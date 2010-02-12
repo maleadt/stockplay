@@ -1,0 +1,119 @@
+\subsection{Webapplicatie}
+
+Deze interface wordt gebruik om deel te nemen aan het spel. Een gebruiker surft hierbij naar de server die de interface host, en krijgt direct de spelomgeving te zien, dit zonder eerst aan bepaalde softwarevereisten (zoals een Java runtime) te moeten voldaan hebben. Een deel van de functionaliteit is beperkt tot geregistreerde gebruikers, maar hier meer over later.
+
+Eerst en vooral is er de algemene overzichtspagina. Die geeft de gebruiker een zicht over:
+\begin{itemize}
+\item{de huidige waarde van de aangekochte effecten en de meer/minwaarde op de aankoopprijs}
+\item{cashpositie}
+\item{totaal van cashpositie + huidige waarde van de effecten}
+\item{huidig rendement}
+\item{grafiek met een overzicht van hun rendement tov het gemiddeld rendement, beste rendement, enz}
+\item{algemeen klassement, tussenklassementen}
+\end{itemize}
+
+Vervolgens kan de gebruiker zijn portefolio bekijken, en daar volgende informatie uit halen:
+\begin{itemize}
+\item{overzicht van het portefolio van de gebruiker}
+\item{effecten momenteel in bezit, aankoopprijs (per stuk en in totaal), huidige koers, rendement en winst/verlies op het aandeel}
+\end{itemize}
+
+Er is ook een pagina die een zicht biedt op alle effecten aanwezig in het spel. Om het overzicht te behouden voorziet dat overzicht in verschillende filters:
+\begin{itemize}
+\item{Per beurs}
+\item{Per type (aandeel, tracker, ...)}
+\item{Per index}
+\item{Per naam}
+\item{Aandelen die als favoriet zijn gekenmerkt door de gebruiker}
+\item{Per prijs}
+\item{Per volume}
+\end{itemize}
+
+Per aandeel kan vervolgens doorgeklikt worden naar een overzichtspagina, die volgende informatie biedt:
+\begin{itemize}
+\item{grafiek met koers}
+\item{hoog/laag van de dag}
+\item{huidige koers}
+\item{openingskoers}
+\item{verschil}
+\item{omzet}
+\item{mogelijkheid om te kopen/te verkopen}
+\end{itemize}
+
+De gebruiker kan ook een overzicht bovenhalen waarop zijn transactiegeschiedenis zichtbaar is. Daarbij krijgt hij per transactie het volgende te zien:
+\begin{itemize}
+\item{het tijdstip}
+\item{het effect}
+\item{het type transactie}
+\item{het aantal}
+\item{de kostprijs voor de transactie}
+\item{de winst/verlies door transactie}
+\item{totaal van uw portefeuille}
+\end{itemize}
+Ook hier kan men steeds doorklikken naar een detailpagina in kwestie, en ook het overzicht behouden met behulp van volgende filters:
+\begin{itemize}
+\item{enkel aankopen/verkopen}
+\item{enkel met winst/verlies}
+\end{itemize}
+
+Er zijn ook verschillende klassementen aanwezig:
+\begin{itemize}
+\item{Meest aangekochte aandelen}
+\item{Meest verkochte aandelen}
+\item{Spelers top}
+\end{itemize}
+
+De interface voorziet ook in een pagina om aandelen te kopen of verkopen. Hiervoor zijn verschillende mogelijkheden:
+\begin{itemize}
+\item{de prijs die je biedt voor het aandeel. Pas als het aandeel die koers bereikt wordt het aandeel effectief aangekocht}
+\item{de hoeveelheid aandelen die je wenst aan te kopen}
+\item{de max. geldigheidsduur van dit order (1 uur/dag/week/maand)}
+\end{itemize}
+Tijdens de aankoop krijgt de gebruiker een overzicht van de totale kostprijs en de verschillende taksen die erop staan.
+
+
+\subsection{Desktopapplicatie}
+
+Deze applicatie voorziet in het beheer van het hele systeem. De beheerder logt daarvoor in met behulp van zijn eID.
+
+De desktopapplicatie is opgesplitst in drie grote componenten.
+Enerzijds is er het overzicht van de gebruikers. Per gebruiker zijn de volgende beheersopdrachten mogelijk: 
+\begin{itemize}
+\item{wijzigen van}
+\item{verwijderen van gebruiker}
+\item{aanpassen van portefolio: kopen/verkopen van effecten}
+\item{de hoeveelheid cash van de gebruiker aanpassen}
+\end{itemize}
+
+Er is ook een overzicht van de effecten voorzien, die de volgende functionaliteit biedt:
+\begin{itemize}
+\item{Aanduiden van welke effecten moeten gescraped worden, welke effecten zichtbaar zijn bij de spelers}
+\item{Schorsen van handel in een effect}
+\item{Wijzigen van de gescrapede gegevens}
+\item{Overzicht van de aanwezigheid in portefeuilles bij spelers}
+\end{itemize}
+
+Het laatste grote deel van de applicatie biedt een overzicht van de systeemstatus. Daarbij kan de beheerder het volgende ondernemen:
+\begin{itemize}
+\item{Status van de componenten (scraper, database, website, ...) en starten/stoppen/herstarten van degene die dit aankunnen.}
+\item{Statistieken bekijken}
+	\begin{itemize}
+	\item{Aantal ingeschreven gebruikers sinds de start}
+	\item{Aantal gebruikers online}
+	\item{Aantal connecties per tijdseenheid op de backend}
+	\item{Aantal transacties per tijdseenheid}
+	\item{Aantal (succesvol/gefaalde/...) gescrapede aandelen per tijdseenheid}
+	\end{itemize}
+\end{itemize}
+
+\subsection{Backend}
+
+De backend fungeert als een schil rond de database. Alle aanvragen van de desktopapplicatie en de website die informatie uit de database nodig hebben, of er naartoe willen schrijven worden afgeleid naar de backend. De communicatie tussen backend en zijn clients gebeurt mbv XML-RPC. 
+
+\subsection{Scrapers}
+
+De scrapers gaan periodiek enkele vooraf bepaalde sites ophalen en halen hieruit de huidige koersinformatie. Hiervoor wordt oa. handig gebruik gemaakt van de AJAX-requests die deze websites gebruiken om de koersen live te tonen. Dit zorgt ervoor dat bijna enkel de koersen worden opgehaald, zonder overhead (zoals de layout van de website, etc) 
+De opgehaalde informatie wordt vervolgens doorgestuurd naar de backend dewelke deze koersinformatie vervolgens opslaat in de database. 
+Optioneel: mobiele client voor PDA/Smartphone 
+Spelers kunnen met behulp van hun PDA/Smartphone een gereduceerde set acties uitvoeren op hun portefolio.
+

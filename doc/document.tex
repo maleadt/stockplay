@@ -1,0 +1,79 @@
+%
+% Configuratie
+%
+
+\documentclass{article}
+
+% Subtitle functie
+\makeatletter
+\def\s@btitle{\relax}
+\def\subtitle#1{\gdef\s@btitle{#1}}
+\def\@maketitle{%
+  \newpage
+  \null
+  \vskip 2em%
+  \begin{center}%
+  \let \footnote \thanks
+    {\LARGE \@title \par}%
+                \if\s@btitle\relax
+                \else\typeout{[subtitle]}%
+                        \vskip .5pc
+                        \begin{large}%
+                                \textsl{\s@btitle}%
+                                \par
+                        \end{large}%
+                \fi
+    \vskip 1.5em%
+    {\large
+      \lineskip .5em%
+      \begin{tabular}[t]{c}%
+        \@author
+      \end{tabular}\par}%
+    \vskip 1em%
+    {\large \@date}%
+  \end{center}%
+  \par
+  \vskip 1.5em}
+\makeatother
+
+% Document parameters
+\begin{document}
+\title{StockPlay}
+\subtitle{Vakoverschrijdend Eindproject}
+\author{Tim Besard
+\and Thijs Walcarius
+\and Laurens Van Acker
+\and Dieter Deforce}
+\date{\today}
+\maketitle
+
+% Ruimte tussen paragrafen
+\parskip 7.2pt
+
+
+%
+% Inhoud
+%
+
+% Abstract
+\begin{abstract}
+Dit document is het verslag van ons vakoverschrijdend eindproject -- StockPlay.
+Hier komt wat zinnige informatie dat het project kort en bondig omschrijft.
+\end{abstract}
+
+% Behoeften-analyse
+\newpage
+\section{Behoefteanalyse}
+\input{analyse_behoeften.tex}
+
+% Functionele analyse
+\newpage
+\section{Functionele analyse}
+\input{analyse_functioneel.tex}
+
+
+%
+% Afsluiten
+%
+
+\end{document}
