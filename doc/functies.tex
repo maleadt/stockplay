@@ -1,0 +1,52 @@
+% Maak een ondertitel
+\makeatletter
+\def\s@btitle{\relax}
+\def\subtitle#1{\gdef\s@btitle{#1}}
+\def\@maketitle{%
+  \newpage
+  \null
+  \vskip 2em%
+  \begin{center}%
+  \let \footnote \thanks
+    {\LARGE \@title \par}%
+                \if\s@btitle\relax
+                \else\typeout{[subtitle]}%
+                        \vskip .5pc
+                        \begin{large}%
+                                \textsl{\s@btitle}%
+                                \par
+                        \end{large}%
+                \fi
+    \vskip 1.5em%
+    {\large
+      \lineskip .5em%
+      \begin{tabular}[t]{c}%
+        \@author
+      \end{tabular}\par}%
+    \vskip 1em%
+    {\large \@date}%
+  \end{center}%
+  \par
+  \vskip 1.5em}
+\makeatother
+
+% Verkleinde margin entry
+\setlength{\marginparwidth}{1.2in}
+\let\oldmarginpar\marginpar
+\renewcommand\marginpar[1] {\-\oldmarginpar[\raggedleft\footnotesize #1]%
+{\raggedright\footnotesize #1}}
+
+% Een TODO-entry
+\newcommand{\todo}[1] {
+	\addcontentsline{tdo}{todo}{\protect{#1}}
+	\marginpar{#1}
+}
+
+% Een lijst van TODO-entries
+\makeatletter
+\newcommand \listoftodos {
+	\section*{Todo list} \@starttoc{tdo}
+}
+\newcommand\l@todo[2] {
+	\par\noindent \textit{#2}, \parbox{10cm}{#1}\par
+} \makeatother

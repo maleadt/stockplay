@@ -4,48 +4,11 @@
 
 \documentclass{article}
 
-% Subtitle functie
-\makeatletter
-\def\s@btitle{\relax}
-\def\subtitle#1{\gdef\s@btitle{#1}}
-\def\@maketitle{%
-  \newpage
-  \null
-  \vskip 2em%
-  \begin{center}%
-  \let \footnote \thanks
-    {\LARGE \@title \par}%
-                \if\s@btitle\relax
-                \else\typeout{[subtitle]}%
-                        \vskip .5pc
-                        \begin{large}%
-                                \textsl{\s@btitle}%
-                                \par
-                        \end{large}%
-                \fi
-    \vskip 1.5em%
-    {\large
-      \lineskip .5em%
-      \begin{tabular}[t]{c}%
-        \@author
-      \end{tabular}\par}%
-    \vskip 1em%
-    {\large \@date}%
-  \end{center}%
-  \par
-  \vskip 1.5em}
-\makeatother
+% Extra paketten
+\usepackage[dutch]{babel}
 
-% Document parameters
-\begin{document}
-\title{StockPlay}
-\subtitle{Vakoverschrijdend Eindproject}
-\author{Tim Besard
-\and Thijs Walcarius
-\and Laurens Van Acker
-\and Dieter Deforce}
-\date{\today}
-\maketitle
+% Functiedefinities
+\input{functies.tex}
 
 % Ruimte tussen paragrafen
 \parskip 7.2pt
@@ -55,10 +18,22 @@
 % Inhoud
 %
 
+\begin{document}
+
+% Titelpagina
+\title{StockPlay}
+\subtitle{Vakoverschrijdend eindproject 2009-2010}
+\author{
+	\begin{tabular}{ l c r }
+		Tim Besard & Thijs Walcarius \\
+		Laurens Van Acker & Dieter Deforce
+	\end{tabular}}
+\date{\today}
+\maketitle
+
 % Abstract
 \begin{abstract}
-Dit document is het verslag van ons vakoverschrijdend eindproject -- StockPlay.
-Hier komt wat zinnige informatie dat het project kort en bondig omschrijft.
+Dit verslag documenteert en verduidelijkt StockPlay, een beursspel gemaakt als vakoverschrijdend eindproject aan de Hogeschool Gent, departement Industri\"ele Wetenschappen. Het project combineert de aangeleerde technieken en technologie\"en en vormt zo de slotsom van de voorbije drie jaar bachelorstudie.
 \end{abstract}
 
 % Behoeften-analyse
@@ -71,9 +46,5 @@ Hier komt wat zinnige informatie dat het project kort en bondig omschrijft.
 \section{Functionele analyse}
 \input{analyse_functioneel.tex}
 
-
-%
-% Afsluiten
-%
-
 \end{document}
+
