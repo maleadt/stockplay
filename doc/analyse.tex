@@ -1,0 +1,44 @@
+%Preambule met standaardinstellingen
+\documentclass[a4paper,oneside]{report}
+%Noot: zorg ervoor dat Nederlandse woordsplitsing geactiveerd is.
+\usepackage[dutch]{babel}
+% Noot: je kan het graphicxpakket een optie dvips of pdftex doorgeven
+% in dat geval oet je ze ook aan iiiscriptie doorgeven, dus bijvoorbeeld
+% \usepackage[dvips]{graphicx}
+% \usepackage[dvips]{iiiscriptie}
+\usepackage{graphicx}
+\usepackage{iiiscriptie}
+%Nuttig pakket voor URL's
+\usepackage{url}
+%extra functies door Tim
+\input{functies.tex}
+%
+%Invullen velden voor titelpagina.
+%
+\departement{Departement Toegepaste Ingenieurswetenschappen}
+\deptadres{Schoonmeersstraat 52 - 9000 Gent}
+\studiejaar{3e Bachelor Informatica}
+\soortrapport{
+Analyse voor het vakoverschrijdend project Informatica
+}
+\title{Analyse 'Stockplay'}
+\author{
+Tim BESARD\\
+Dieter DEFORCE\\
+Laurens VAN ACKER\\
+Thijs WALCARIUS
+}
+\begin{document}
+\maketitle
+\pagenumbering{roman}
+\tableofcontents
+\pagenumbering{arabic}
+% Behoeften-analyse
+\chapter{Behoefteanalyse}
+\input{analyse_behoeften.tex}
+
+% Functionele analyse
+\chapter{Functionele analyse}
+\input{analyse_functioneel.tex}
+\end{document}
+

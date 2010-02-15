@@ -1,100 +1,121 @@
-\subsection{Webapplicatie}
+\section{Webapplicatie}
 
 \todo{Sommige opsommingen herwerken tot tekst?}
 Deze interface wordt gebruik om deel te nemen aan het spel. Een gebruiker surft hierbij naar de server die de interface host, en krijgt zo de spelomgeving te zien, dit zonder eerst aan bepaalde softwarevereisten (zoals een Java runtime) te moeten voldaan hebben. Een deel van de functionaliteit is beperkt tot geregistreerde gebruikers, maar meer hierover in hoofdstuk X.
 
-Eerst en vooral is er de algemene overzichtspagina. Die geeft de gebruiker een zicht over:
+\paragraph{De algemene overzichtspagina}
+Deze pagina geeft de gebruiker een zicht over:
 \begin{itemize}
-\item{de huidige waarde van de aangekochte effecten en de meer- of minwaarde op de aankoopprijs}
-\item{zijn cashpositie}
-\item{het totaal van zijn cashpositie en de huidige waarde van de effecten}
-\item{het huidige rendement}
-\item{een grafiek met een overzicht van hun rendement ten opzichte van het gemiddeld rendement, beste rendement, enz.}
-\item{het algemeen klassement en eventuele tussenklassementen}
+	\item{de huidige waarde van de aangekochte effecten en de meer- of minwaarde op de aankoopprijs}
+	\item{zijn cashpositie}
+	\item{het totaal van zijn cashpositie en de huidige waarde van de effecten}
+	\item{het huidige rendement}
+	\item{een grafiek met een overzicht van hun rendement ten opzichte van het gemiddeld rendement, beste rendement, enz.}
+	\item{het algemeen klassement en eventuele tussenklassementen}
 \end{itemize}
 
+\paragraph{Portefolio}
 Vervolgens kan de gebruiker zijn portefolio bekijken, en daar volgende informatie uit halen:
 \begin{itemize}
-\item{een overzicht van het portefolio van de gebruiker}
-\item{de effecten momenteel in bezit, aankoopprijs (per stuk en in totaal), huidige koers, rendement en winst/verlies op het aandeel}
+	\item{een overzicht van het portefolio van de gebruiker}
+	\item{de effecten momenteel in bezit, aankoopprijs (per stuk en in totaal), huidige koers, rendement en winst/verlies op het aandeel}
 \end{itemize}
 
-Er is ook een pagina die een zicht biedt op alle effecten aanwezig in het spel. Om het overzicht te behouden voorziet dat overzicht in verschillende filters:
+\paragraph{Overzicht beschikbare effecten}
+Er is ook een pagina die een zicht biedt op alle effecten aanwezig in het spel.
+\subparagraph{Filters} Om het overzicht te behouden voorziet dat overzicht in verschillende filters:
 \begin{itemize}
-\item{per beurs}
-\item{per type (aandeel, tracker, ...)}
-\item{per index}
-\item{per naam}
-\item{aandelen die als favoriet zijn gekenmerkt door de gebruiker}
-\item{per prijs}
-\item{per volume}
+  \setlength{\itemsep}{1pt}
+  \setlength{\parskip}{0pt}
+  \setlength{\parsep}{0pt}
+	\item{per beurs}
+	\item{per type (aandeel, tracker, ...)}
+	\item{per index}
+	\item{per naam}
+	\item{aandelen die als favoriet zijn gekenmerkt door de gebruiker}
+	\item{per prijs}
+	\item{per volume}
+\end{itemize}
+\subparagraph{Details per effect}Per aandeel kan vervolgens doorgeklikt worden naar een overzichtspagina, die de volgende informatie biedt:
+\begin{itemize}
+  \setlength{\itemsep}{1pt}
+  \setlength{\parskip}{0pt}
+  \setlength{\parsep}{0pt}
+	\item{grafiek met koers}
+	\item{hoog/laag van de dag}
+	\item{huidige koers}
+	\item{openingskoers}
+	\item{verschil}
+	\item{omzet}
+	\item{mogelijkheid om te kopen/te verkopen}
 \end{itemize}
 
-Per aandeel kan vervolgens doorgeklikt worden naar een overzichtspagina, die de volgende informatie biedt:
+\paragraph{Transactiegeschiedenis}De gebruiker kan ook een overzicht bovenhalen waarop zijn transactiegeschiedenis zichtbaar is. 
+\subparagraph{Details per transactie}Ook hier kan men steeds doorklikken naar een detailpagina in kwestie:
 \begin{itemize}
-\item{grafiek met koers}
-\item{hoog/laag van de dag}
-\item{huidige koers}
-\item{openingskoers}
-\item{verschil}
-\item{omzet}
-\item{mogelijkheid om te kopen/te verkopen}
+  \setlength{\itemsep}{1pt}
+  \setlength{\parskip}{0pt}
+  \setlength{\parsep}{0pt}
+	\item{het tijdstip}
+	\item{het effect}
+	\item{het type transactie}
+	\item{het aantal}
+	\item{de kostprijs voor de transactie}
+	\item{de winst/verlies door transactie}
+	\item{totaal van uw portefeuille}
+\end{itemize}
+\subparagraph{Filters}Het overzicht kan worden behouden met behulp van volgende filters:
+\begin{itemize}
+  \setlength{\itemsep}{1pt}
+  \setlength{\parskip}{0pt}
+  \setlength{\parsep}{0pt}
+	\item{enkel aankopen/verkopen}
+	\item{enkel met winst/verlies}
 \end{itemize}
 
-De gebruiker kan ook een overzicht bovenhalen waarop zijn transactiegeschiedenis zichtbaar is. Daarbij krijgt hij per transactie het volgende te zien:
+\paragraph{Klassementen}Er zijn ook verschillende klassementen aanwezig:
 \begin{itemize}
-\item{het tijdstip}
-\item{het effect}
-\item{het type transactie}
-\item{het aantal}
-\item{de kostprijs voor de transactie}
-\item{de winst/verlies door transactie}
-\item{totaal van uw portefeuille}
-\end{itemize}
-Ook hier kan men steeds doorklikken naar een detailpagina in kwestie, en ook het overzicht behouden met behulp van volgende filters:
-\begin{itemize}
-\item{enkel aankopen/verkopen}
-\item{enkel met winst/verlies}
+  \setlength{\itemsep}{1pt}
+  \setlength{\parskip}{0pt}
+  \setlength{\parsep}{0pt}
+	\item{meest aangekochte aandelen}
+	\item{meest verkochte aandelen}
+	\item{spelers top 20 (waarde portefolio)}
+	\item{spelers top 20 (puntentotaal)}
 \end{itemize}
 
-Er zijn ook verschillende klassementen aanwezig:
+\paragraph{Verhandelpagina effecten}De interface voorziet ook in een pagina om aandelen te kopen of verkopen. Hiervoor zijn verschillende mogelijkheden:
 \begin{itemize}
-\item{meest aangekochte aandelen}
-\item{meest verkochte aandelen}
-\item{spelers top}
-\end{itemize}
-
-De interface voorziet ook in een pagina om aandelen te kopen of verkopen. Hiervoor zijn verschillende mogelijkheden:
-\begin{itemize}
-\item{de prijs die je biedt voor het aandeel. Pas als het aandeel die koers bereikt wordt het aandeel effectief aangekocht}
-\item{de hoeveelheid aandelen die je wenst aan te kopen}
-\item{de max. geldigheidsduur van dit order (1 uur/dag/week/maand)}
+  \setlength{\itemsep}{1pt}
+  \setlength{\parskip}{0pt}
+  \setlength{\parsep}{0pt}
+	\item{de prijs die je biedt voor het aandeel. Pas als het aandeel die koers bereikt wordt het aandeel effectief aangekocht}
+	\item{de hoeveelheid aandelen die je wenst aan te kopen}
+	\item{de max. geldigheidsduur van dit order (1 uur/dag/week/maand)}
 \end{itemize}
 Tijdens de aankoop krijgt de gebruiker een overzicht van de totale kostprijs en de verschillende taksen die erop staan.
 
-
-\subsection{Desktopapplicatie}
-
+\section{Desktopapplicatie}
 Deze applicatie voorziet in het beheer van het hele systeem. De beheerder logt daarvoor in met behulp van zijn eID.
 
 De desktopapplicatie is opgesplitst in drie grote componenten.
-Enerzijds is er het overzicht van de gebruikers. Per gebruiker zijn de volgende beheersopdrachten mogelijk: 
+\paragrah{Gebruikersbeheer}Enerzijds is er het overzicht van de gebruikers. Per gebruiker zijn de volgende beheersopdrachten mogelijk: 
 \begin{itemize}
-\item{wijzigen van}
-\item{verwijderen van gebruiker}
-\item{aanpassen van portefolio: kopen/verkopen van effecten}
-\item{de hoeveelheid cash van de gebruiker aanpassen}
+	\item{wijzigen van een gebruiker}
+	\item{verwijderen van een gebruiker}
+	\item{aanpassen van portefolio: kopen/verkopen van effecten}
+	\item{de hoeveelheid cash van de gebruiker aanpassen}
 \end{itemize}
 
-Er is ook een overzicht van de effecten voorzien, die de volgende functionaliteit biedt:
+\paragraph{Effectenbeheer}Er is ook een overzicht van de effecten voorzien, die de volgende functionaliteit biedt:
 \begin{itemize}
-\item{aanduiden van welke effecten moeten gescraped worden, welke effecten zichtbaar zijn bij de spelers}
-\item{schorsen van handel in een effect}
-\item{wijzigen van de gescrapede gegevens}
-\item{overzicht van de aanwezigheid in portefeuilles bij spelers}
+	\item{aanduiden van welke effecten moeten gescraped worden, welke effecten zichtbaar zijn bij de spelers}
+	\item{schorsen van handel in een effect}
+	\item{wijzigen van de gescrapede gegevens}
+	\item{overzicht van de aanwezigheid in portefeuilles bij spelers}
 \end{itemize}
 
-Het laatste grote deel van de applicatie biedt een overzicht van de systeemstatus. Daarbij kan de beheerder het volgende ondernemen:
+\paragraph{Systeemstatus}Het laatste grote deel van de applicatie biedt een overzicht van de systeemstatus. Daarbij kan de beheerder het volgende ondernemen:
 \begin{itemize}
 \item{status van de componenten (scraper, database, website, ...) en starten/stoppen/herstarten van degene die dit aankunnen.}
 \item{statistieken bekijken}
@@ -107,11 +128,11 @@ Het laatste grote deel van de applicatie biedt een overzicht van de systeemstatu
 	\end{itemize}
 \end{itemize}
 
-\subsection{Backend}
+\section{Backend}
 
 De backend fungeert als een schil rond de database. Alle aanvragen van de desktopapplicatie en de website die informatie uit de database nodig hebben, of er naartoe willen schrijven worden afgeleid naar de backend. De communicatie tussen backend en zijn clients gebeurt mbv XML-RPC. 
 
-\subsection{Scrapers}
+\section{Scrapers}
 
 De scrapers gaan periodiek enkele vooraf bepaalde sites ophalen en halen hieruit de huidige koersinformatie. Hiervoor wordt oa. handig gebruik gemaakt van de AJAX-requests die deze websites gebruiken om de koersen live te tonen. Dit zorgt ervoor dat bijna enkel de koersen worden opgehaald, zonder overhead (zoals de layout van de website, etc) 
 De opgehaalde informatie wordt vervolgens doorgestuurd naar de backend dewelke deze koersinformatie vervolgens opslaat in de database. 
