@@ -136,7 +136,7 @@ De desktopapplicatie is opgesplitst in drie grote componenten.
 
 \section{Backend}
 
-De backend fungeert als een schil rond de database. Alle aanvragen van de desktopapplicatie en de website die informatie uit de database nodig hebben, of er naartoe willen schrijven worden afgeleid naar de backend. De communicatie tussen backend en zijn clients gebeurt mbv XML-RPC. 
+Om te vermijden dat alle interfaces gedetailleerde informatie over het databaseontwerp moeten hebben, abstraheren we alle toegang tot de database via een backend. Als een client applicatie dan bepaalde informatie nodig heeft, of wijzigingen wilt toepassen, zal dat gebeuren via een uniforme interface die de backend implementeert. Het exacte ontwerp van deze interface, en de implementatie ervan, kan gevonden worden in een verder hoofdstuk.
 
 \section{Scrapers}
 

@@ -18,3 +18,9 @@
 \newcommand\l@todo[2] {
 	\par\noindent \textit{#2}, \parbox{10cm}{#1}\par
 } \makeatother
+
+% Float definiëren voor codefragmenten
+\usepackage{float}
+\floatstyle{ruled}
+\newfloat{code}{thp}{lop}
+\floatname{code}{Codefragment}

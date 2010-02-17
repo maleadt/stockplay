@@ -1,4 +1,14 @@
 %
+% Configuration
+%
+
+% Change back to English language
+\selectlanguage{english}
+\floatname{code}{Code fragment}
+\todo{Doen via Babel}
+
+
+%
 % Overview
 %
 
@@ -18,6 +28,7 @@ Procedure parameters can be scalars, numbers, strings, dates, etc.; and can also
 \subsection{Request example}
 
 Here's an example of an XML-RPC request:
+\begin{code}
 \begin{verbatim}
 POST /RPC2 HTTP/1.0
 User-Agent: Frontier/5.1.2 (WinNT)
@@ -35,6 +46,8 @@ Content-length: 181
   </params>
 </methodCall>
 \end{verbatim}
+\caption{Sample RML-RPC request}
+\end{code}
 
 \subsection{Header requirements}
 
@@ -63,7 +76,7 @@ $<$value$>$s can be scalars, type is indicated by nesting the value inside one o
 \begin{table}
 \caption{Possible scalar values}
 \centering
-\begin{tabular}{ccccccc}
+\begin{tabular}{c p{4cm} p{6cm}}
 \hline \hline
 \textbf{Tag} & \textbf{Type} & \textbf{Example} \\
 \hline
@@ -86,8 +99,9 @@ A value can also be of type $<$struct$>$.
 A $<$struct$>$ contains $<$member$>$s and each $<$member$>$ contains a $<$name$>$ and a $<$value$>$.
 
 Here's an example of a two-element $<$struct$>$:
+\begin{code}
 \begin{verbatim}
-  <struct>
+<struct>
   <member>
     <name>lowerBound</name>
     <value><i4>18</i4></value>
@@ -98,6 +112,8 @@ Here's an example of a two-element $<$struct$>$:
   </member>
 </struct>
 \end{verbatim}
+\caption{Example of a two-element $<$struct$>$}
+\end{code}
 
 $<$struct$>$s can be recursive, any $<$value$>$ may contain a $<$struct$>$ or any other type, including an $<$array$>$, described below.
 \subsection{$<$array$>$s}
@@ -107,6 +123,7 @@ A value can also be of type $<$array$>$.
 An $<$array$>$ contains a single $<$data$>$ element, which can contain any number of $<$value$>$s.
 
 Here's an example of a four-element array:
+\begin{code}
 \begin{verbatim}
 <array>
   <data>
@@ -117,6 +134,8 @@ Here's an example of a four-element array:
   </data>
 </array>
 \end{verbatim}
+\caption{Example of a four-element array.}
+\end{code}
 
 $<$array$>$ elements do not have names.
 
@@ -126,6 +145,7 @@ $<$arrays$>$s can be recursive, any value may contain an $<$array$>$ or any othe
 \subsection{Response example}
 
 Here's an example of a response to an XML-RPC request:
+\begin{code}
 \begin{verbatim}
 HTTP/1.1 200 OK
 Connection: close
@@ -143,6 +163,9 @@ Server: UserLand Frontier/5.1.2-WinNT
   </params>
 </methodResponse>
 \end{verbatim}
+\caption{Example of a XML-RPC response.}
+\end{code}
+
 \subsection{Response format}
 
 Unless there's a lower-level error, always return 200 OK.
@@ -155,6 +178,7 @@ The $<$methodResponse$>$ could also contain a $<$fault$>$ which contains a $<$va
 
 A $<$methodResponse$>$ can not contain both a $<$fault$>$ and a $<$params$>$.
 \subsection{Fault example}
+\begin{code}
 \begin{verbatim}
 HTTP/1.1 200 OK
 Connection: close
@@ -181,6 +205,8 @@ Server: UserLand Frontier/5.1.2-WinNT
   </fault>
 </methodResponse>
 \end{verbatim}
+\caption{Example of a XML-RPC fault message.}
+\end{code}
 
 
 %

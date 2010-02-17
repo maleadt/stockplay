@@ -4,4 +4,35 @@
 
 \chapter{Procedureontwerp}
 
-\todo{XML-RPC protocol}
+\section{Backend protocol}
+
+Zoals vermeld in de behoeftenanalyse wordt alle databasetoegang uitgevoerd via een gemeenschappelijke backend. De interface hiervoor stelt echter een aantal bijzondere eisen:
+\begin{itemize}
+\item{Taalonafhankelijk: aangezien de interfaces met behulp van verschillende programmeertalen gerealiseerd worden, moet de interface toegankelijk zijn vanuit een zo wijd mogelijke waaier aan programmeertalen.}
+\item{Lichtgewicht: als een mobiele interface een mogelijke uitbreiding kan zijn, moet het gekozen protocol compact zijn en mogen de eventueel benodigde libraries niet te zwaar zijn.}
+\item{Toegankelijk: omdat interfaces niet noodzakelijk uitgevoerd worden op hetzelfde systeem van de backend, is het mooi meegenomen als het protocol geen probleem vormt in gelimiteerde omgevingen.}
+\end{itemize}
+
+Na verschillende kandidaten overwogen te hebben, hebben we gekozen voor XML-RPC. Dit is een lichtgewicht Remote Procedure protocol, dewelke methodeaanvragen en -antwoorden verpakt in XML-data en ze als POST request verstuurd over het HTTP protocol (zie bijlage A voor de exacte specificatie).
+\todo{Bijlage A als referentie/link?}
+Het protocol voldoet volledig aan de opgestelde eisen: aangezien het verderbouwt op het bestaande HTTP-protocol kan het gebruik maken van diens mogelijkheden (zoals compressie en encryptie), en kan het indien een specifieke bibliotheek onbestaande is eenvoudig verwerkt worden via reeds bestaande HTTP- en XML-bibliotheken. Bovendien verschilt de communicatie niet van regulier browsen waardoor de toegankelijkheid in gelimiteerde omgevingen ook toeneemt.
+
+Aangezien XML-RPC geen ondersteuning biedt voor namespaces of andere vormen van functieorganisatie, hanteren we zelf een mechanisme om dit te bekomen: een methode-naam bestaat altijd uit twee delen, gescheiden door een punt. Het deel voor het scheidingsteken duidt het pakket aan, het deel erna de specifieke methode.
+Zo delen we de backend op in volgende klassen:
+\begin{itemize}
+\item{System: functionaliteit voor beheer van het systeem.}
+\item{User: beheer van gebruikers, ook voor gebruikers zelf.}
+\item{Stocks: functionaliteit gerelateerd met effecten.}
+\end{itemize}
+
+\subsection{System}
+
+Deze klasse biedt de client mogelijkheden om het systeem te beheren, met name ophalen van informatie, wijzigen van configuraties, en (her)starten of stoppen van bepaalde subsystemen.
+
+\subsection{User}
+
+Hier vindt men de nodige methodes terug om gebruikers te beheren. Dit is echter niet beperkt tot de administrator: ook gebruikers zelf kunnen hun eigen profiel (in beperktere mate) beheren.
+
+\subsection{Stocks}
+
+Tenslotte zijn er nog de methodes gerelateerd met het effectieve beurswezen, die (hoofdzakelijk) terug te vinden zijn in deze klasse. Enkel het ophalen van de portefolio bevindt zich, logischerwijs, in de User-klasse.
