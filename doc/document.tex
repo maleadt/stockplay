@@ -1,0 +1,77 @@
+%
+% Configuratie
+%
+
+% Preambule met standaardinstellingen
+\documentclass[a4paper,oneside]{report}
+
+% Noot: zorg ervoor dat Nederlandse woordsplitsing geactiveerd is.
+\usepackage[dutch]{babel}
+
+% Noot: je kan het graphicxpakket een optie dvips of pdftex doorgeven
+% in dat geval moet je ze ook aan iiiscriptie doorgeven, dus bijvoorbeeld
+% \usepackage[dvips]{graphicx}
+% \usepackage[dvips]{iiiscriptie}
+\usepackage{graphicx}
+\usepackage{iiiscriptie}
+
+%Nuttig pakket voor URL's
+\usepackage{url}
+
+% extra functies door Tim
+\input{functies.tex}
+
+
+%
+% Titelpagina
+%
+
+% Invullen velden
+\departement{Departement Toegepaste Ingenieurswetenschappen}
+\deptadres{Schoonmeersstraat 52 - 9000 Gent}
+\studiejaar{3e Bachelor Informatica}
+\soortrapport{
+Analyse voor het vakoverschrijdend project Informatica
+}
+\title{Analyse 'Stockplay'}
+\author{
+Tim BESARD\\
+Dieter DEFORCE\\
+Laurens VAN ACKER\\
+Thijs WALCARIUS
+}
+
+% Pagina maken
+\begin{document}
+\maketitle
+\pagenumbering{roman}
+\tableofcontents
+\pagenumbering{arabic}
+
+
+%
+% Inhoud
+%
+
+% Analyse
+\part{Analyse}
+\input{analyse.tex}
+
+% Ontwerp
+\part{Ontwerp}
+\input{ontwerp.tex}
+
+% Realisatie
+\part{Realisatie}
+\input{realisatie.tex}
+
+% Invoering
+\part{Invoering}
+\input{invoering.tex}
+
+% Documentatie
+\part{Documentatie}
+\input{documentatie.tex}
+
+\end{document}
+
