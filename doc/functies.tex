@@ -24,3 +24,8 @@
 \floatstyle{ruled}
 \newfloat{code}{thp}{lop}
 \floatname{code}{Codefragment}
+
+% Hyperlink maken en URL in footnote tonen
+\usepackage{hyperref}
+\newcommand{\makeurl}[2]{\href{#2}{#1} \footnote{#2}}
+

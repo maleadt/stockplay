@@ -7,6 +7,9 @@
 \floatname{code}{Code fragment}
 \todo{Doen via Babel}
 
+% Label
+\label{chap:xml-rpc}
+
 
 %
 % Overview
@@ -74,11 +77,9 @@ If the procedure call has parameters, the $<$methodCall$>$ must contain a $<$par
 $<$value$>$s can be scalars, type is indicated by nesting the value inside one of the tags listed in this table:
 
 \begin{table}
-\caption{Possible scalar values}
-\centering
-\begin{tabular}{c p{4cm} p{6cm}}
-\hline \hline
-\textbf{Tag} & \textbf{Type} & \textbf{Example} \\
+\begin{tabular}{| c | p{4cm} | p{6cm} |}
+\hline
+Tag & Type & Example \\
 \hline
 $<$i4$>$ or $<$int$>$ & four-byte signed integer & -12 \\
 $<$boolean$>$ & 0 (false) or 1 (true) & 1 \\
@@ -88,6 +89,7 @@ $<$dateTime.iso8601$>$ & date/time & 19980717T14:08:55 \\
 $<$base64$>$ & base64-encoded binary & eW91IGNhbid0IHJlYWQgdGhpcyE= \\
 \hline
 \end{tabular}
+\caption{Possible scalar values}
 \end{table}
 
 If no type is indicated, the type is string.
