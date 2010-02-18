@@ -25,12 +25,13 @@ Voor de programmeertalen die we gaan gebruiken bij het implementeren blijken er 
 \end{itemize}
 
 Aangezien XML-RPC geen ondersteuning biedt voor namespaces of andere vormen van functieorganisatie, hanteren we zelf een mechanisme om dit te bekomen: een methode-naam bestaat altijd uit twee delen, gescheiden door een punt. Het deel voor het scheidingsteken duidt het pakket aan, het deel erna de specifieke methode.
-Zo delen we de backend op in volgende klassen:
+Zo delen we de backend op in volgende primaire klassen:
 \begin{itemize}
 \item{System: functionaliteit voor beheer van het systeem.}
 \item{User: beheer van gebruikers, ook voor gebruikers zelf.}
 \item{Stocks: functionaliteit gerelateerd met effecten.}
 \end{itemize}
+Hogere-orde klassen zijn eventueel ook mogelijk (zoals \emph{System.Database}), maar niet verplicht. De semantiek is daarbij identiek aan primaire klassen, met een punt als scheidingsteken.
 
 \subsection{Algemene foutcodes}
 
@@ -78,18 +79,44 @@ Autorisatie tenslotte is beperkt: in de huidige opzet ondersteunen we geen flexi
 
 Deze klasse biedt de client mogelijkheden om het systeem te beheren, met name ophalen van informatie, wijzigen van configuraties, en (her)starten of stoppen van bepaalde subsystemen.
 
-\paragraph{DatabaseRestart}
+\paragraph{Backend.Status}
 \begin{itemize}
-\item{\textbf{Gebruik}: herstart de database, indien de backend hiervoor de nodige rechten heeft.}
+\item{\textbf{Gebruik}: haalt backend-statistieken op.}
 \item{\textbf{Parameters}: geen}
-\item{\textbf{Output}: resultaat van de bewerking (bool)}
-\item{\textbf{Extra}: admin-rechten benodigd}
+\item{\textbf{Output}: named hash (struct) met enkele statistieken:}
+	\begin{itemize}
+	\item{conn: het aantal verwerkte connecties}
+	\end{itemize}
+\item{\textbf{Autorisatie}: administrator-rechten}
 \end{itemize}
+
+\paragraph{Backend.Stats}
+
+\paragraph{Backend.Restart}
+
+\paragraph{Backend.Stop}
+
+\paragraph{Database.Status}
+
+\paragraph{Database.Stats}
+
+\paragraph{Scraper.Status}
+
+\paragraph{Scraper.Stats}
+
 
 \subsection{User-klasse}
 
 Hier vindt men de nodige methodes terug om gebruikers te beheren. Dit is echter niet beperkt tot de administrator: ook gebruikers zelf kunnen hun eigen profiel (in beperktere mate) beheren.
 
+\paragraph{List}
+
+\paragraph{Info}
+
+\paragraph{Modify}
+
+
 \subsection{Stocks-klasse}
 
 Tenslotte zijn er nog de methodes gerelateerd met het effectieve beurswezen, die (hoofdzakelijk) terug te vinden zijn in deze klasse. Enkel het ophalen van de portefolio bevindt zich, logischerwijs, in de User-klasse.
+\todo{afwerken van zodra het database-ontwerp af is}
