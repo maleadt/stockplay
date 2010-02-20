@@ -1,12 +1,10 @@
 \chapter{Definitiestudie}
 
-Bij dit spel is het de bedoeling dat deelnemers tijdens de duur van het spel (dat loopt over enkele weken/maanden) virtueel aandelen, opties, trackers, fondsen, enz. kunnen verhandelen om zo op het einde van het spel een zo hoog mogelijk rendement neer te zetten. Hiervoor krijgt iedereen aan het begin van het spel eenzelfde budget toegewezen. 
+Voorafgaand aan de start van het spel is er reeds een inschrijvingsperiode. (Uitbreiding: Hierbij spelers kunnen zich registeren met behulp van hun eID.) Spelers die zich registeren tijdens deze periode krijgen bij de start van het spel 100.000 euro.
 
-Voorafgaand aan de start van het spel is een inschrijvingsperiode. Hierbij spelers kunnen zich registeren met behulp van hun eID. 
+Het spel start op een vastgestelde dag en tijdstip: 1 maart 2010 om 8u 's morgens. Gebruikers die na de start van het spel starten hebben een variabel startbudget. Maximaal hebben ze een startbudget van 100.000 euro. Is de beurs sinds de start van het spel negatief geëvolueerd, dan wordt het startbudget ook evenveel verlaagd. 
 
-Het spel start op een vastgestelde dag en tijdstip: 1 maart 2010 om 8u 's morgens. Elke speler krijgt een startbudget van 100.000 euro.
-\todo{Waarom fixed registratieperiode?}
-\\Vanaf dat moment hebben de gebruikers toegang tot hun portefolio en kunnen effecten worden verhandeld.
+Vanaf dat moment hebben de gebruikers toegang tot hun portefolio en kunnen effecten worden verhandeld.
 
 De gebruiker kan effecten aankopen van onderstaande types:
 \begin{itemize}
@@ -22,6 +20,200 @@ De gebruiker kan effecten aankopen van onderstaande types:
 Tijdens de loop van het spel worden er op gezette tijden (per dag/week/maand) klassementen opgemaakt met daarin het relatief rendement dat de spelers konden neerzetten. Op basis van deze tussenklassementen worden er ook punten toegekend, waarmee ook een apart puntenklassement wordt opgemaakt. Dit puntenklassement geeft een eerlijkere kijk op de prestaties van de speler, en zorgt ervoor dat niet enkel het uiteindelijke rendement tussen de start- en einddatum van belang is, maar ook de continue goede prestaties tijdens de duur van het spel.
 
 Het spel eindigt op 31 mei 2010, waarna een eindklassement wordt opgemaakt. De koersen op de website worden niet meer ge\"updatet, en er kunnen ook geen transacties meer gedaan worden. Gebruikers kunnen wel nog steeds inloggen op de website om statistieken te raadplegen.
+
+\section{Website}
+
+\todo{vormgeving laten overeenstemmen met analyse desktopapplicatie, of omgekeerd}
+
+\begin{figure}[h!]
+	\centering
+		\includegraphics[width=0.5\textwidth]{images/analyse/ucd_website}
+	\caption{Use-case diagram van de website.}
+\end{figure}
+
+\subsection{Uitwerking use cases}
+
+
+\subsubsection{Lidmaatschap aanvragen}
+\paragraph{Samenvatting}Een natuurlijk persoon kan zich inschrijven voor een lidmaatschap. Dit lidmaatschap is een vereiste om de interactieve delen van de website te kunnen beleven. Deze procedure bestaat uit een aantal velden die naar waarheid in te vullen zijn en een aantal velden waar men een waarde voor kan kiezen.
+\paragraph{Actoren}Een natuurlijk persoon die de interactieve delen van de website wil gebruiken
+\paragraph{Doel}De speler verkrijgt een lidmaatschap. Via dit lidmaatschap kunnen we een persoon (een speler) koppelen aan zijn portfolio.
+\paragraph{Precondities}De speler dient een geldig email adres te bezitten, een eID lezer en hij mag nog geen lidmaatschap bezitten (een persoon bezit een lidmaatschap als hij de combinatie gebruikersnaam en wachtwoord kent of over een eID bezig waar een lidmaatschap aan gekoppeld is). \small{Lidmaatschap aanvragen is pas mogelijk vanaf 1 maart 2010, 8u, Central European Time.}
+\paragraph{Postcondities}In de database zit een nieuw record waarmee we de speler kunnen authentiekeren en waaraan zijn instellingen en portfolio gekoppeld worden.
+\paragraph{Triggers}Een persoon zit op de inleidende website en kiest daar voor de optie "Registreren".
+\paragraph{Notities}De velden die de gebruiker op de afzonderlijke registratie pagina dient in te vullen zijn terug te vinden in het database schema van de gebruikers. Alle velden zijn verplicht.
+\paragraph{Business rules}: Het registreren (en dus onrechtstreeks het spelen van het beursspel) moet aangemoedigd worden vanuit gastsite.
+
+
+\subsubsection{Het bekijken van de gastsite}
+\paragraph{Samenvatting}De website zal uit drie delen bestaan. Een deel bestaat uit een of meerdere pagina's. Een deel zal enkel zichtbaar zijn voor niet geauthenticeerde gebruikers of bezoekers zonder lidmaatschap. Een ander deel zal zichtbaar zijn voor zowel niet geauthenticeerde bezoekers als geauthenticeerde bezoekers. Geauthenticeerde bezoekers hebben dan ook nog toegang tot een enkel voor hen zichtbare derde deel. Het is in dat deel dat de interactieve site zich bevindt.
+\paragraph{Actoren} Bezoekers zonder lidmaatschap die er wel een willen aanvragen, bezoekers zonder lidmaatschap die enkel op zoek zijn naar informatie over het spel en bezoekers met lidmaatschap die zich willen authenticeren voor toegang tot het voor hen zichtbare deel.
+\paragraph{Doel} Bezoekers snel laten inloggen, bezoekers informeren over het spel, bezoekers doorheen de registratieprocedure leiden.
+\paragraph{Precondities} De gastsite heeft de zelfde precondities als de overige delen van de website. De surfer moet voorzien zijn van een breedband internetverbinding, een desktop of draagbare computer met daarop een gangbaar en recent besturingssysteem en internetbrowser.
+\paragraph{Postcondities} De gebruiker is ingelogd, geregistreerd of is voldoende geïnformeerd over het spel.
+\paragraph{Triggers} De surfer bezoekt de website door het ingeven van het webadres, het aanklikken van een favoriet in zijn internetbrowser of na het klikken op een webverwijzing op een andere internetwebsite.
+\paragraph{Notities} Het gastgedeelte zal op elke pagina een module bevatten waarmee bezoekers met lidmaatschap zich snel kunnen authenticeren.\small{Om de surfer te informeren over het spel zullen verschillende pagina's voorzien worden. Op die pagina's zijn visuele hulpmiddelen voorzien zoals afbeeldingen waarop te zien is hoe bepaalde spelprocedures verlopen en eventueel ook ondersteunde filmen.}
+\paragraph{Business rules}Het is op dit gedeelte van de site dat de surfer en potentiële speler overtuigd moet worden om actief mee te spelen.
+
+
+\subsubsection{Inloggen}
+\paragraph{Samenvatting} De website zal uit drie delen bestaan. Een deel bestaat uit een of meerdere pagina's. Een deel zal enkel zichtbaar zijn voor niet geauthenticeerde gebruikers of bezoekers zonder lidmaatschap. Een ander deel zal zichtbaar zijn voor zowel niet geauthenticeerde bezoekers als geauthenticeerde bezoekers. Geauthenticeerde bezoekers hebben dan ook nog toegang tot een enkel voor hen zichtbare derde deel. Het is in dat deel dat de interactieve site zich bevindt. Dat deel is enkel toegankelijk voor geauthenticeerde bezoekers.
+\paragraph{Actoren} Bezoekers met lidmaatschap die toegang willen tot het interactieve deel van de website.
+\paragraph{Doel} Een bezoeker koppelen aan zijn lidmaatschap en dus onrechtstreeks aan zijn portfolio, puntentotaal en instellingen.
+\paragraph{Precondities} De bezoeker bezit reeds een lidmaatschap en beschikt over voldoende informatie en hulpmiddelen om aan te kunnen tonen dat dit lidmaatschap van hem of haar is.
+\paragraph{Postcondities} De gebruiker is geauthenticeerd.
+\paragraph{Triggers} De gebruiker vult zijn gebruikersnaam en wachtwoord in of verbind zijn eID met de applicatie. Dit gebeurd vanaf de gastpagina.
+\paragraph{Notities} Het kan zijn dat de gebruiker niet moet inloggen omdat dit reeds voorheen gebeurd is en een bepaald mechanisme met een cookie de authenticatie reeds verzocht heeft. Dit laatste gebeurd dan onzichtbaar voor de gebruiker.
+
+
+\subsubsection{De gebruiker bekijkt zijn eigen Portfolio}
+\paragraph{Samenvatting} De gebruiker ziet een webpagina met daarop de effecten die deze momenteel in bezit heeft, de historische aankoopprijs per stuk, de historische aankoopprijs in totaal, de huidige koers, het rendement en het verschil op de waarde sinds de aankoop van het effect.
+\paragraph{Actoren} De speler bekijkt het portfolio. De huidige waarde hangt af van de reële beursevolutie (de scappers volgen deze evolutie).
+\paragraph{Doel} De gebruiker ziet zijn portfolio en de gegevens die interessant zijn om erbij te zien.
+\paragraph{Precondities} De gebruiker is ingelogd.
+\paragraph{Triggers} De gebruiker kiest in het linkermenu de optie "Portfolio" aan.
+
+
+
+\subsubsection{Effecten aankopen}
+
+\paragraph{Overzicht}Een gebruiker kan zijn portfolio invullen of aanvullen door effecten bij te kopen. De speler kan effecten bijkopen van een reeks die hij/zei reeds bezit of een nieuwe reeks aankopen. Een effect kan nooit rechtstreeks aangekocht worden, dit gebeurd met een tussenstap. Deze tussenstap noemen we het plaatsen van een order. Een order bestaat er in twee types; een aankooporder of een verkooporder. Een order heeft een voorwaarde, type, aantal, eigenaar en effect. Orders worden periodiek (elke minuut) bekeken. Als aan de voorwaarde voldaan wordt, dan wordt het order omgezet in een effectieve aankoop of verkoop. Dan pas worden de effecten toegevoegd of verwijderd van het spelers portfolio. Het kan dus zijn dat een geplaatst order pas in de verre toekomst uitgevoerd wordt of in zijn geheel niet uitgevoerd wordt. De voorwaarden die op een order ingezet kunnen worden houden we in een eerste fase beperkt. Maar deze kunnen later aangevuld worden met geavanceerde orders, zoals ook te zien bij de huidige gespecialiseerde brokers. We beginnen met drie typen van orders:
+
+\begin{itemize}
+ \item Voer onmiddellijk uit, ongeacht de huidige koers.
+ \item Koerslimiet: Voer een aankoop order uit als de prijs lager is dan de ingestelde limietwaarde
+ \item Koerslimiet: Voer een verkoop order uit als de prijs hoger is dan de ingestelde limietwaarde
+\end{itemize}
+
+Mogelijke geavanceerde orders die we in een verdere fase zouden kunnen invoeren zijn de volgende:
+\begin{itemize}
+	\item Trailling-stop: Bij een verkoop order wordt de trigger waarde ingesteld op een vast aantal beurspunten onder de hoogste koers. Als de hoogste koers dus verhoogd in waarde, dan verhoogd ook de trigger waarde evenveel punten. Deze tactiek gebruikt de speler als die verwacht dat de waarde van het effect nog wel een tijdje zal toenemen, maar hij toch zijn winst wil veiligstellen. Hetzelfde kan ook ingesteld worden bij een aankooporder. Als de speler namelijk verwacht dat de waarde van een effect nog een tijdje zal blijven dalen, en de speler laag wil inkopen.
+  \item Bracket-limiet: De speler kan met dit type order de maximale fluctuaties van zijn effect beperken. Hij stelt twee waardes in waar het order omgezet zal worden in een effectieve handeling. Dit is een waarde boven de huidige koers en een waarde onder de huidige koers. Zo beperkt de speler dus zijn maximaal verlies, maar ook zijn maximale winst. De waardes tussen de hoogste en laagste limietwaarde is de bandbreedte waar het effect kan tussen schommelen terwijl het in de portefeuille blijft van de speler.
+  \item Stop loss order: Een order wordt omgezet in een effectieve handeling ongeacht de limietwaarde. Het order wordt hierdoor sneller uitgevoerd, maar er is geen minimumprijs (maximumprijs) gegarandeerd.
+\end{itemize}
+
+\paragraph{Actoren} De speler plaatst een order
+\paragraph{Doel} Een order plaatsen welke tot doel heeft omgezet te worden in een effectief order. Dit wordt bepaald door de voorwaarde die gevalueerd wordt ten op zichtte van de huidige beursevolutie. Het onrechtstreekse doel is het uitbreiden van het virtueel portfolio van de speler.
+\paragraph{Precondities} De gebruiker zijn cash positie moet voldoen om het order te plaatsen en uit te voeren.
+\paragraph{Postcondities} Een order is geplaatst en kan later uitgevoerd worden, mislukken of verlopen.
+\paragraph{Triggers} De aankooppagina wordt getoond door het activeren van een optie op een effectenpagina.
+
+
+
+\subsubsection{Overzicht opvragen van de effecten die je in het spel actief kan verhandelen}
+\paragraph{Samenvatting} Een effect op de beurs kan ofwel opgenomen worden door onze scrappers of buiten bereik liggen van onze scrappers.
+Als deze binnen het bereik van een of meerdere scrappers valt, dan worden er gegevens van bijgehouden in onze dataopslag. Een effect kan dan nog onderverdeeld worden onder effecten die onzichtbaar zijn op de site, effecten die geschorst zijn en dus niet actief verhandeld kunnen worden en actief te verhandelen effecten. Bij het overzicht worden de gescrapte actieve of geschorste effecten getoond. Hierop kunnen dan filters geplaatst worden om de lijst in te korten.
+\paragraph{Doel} Een effect kunnen vinden waarvan je de detail pagina van wil bekijken. Met het onrechtstreekse doel op geschikt effect een order te plaatsen. Een detail pagina vind je door in het overzicht een aandeel aan te klikken.
+\paragraph{Postcondities} De speler ziet een pagina met daarin een lijst van effecten die voldoen aan zijn ingestelde of geselecteerde filter
+\paragraph{Triggers} Via het menu vraag de speler de overzichtspagina op\paragraph{Notities} Er kan een combinatie van volgende filters ingesteld worden op de site:
+
+\begin{itemize}
+	\item Type
+	\item Beurs
+	\item Index
+	\item Deelstring van de naam
+	\item Effecten met een vlagje (favoriete aandelen)
+	\item Per prijs ($<$ $>$ = $\leq$ $\geq$)
+	\item Per volume
+	\item Per aantal persoonlijke verhandelingen op het effect
+	\item Per aantal verhandelingen van medespelers in het spel op het effect ((on-)populaire effecten)
+\end{itemize}
+
+\paragraph{Notities}In het overzicht zijn naast de link naar de detailpagina ook knoppen voorzien om rechtstreeks een aankoop of verkoop order te plaatsen op een bepaald effect.
+\paragraph{Business rules}Een aantal combinaties van filters moeten reeds voor ingesteld worden door de beheerders en gemakkelijk te selecteren zijn vanuit het menu.
+
+
+\subsubsection{Een klassement opvragen}
+
+\paragraph{Samenvatting} Er bestaat een overzichtspagina waar gastgebruikers en geauthenticeerde spelers een overzicht kunnen zien van:
+\begin{itemize}
+	\item De top 10 effecten die het meest aangekocht zijn op een specifiek tijdsinterval
+  \item De top 10 effecten die het meest verkocht zijn op een specifiek tijdsinterval
+  \item De top 20 spelers met het hoogst behaalde rendement tijdens het geselecteerde tijdsinterval
+\end{itemize}
+Het tijdsinterval kan de speler bepalen door een dubbele slider te verslepen. Deze slider heeft een beginpunt en een eindpunt. De periode wordt bepaald door deze twee punten en dus de grote van de periode door het verschil van het eindpunt en het beginpunt.
+\paragraph{Triggers} De surfer selecteert het overzichtsscherm in het menu op de linkerzijde van het scherm.
+\paragraph{Notities} De resultaten wordt getoond in tabellen die via een synchrome AJAX request opgehaald worden na het verplaatsen van een van beide punten van de slider.
+
+\subsubsection{Een detail fiche bekijken}
+\paragraph{Samenvatting} De detail fiche heeft tot doel de speler of bezoeker zoveel mogelijk informatie te verschaffen over de huidige en historische stand van een effect.
+\paragraph{Doel} De speler of bezoeker genoeg informatie verschaffen zodat hij op basis daarvan kan bepalen of het interessant zou zijn een order te plaatsen op het aandeel. Eventueel kan de speler het effect een vlagje geven (favoriet aandeel). Zodoende vindt hij/zij het dan later vlugger terug door het zetten van de geschikte filter.
+\paragraph{Triggers} De detailpagina kan de speler bereiken door in zijn portfolio op een effect te klikken. Spelers of gastgebruikers vinden de pagina door de weblink te gebruiken op een al dan niet gefilterde overzichtspagina. Eventueel kan ook de directe link van de detail pagina gebruikt worden. Die directe link kan direct bezocht worden, opgevraagd worden uit de favorieten van de browser of via een weblink op een andere webpagina aangeboden worden.
+\paragraph{Notities} Op deze pagina wordt het mogelijk gemaakt een favorietenvlag te zetten of weg te halen, naar de aankooppagina te gaan van dit effect of naar de verkooppagina te gaan van dit effect.
+
+
+
+\subsubsection{Gebruiker bekijkt zijn transactiegeschiedenis}
+\paragraph{Samenvatting} Een gebruiker bekijkt zijn transactiegeschiedenis op een daarvoor ingerichte pagina. De gebeurtenissen op die pagina zijn te filteren op:
+
+\begin{itemize}
+	\item Type
+	\item Transacties die winst opleveren volgens de huidige beursevolutie
+	\item Het tijdstip
+	\item Het effect
+	\item Het aantal
+	\item Het verschil in waarde sinds de aankoop en het huidige moment
+\end{itemize}
+
+\subsubsection{Gebruiker bekijkt zijn algemeen overzicht}
+\paragraph{Samenvatting} Een gebruiker bekijkt zijn algemeen overzichtspagina en vindt hierop zeker volgende waardes opgesomd:
+\begin{itemize}
+	\item De huidige waarde dat zijn portfolio en cashpositie samen vertegenwoordigen
+	\item Cashpositie
+	\item Huidig rendement
+	\item Een grafiek met daarop volgende lijnen geplot in functie van de tijd:
+  \begin{itemize}
+  	\item  Overzicht van hun rendement
+    \item Overzicht van het gemiddelde rendement
+    \item Overzicht van het rendement van de speler met het op dat moment hoogste rendement
+  \end{itemize}
+  \item Een algemeen klassement en de positie van de speler daarin
+  \item Een klassement van de huidige periode en de positie van de speler daarin
+\end{itemize}
+
+\section{Desktopapplicatie}
+
+\todo{vormgeving laten overeenstemmen met analyse webapplicatie, of omgekeerd}
+
+\begin{figure}[h!]
+	\centering
+		\includegraphics[width=0.5\textwidth]{images/analyse/ucd_desktop}
+	\caption{Use-case diagram van de desktopapplicatie.}
+\end{figure}
+
+\subsubsection{Gebruiksgeval: sessie starten}
+Na het openen van de applicatie moet de gebruiker eerst een verbinding maken met de servers. Dit doet hij door in het menu 'Bestand' te kiezen voor 'Verbinding maken...'. Er verschijnt een modaal dialoogvenster waar de gebruiker zijn gegevens moet invullen om te kunnen verbinden. Deze authenticatie kan enerzijds door de eID van de gebruiker in een kaartlezer te plaatsen of via een traditioneel inlogscherm met gebruikersnaam en wachtwoord. Eenmaal de applicatie een verbinding heeft opgesteld wordt het keuzemenu van de applicatie actief en kunnen er beheerstaken worden uitgevoerd.
+
+\subsubsection{Gebruiksgeval: status opvragen}
+De gebruiker klikt in het keuzemenu op de statusknop waardoor een overzichtspagina verschijnt. Hier kan de gebruiker zien welke servers online zijn en enkele algemene statistieken bekijken.
+
+Onder de statusknop verschijnt een submenu waar de individuele componenten vermeld staan. Als op een van deze componenten geklikt wordt, dan toont de applicatie een pagina met gedetailleerde informatie van die component.
+
+\subsubsection{Gebruiksgeval: status aanpassen}
+Op de overzichtspagina die getoond wordt na het klikken op de statusknop kunnen de componenten ook beheerd worden. Voor iedere component is een Start, Stop en Herstart knop beschikbaar.
+
+\subsubsection{Gebruiksgeval: gebruikersbeheer}
+Als de gebruiker op de knop Gebruikersbeheer klikt in het keuzemenu dan wordt een overzichtspagina van de geregistreerde gebruikers getoond.
+
+In de vorm van een tabel worden de belangrijkste gegevens van de gebruikers getoond. Onder de tabel staan ook enkele knoppen waarmee de administrator meer informatie van de gebruikers kan bekijken en eventueel aanpassingen kan aanbrengen:
+\begin{itemize}
+	\item Details: Toont een modaal venster waar alle beschikbare informatie van de geselecteerde gebruiker getoond wordt. Hier kan de administrator ook gegevens van de gebruiker wijzigen (bv. budget, paswoord, ), maar vaste gegevens worden uitgegrijsd (bv. registratiedatum). Onderaan het dialoogvenster staat een OK en Annuleren knop. Als er op OK geklikt wordt, dan worden de doorgevoerde veranderingen opgeslagen in de databank. Anderzijds worden de wijzigingen genegeerd.
+  \item Deactiveren: Hiermee kan een gebruiker op niet-actief worden gezet, bijvoorbeeld wanneer een speler tijdelijk geschorst moet worden. De gebruiker kan dan niet meer inloggen, maar zijn account blijft wel nog bestaan.
+   \item Verwijderen: Hierdoor wordt de account van de gebruiker permanent verwijderd. Alvorens dit wordt doorgevoerd wordt een dialoogvenster getoond om deze actie te bevestigen, aangezien deze actie niet omkeerbaar is. Alle gegevens die betrekking hebben met die gebruiker worden uit de database geschrapt.
+    \item Bericht sturen: Als hier op geklikt wordt opent er een nieuw dialoogvenster waar de administrator een bericht kan intypen gericht aan de geselecteerde gebruiker(s).
+\end{itemize}
+Om makkelijk gebruikers te kunnen opsporen zijn er verschillende filters beschikbaar. Deze kunnen geselecteerd worden uit het submenu dat tevoorschijn komt als het Gebruikersbeheermenu geopend wordt. De administrator kan filteren op registratiedatum of kan alfabetisch zoeken op gebruikers.
+
+\subsubsection{Gebruiksgeval: effectenbeheer}
+Als op de Effectenbeheer knop wordt gedrukt krijgt de gebruiker een overzicht van alle effecten te zien die in de databank zijn opgeslaan. Alle informatie uit de effectentabel van de databank wordt getoond in een tabel.
+
+Onder de tabel staan volgende knoppen:
+\begin{itemize}
+	\item Verbergen in spel: Hierdoor wordt het geselecteerde aandeel verborgen voor de spelers.
+  \item Schors effect: Als een effect geschorst wordt, dan blijft het zichtbaar voor de gebruikers maar kan het niet meer verhandeld worden.
+\end{itemize}
+
+In het submenu zijn ook filters beschikbaar. De effectenlijst kan gefilterd worden op beurs of op type. 
 
 \chapter{Functieanalyse}
 

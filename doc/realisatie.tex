@@ -1,6 +1,21 @@
 \chapter{Dataontwerp}
 
-\todo{Database-ontwerp}
+\begin{figure}[h!]
+	\centering
+		\includegraphics[width=0.5\textwidth]{images/realisatie/ER_Diagram}
+	\caption{Entity-relationship model.}
+\end{figure}
+
+\section{Ontwerp backend}
+\todo{dit hoort hier niet}
+De klassen die de persistente data uit de database moeten weergeven staan opgesomd in onderstaand klassendiagram:
+
+\begin{figure}[h!]
+	\centering
+		\includegraphics[width=0.5\textwidth]{images/realisatie/Class_Diagram}
+	\caption{Klassendiagram persistente data in backend.}
+\end{figure}
+
 
 \chapter{Procedureontwerp}
 
@@ -29,7 +44,7 @@ Zo delen we de backend op in volgende primaire klassen:
 \begin{itemize}
 \item{System: functionaliteit voor beheer van het systeem.}
 \item{User: beheer van gebruikers, ook voor gebruikers zelf.}
-\item{Stocks: functionaliteit gerelateerd met effecten.}
+\item{Finance: functionaliteit gerelateerd met het beurswezen.}
 \end{itemize}
 Hogere-orde klassen zijn eventueel ook mogelijk (zoals \emph{System.Database}), maar niet verplicht. De semantiek is daarbij identiek aan primaire klassen, met een punt als scheidingsteken.
 
@@ -75,34 +90,140 @@ Als deze optie niet dynamisch ingeschakeld kan worden, zullen we zelf een eigen 
 
 Autorisatie tenslotte is beperkt: in de huidige opzet ondersteunen we geen flexibel-toegekende rechten, enkel een bit die bepaalt of de gebruiker een administrator is of niet.
 
+\todo{gebruikers-autorisatie ook via dit systeem, return rechten bitmap / ID}
+
 \subsection{System-klasse}
 
 Deze klasse biedt de client mogelijkheden om het systeem te beheren, met name ophalen van informatie, wijzigen van configuraties, en (her)starten of stoppen van bepaalde subsystemen.
 
+
+\begin{itemize}
+\item{\textbf{Gebruik}: }
+\item{\textbf{Parameters}:}
+	\begin{itemize}
+	\item{}
+	\end{itemize}
+\item{\textbf{Output}:}
+	\begin{itemize}
+	\item{}
+	\end{itemize}
+\item{\textbf{Autorisatie}: }
+\end{itemize}
+
 \paragraph{Backend.Status}
 \begin{itemize}
-\item{\textbf{Gebruik}: haalt backend-statistieken op.}
-\item{\textbf{Parameters}: geen}
-\item{\textbf{Output}: named hash (struct) met enkele statistieken:}
+\item{\textbf{Gebruik}: status van de backend ophalen.}
+\item{\textbf{Parameters}: geen.}
+\item{\textbf{Output}: integer die status beschrijft:}
 	\begin{itemize}
-	\item{conn: het aantal verwerkte connecties}
+	\item{0: maintenance-mode}
+	\item{1: de backend werkt}
 	\end{itemize}
-\item{\textbf{Autorisatie}: administrator-rechten}
+\item{\textbf{Autorisatie}: administrator-rechten benodigd}
 \end{itemize}
 
 \paragraph{Backend.Stats}
+\begin{itemize}
+\item{\textbf{Gebruik}: backend-statistieken ophalen.}
+\item{\textbf{Parameters}: geen.}
+\item{\textbf{Output}: struct met statistieken}
+	\begin{itemize}
+	\item{users: aantal gebruikers online}
+	\item{req: aantal verwerkte XML-RPC requests}
+	\item{uptime: hoe lang de backend al draait}
+	\end{itemize}
+\item{\textbf{Autorisatie}: administrator-rechten benodigd.}
+\end{itemize}
 
 \paragraph{Backend.Restart}
+\begin{itemize}
+\item{\textbf{Gebruik}: de backend herstarten.}
+\item{\textbf{Parameters}: geen.}
+\item{\textbf{Output}: bool die indiceert of de actie succesvol was.}
+\item{\textbf{Autorisatie}: administrator-rechten benodigd.}
+\end{itemize}
 
 \paragraph{Backend.Stop}
+\begin{itemize}
+\item{\textbf{Gebruik}: de backend permanent stilleggen.}
+\item{\textbf{Parameters}: geen.}
+\item{\textbf{Output}: bool die indiceert of de actie succesvol was.}
+\item{\textbf{Autorisatie}: administrator-rechten benodigd.}
+\end{itemize}
 
 \paragraph{Database.Status}
+\begin{itemize}
+\item{\textbf{Gebruik}: status van de database ophalen.}
+\item{\textbf{Parameters}: geen.}
+\item{\textbf{Output}: integer die status beschrijft:}
+	\begin{itemize}
+	\item{0: database niet te bereiken}
+	\item{1: de backend werkt}
+	\end{itemize}
+\item{\textbf{Autorisatie}: administrator-rechten benodigd}
+\end{itemize}
 
 \paragraph{Database.Stats}
+\begin{itemize}
+\item{\textbf{Gebruik}: database-statistieken ophalen. Dit zijn de statistieken geleverd door de database zelf, ze zijn dus niet beperkt tot acties ondernomen door de backend.}
+\item{\textbf{Parameters}: geen.}
+\item{\textbf{Output}: struct met statistieken}
+	\begin{itemize}
+	\item{queries: aantal uitgevoerde queries}
+	\item{uptime: hoe lang de database al draait}
+	\item{traffic: hoeveelheid data verzonden en ontvangen}
+	\item{slow\_queries: aantal queries die teveel uitvoeringstijd vergden}
+	\end{itemize}
+\item{\textbf{Autorisatie}: administrator-rechten benodigd.}
+\end{itemize}
 
 \paragraph{Scraper.Status}
+\begin{itemize}
+\item{\textbf{Gebruik}: status van de scraper ophalen.}
+\item{\textbf{Parameters}: geen.}
+\item{\textbf{Output}: integer die status beschrijft:}
+	\begin{itemize}
+	\item{0: niet geactiveerd}
+	\item{1: inactief}
+	\item{2: bezig met data-mining}
+	\end{itemize}
+\item{\textbf{Autorisatie}: administrator-rechten benodigd}
+\end{itemize}
 
 \paragraph{Scraper.Stats}
+\begin{itemize}
+\item{\textbf{Gebruik}: scraper-statistieken ophalen.}
+\item{\textbf{Parameters}: geen.}
+\item{\textbf{Output}: struct met statistieken}
+	\begin{itemize}
+	\item{executes: aantal voltooide plugin-uitvoeringen}
+	\item{uptime: hoe lang de scraper al draait}
+	\item{traffic: hoeveelheid data verzonden en ontvangen}
+	\item{plugins: aantal geactiveerde plugins}
+	\item{securities: aantal beschikbare effecten}
+	\item{exchanges: aantal beschikbare beurzen}
+	\item{indexes: aantal beschikbare indexen}
+	\item{delay: tijd tot de volgende plugin-uitvoering}
+	\item{memory: geheugengebruik}
+	\end{itemize}
+\item{\textbf{Autorisatie}: administrator-rechten benodigd.}
+\end{itemize}
+
+\paragraph{Scraper.Restart}
+\begin{itemize}
+\item{\textbf{Gebruik}: de scraper herstarten.}
+\item{\textbf{Parameters}: geen.}
+\item{\textbf{Output}: bool die indiceert of de actie succesvol was.}
+\item{\textbf{Autorisatie}: administrator-rechten benodigd.}
+\end{itemize}
+
+\paragraph{Scraper.Stop}
+\begin{itemize}
+\item{\textbf{Gebruik}: de scraper permanent stilleggen.}
+\item{\textbf{Parameters}: geen.}
+\item{\textbf{Output}: bool die indiceert of de actie succesvol was.}
+\item{\textbf{Autorisatie}: administrator-rechten benodigd.}
+\end{itemize}
 
 
 \subsection{User-klasse}
@@ -111,12 +232,97 @@ Hier vindt men de nodige methodes terug om gebruikers te beheren. Dit is echter 
 
 \paragraph{List}
 
-\paragraph{Info}
+\begin{itemize}
+\item{\textbf{Gebruik}: lijst met publieke informatie opvragen van de gebruikers}
+\item{\textbf{Parameters}: een filter}
+\item{\textbf{Output}: een lijst met structs}
+	\begin{itemize}
+	\item{id}
+	\item{nickname}
+	\item{regdate}
+	\item{points}
+	\end{itemize}
+\item{\textbf{Autorisatie}: geen benodigd}
+\end{itemize}
+
+\paragraph{Details}
+
+\begin{itemize}
+\item{\textbf{Gebruik}: lijst met publieke informatie opvragen van de gebruikers}
+\item{\textbf{Parameters}: een lijst met id's}
+\item{\textbf{Output}: een lijst met structs}
+	\begin{itemize}
+	\item{id}
+	\item{firstName}
+	\item{lastName}
+	\item{rrn}
+	\item{cash}
+	\item{startkapitaal}
+	\end{itemize}
+\item{\textbf{Autorisatie}: Gebruiker zelf of een gebruiker met administratorrechten}
+\end{itemize}
+
+\paragraph{Create}
+
+\begin{itemize}
+\item{\textbf{Gebruik}: aanmaken van een nieuwe gebruiker}
+\item{\textbf{Parameters}: struct met de gebruikers}
+	\begin{itemize}
+	\item{}
+	\end{itemize}
+\item{\textbf{Output}: id van de aangemaakte gebruiker}
+\todo{specifieke foutcode genereren} 
+\item{\textbf{Autorisatie}: een gebruiker met adminstrator}
+\end{itemize}
 
 \paragraph{Modify}
 
+\paragraph{Remove}
 
-\subsection{Stocks-klasse}
+\paragraph{Portefolio.List}
+
+\paragraph{Portefolio.History}
+
+1e param is struct die range definiëert, response is array van structs (datetime, points).
+
+\paragraph{Orders.List}
+
+\paragraph{Orders.Create}
+
+\paragraph{Orders.Cancel}
+
+\paragraph{Transactions.List}
+
+
+\subsection{Finance-klasse}
 
 Tenslotte zijn er nog de methodes gerelateerd met het effectieve beurswezen, die (hoofdzakelijk) terug te vinden zijn in deze klasse. Enkel het ophalen van de portefolio bevindt zich, logischerwijs, in de User-klasse.
-\todo{afwerken van zodra het database-ontwerp af is}
+
+\paragraph{Exchange.List}
+
+\paragraph{Exchange.Modify}
+
+\paragraph{Index.List}
+
+\paragraph{Index.Modify}
+
+\paragraph{Security.List}
+
+ook flag key
+output is enkel opprevlakkige informatie om tabel te maken
+
+\paragraph{Security.Details}
+
+input is ID uit Security.List
+
+\paragraph{Security.Modify}
+
+plus "hide" flag etc
+
+\paragraph{Security.Flag}
+
+1e param type vlag
+2e param bool voor set/unset
+3e param array array van security ID's
+
+
