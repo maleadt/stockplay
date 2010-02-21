@@ -29,3 +29,16 @@
 \usepackage{hyperref}
 \newcommand{\makeurl}[2]{\href{#2}{#1} \footnote{#2}}
 
+% Functiedefinitie voor protocolstudie
+\newcommand{\function}[5] {
+	\subsubsection{#1}
+	\begin{tabular}{|r p{10cm}|}
+	\hline
+	\textsc{Gebruik} |		& #2 \\
+	\textsc{Parameters} |		& #3 \\
+	\textsc{Output} |		& #4 \\
+	\textsc{Autorisatie} |		& #5 \\
+	\hline
+	\end{tabular}
+}
+

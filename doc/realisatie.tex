@@ -96,233 +96,336 @@ Autorisatie tenslotte is beperkt: in de huidige opzet ondersteunen we geen flexi
 
 Deze klasse biedt de client mogelijkheden om het systeem te beheren, met name ophalen van informatie, wijzigen van configuraties, en (her)starten of stoppen van bepaalde subsystemen.
 
+\function{Backend.Status}
+	{ status van de backend ophalen }
+	{ geen }
+	{ integer die de status beschrijft:
+		\begin{itemize}
+		\item{0: maintenance-mode}
+		\item{1: de backend werkt}
+		\end{itemize} }
+	{ administrator-rechten }
 
-\begin{itemize}
-\item{\textbf{Gebruik}: }
-\item{\textbf{Parameters}:}
-	\begin{itemize}
-	\item{}
-	\end{itemize}
-\item{\textbf{Output}:}
-	\begin{itemize}
-	\item{}
-	\end{itemize}
-\item{\textbf{Autorisatie}: }
-\end{itemize}
+\function{Backend.Stats}
+	{ backend-statistieken ophalen }
+	{ geen }
+	{ struct met statistieken:
+		\begin{itemize}
+		\item{users: aantal gebruikers online}
+		\item{req: aantal verwerkte XML-RPC requests}
+		\item{uptime: hoe lang de backend al draait}
+		\end{itemize} }
+	{ administrator-rechten }
 
-\paragraph{Backend.Status}
-\begin{itemize}
-\item{\textbf{Gebruik}: status van de backend ophalen.}
-\item{\textbf{Parameters}: geen.}
-\item{\textbf{Output}: integer die status beschrijft:}
-	\begin{itemize}
-	\item{0: maintenance-mode}
-	\item{1: de backend werkt}
-	\end{itemize}
-\item{\textbf{Autorisatie}: administrator-rechten benodigd}
-\end{itemize}
+\function{Backend.Restart}
+	{ de backend herstarten }
+	{ geen }
+	{ bool die indiceert of de actie succesvol was }
+	{ administrator-rechten }
 
-\paragraph{Backend.Stats}
-\begin{itemize}
-\item{\textbf{Gebruik}: backend-statistieken ophalen.}
-\item{\textbf{Parameters}: geen.}
-\item{\textbf{Output}: struct met statistieken}
-	\begin{itemize}
-	\item{users: aantal gebruikers online}
-	\item{req: aantal verwerkte XML-RPC requests}
-	\item{uptime: hoe lang de backend al draait}
-	\end{itemize}
-\item{\textbf{Autorisatie}: administrator-rechten benodigd.}
-\end{itemize}
+\function{Backend.Stop}
+	{ de backend permanent stilleggen }
+	{ geen }
+	{ bool die indiceert of de actie succesvol was }
+	{ administrator-rechten }
 
-\paragraph{Backend.Restart}
-\begin{itemize}
-\item{\textbf{Gebruik}: de backend herstarten.}
-\item{\textbf{Parameters}: geen.}
-\item{\textbf{Output}: bool die indiceert of de actie succesvol was.}
-\item{\textbf{Autorisatie}: administrator-rechten benodigd.}
-\end{itemize}
+\function{Database.Status}
+	{ status van de database ophalen }
+	{ geen }
+	{ integer die status beschrijft:
+		\begin{itemize}
+		\item{0: database niet te bereiken}
+		\item{1: de backend werkt}
+		\end{itemize} }
+	{ administrator-rechten benodigd}
 
-\paragraph{Backend.Stop}
-\begin{itemize}
-\item{\textbf{Gebruik}: de backend permanent stilleggen.}
-\item{\textbf{Parameters}: geen.}
-\item{\textbf{Output}: bool die indiceert of de actie succesvol was.}
-\item{\textbf{Autorisatie}: administrator-rechten benodigd.}
-\end{itemize}
+\function{Database.Stats}
+	{ database-statistieken ophalen. Dit zijn de statistieken geleverd door de database zelf, ze zijn dus niet beperkt tot acties ondernomen door de backend }
+	{ geen }
+	{ struct met statistieken:
+		\begin{itemize}
+		\item{queries: aantal uitgevoerde queries}
+		\item{uptime: hoe lang de database al draait}
+		\item{traffic: hoeveelheid data verzonden en ontvangen}
+		\item{slow\_queries: aantal queries die teveel uitvoeringstijd vergden}
+		\end{itemize} }
+	{ administrator-rechten }
 
-\paragraph{Database.Status}
-\begin{itemize}
-\item{\textbf{Gebruik}: status van de database ophalen.}
-\item{\textbf{Parameters}: geen.}
-\item{\textbf{Output}: integer die status beschrijft:}
-	\begin{itemize}
-	\item{0: database niet te bereiken}
-	\item{1: de backend werkt}
-	\end{itemize}
-\item{\textbf{Autorisatie}: administrator-rechten benodigd}
-\end{itemize}
+\function{Scraper.Status}
+	{ status van de scraper ophalen }
+	{ geen }
+	{ integer die status beschrijft:
+		\begin{itemize}
+		\item{0: niet geactiveerd}
+		\item{1: inactief}
+		\item{2: bezig met data-mining}
+		\end{itemize} }
+	{ administrator-rechten }
 
-\paragraph{Database.Stats}
-\begin{itemize}
-\item{\textbf{Gebruik}: database-statistieken ophalen. Dit zijn de statistieken geleverd door de database zelf, ze zijn dus niet beperkt tot acties ondernomen door de backend.}
-\item{\textbf{Parameters}: geen.}
-\item{\textbf{Output}: struct met statistieken}
-	\begin{itemize}
-	\item{queries: aantal uitgevoerde queries}
-	\item{uptime: hoe lang de database al draait}
-	\item{traffic: hoeveelheid data verzonden en ontvangen}
-	\item{slow\_queries: aantal queries die teveel uitvoeringstijd vergden}
-	\end{itemize}
-\item{\textbf{Autorisatie}: administrator-rechten benodigd.}
-\end{itemize}
+\function{Scraper.Stats}
+	{ scraper-statistieken ophalen }
+	{ geen }
+	{ struct met statistieken:
+		\begin{itemize}
+		\item{executes: aantal voltooide plugin-uitvoeringen}
+		\item{uptime: hoe lang de scraper al draait}
+		\item{traffic: hoeveelheid data verzonden en ontvangen}
+		\item{plugins: aantal geactiveerde plugins}
+		\item{securities: aantal beschikbare effecten}
+		\item{exchanges: aantal beschikbare beurzen}
+		\item{indexes: aantal beschikbare indexen}
+		\item{delay: tijd tot de volgende plugin-uitvoering}
+		\item{memory: geheugengebruik}
+		\end{itemize} }
+	{ administrator-rechten }
 
-\paragraph{Scraper.Status}
-\begin{itemize}
-\item{\textbf{Gebruik}: status van de scraper ophalen.}
-\item{\textbf{Parameters}: geen.}
-\item{\textbf{Output}: integer die status beschrijft:}
-	\begin{itemize}
-	\item{0: niet geactiveerd}
-	\item{1: inactief}
-	\item{2: bezig met data-mining}
-	\end{itemize}
-\item{\textbf{Autorisatie}: administrator-rechten benodigd}
-\end{itemize}
+\function{Scraper.Restart}
+	{ de scraper herstarten }
+	{ geen }
+	{ bool die indiceert of de actie succesvol was }
+	{ administrator-rechten }
 
-\paragraph{Scraper.Stats}
-\begin{itemize}
-\item{\textbf{Gebruik}: scraper-statistieken ophalen.}
-\item{\textbf{Parameters}: geen.}
-\item{\textbf{Output}: struct met statistieken}
-	\begin{itemize}
-	\item{executes: aantal voltooide plugin-uitvoeringen}
-	\item{uptime: hoe lang de scraper al draait}
-	\item{traffic: hoeveelheid data verzonden en ontvangen}
-	\item{plugins: aantal geactiveerde plugins}
-	\item{securities: aantal beschikbare effecten}
-	\item{exchanges: aantal beschikbare beurzen}
-	\item{indexes: aantal beschikbare indexen}
-	\item{delay: tijd tot de volgende plugin-uitvoering}
-	\item{memory: geheugengebruik}
-	\end{itemize}
-\item{\textbf{Autorisatie}: administrator-rechten benodigd.}
-\end{itemize}
-
-\paragraph{Scraper.Restart}
-\begin{itemize}
-\item{\textbf{Gebruik}: de scraper herstarten.}
-\item{\textbf{Parameters}: geen.}
-\item{\textbf{Output}: bool die indiceert of de actie succesvol was.}
-\item{\textbf{Autorisatie}: administrator-rechten benodigd.}
-\end{itemize}
-
-\paragraph{Scraper.Stop}
-\begin{itemize}
-\item{\textbf{Gebruik}: de scraper permanent stilleggen.}
-\item{\textbf{Parameters}: geen.}
-\item{\textbf{Output}: bool die indiceert of de actie succesvol was.}
-\item{\textbf{Autorisatie}: administrator-rechten benodigd.}
-\end{itemize}
+\function{Scraper.Stop}
+	{ de scraper permanent stilleggen }
+	{ geen }
+	{ bool die indiceert of de actie succesvol was }
+	{ administrator-rechten }
 
 
 \subsection{User-klasse}
 
 Hier vindt men de nodige methodes terug om gebruikers te beheren. Dit is echter niet beperkt tot de administrator: ook gebruikers zelf kunnen hun eigen profiel (in beperktere mate) beheren.
 
-\paragraph{List}
+\function{List}
+	{ lijst met publieke informatie opvragen van de gebruikers }
+	{ een filter, met de volgende mogelijke sleutels:
+		\begin{itemize}
+		\item{nickname}
+		\item{regdate}
+		\item{points}
+		\end{itemize} }
+	{ een lijst met structs:
+		\begin{itemize}
+		\item{id}
+		\item{nickname}
+		\item{regdate}
+		\item{points}
+		\end{itemize} }
+	{ geen benodigd }
 
-\begin{itemize}
-\item{\textbf{Gebruik}: lijst met publieke informatie opvragen van de gebruikers}
-\item{\textbf{Parameters}: een filter}
-\item{\textbf{Output}: een lijst met structs}
-	\begin{itemize}
-	\item{id}
-	\item{nickname}
-	\item{regdate}
-	\item{points}
-	\end{itemize}
-\item{\textbf{Autorisatie}: geen benodigd}
-\end{itemize}
+\function{Details}
+	{ lijst met publieke informatie opvragen van de gebruikers }
+	{ een filter, met de volgende mogelijke sleutels:
+		\begin{itemize}
+		\item{id: een gebruikers-ID}
+		\end{itemize} }
+	{ een lijst met structs:
+		\begin{itemize}
+		\item{id}
+		\item{firstName}
+		\item{lastName}
+		\item{rrn}
+		\item{cash}
+		\item{startkapitaal}
+		\end{itemize} }
+	{ administrator-rechten of identificatie als gebruiker beschreven in het 'id' veld van de filter }
 
-\paragraph{Details}
-
-\begin{itemize}
-\item{\textbf{Gebruik}: lijst met publieke informatie opvragen van de gebruikers}
-\item{\textbf{Parameters}: een lijst met id's}
-\item{\textbf{Output}: een lijst met structs}
-	\begin{itemize}
-	\item{id}
-	\item{firstName}
-	\item{lastName}
-	\item{rrn}
-	\item{cash}
-	\item{startkapitaal}
-	\end{itemize}
-\item{\textbf{Autorisatie}: Gebruiker zelf of een gebruiker met administratorrechten}
-\end{itemize}
-
-\paragraph{Create}
-
-\begin{itemize}
-\item{\textbf{Gebruik}: aanmaken van een nieuwe gebruiker}
-\item{\textbf{Parameters}: struct met de gebruikers}
-	\begin{itemize}
-	\item{}
-	\end{itemize}
-\item{\textbf{Output}: id van de aangemaakte gebruiker}
 \todo{specifieke foutcode genereren} 
-\item{\textbf{Autorisatie}: een gebruiker met adminstrator}
-\end{itemize}
+\function{Create}
+	{ aanmaken van een nieuwe gebruiker }
+	{ struct met de gebruikersinformatie:
+		\begin{itemize}
+		\item{}
+		\end{itemize} }
+	{ id van de aangemaakte gebruiker }
+	{ administrator-rechten }
 
-\paragraph{Modify}
+\todo{voor alle modify functies: slechts 1 item laten wijzigen, of cfr UPDATE ook een filter aanvaarden?}
+\function{Modify}
+	{ wijzigen van een bestaande gebruiker }
+	{ identificatie-code van de gebruiker, en een struct met de te-wijzigen gebruikersinformatie:
+		\begin{itemize}
+		\item{}
+		\end{itemize} }
+	{ niks }
+	{ administrator-rechten of identificatie als gebruiker beschreven in het 'id' veld van de filter }
 
-\paragraph{Remove}
+\function{Remove}
+	{ verwijderen van een bestaande gebruiker }
+	{ id van de te-verwijderen gebruiker }
+	{ niks }
+	{ administrator-rechten }
 
-\paragraph{Portefolio.List}
+\function{Portefolio.List}
+	{ basisinformatie van effecten in bezit opsommen (gebruik Finance.Security.Details voor meer informatie) }
+	{ een filter, met de volgende mogelijke sleutels:
+		\begin{itemize}
+		\item{id: een gebruikers-ID}
+		\end{itemize} }
+	{ array van structs met basisinformatie van de effecten:
+		\begin{itemize}
+		\item{symbool: identificatiecode van het aandeel}
+		\end{itemize} }
+	{ administrator-rechten of identificatie als gebruiker beschreven in het 'id' veld van de filter }
 
-\paragraph{Portefolio.History}
+\function{Portefolio.History}
+	{ snapshot van de gebruikersportefolio weergeven }
+	{ een filter, met de volgende mogelijke sleutels:
+		\begin{itemize}
+		\item{id: een gebruikers-ID}
+		\item{range: een array met 2 datums die de range bepalen}
+		\end{itemize} }
+	{ array van structs die de portefolio beschrijven:
+		\begin{itemize}
+		\item{timestamp}
+		\item{points}
+		\end{itemize} }
+	{ administrator-rechten of identificatie als gebruiker beschreven in het 'id' veld van de filter }
 
-1e param is struct die range definiëert, response is array van structs (datetime, points).
+\todo{behoudt Orders.List ook uitgevoerde orders van een bepaald timeframe?}
+\function{Order.List}
+	{ wachtende orders bekijken }
+	{ een filter, met de volgende mogelijke sleutels:
+		\begin{itemize}
+		\item{id: gebruikers-ID}
+		\end{itemize} }
+	{ lijst van structs met order-informatie:
+		\begin{itemize}
+		\item{type: aankoop of verkoop}
+		\item{effect: symbool van het effect in kwestie}
+		\item{aantal: het aantal effecten dat het order verhandelt}
+		\end{itemize} }
+	{ administrator-rechten of identificatie als gebruiker beschreven in het 'id' veld van de filter }
 
-\paragraph{Orders.List}
+\todo{specifieke foutmelding als order aanmaken faalde}
+\function{Order.Create}
+	{ een nieuw order aanmaken }
+	{ struct met orderdetails:
+		\begin{itemize}
+		\item{type: aankoop of verkoop}
+		\item{effect: symbool van het effect in kwestie}
+		\item{aantal: het aantal effecten dat het order verhandelt}
+		\end{itemize} }
+	{ ID van het aangemaakte order }
+	{ administrator-rechten of identificatie als gebruiker beschreven in het 'id' veld van de filter }
 
-\paragraph{Orders.Create}
+\function{Order.Cancel}
+	{ een bestaande order annuleren }
+	{ order-identificatie }
+	{ geen }
+	{ administrator-rechten of identificatie als gebruiker beschreven in het 'id' veld van de filter }
 
-\paragraph{Orders.Cancel}
-
-\paragraph{Transactions.List}
-
+\function{Transaction.List}
+	{ lijst van uitgevoerde transacties weergeven }
+	{ een filter, met de volgende mogelijke sleutels:
+		\begin{itemize}
+		\item{id: gebruikers-ID}
+		\end{itemize} }
+	{ array van structs die transactie-informatie bevatten:
+		\begin{itemize}
+		\item{timestamp: datum van de transactie}
+		\item{...}
+		\end{itemize} }
+	{ administrator-rechten of identificatie als gebruiker beschreven in het 'id' veld van de filter }
 
 \subsection{Finance-klasse}
 
 Tenslotte zijn er nog de methodes gerelateerd met het effectieve beurswezen, die (hoofdzakelijk) terug te vinden zijn in deze klasse. Enkel het ophalen van de portefolio bevindt zich, logischerwijs, in de User-klasse.
 
-\paragraph{Exchange.List}
+\function{Exchange.List}
+	{ lijst van beurzen opvragen }
+	{ een filter, met de volgende mogelijke sleutels:
+		\begin{itemize}
+		\item{}
+		\end{itemize} }
+	{ array van structs met beurs-info:
+		\begin{itemize}
+		\item{ID: identificatie-symbool van de beurs}
+		\item{beschrijving: een langere beschrijving van de beurs}
+		\item{locatie: waar de beurs zich bevindt}
+		\end{itemize} }
+	{ gebruikers-rechten }
 
-\paragraph{Exchange.Modify}
+\function{Exchange.Modify}
+	{ informatie van een beurs wijzigen }
+	{ beurs-ID }
+	{ struct met beursinformatie:
+		\begin{itemize}
+		\item{beschrijving}
+		\item{locatie}
+		\end{itemize} }
+	{ administrator-rechten }
 
-\paragraph{Index.List}
+\function{Index.List}
+	{ lijst van indexen opvragen }
+	{ een filter, met de volgende mogelijke sleutels:
+		\begin{itemize}
+		\item{}
+		\end{itemize} }
+	{ array van structs met index-informatie:
+		\begin{itemize}
+		\item{ID: identificatie-symbool van de index}
+		\item{beurs: identificatie-symbool van de beurs waarop de index zich bevindt}
+		\item{beschrijving}
+		\end{itemize} }
+	{ gebruikers-rechten }
 
-\paragraph{Index.Modify}
+\function{Index.Modify}
+	{ informatie van een index wijzigen }
+	{ index-ID }
+	{ struct met indexinformatie:
+		\begin{itemize}
+		\item{beschrijving}
+		\end{itemize} }
+	{ administrator-rechten }
 
-\paragraph{Security.List}
+\function{Security.List}
+	{ lijst met oppervlakkige informatie van effecten opvragen }
+	{ een filter, met de volgende mogelijke sleutels:
+		\begin{itemize}
+		\item{}
+		\end{itemize} }
+	{ array van structs met informatie over het effect:
+		\begin{itemize}
+		\item{ID: identificatie-symbool van het effect}
+		\item{beurs: identificatie-symbool van de beurs waarop het effect zich bevindt}
+		\item{index: identificatie-symbool van de index waarop het effect zich bevindt}
+		\item{koers: de huidige koers}
+		\item{flags: de gezette vlaggen}
+		\end{itemize} }
+	{ gebruikers-rechten }
 
-ook flag key
-output is enkel opprevlakkige informatie om tabel te maken
+\function{Security.Modify}
+	{ informatie van een effect wijzigen }
+	{ effect-ID }
+	{ struct met informatie over het effect:
+		\begin{itemize}
+		\item{...}
+		\end{itemize} }
+	{ administrator-rechten }
 
-\paragraph{Security.Details}
+\function{Security.Modify}
+	{ defail-informatie van een effect opvragen }
+	{ effect-ID }
+	{ struct met defail-informatie over het effect:
+		\begin{itemize}
+		\item{omzet}
+		\item{aankoopprijs}
+		\item{verkoopprijs}
+		\end{itemize} }
+	{ gebruikers-rechten }
 
-input is ID uit Security.List
+\function{Security.Flag}
+	{ vlaggen van een effect wijzigen }
+	{ het type vlag, de instelling, en een filter met de volgende mogelijke sleutels:
+		\begin{itemize}
+		\item{}
+		\end{itemize} }
+	{ niks }
+	{ administrator-rechten }
 
-\paragraph{Security.Modify}
-
-plus "hide" flag etc
-
-\paragraph{Security.Flag}
-
-1e param type vlag
-2e param bool voor set/unset
-3e param array array van security ID's
-
-
+De mogelijke vlaggen zijn:
+\begin{itemize}
+\item{1: kunnen gebruikers het effect zien}
+\item{2: kunnen gebruikers het effect aankopen (impliceert flag 1)}
+\end{itemize}
