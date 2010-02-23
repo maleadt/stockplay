@@ -7,19 +7,19 @@
 \section{Actoren}
 \paragraph{Gebruikers}Het spel kent de volgende types gebruikers:
 \begin{itemize}
-	\item{\emph{Speler}: een ingelogde gebruiker die deelneemt aan het spel. Hij kan hiervoor gebruik maken van de interactieve delen van de website, en van een client op een mobiele telefoon.}
+	\item{\emph{Speler}: een geauthenticeerde gebruiker die deelneemt aan het spel. Hij kan hiervoor gebruik maken van de interactieve delen van de website en van een client op een mobiele telefoon.}
 	\item{\emph{Administrator}: deze gebruiker beheert het spel. Hij kan de gebruikers en effecten in het spel beheren, de status van de verschillende componenten bekijken en statistieken raadplegen.}
 \end{itemize}
 \paragraph{Informaticasystemen}Deze applicatie maakt gebruik van een software design pattern: de 'Three-tier architecture'. De applicatie heeft 3 tiers:
 \begin{enumerate}
 	\item\emph{Data tier}: Dit is de database waar alle persistente informatie uit het spel wordt in opgeslagen
-	\item\emph{Application tier} (ook wel 'Business Logic' genoemd): In deze applicatie wordt deze tier verzorgd door de 'backend'. De backend fungeert als een interface rond de database. Want ze voert alle acties uit op de persistente data in het spel (vb. aanmaken gebruiker, opslaan \& uitvoeren van orders, etc.). Indien bovenliggende lagen persistente informatie willen opvragen, gebeurt dit ook via deze laag. De communicatie tussen backend en zijn clients gebeurt met behulp van het XML-RPC protocol. 
+	\item\emph{Application tier} (ook wel 'Business Logic' genoemd): In deze applicatie wordt deze tier verzorgd door de 'backend'. De backend fungeert als een interface rond de database. Want ze voert alle acties uit op de persistente data in het spel (bijvoorbeeld het aanmaken gebruiker, opslaan \& uitvoeren van orders, ..). Indien de bovenliggende lagen persistente informatie willen opvragen, gebeurt dit ook via deze laag. De communicatie tussen backend en zijn clients gebeurt met behulp van het XML-RPC protocol. 
 	\item\emph{Presentation tier}: Deze tier presenteert de informatie aan de eindgebruikers, en laat toe om deze te manipuleren. Alle uitgevoerde manipulaties worden pas effectief als ze zijn doorgegeven aan en uitgevoerd door de Application tier.
 De presentation tier bestaat hier uit 3 onafhankelijke applicaties:
 	\begin{enumerate}
-		\item{De administratieapplicatie}
-		\item{De spelwebsite}
-		\item{Uitbreiding: De mobiele spelclient}
+		\item{de administratieapplicatie}
+		\item{de spelwebsite}
+		\item{de mobiele spelclient}
 	\end{enumerate}
 \end{enumerate}
 \begin{figure}[h!]
@@ -29,8 +29,7 @@ De presentation tier bestaat hier uit 3 onafhankelijke applicaties:
 \end{figure}
 
 \subparagraph{Scrapers}
-StockPlay gebruikt de echte re‘le beurs. De koersen van deze effecten moeten dus periodiek worden opgehaald om het spel te laten werken. Hiervoor maken we gebruik van in Perl geschreven scrapers die
-vanaf enkele vooraf bepaalde internetsites de koersen extraheren. (vb. \makeurl{De Tijd}{http://www.tijd.be/beurzen/euronext-brussel/continumarkt} of \makeurl{Beursduivel}{http://www.beursduivel.be/koersen-belmid.index}) Hiervoor wordt oa. handig gebruik gemaakt van de AJAX-requests die deze websites gebruiken om de koersen live te tonen. Dit zorgt ervoor dat bijna enkel de koersen worden opgehaald, zonder extra overhead (zoals de layout van de website, etc). Bijkomend voordeel van het gebruik van AJAX is dat Perl libraries voorziet waarmee JSON gemakkelijk ontleed kan worden.
+StockPlay gebruikt de echte re‘le beurs. De koersen van deze effecten moeten dus periodiek worden opgehaald om het spel te laten werken. Hiervoor maken we gebruik van in Perl geschreven scrapers die vanaf enkele vooraf bepaalde internetsites de koersen extraheren. (vb. \makeurl{De Tijd}{http://www.tijd.be/beurzen/euronext-brussel/continumarkt} of \makeurl{Beursduivel}{http://www.beursduivel.be/koersen-belmid.index}) Hiervoor wordt oa. handig gebruik gemaakt van de AJAX-requests die deze websites gebruiken om de koersen live te tonen. Dit zorgt ervoor dat bijna enkel de koersen worden opgehaald, zonder extra overhead (zoals de layout van de website, etc). Bijkomend voordeel van het gebruik van AJAX is dat Perl libraries voorziet waarmee JSON gemakkelijk ontleed kan worden.
 De opgehaalde informatie wordt vervolgens doorgestuurd naar de backend dewelke deze koersinformatie vervolgens opslaat in de database. 
 
 \section{Uitwerking User interfaces}
@@ -42,7 +41,7 @@ De opgehaalde informatie wordt vervolgens doorgestuurd naar de backend dewelke d
 	\caption{Layout van de website.}
 \end{figure}
 
-Deze interface wordt gebruik om deel te nemen aan het spel. Een gebruiker surft hierbij naar de server die de interface host, en krijgt zo de spelomgeving te zien, dit zonder eerst aan bepaalde softwarevereisten (zoals een Java runtime) te moeten voldaan hebben. Een deel van de functionaliteit is beperkt tot geregistreerde gebruikers, maar meer hierover in hoofdstuk X.
+Deze interface wordt gebruik om deel te nemen aan het spel. Een gebruiker surft hierbij naar de server die de interface host, en krijgt zo de spelomgeving te zien, dit zonder eerst aan bepaalde softwarevereisten (zoals een Java runtime) te moeten voldaan hebben. Een deel van de functionaliteit is beperkt tot geregistreerde gebruikers.e
 
 \paragraph{De algemene overzichtspagina}
 Deze pagina geeft de gebruiker een zicht over:
