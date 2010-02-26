@@ -1,6 +1,6 @@
 /*
- * Pobject.java
- * StockPlay - Persistent data container
+ * ISystem.java
+ * StockPlay - API System class interface
  *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
@@ -19,23 +19,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.kapti.backend;
+package com.kapti.backend.api;
 
 /**
- * Deze klasse wordt gebruik om persistente data op te slaan, zoals referenties
- * naar databaseobjecten.
  *
  * @author tim
  */
-public class Pobject {
-
-    private String storedString = "";
-
-    public synchronized void setString(String string) {
-        storedString = string;
-    }
-
-    public synchronized String getString() {
-        return storedString;
-    }
+public interface ISystem extends IClass {
 }

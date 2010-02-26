@@ -1,6 +1,6 @@
 /*
- * Pobject.java
- * StockPlay - Persistent data container
+ * Dummy.java
+ * StockPlay - API System.Database subclass dummy implementation
  *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
@@ -19,23 +19,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.kapti.backend;
+package com.kapti.backend.api.system.database;
+
+import com.kapti.backend.Pobject;
+import com.kapti.backend.api.system.IDatabase;
 
 /**
- * Deze klasse wordt gebruik om persistente data op te slaan, zoals referenties
- * naar databaseobjecten.
  *
  * @author tim
  */
-public class Pobject {
+public class Dummy implements IDatabase {
 
-    private String storedString = "";
+    private Pobject pobject = null;
 
-    public synchronized void setString(String string) {
-        storedString = string;
+    public void init(Pobject pobject) {
+        this.pobject = pobject;
     }
 
-    public synchronized String getString() {
-        return storedString;
+    public int Status() {
+        return 1;
     }
+
 }

@@ -1,6 +1,6 @@
 /*
  * Dummy.java
- * StockPlay - Dummy handler implementation
+ * StockPlay - API System.Backend subclass dummy implementation
  *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
@@ -19,33 +19,34 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.kapti.backend.implementation;
+package com.kapti.backend.api.system.backend;
 
-import com.kapti.backend.MethodInterface;
 import com.kapti.backend.Pobject;
+import com.kapti.backend.api.system.IDatabase;
 
 /**
  *
  * @author tim
  */
-public class Dummy implements MethodInterface {
+public class Dummy implements IDatabase {
 
     private Pobject pobject = null;
 
     public void init(Pobject pobject) {
-        // our init method, here we receive the object
-        // we want our handler class to work with.
         this.pobject = pobject;
     }
 
-    public boolean setString(String string) {
-        pobject.setString(string);
+    public int Status() {
+        return 1;
+    }
+
+    public boolean Stop() {
+        return false;
+    }
+
+    public boolean Restart() {
         return true;
     }
 
-    public String getString() {
-        String returnValue = null;
-        returnValue = pobject.getString();
-        return returnValue;
-    }
 }
+

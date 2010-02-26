@@ -21,8 +21,8 @@
  */
 package com.kapti.backend.xmlrpc;
 
-import com.kapti.backend.MethodInterface;
 import com.kapti.backend.Pobject;
+import com.kapti.backend.api.IClass;
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.XmlRpcRequest;
 import org.apache.xmlrpc.server.RequestProcessorFactoryFactory.RequestSpecificProcessorFactoryFactory;
@@ -36,7 +36,6 @@ import org.apache.xmlrpc.server.RequestProcessorFactoryFactory.RequestSpecificPr
  */
 public class ProcessorFactory extends RequestSpecificProcessorFactoryFactory {
     // Referentie naar data container
-
     private Pobject pobject = null;
 
     public ProcessorFactory(Pobject pobject) {
@@ -55,8 +54,9 @@ public class ProcessorFactory extends RequestSpecificProcessorFactoryFactory {
      * @return
      * @throws XmlRpcException
      */
+    @Override
     protected Object getRequestProcessor(Class iClass, XmlRpcRequest iRequest) throws XmlRpcException {
-        MethodInterface proc = (MethodInterface) super.getRequestProcessor(iClass, iRequest);
+        IClass proc = (IClass) super.getRequestProcessor(iClass, iRequest);
         proc.init(pobject);
         return proc;
     }

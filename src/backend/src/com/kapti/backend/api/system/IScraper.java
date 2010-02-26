@@ -1,6 +1,6 @@
 /*
- * MethodInterface.java
- * StockPlay - Method interface
+ * IScraper.java
+ * StockPlay - API System.Scraper subclass interface
  *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
@@ -19,19 +19,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.kapti.backend;
+package com.kapti.backend.api.system;
+
+import com.kapti.backend.api.IClass;
 
 /**
- * Deze interface legt vast welke functies moeten geimplementeerd worden
- * door alle handlers.
- * 
+ *
  * @author tim
  */
-public interface MethodInterface {
-
-    public void init(Pobject pobject);
-
-    public boolean setString(String string);
-
-    public String getString();
+public interface IScraper extends IClass {
+    public int Status();
+    public boolean Restart();
+    public boolean Stop();
 }

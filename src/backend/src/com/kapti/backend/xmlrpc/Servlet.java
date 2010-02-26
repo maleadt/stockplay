@@ -76,7 +76,7 @@ public class Servlet extends XmlRpcServlet {
         } catch (IOException e) {
             throw new XmlRpcException("Failed to load resource " + tUrl + ": " + e.getMessage(), e);
         }
-
+        
         // add simple auth to our handler..
         AuthenticationHandler handler = new AuthHandler();
         oMapping.setAuthenticationHandler(handler);
