@@ -24,11 +24,13 @@ package com.kapti.backend.xmlrpc;
 import com.kapti.backend.Pobject;
 import java.io.IOException;
 import java.net.URL;
+import javax.servlet.ServletConfig;
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.server.AbstractReflectiveHandlerMapping.AuthenticationHandler;
 import org.apache.xmlrpc.server.PropertyHandlerMapping;
 import org.apache.xmlrpc.server.XmlRpcHandlerMapping;
 import org.apache.xmlrpc.webserver.XmlRpcServlet;
+import org.apache.xmlrpc.webserver.XmlRpcServletServer;
 
 /**
  * Dit is de servlet die alle aanvragen in de server al afhandelen. De servlet
@@ -60,10 +62,8 @@ public class Servlet extends XmlRpcServlet {
      * tegenhanger. Deze informatie is opgeslaan in een propery bestand,
      * dewelke door deze methode wordt ingelezen en teruggegeven als Mapping
      * object.
-     *
-     * @return
-     * @throws XmlRpcException
      */
+    @Override
     protected XmlRpcHandlerMapping newXmlRpcHandlerMapping() throws XmlRpcException {
         // load the properties file and initialise the PropertyHandlerMapping
         PropertyHandlerMapping oMapping = null;
@@ -76,13 +76,14 @@ public class Servlet extends XmlRpcServlet {
         } catch (IOException e) {
             throw new XmlRpcException("Failed to load resource " + tUrl + ": " + e.getMessage(), e);
         }
-        
+
         // add simple auth to our handler..
         AuthenticationHandler handler = new AuthHandler();
         oMapping.setAuthenticationHandler(handler);
         return oMapping;
     }
 
+    @Override
     protected PropertyHandlerMapping newPropertyHandlerMapping(URL iUrl) throws IOException, XmlRpcException {
         // call the newPropertyHandlerMapping method from our parent class
         PropertyHandlerMapping oMapping = super.newPropertyHandlerMapping(iUrl);
@@ -92,5 +93,17 @@ public class Servlet extends XmlRpcServlet {
         oMapping.setRequestProcessorFactoryFactory(factory);
         oMapping.load(Thread.currentThread().getContextClassLoader(), iUrl);
         return oMapping;
+    }
+
+    /**
+     * Overloaded methode om de XML server te bekomen, zodat we extra types
+     * kunenn registreren.
+     */
+
+    @Override
+    protected XmlRpcServletServer newXmlRpcServer(ServletConfig iConfig) throws XmlRpcException {
+        XmlRpcServletServer oServer = super.newXmlRpcServer(iConfig);
+        oServer.setTypeFactory(new TypeFactory(oServer));
+        return oServer;
     }
 }
