@@ -71,12 +71,12 @@ Maar er zijn ook generieke foutmeldingen, die van toepassing zijn op alle klasse
 	Foutcode & Foutbericht & Controle \\
 	\hline
 	
-	0 & Version Not Supported & De client gebruikt een verkeerd communicatieprotocol. \\
+	0 & Internal Failure & Verifieer de status van de backend, de log kan hierbij helpen. \\
 	\hline
 	
 	$[1-10[$ & \emph{Subsystem failures.} & \\
-	1 & Internal Failure & Verifieer de status van de backend, de log kan hierbij helpen. \\
-	2 & Database Failure & Er is een probleem met de database (onbeschikbaar, corrupt, ...), zie de log voor meer details. \\
+	1 & Database Failure & Er is een probleem met de database (onbeschikbaar, corrupt, ...), zie de log voor meer details. \\
+	2 & Scraper Failure & Er is een probleem met de scraper (onbeschikbaar, uitgevallen, ...), zie de log voor meer details. \\
 	\hline
 	
 	$[10-20[$ & \emph{Service issues.} & \\
@@ -84,8 +84,9 @@ Maar er zijn ook generieke foutmeldingen, die van toepassing zijn op alle klasse
 	11 & Unauthorized & Meld u aan vooraleer deze functie te gebruiken. \\
 	\hline
 	
-	$[20-30[$ & \emph{Method issues.} & \\
-	20 & Not Found & Methode niet gevonden, verifieer de schrijfwijze en de klasse. \\
+	$[20-30[$ & \emph{Invocation issues.} & \\
+	20 & Version Not Supported & De client gebruikt een verkeerd communicatieprotocol. \\
+	21 & Not Found & Methode niet gevonden, verifieer de schrijfwijze en de klasse. \\
 	21 & Bad Request & Probleem met de parameters, controleer het gebruik van de methode. \\
 	\hline
 \end{tabular}
