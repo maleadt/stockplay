@@ -1,17 +1,11 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 
 package com.kapti.bo;
-
-import com.kapti.bo.interfaces.IInstruction;
 
 /**
  *
  * @author Thijs
  */
-public class Instruction implements IInstruction {
+public class Instruction  {
     private int id=-1;
     private int amount;
     private double price;

@@ -5,14 +5,13 @@
 
 package com.kapti.bo;
 
-import com.kapti.bo.interfaces.IUser;
 import java.util.Date;
 
 /**
  *
  * @author Thijs
  */
-public class User implements IUser {
+public class User {
 
     private int id = -1;
     private String nickname ="";

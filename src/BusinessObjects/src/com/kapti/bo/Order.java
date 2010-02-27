@@ -1,18 +1,14 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 
 package com.kapti.bo;
 
-import com.kapti.bo.interfaces.IOrder;
 import java.util.Date;
 
 /**
  *
  * @author Thijs
  */
-public class Order extends Instruction implements IOrder{
+public class Order extends Instruction{
     private Date creationTime;
     private Date expiryTimer;
 

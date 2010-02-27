@@ -5,15 +5,13 @@
 
 package com.kapti.bo;
 
-import com.kapti.bo.Instruction;
-import com.kapti.bo.interfaces.ITransaction;
 import java.util.Date;
 
 /**
  *
  * @author Thijs
  */
-public class Transaction extends Instruction implements ITransaction {
+public class Transaction extends Instruction {
 
     private Date time;
 

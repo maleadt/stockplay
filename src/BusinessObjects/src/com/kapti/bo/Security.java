@@ -1,20 +1,29 @@
 package com.kapti.bo;
 
-import com.kapti.bo.interfaces.ISecurity;
 import java.util.Date;
-
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
  *
  * @author Thijs
  */
-public class Security implements ISecurity {
+public class Security  {
     private String symbol = "";
     private String name = "";
+
+    private Exchange exchange;
+
+    public Security(){
+        
+    }
+
+    public Security(String symbol){
+        this.symbol = symbol;
+    }
+
+    public Security(String symbol, String name, Exchange exchange){
+        this.symbol = symbol;
+        this.name = name;
+        this.exchange = exchange;
+    }
 
     public String getName() {
         return name;
@@ -28,10 +37,6 @@ public class Security implements ISecurity {
         return symbol;
     }
 
-    public void setSymbol(String symbol) {
-        this.symbol = symbol;
-    }
-
     public SharePrice getSharePrice(){
         return null;
     }
@@ -43,5 +48,13 @@ public class Security implements ISecurity {
      */
     public SharePrice getSharePrice(Date time){
         return null;
+    }
+
+        public Exchange getExchange() {
+        return exchange;
+    }
+
+    public void setExchange(Exchange exchange) {
+        this.exchange = exchange;
     }
 }
