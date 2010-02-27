@@ -22,6 +22,7 @@
 package com.kapti.backend.api.system;
 
 import com.kapti.backend.api.IClass;
+import java.util.Hashtable;
 
 /**
  *
@@ -31,4 +32,5 @@ public interface IBackend extends IClass {
     public int Status();
     public boolean Restart();
     public boolean Stop();
+    public Hashtable<String, Object> Stats();
 }

@@ -22,13 +22,14 @@
 package com.kapti.backend.api.system.backend;
 
 import com.kapti.backend.Pobject;
-import com.kapti.backend.api.system.IDatabase;
+import com.kapti.backend.api.system.IBackend;
+import java.util.Hashtable;
 
 /**
  *
  * @author tim
  */
-public class Dummy implements IDatabase {
+public class Dummy implements IBackend {
 
     private Pobject pobject = null;
 
@@ -46,6 +47,14 @@ public class Dummy implements IDatabase {
 
     public boolean Restart() {
         return true;
+    }
+
+    public Hashtable<String, Object> Stats() {
+        Hashtable<String, Object> oStats = new Hashtable<String, Object>();
+        oStats.put("users", 5);
+        oStats.put("req", 100);
+        oStats.put("uptime", 12345);
+        return oStats;
     }
 
 }

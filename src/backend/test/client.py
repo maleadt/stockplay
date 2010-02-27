@@ -2,8 +2,6 @@
 
 # Import XML-RPC library
 import xmlrpclib
-import pprint
-
 
 # Login to the server
 print "* Connecting to backend"

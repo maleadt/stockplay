@@ -104,7 +104,6 @@ public class Servlet extends XmlRpcServlet {
     protected XmlRpcServletServer newXmlRpcServer(ServletConfig iConfig) throws XmlRpcException {
         //XmlRpcServletServer oServer = super.newXmlRpcServer(iConfig);
         XmlRpcServletServer oServer = new ServletServer();  // iConfig seems unused in XmlRpcServlet.java
-        oServer.setTypeFactory(new TypeFactory(oServer));
         return oServer;
     }
 }
