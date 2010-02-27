@@ -78,8 +78,8 @@ public class Servlet extends XmlRpcServlet {
         }
 
         // add simple auth to our handler..
-        AuthenticationHandler handler = new AuthHandler();
-        oMapping.setAuthenticationHandler(handler);
+        AuthenticationHandler tHandler = new AuthHandler();
+        oMapping.setAuthenticationHandler(tHandler);
         return oMapping;
     }
 
@@ -97,12 +97,13 @@ public class Servlet extends XmlRpcServlet {
 
     /**
      * Overloaded methode om de XML server te bekomen, zodat we extra types
-     * kunenn registreren.
+     * kunnen registreren.
      */
 
     @Override
     protected XmlRpcServletServer newXmlRpcServer(ServletConfig iConfig) throws XmlRpcException {
-        XmlRpcServletServer oServer = super.newXmlRpcServer(iConfig);
+        //XmlRpcServletServer oServer = super.newXmlRpcServer(iConfig);
+        XmlRpcServletServer oServer = new ServletServer();  // iConfig seems unused in XmlRpcServlet.java
         oServer.setTypeFactory(new TypeFactory(oServer));
         return oServer;
     }

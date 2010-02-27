@@ -22,7 +22,7 @@
 package com.kapti.backend;
 
 import com.kapti.backend.xmlrpc.Servlet;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 import org.apache.xmlrpc.webserver.ServletWebServer;
 import org.apache.xmlrpc.webserver.XmlRpcServlet;
 
@@ -32,8 +32,8 @@ import org.apache.xmlrpc.webserver.XmlRpcServlet;
  */
 public class Main {
 
-    private static final int port = 8080;
-    static Logger logger = Logger.getLogger("stockplay.backend");
+    private static final int mPort = 8080;
+    static Logger mLogger = Logger.getLogger(Main.class);
 
     public static void main(String[] args) throws Exception {
         /*
@@ -42,9 +42,9 @@ public class Main {
          * worden naar een volwaardige webserver. Tot we dit doen zorgt de
          * servlet-api-x.y.jar library voor de nodige servlet klassen.
          */
-        logger.info("Starting servlet server.");
+        mLogger.info("Starting servlet server.");
         XmlRpcServlet servlet = new Servlet();
-        ServletWebServer webServer = new ServletWebServer(servlet, port);
+        ServletWebServer webServer = new ServletWebServer(servlet, mPort);
         webServer.start();
     }
 }
