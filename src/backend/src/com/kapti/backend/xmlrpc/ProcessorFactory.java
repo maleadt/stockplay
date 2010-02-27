@@ -1,6 +1,6 @@
 /*
  * ProcessorFactory.java
- * StockPlay - Factory for request processors
+ * StockPlay - Factory voor request processors.
  *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
@@ -28,31 +28,39 @@ import org.apache.xmlrpc.XmlRpcRequest;
 import org.apache.xmlrpc.server.RequestProcessorFactoryFactory.RequestSpecificProcessorFactoryFactory;
 
 /**
+ * \brief Factory voor request processors.
+ *
  * Deze klasse, een uitbreiding van RequestSpecificProcessorFactoryFactory,
  * zorgt ervoor dat aangemaakte handlers extra informatie kunnen meegegeven
  * worden, dit vooraleer ze een effectieve XML-RPC request afhandelen.
- *
- * @author tim
  */
 public class ProcessorFactory extends RequestSpecificProcessorFactoryFactory {
-    // Referentie naar data container
+    //
+    // Dataleden
+    //
+
     private Pobject pobject = null;
+
+
+    //
+    // Constructie
+    //
 
     public ProcessorFactory(Pobject pobject) {
         // init method, called in BmXmlRpcServlet
         this.pobject = pobject;
     }
 
+
+    //
+    // Methoden
+    //
+
     /**
      * Deze methode wordt door de servlet server gebruikt om een lokale handler
      * te vinden om een RPC af te handelen. We overschrijven deze methode louter
      * om de geinstantieerde handler een referentie naar de container met
      * persistente data mee te geven.
-     * 
-     * @param iClass
-     * @param iRequest
-     * @return
-     * @throws XmlRpcException
      */
     @Override
     protected Object getRequestProcessor(Class iClass, XmlRpcRequest iRequest) throws XmlRpcException {

@@ -1,6 +1,6 @@
 /*
  * Dummy.java
- * StockPlay - API System.Database subclass dummy implementation
+ * StockPlay - Dummy implementatie van de System.Database subklasse.
  *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
@@ -25,12 +25,24 @@ import com.kapti.backend.Pobject;
 import com.kapti.backend.api.system.IDatabase;
 
 /**
+ * \brief   Dummy implementatie van de System.Database interface.
  *
- * @author tim
+ * Deze klasse is een dummy implementatie van de System.Database interface. Een
+ * dergelijke implementatie geeft valide data terug, zonder daarvoor de database
+ * te raadplegen. Deze implementatie kan zo gebruikt worden om een client-systeem
+ * te testen.
  */
 public class Dummy implements IDatabase {
+    //
+    // Dataleden
+    //
 
     private Pobject pobject = null;
+
+
+    //
+    // Methodes
+    //
 
     public void init(Pobject pobject) {
         this.pobject = pobject;

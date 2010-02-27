@@ -1,6 +1,6 @@
 /*
  * Pobject.java
- * StockPlay - Persistent data container
+ * StockPlay - Container voor persistente data.
  *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
@@ -22,15 +22,29 @@
 package com.kapti.backend;
 
 /**
- * Deze klasse wordt gebruik om persistente data op te slaan, zoals referenties
- * naar databaseobjecten.
+ * \brief Container voor persistente data.
  *
- * @author tim
+ * Deze klasse wordt gebruik om persistente data op te slaan, zoals referenties
+ * naar dataobjecten. De klasse wordt slechts één keer geinstantieerd, en die
+ * referentie zal steeds doorgegeven worden aan alle method handlers.
+ * Aangezien de functies uit deze klasse uit verschillende threads
+ * gebruikt kunnen worden, kan het nuttig zijn om deze (of de onderliggende)
+ * functies gesynchroniseerd te maken.
  */
 public class Pobject {
+    //
+    // Dataleden
+    //
 
     private String storedString = "";
 
+
+    //
+    // Methodes
+    //
+
+
+    // Voorbeeldfunctionaliteit, niet benodigd voor ons //
     public synchronized void setString(String string) {
         storedString = string;
     }

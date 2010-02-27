@@ -1,6 +1,6 @@
 /*
  * AuthHandler.java
- * StockPlay - Authentication handler
+ * StockPlay - Authentication handler.
  *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
@@ -21,6 +21,7 @@
  */
 package com.kapti.backend.xmlrpc;
 
+import com.kapti.backend.Pobject;
 import org.apache.xmlrpc.XmlRpcRequest;
 import org.apache.xmlrpc.common.XmlRpcHttpRequestConfig;
 import org.apache.xmlrpc.server.AbstractReflectiveHandlerMapping.AuthenticationHandler;
@@ -30,10 +31,34 @@ import org.apache.xmlrpc.server.AbstractReflectiveHandlerMapping.AuthenticationH
  * @author tim
  */
 public class AuthHandler implements AuthenticationHandler {
+    //
+    // Dataleden
+    //
+    
+    private Pobject pobject;
+    
+    
+    //
+    // Constructie
+    //
+
+    public AuthHandler(Pobject pobject) {
+        super();
+        this.pobject = pobject;
+    }
+
+
+    //
+    // Methoden
+    //
 
     public boolean isAuthorized(XmlRpcRequest pRequest) {
-        XmlRpcHttpRequestConfig config =
-                (XmlRpcHttpRequestConfig) pRequest.getConfig();
-        return Servlet.isAuthenticated(config.getBasicUserName(), config.getBasicPassword());
+        // Haal credentials op
+        XmlRpcHttpRequestConfig config = (XmlRpcHttpRequestConfig) pRequest.getConfig();
+        String tUsername = config.getBasicUserName();
+        String tPassword = config.getBasicPassword();
+
+        // Verifieer ze
+        return true;
     }
 }

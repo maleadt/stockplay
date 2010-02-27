@@ -1,6 +1,6 @@
 /*
  * IDatabase.java
- * StockPlay - API System.Database subclass interface
+ * StockPlay - Interface voor de System.Database subklasse.
  *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
@@ -21,12 +21,18 @@
  */
 package com.kapti.backend.api.system;
 
-import com.kapti.backend.api.IClass;
+import com.kapti.backend.api.ISystem;
 
 /**
+ * \brief Interface voor de System.Database subklasse.
  *
- * @author tim
+ * Deze klasse voorziet in functiesignaturen zoals voorgeschreven in de
+ * protocoldefinitie van de System.Database subklasse.
  */
-public interface IDatabase extends IClass {
+public interface IDatabase extends ISystem {
+    //
+    // Methodes
+    //
+
     public int Status();
 }

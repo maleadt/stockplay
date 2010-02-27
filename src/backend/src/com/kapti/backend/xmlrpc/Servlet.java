@@ -1,6 +1,6 @@
 /*
  * Servlet.java
- * StockPlay - Main servlet
+ * StockPlay - XML-RPC servletimplementatie.
  *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
@@ -33,39 +33,38 @@ import org.apache.xmlrpc.webserver.XmlRpcServlet;
 import org.apache.xmlrpc.webserver.XmlRpcServletServer;
 
 /**
- * Dit is de servlet die alle aanvragen in de server al afhandelen. De servlet
- * wordt eenmaal geinitialiseerd, waarbij ook de container voor persistente data
- * aangemaakt wordt (Pobject).
+ * \brief XML-RPC servletimplementatie.
  *
- * De servlet handelt, het zij indirect, ook authenticatieaavragen aan. Deze
- * aanvragen worden hier naartoe gestuurt door onze AuthHandler, die gemapt is
- * als default AuthHandler. Deze redirectie vindt plaats omdat enkel te servlet
- * toegang heeft tot de persistente data.
- *
- * @author tim
+ * Dit is een uitbreiding van de standaard XML-RPC servlet. Deze voorziet
+ * in een aantal extra features, namelijk:
+ *  - Registratie van een authentication handler
+ *  - Doorgeven van persistente data aan method handlers
+ *  - Flexibele method mapping via property-file
+ *  - Gebruik van customized XML-RPC server voor exception trapping
  */
 public class Servlet extends XmlRpcServlet {
+    //
+    // Dataleden
+    //
 
-    /**
-     * Container voor persistente data. Deze wordt doorgegeven aan de init
-     * functie van een handler.
-     */
     private Pobject pobject = new Pobject();
 
-    public static boolean isAuthenticated(String iUsername, String iPassword) {
-        return true;
-    }
+
+    //
+    // Methoden
+    //
 
     /**
      * Deze methode wordt gebruikt bij het configureren van de servlet server,
      * en zorgt voor de connectie tussen aangevraagde methodes en hun lokale
-     * tegenhanger. Deze informatie is opgeslaan in een propery bestand,
-     * dewelke door deze methode wordt ingelezen en teruggegeven als Mapping
-     * object.
+     * tegenhanger. Om een flexibele manier van werken te bekomen, gebruiken we
+     * hier een property handler in plaats van een statische configuratie.
+     * Ook registreren we hier de authenticatie-handler, verantwoordelijk voor
+     * het  controleren van doorgegeven credentials.
      */
     @Override
     protected XmlRpcHandlerMapping newXmlRpcHandlerMapping() throws XmlRpcException {
-        // load the properties file and initialise the PropertyHandlerMapping
+        // Property-handler registreren
         PropertyHandlerMapping oMapping = null;
         URL tUrl = Servlet.class.getResource("XmlRpcServlet.properties");
         if (tUrl == null) {
@@ -77,29 +76,41 @@ public class Servlet extends XmlRpcServlet {
             throw new XmlRpcException("Failed to load resource " + tUrl + ": " + e.getMessage(), e);
         }
 
-        // add simple auth to our handler..
-        AuthenticationHandler tHandler = new AuthHandler();
+        // Authenticatie-handler registreren
+        AuthenticationHandler tHandler = new AuthHandler(pobject);
         oMapping.setAuthenticationHandler(tHandler);
+
         return oMapping;
     }
 
+
+    /**
+     * Deze methode haalt een property-handler op, gebaseerd op een property-
+     * bestand. Normaal worden de mappings tussen een property name en een
+     * property handler statisch verzorgd, maar door het gebruik van een
+     * eigen property handler maken we dit proces flexibel en makkelijk
+     * aanpasbaar. We bekomen dit door de opgehaalde property handler
+     * dusdanig aan te passen dat een eigen handler-factory gebruikt wordt (dit
+     * is nodig om voor het verwerken van een request de persistente data
+     * te kunnen doorgeven aan de handler in kwestie).
+     */
     @Override
     protected PropertyHandlerMapping newPropertyHandlerMapping(URL iUrl) throws IOException, XmlRpcException {
-        // call the newPropertyHandlerMapping method from our parent class
+        // Property-handler ophalen in superklasse, dit doen we niet zelf
         PropertyHandlerMapping oMapping = super.newPropertyHandlerMapping(iUrl);
 
-        // create our Request Processor Factory Factory and pass our pobject instance.
+        // Property-handler aanpassen naar onze wensen
         ProcessorFactory factory = new ProcessorFactory(pobject);
         oMapping.setRequestProcessorFactoryFactory(factory);
         oMapping.load(Thread.currentThread().getContextClassLoader(), iUrl);
+
         return oMapping;
     }
 
     /**
-     * Overloaded methode om de XML server te bekomen, zodat we extra types
-     * kunnen registreren.
+     * Door deze methode te overschrijven kunnen we een eigen XmlRpcServer
+     * gebruiken.
      */
-
     @Override
     protected XmlRpcServletServer newXmlRpcServer(ServletConfig iConfig) throws XmlRpcException {
         //XmlRpcServletServer oServer = super.newXmlRpcServer(iConfig);

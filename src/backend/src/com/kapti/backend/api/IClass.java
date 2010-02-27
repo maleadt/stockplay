@@ -1,6 +1,6 @@
 /*
  * IClass.java
- * StockPlay - Main API class interface
+ * StockPlay - Hoofdinterface voor method handlers.
  *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
@@ -24,10 +24,22 @@ package com.kapti.backend.api;
 import com.kapti.backend.Pobject;
 
 /**
+ * \brief Hoofdinterface voor method handlers.
  *
- * @author tim
+ * Dit is de interface die moet geimplementeerd worden door alle method handlers.
+ * Ze voorziet in de functies gerelateerd met het opslaan van de persistente
+ * data.
  */
 public interface IClass {
+    //
+    // Methoden
+    //
+
+    /**
+     * Deze initialisatiefunctie wordt aangeroepen vooraleer de method handler
+     * een functie moet afhandelen, en moet dusdanig geimplementeerd worden
+     * zodat het doorgegeven object lokaal opgeslaan wordt voor verder gebruik.
+     */
     public void init(Pobject pobject);
 
 }

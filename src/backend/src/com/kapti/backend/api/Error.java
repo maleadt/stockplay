@@ -1,6 +1,6 @@
 /*
  * Error.java
- * StockPlay - Protocol error enumeration class
+ * StockPlay - Protocol error enumeratieklasse.
  *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
@@ -24,12 +24,18 @@ package com.kapti.backend.api;
 import org.apache.xmlrpc.XmlRpcException;
 
 /**
+ * \brief Protocol error enumeratieklasse.
  *
- * @author tim
+ * Deze enumeratieklasse bevat objecten die gebruikt worden om een uniforme
+ * set aan protocolerrors naar de gebruiker te sturen. De verschillende
+ * errors zijn ingedeeld in enkele types:
+ *  - Subsystem problemen
+ *  - Service problemen
+ *  - Gebruiksproblemen
  */
 public enum Error {
     //
-    // Available errors
+    // Beschikbare foutmeldingen
     //
 
     INTERNAL_FAILURE(0, "Internal Failure"),
@@ -49,7 +55,7 @@ public enum Error {
 
 
     //
-    // Data members
+    // Dataleden
     //
 
     private final int mCode;
@@ -58,7 +64,7 @@ public enum Error {
 
 
     //
-    // Construction
+    // Constructie
     //
 
     Error(int iCode, String iMessage) {
@@ -68,17 +74,27 @@ public enum Error {
 
 
     //
-    // Methods
+    // Methodes
     //
 
+    /**
+     * Haalt de code van een fouttype op. Normaal enkel intern gebruikt.
+     */
     public int getCode() {
         return mCode;
     }
 
+    /**
+     * Haalt een human-readable foutbericht op, normaal enkel intern gebruikt.
+     */
     public String getMessage() {
         return mMessage;
     }
 
+    /**
+     * Belangrijkste functie voor extern gebruik: genereert een XmlRpcException
+     * gebaseerd op de interne foutcode en -bericht.
+     */
     public XmlRpcException getException() {
         return new XmlRpcException(getCode(), getMessage());
     }

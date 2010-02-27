@@ -1,6 +1,6 @@
 /*
  * IScraper.java
- * StockPlay - API System.Scraper subclass interface
+ * StockPlay - Interface voor de System.Scraper subklasse.
  *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
@@ -21,13 +21,19 @@
  */
 package com.kapti.backend.api.system;
 
-import com.kapti.backend.api.IClass;
+import com.kapti.backend.api.ISystem;
 
 /**
+ * \brief Interface voor de System.Scraper subklasse.
  *
- * @author tim
+ * Deze klasse voorziet in functiesignaturen zoals voorgeschreven in de
+ * protocoldefinitie van de System.Scraper subklasse.
  */
-public interface IScraper extends IClass {
+public interface IScraper extends ISystem {
+    //
+    // Methodes
+    //
+
     public int Status();
     public boolean Restart();
     public boolean Stop();

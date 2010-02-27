@@ -1,6 +1,6 @@
 /*
  * Dummy.java
- * StockPlay - API System.Backend subclass dummy implementation
+ * StockPlay - Dummy implementatie van de System.Backend subklasse.
  *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
@@ -26,12 +26,24 @@ import com.kapti.backend.api.system.IBackend;
 import java.util.Hashtable;
 
 /**
+ * \brief   Dummy implementatie van de System.Backend interface.
  *
- * @author tim
+ * Deze klasse is een dummy implementatie van de System.Backend interface. Een
+ * dergelijke implementatie geeft valide data terug, zonder daarvoor de database
+ * te raadplegen. Deze implementatie kan zo gebruikt worden om een client-systeem
+ * te testen.
  */
 public class Dummy implements IBackend {
+    //
+    // Dataleden
+    //
 
     private Pobject pobject = null;
+
+
+    //
+    // Methodes
+    //
 
     public void init(Pobject pobject) {
         this.pobject = pobject;

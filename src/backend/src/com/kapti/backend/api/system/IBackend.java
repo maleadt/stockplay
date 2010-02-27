@@ -1,6 +1,6 @@
 /*
  * IBackend.java
- * StockPlay - API System.Backend subclass interface
+ * StockPlay - Interface voor de System.Backend subklasse.
  *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
@@ -21,14 +21,20 @@
  */
 package com.kapti.backend.api.system;
 
-import com.kapti.backend.api.IClass;
+import com.kapti.backend.api.ISystem;
 import java.util.Hashtable;
 
 /**
+ * \brief Interface voor de System.Backend subklasse.
  *
- * @author tim
+ * Deze klasse voorziet in functiesignaturen zoals voorgeschreven in de
+ * protocoldefinitie van de System.Backend subklasse.
  */
-public interface IBackend extends IClass {
+public interface IBackend extends ISystem {
+    //
+    // Methodes
+    //
+
     public int Status();
     public boolean Restart();
     public boolean Stop();

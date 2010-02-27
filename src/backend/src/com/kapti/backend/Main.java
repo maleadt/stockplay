@@ -1,6 +1,6 @@
 /*
  * Main.java
- * StockPlay - Main class
+ * StockPlay - Main klasse.
  *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
@@ -27,13 +27,28 @@ import org.apache.xmlrpc.webserver.ServletWebServer;
 import org.apache.xmlrpc.webserver.XmlRpcServlet;
 
 /**
+ * \brief Main klasse, instantieert en activeert alle subcomponenten.
  *
- * @author tim
+ * Deze klasse is verantwoordelijk voor het instantiëren en starten van de
+ * verschillende subcomponenten van de backend, zoals:
+ *  - Servlet webserver
  */
 public class Main {
+    //
+    // Dataleden
+    //
 
     private static final int mPort = 8080;
     static Logger mLogger = Logger.getLogger(Main.class);
+
+
+    //
+    // Methodes
+    //
+
+    /**
+     * Main entrypoint van de backend.
+     */
 
     public static void main(String[] args) throws Exception {
         /*

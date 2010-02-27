@@ -1,6 +1,6 @@
 /*
  * Dummy.java
- * StockPlay - API System class dummy implementation
+ * StockPlay - Dummy implementatie van de System interface.
  *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
@@ -25,12 +25,24 @@ import com.kapti.backend.Pobject;
 import com.kapti.backend.api.ISystem;
 
 /**
+ * \brief   Dummy implementatie van de System interface.
  *
- * @author tim
+ * Deze klasse is een dummy implementatie van de System interface. Een
+ * dergelijke implementatie geeft valide data terug, zonder daarvoor de database
+ * te raadplegen. Deze implementatie kan zo gebruikt worden om een client-systeem
+ * te testen.
  */
 public class Dummy implements ISystem {
+    //
+    // Dataleden
+    //
 
     private Pobject pobject = null;
+
+
+    //
+    // Methodes
+    //
 
     public void init(Pobject pobject) {
         this.pobject = pobject;
