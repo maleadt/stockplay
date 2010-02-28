@@ -1,6 +1,6 @@
 /*
- * Dummy.java
- * StockPlay - Dummy implementatie van de System.Database subklasse.
+ * ConcreteDummy.java
+ * StockPlay - Dummy implementatie van de System.Backend subklasse.
  *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
@@ -19,37 +19,44 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.kapti.backend.api.system.database;
+package com.kapti.backend.api.system.backend;
 
-import com.kapti.backend.Pobject;
-import com.kapti.backend.api.system.IDatabase;
+import com.kapti.backend.api.system.Backend;
+import java.util.Hashtable;
+import org.apache.xmlrpc.XmlRpcException;
 
 /**
- * \brief   Dummy implementatie van de System.Database interface.
+ * \brief   Dummy implementatie van de System.Backend interface.
  *
- * Deze klasse is een dummy implementatie van de System.Database interface. Een
+ * Deze klasse is een dummy implementatie van de System.Backend interface. Een
  * dergelijke implementatie geeft valide data terug, zonder daarvoor de database
  * te raadplegen. Deze implementatie kan zo gebruikt worden om een client-systeem
  * te testen.
  */
-public class Dummy implements IDatabase {
-    //
-    // Dataleden
-    //
-
-    private Pobject pobject = null;
-
-
+public class ConcreteDummy extends Backend {
     //
     // Methodes
     //
 
-    public void init(Pobject pobject) {
-        this.pobject = pobject;
-    }
-
-    public int Status() {
+    public int Status() throws XmlRpcException {
         return 1;
     }
 
+    public boolean Stop() throws XmlRpcException {
+        return false;
+    }
+
+    public boolean Restart() throws XmlRpcException {
+        return true;
+    }
+
+    public Hashtable<String, Object> Stats() throws XmlRpcException {
+        Hashtable<String, Object> oStats = new Hashtable<String, Object>();
+        oStats.put("users", 5);
+        oStats.put("req", 100);
+        oStats.put("uptime", 12345);
+        return oStats;
+    }
+
 }
+

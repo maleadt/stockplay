@@ -1,6 +1,6 @@
 /*
- * Dummy.java
- * StockPlay - Dummy implementatie van de System interface.
+ * IBackend.java
+ * StockPlay - Abstracte klasse van de System.Backend interface.
  *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
@@ -21,30 +21,23 @@
  */
 package com.kapti.backend.api.system;
 
-import com.kapti.backend.Pobject;
-import com.kapti.backend.api.ISystem;
+import com.kapti.backend.api.MethodClass;
+import java.util.Hashtable;
+import org.apache.xmlrpc.XmlRpcException;
 
 /**
- * \brief   Dummy implementatie van de System interface.
+ * \brief Abstracte klasse van de System.Backend interface.
  *
- * Deze klasse is een dummy implementatie van de System interface. Een
- * dergelijke implementatie geeft valide data terug, zonder daarvoor de database
- * te raadplegen. Deze implementatie kan zo gebruikt worden om een client-systeem
- * te testen.
+ * Deze klasse voorziet in functiesignaturen zoals voorgeschreven in de
+ * protocoldefinitie van de System.Backend subklasse.
  */
-public class Dummy implements ISystem {
-    //
-    // Dataleden
-    //
-
-    private Pobject pobject = null;
-
-
+public abstract class Backend extends MethodClass {
     //
     // Methodes
     //
 
-    public void init(Pobject pobject) {
-        this.pobject = pobject;
-    }
+    public abstract int Status() throws XmlRpcException;
+    public abstract boolean Restart() throws XmlRpcException;
+    public abstract boolean Stop() throws XmlRpcException;
+    public abstract Hashtable<String, Object> Stats() throws XmlRpcException;
 }

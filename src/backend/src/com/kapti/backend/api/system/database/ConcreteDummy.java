@@ -1,6 +1,6 @@
 /*
- * IDatabase.java
- * StockPlay - Interface voor de System.Database subklasse.
+ * ConcreteDummy.java
+ * StockPlay - Dummy implementatie van de System.Database subklasse.
  *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
@@ -19,20 +19,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.kapti.backend.api.system;
+package com.kapti.backend.api.system.database;
 
-import com.kapti.backend.api.ISystem;
+import com.kapti.backend.api.system.Database;
+import org.apache.xmlrpc.XmlRpcException;
 
 /**
- * \brief Interface voor de System.Database subklasse.
+ * \brief   Dummy implementatie van de System.Database interface.
  *
- * Deze klasse voorziet in functiesignaturen zoals voorgeschreven in de
- * protocoldefinitie van de System.Database subklasse.
+ * Deze klasse is een dummy implementatie van de System.Database interface. Een
+ * dergelijke implementatie geeft valide data terug, zonder daarvoor de database
+ * te raadplegen. Deze implementatie kan zo gebruikt worden om een client-systeem
+ * te testen.
  */
-public interface IDatabase extends ISystem {
+public class ConcreteDummy extends Database {
     //
     // Methodes
     //
 
-    public int Status();
+    public int Status() throws XmlRpcException {
+        return 1;
+    }
+
 }

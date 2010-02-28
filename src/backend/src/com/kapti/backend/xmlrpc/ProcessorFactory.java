@@ -22,7 +22,7 @@
 package com.kapti.backend.xmlrpc;
 
 import com.kapti.backend.Pobject;
-import com.kapti.backend.api.IClass;
+import com.kapti.backend.api.MethodClass;
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.XmlRpcRequest;
 import org.apache.xmlrpc.server.RequestProcessorFactoryFactory.RequestSpecificProcessorFactoryFactory;
@@ -64,7 +64,7 @@ public class ProcessorFactory extends RequestSpecificProcessorFactoryFactory {
      */
     @Override
     protected Object getRequestProcessor(Class iClass, XmlRpcRequest iRequest) throws XmlRpcException {
-        IClass proc = (IClass) super.getRequestProcessor(iClass, iRequest);
+        MethodClass proc = (MethodClass) super.getRequestProcessor(iClass, iRequest);
         proc.init(pobject);
         return proc;
     }

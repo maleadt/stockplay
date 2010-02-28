@@ -1,6 +1,6 @@
 /*
- * ISystem.java
- * StockPlay - Interface voor de System klasse.
+ * System.java
+ * StockPlay - Abstracte klasse vab de System interface.
  *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
@@ -22,10 +22,10 @@
 package com.kapti.backend.api;
 
 /**
- * \brief Interface voor de System subklasse.
+ * \brief Abstracte klasse vab de System interface.
  *
  * Deze klasse voorziet in functiesignaturen zoals voorgeschreven in de
  * protocoldefinitie van de System klasse.
  */
-public interface ISystem extends IClass {
+public abstract class System extends MethodClass {
 }

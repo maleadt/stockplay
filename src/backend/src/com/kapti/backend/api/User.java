@@ -1,6 +1,6 @@
 /*
- * IScraper.java
- * StockPlay - Interface voor de System.Scraper subklasse.
+ * User.java
+ * StockPlay - Abstracte klasse vab de User interface.
  *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
@@ -19,22 +19,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.kapti.backend.api.system;
+package com.kapti.backend.api;
 
-import com.kapti.backend.api.ISystem;
+import org.apache.xmlrpc.XmlRpcException;
 
 /**
- * \brief Interface voor de System.Scraper subklasse.
+ * \brief Abstracte klasse vab de System interface.
  *
  * Deze klasse voorziet in functiesignaturen zoals voorgeschreven in de
- * protocoldefinitie van de System.Scraper subklasse.
+ * protocoldefinitie van de System klasse.
  */
-public interface IScraper extends ISystem {
+public abstract class User extends MethodClass {
     //
     // Methodes
     //
-
-    public int Status();
-    public boolean Restart();
-    public boolean Stop();
+    
+    public abstract int Hello(String iClient, int iProtocolVersion) throws XmlRpcException;
 }

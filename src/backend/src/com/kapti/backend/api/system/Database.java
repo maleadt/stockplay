@@ -1,6 +1,6 @@
 /*
- * IClass.java
- * StockPlay - Hoofdinterface voor method handlers.
+ * Database.java
+ * StockPlay - Abstracte klasse van de System.Database interface.
  *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
@@ -19,27 +19,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.kapti.backend.api;
+package com.kapti.backend.api.system;
 
-import com.kapti.backend.Pobject;
+import com.kapti.backend.api.MethodClass;
+import org.apache.xmlrpc.XmlRpcException;
 
 /**
- * \brief Hoofdinterface voor method handlers.
+ * \brief Abstracte klasse van de System.Database interface.
  *
- * Dit is de interface die moet geimplementeerd worden door alle method handlers.
- * Ze voorziet in de functies gerelateerd met het opslaan van de persistente
- * data.
+ * Deze klasse voorziet in functiesignaturen zoals voorgeschreven in de
+ * protocoldefinitie van de System.Database subklasse.
  */
-public interface IClass {
+public abstract class Database extends MethodClass {
     //
-    // Methoden
+    // Methodes
     //
 
-    /**
-     * Deze initialisatiefunctie wordt aangeroepen vooraleer de method handler
-     * een functie moet afhandelen, en moet dusdanig geimplementeerd worden
-     * zodat het doorgegeven object lokaal opgeslaan wordt voor verder gebruik.
-     */
-    public void init(Pobject pobject);
-
+    public abstract int Status() throws XmlRpcException;
 }

@@ -1,6 +1,6 @@
 /*
- * IBackend.java
- * StockPlay - Interface voor de System.Backend subklasse.
+ * ConcreteDummy.java
+ * StockPlay - Dummy implementatie van de System interface.
  *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
@@ -21,22 +21,15 @@
  */
 package com.kapti.backend.api.system;
 
-import com.kapti.backend.api.ISystem;
-import java.util.Hashtable;
+import com.kapti.backend.api.System;
 
 /**
- * \brief Interface voor de System.Backend subklasse.
+ * \brief   Dummy implementatie van de System interface.
  *
- * Deze klasse voorziet in functiesignaturen zoals voorgeschreven in de
- * protocoldefinitie van de System.Backend subklasse.
+ * Deze klasse is een dummy implementatie van de System interface. Een
+ * dergelijke implementatie geeft valide data terug, zonder daarvoor de database
+ * te raadplegen. Deze implementatie kan zo gebruikt worden om een client-systeem
+ * te testen.
  */
-public interface IBackend extends ISystem {
-    //
-    // Methodes
-    //
-
-    public int Status();
-    public boolean Restart();
-    public boolean Stop();
-    public Hashtable<String, Object> Stats();
+public class ConcreteDummy extends System {
 }

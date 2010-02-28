@@ -62,7 +62,7 @@ public class ServletServer extends XmlRpcServletServer {
             if (iException.code == 0) {
                 // Log the original message
                 final String tMessage = iException.getMessage();
-                mLogger.error("Untrapped exception: " + tMessage);
+                mLogger.error("untrapped exception (" + tMessage + ")");
                 
                 // Detect exception subtype
                 if (tMessage.contains("No method matching arguments")) {

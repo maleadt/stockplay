@@ -1,6 +1,6 @@
 /*
- * Dummy.java
- * StockPlay - Dummy implementatie van de System.Scraper subklasse.
+ * ConcreteDummy.java
+ * StockPlay - Dummy implementatie van de User subklasse.
  *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
@@ -19,10 +19,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.kapti.backend.api.system.scraper;
+package com.kapti.backend.api.user;
 
-import com.kapti.backend.Pobject;
-import com.kapti.backend.api.system.IDatabase;
+import com.kapti.backend.api.User;
+import com.kapti.backend.api.Error;
+import org.apache.xmlrpc.XmlRpcException;
 
 /**
  * \brief   Dummy implementatie van de System.Scraper interface.
@@ -32,32 +33,16 @@ import com.kapti.backend.api.system.IDatabase;
  * te raadplegen. Deze implementatie kan zo gebruikt worden om een client-systeem
  * te testen.
  */
-public class Dummy implements IDatabase {
-    //
-    // Dataleden
-    //
-
-    private Pobject pobject = null;
-
-
+public class ConcreteDummy extends User {
     //
     // Methodes
     //
 
-    public void init(Pobject pobject) {
-        this.pobject = pobject;
-    }
-
-    public int Status() {
+    public int Hello(String iClient, int iProtocolVersion) throws XmlRpcException {
+        getLogger().info("Client connected: " + iClient);
+        if (iProtocolVersion != PROTOCOL_VERSION)
+            throw Error.VERSION_NOT_SUPPORTED.getException();
         return 1;
-    }
-
-    public boolean Stop() {
-        return false;
-    }
-
-    public boolean Restart() {
-        return true;
     }
 }
 
