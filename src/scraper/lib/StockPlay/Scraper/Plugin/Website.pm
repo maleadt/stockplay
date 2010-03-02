@@ -1,20 +1,23 @@
 ################################################################################
 # Configuration
 #
+## NAME		= Website
+## SOURCE	= allerhande websites
+## DESCRIPTION	= Functionaliteit voor website-scrapers.
+## TYPE		= abstract
 
 # Package definition
-package StockPlay::Scraper::Plugin;
+package StockPlay::Scraper::Plugin::Website;
 
 =pod
 
 =head1 NAME
 
-StockPlay::Scraper::Plugin - StockPlay scraper base plugin
+StockPlay::Scraper::Plugin::Website - StockPlay website scraper functionality
 
 =head1 DESCRIPTION
 
-The C<StockPlay::Scraper::Plugin> package contains base functionality for all
-plugins.
+Plugin met functionaliteit voor scrapers die websites gebruiken.
 
 =head1 SYNPOSIS
 
@@ -22,6 +25,11 @@ plugins.
 
 # Packages
 use Moose::Role;
+use WWW::Mechanize;
+use StockPlay::Scraper::Plugin;
+
+# Roles
+with 'StockPlay::Scraper::Plugin';
 
 # Write nicely
 use strict;
@@ -36,35 +44,30 @@ use warnings;
 
 =head1 ATTRIBUTES
 
-=head2 C<infohash>
-
-The plugin-specific infohash, containing the info keys defined in the plugin
-file. This infohash is constructed in C<StockPlay::Scraper::PluginManager::parse>,
-so look there for more information.
+=head2 C<browser>
 
 =cut
 
-has 'infohash' => (
+has 'browser' => (
 	is		=> 'ro',
-	isa		=> 'HashRef',
-	required	=> 1
+	isa		=> 'WWW::Mechanize',
+	builder		=> '_build_browser'
 );
+
+sub _build_browser {
+	my ($self) = @_;
+	
+	my $browser = new WWW::Mechanize;
+	$browser->agent('StockPlay/0.1');
+	
+	return $browser;
+}
+
 
 ################################################################################
 # Methods
 #
 
-=pod
-
-=head1 METHODS
-
-=cut
-
-requires 'getExchanges';
-
-requires 'getIndexes';
-
-requires 'getQuotes';
 
 ################################################################################
 # Auxiliary
