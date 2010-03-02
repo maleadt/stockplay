@@ -95,19 +95,39 @@ Maar er zijn ook generieke foutmeldingen, die van toepassing zijn op alle klasse
 
 \subsection{Authenticatie en autorisatie}
 
-Aangezien het XML-RPC protocol gebruik maakt van het HTTP-protocol, kunnen we diens functionaliteit gebruiken om authenticatie te bekomen. Daartoe zullen we gebruik maken van \emph{basic authentication}, waarbij de client indien gevraagt een gebruikersnaam en wachtwoord naar de server doorstuurd.
+Aangezien het XML-RPC protocol gebruik maakt van het HTTP-protocol, kunnen we diens functionaliteit gebruiken om authenticatie te bekomen. Daartoe zullen we gebruik maken van \emph{basic authentication}, waarbij de client indien gevraagd een gebruikersnaam en wachtwoord naar de server doorstuurd.
 \todo{Dit is tijdelijk - hoe bedoel je tijdelijk? Hier waren we toch al over eens denk ik? - Laur}
 
 Afhankelijk van de mogelijkheden van het XML-RPC pakket dat we in de backend gebruiken (Apache XML-RPC), kan dit op twee manieren verlopen. Indien de bibliotheek ondersteuning biedt voor het on-demand inschakelen van authenticatie gebaseerd op de ontvangen request, kunnen we zo wanneer benodigd \emph{basic authentication} inschakelen en de webserver zelf een HTTP-401 laten terugsturen. Hiervoor is dan geen extra code in de backend benodigd.
 Als deze optie niet dynamisch ingeschakeld kan worden, zullen we zelf een eigen foutmelding moeten terugsturen die aanduidt dat authorisatie benodigd is. Als de client zo een $<$fault$>$-bericht ontvangt, zal die een nieuwe XML-RPC socket openen op een alternatieve URL (bijvoorbeeld \texttt{http://server.hogent.be/authenticated}). Aangezien de URL nu verschillend is, kunnen we de webserver in de backend zodanig configureren dat authenticatie vereist is voor die zone. Zo bekomen we eveneens verplichte authenticatie voor bepaalde methodes, maar dit door ze enkel beschikbaar te stellen in een subset van het serverdomein. Dit vereist echter enige extra code in de backend.
 
-Autorisatie tenslotte is beperkt: met behulp van een integer bepalen we de rechten van de gebruiken. Mogelijke rechten zijn:
+Autorisatie wordt bepaald door een bitmap. Mogelijke rechten zijn:
 \begin{itemize}
-\item{0: niet ingelogd}
-\item{1: speler}
-\item{2: adminstrator}
-\item{3: scrapper}
+\item{1: securities bekijken}
+\item{2: rankings bekijken}
+\item{4: user-profielen bekijken}
+\item{8: securities verhandelen}
+\item{16: gebruikers wijzigen of verwijderen}
+\item{32: securities wijzigen of verwijderen}
+\item{64: quotes toevoegen of wijzigen}
 \end{itemize}
+
+Hoewel een administrator gebruikersprofielen (en bijhorende autorisatiebits) manueel kan aanpassen, kennen we de volgende categorieën gebruikers:
+\begin{table}
+\begin{center}
+\begin{tabular}{| c | r |}
+	\hline
+	\textbf{Gebruiker} & \textbf{Rechten} \\
+	\hline
+	Gast & 1 \\
+	Speler & 1+2+4+8 = 15 \\
+	Administrator & 1+2+4+8+16+32 = 63 \\
+	Scraper & 1+64 = 65 \\
+	\hline
+\end{tabular}
+\caption{Standaard gebruikersklassen en bijhorende rechten.}
+\end{center}
+\end{table}
 
 \subsection{System-klasse}
 
@@ -443,6 +463,22 @@ Tenslotte zijn er nog de methodes gerelateerd met het effectieve beurswezen, die
 		\end{itemize} }
 	{ niks }
 	{ administrator-rechten }
+
+\function{Security.Update}
+	{ nieuwe quote aan een security toevoegen (of updaten) }
+	{ een struct dat een quote voorstelt, met de volgende inhoud:
+		\begin{itemize}
+		\item{security: id van het security dat ge\"updatete moet worden}
+		\item{time: tijdstip waarop de quote gelde}
+		\item{price: huidige prijs}
+		\item{volume: omzet van het aandeel}
+		\item{buy: aankoopprijs}
+		\item{sell: verkoopsprijs}
+		\item{low: laagterecord van het aandeel}
+		\item{high: hoogterecord van het aandeel}
+		\end{itemize} }
+	{ niks }
+	{ scraper-rechten }
 
 De mogelijke vlaggen zijn:
 \begin{itemize}
