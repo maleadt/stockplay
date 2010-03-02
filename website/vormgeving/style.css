@@ -1,0 +1,38 @@
+#container {
+	width: 45em;
+	margin: auto;
+}
+
+#header {
+	background: url(../afbeeldingen/logo.png) left top no-repeat;
+	margin-top: 1.5em;
+	margin-bottom: 0.5em;
+	height: 40px;
+	width: 200px;
+}
+
+#header h1 {
+	display: none;
+}
+
+#content {
+	border-left: solid 1px #ace;
+	border-top: solid 1px #ace;
+	width: 100%;
+}
+
+#left {
+	background: #e9f4ff;
+	border-top: solid 2px white;
+	border-left: solid 2px white;
+	width: 13.1em;
+	height: 20em;
+}
+
+#leftBottom {
+	background: #f6fbff;
+	border-left: solid 2px white;
+	border-top: solid 1px #ace;
+	width: 13.1em;
+	height: 10em;
+}

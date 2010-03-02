@@ -2,7 +2,7 @@ $(function (){
 
     // grafiek opstellen
     function getData(x1, x2) {
-    	alert("data opvragen");
+    	//alert("data opvragen");
         var d = [];
         for (var i = 0; i <= 250; ++i) {
             var x = x1 + i * (x2 - x1) / 500;
@@ -66,6 +66,14 @@ $(function (){
     var vorige;
 
 	$("#plotTest div").bind('plotpan', function (event, plot) {
+        
+        var axes = plot.getAxes();
+
+        $.plot($("#plotTest div"), getData(axes.xaxis.min/10000000, axes.xaxis.max*2/10000000),
+                      $.extend(true, {}, options, {
+                          xaxis: { min: axes.xaxis.min, max: axes.xaxis.max }
+        }));        
+        
         return;
         
         var axes = plot.getAxes();
