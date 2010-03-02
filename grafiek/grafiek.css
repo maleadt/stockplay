@@ -1,0 +1,70 @@
+/* General */
+
+* {
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	font: 63% Arial, Verdana, sans-serif;
+	color: #5A5A5A;
+}
+
+#plotTest {
+	width: 560px;
+}
+
+.plot {
+	padding: 23px 14px 34px 22px;
+	background: url(plot.gif) no-repeat top left;
+}
+
+.plot .draw {
+	height: 250px;
+}
+
+.tickLabel {
+	font-size: 1.3em;
+}
+
+.legendLabel {
+	font-size: 1.4em;
+	padding: 2px;
+}
+
+.plot ul {
+	background: #fff;
+	list-style-type: none;
+	border: #d8d8d8 1px solid;
+	float: right;
+	position: relative;
+	padding: 0 6px;
+	top: -238px;
+	right: 12px;
+	display: none;
+}
+
+.plot:hover ul {
+	display: inherit;
+}
+
+.plot li {
+	margin-right: 1.4em;
+	background: no-repeat center left;
+	padding: 5px 0 5px 22px;
+	float: left;
+	font-size: 1.1em;
+}
+
+li.zoomOut {
+	background-image: url(magifier_zoom_out.png);
+}
+
+li.reset {
+	background-image: url(chart_line.png);
+	margin-right: 0;	
+}
+
+li {
+	cursor: pointer;
+}
