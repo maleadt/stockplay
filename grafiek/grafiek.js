@@ -2,9 +2,10 @@ $(function (){
 
     // grafiek opstellen
     function getData(x1, x2) {
+    	alert("data opvragen");
         var d = [];
-        for (var i = 0; i <= 25; ++i) {
-            var x = x1 + i * (x2 - x1) / 50;
+        for (var i = 0; i <= 250; ++i) {
+            var x = x1 + i * (x2 - x1) / 500;
             d.push([x*10000000, (Math.sin(x+4)+2)*25]);
         }
                 
@@ -35,7 +36,13 @@ $(function (){
         	mode: "time"
         },
         yaxis: { ticks: 6 },
-        selection: { mode: "x" },
+        //selection: { mode: "x" },
+        pan: {
+            interactive: true
+        },
+        zoom: {
+            interactive: true
+        },
         grid: {
     		borderWidth: 1,
     		borderColor: "#d8d8d8",
@@ -57,6 +64,21 @@ $(function (){
     
     var geschiedenis = new Array();
     var vorige;
+
+	$("#plotTest div").bind('plotpan', function (event, plot) {
+        return;
+        
+        var axes = plot.getAxes();
+        // zoom data ophalen
+        
+        //alert(axes.xaxis.min);
+        
+        $.plot($("#plotTest div"), getData(axes.xaxis.min/10000000, axes.xaxis.max*2/10000000), options,
+                      $.extend(true, {}, options, {
+                          //xaxis: { min: axes.xaxis.min, max: axes.xaxis.max }
+        }));
+                      
+    });
     
     $("#plotTest div").bind("plotselected", function (event, ranges) {
         // limiet instellen
@@ -75,6 +97,28 @@ $(function (){
        	geschiedenis.push(vorige);
         vorige = [ranges.xaxis.from, ranges.xaxis.to];
         
+    });
+    
+    $("#plotTest div").bind('plotzoom', function (event, plot) {
+        
+        return;
+        var ranges = plot.getAxes();
+        
+        // limiet instellen
+        if (ranges.xaxis.to - ranges.xaxis.min < 10000)
+            ranges.xaxis.to = ranges.xaxis.min + 10000;
+        if (ranges.yaxis.to - ranges.yaxis.min < 10000)
+            ranges.yaxis.to = ranges.yaxis.min + 10000;
+        
+        // zoom data ophalen
+        $.plot($("#plotTest div"), getData(ranges.xaxis.min/10000000, ranges.xaxis.max*2/10000000),
+                      $.extend(true, {}, options, {
+                          xaxis: { min: ranges.xaxis.min, max: ranges.xaxis.max }
+                      }));
+                      
+        // geschiedenis
+       	geschiedenis.push(vorige);
+        vorige = [ranges.xaxis.min, ranges.xaxis.max];
     });
         
     $("#plotTest li.hand.zoomOut").bind('click', function(e){
