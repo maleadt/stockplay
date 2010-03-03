@@ -1,0 +1,39 @@
+\chapter{Extra modules}
+
+\section{Dynamische grafieken}
+
+Op de internetwebsite zullen we een extra module ontwikkelen waarin grafieken dynamisch gemanipuleerd kunnen worden.
+De gebruikers zullen met eenvoudige muishandelingen andere grafische weergaven van de grafieken kunnen opvragen, zonder de pagina te herladen.
+Hiervoor zal gebruik gemaakt worden van de interpreter taal Javascript en de javascript bibliotheken \makeurl{JQuery}{http://jquery.com/}} en \makeurl{Flot}{http://code.google.com/p/flot/}}. JQuery is benodigd om de Flot bibliotheek werkend te krijgen en kunnen we ook op andere plaatsen op de website gebruiken. Deze bibliotheek gaat wat extra functies aan de html elementen hangen en geeft onze eenvoudige middelen om met AJAX extra informatie op te halen.
+We gebruiken Flot omdat aan deze bibliotheek nog acief ontwikkeld wordt. Alsook is ze heel eenvoudig gehouden en kan je er makkelijk op voortbouwen. Je kan er op voortbouwen door de ingebouwde events op te vangen en door gebruik te maken van de ingebouwde plugin functionaliteit. Er is ook ondersteuning voor datumweergave en er zijn plugins waarmee je een selectievenster op de grafiek kan activeren (om in te zoomen) en om de grafiek te kunnen verslepen.
+De grafieken worden getekend met een combinatie van HTML elementen en CANVAS. De HTML elementen kunnen we gemakkelijk vormgeven met CSS. Canvas wordt ge‘muleerd in Internet Explorer. Alsook kunnen we de grafieken van deze bibliotheek op een eenvoudige manier vullen met JSON.
+
+De module zal de volgende functionaliteit bevatten:
+\begin{itemize}
+\item{zoomen in de grafiek doormiddel van het scrolwiel}
+\item{zoomen in de grafiek doormiddel van een dubbelklik op een locatie}
+\item{uitzoomen met een knop}
+\item{de grafiek zal je kunnen vastnemen en over de x-as verslepen}
+\item{je zal kunnen wisselen tussen een sleepmodus en een modus waarin je een kader kan selecteren waarin je wil inzoomen (enkel over de x-as)}
+\item{er zal onderaan een tweede, gekoppelde grafiek te zien zijn waarin een bargrafiek te zien is waar de volumes van de effecten in te zien zijn}
+\item{eventueel: je zal extra referentie lijnen kunnen toevoegen}
+\item{je zal een beperkt aantal maal op je laatste handelingen kunnen terugkeren}
+\item{de opgehaalde punten zullen gecached worden en enkel indien vereist zal via AJAX nieuwe punten opgehaald worden}
+\end{itemize}
+
+\section{Module geavanceerde orders}
+
+In de order module zullen we een extra modulaire functionaliteit voorzien zodat we later extra types van geavanceerde orders kunnen toevoegen.
+Deze modules accepteren een aantal parameters (limietkoersen) en de huidige koers. Elke keer ze opgeroepen worden geven ze terug of aan de voorwaarde al dan niet voldaan is. Is de voorwaarde voldaan dan zal dit tot gevolg hebben dat het order omgezet zal worden in een effectieve aankoop van een effect.
+Deze modules kunnen ook extra informatie aan de backend vragen die kunnen helpen bij de keuze. Bijvoorbeeld: "Wat was de maximum koers van dit effect in periode x"?
+Elke module krijgt bij het oproepen drie parameters:
+\begin{itemize}
+\item{effectcode}
+\item{waarde een}
+\item{waarde twee}
+\end{itemize}
+
+Waarde een en twee zijn waardes die de gebruiker ingesteld heeft en hebben afhankelijk van de gekozen ordermodule een andere betekenis.
+Hierna volgt een overzicht van de modules die we zullen implementeren.
+
+\subsection{Algemene foutcodes}
