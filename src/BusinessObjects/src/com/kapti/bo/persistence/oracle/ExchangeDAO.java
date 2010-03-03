@@ -46,7 +46,7 @@ public class ExchangeDAO implements GenericDAO<Exchange, String> {
 
                 rs = stmt.executeQuery();
                 if (rs.next()) {
-                    //TODO: exchange ophalen eens geimplementeerd
+
                     return new Exchange(symbol, rs.getString(1), rs.getString(2));
                 } else {
                     throw new NonexistentEntityException("There is no security with symbol '" + symbol + "'");
@@ -84,7 +84,7 @@ public class ExchangeDAO implements GenericDAO<Exchange, String> {
                 rs = stmt.executeQuery();
                 ArrayList<Exchange> list = new ArrayList<Exchange>();
                 while (rs.next()) {
-                    //TODO: exchange ophalen eens geimplementeerd
+
                     list.add(new Exchange(rs.getString(1), rs.getString(2), rs.getString(3)));
 
                 }

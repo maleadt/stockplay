@@ -37,7 +37,7 @@ public class Security  {
         return symbol;
     }
 
-    public SharePrice getSharePrice(){
+    public Quote getSharePrice(){
         return null;
     }
 
@@ -46,7 +46,7 @@ public class Security  {
      * @param time
      * @return
      */
-    public SharePrice getSharePrice(Date time){
+    public Quote getSharePrice(Date time){
         return null;
     }
 

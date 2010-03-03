@@ -15,40 +15,40 @@ import java.util.Collection;
  *
  * @author Thijs
  */
-public class SharePriceDAO implements GenericDAO<SharePrice, SharePrice.SharePricePK> {
+public class QuoteDAO implements GenericDAO<Quote, Quote.QuotePK> {
 
-    private static final String SELECT_SHAREPRICE = "SELECT price, volume, buy, sell, low, high FROM shareprices WHERE symbol = ? AND timestamp = ?";
-    private static final String SELECT_SHAREPRICE_FILTER = "SELECT symbol, timestamp, price, volume, buy, sell, low, high  FROM shareprices "
+    private static final String SELECT_QUOTE = "SELECT price, volume, buy, sell, low, high FROM quotes WHERE symbol = ? AND timestamp = ?";
+    private static final String SELECT_QUOTE_FILTER = "SELECT symbol, timestamp, price, volume, buy, sell, low, high  FROM quotes "
             + "WHERE symbol LIKE ? AND price LIKE ? AND volume LIKE ? AND buy LIKE ? AND sell LIKE ? AND low LIKE ? AND high LIKE ?";
-    private static final String SELECT_SHAREPRICES = "SELECT symbol, name, exchange FROM shareprices";
-    private static final String INSERT_SHAREPRICE = "INSERT INTO shareprices(symbol, timestamp, price, volume, buy, sell, low, high) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
-    private static final String UPDATE_SHAREPRICE = "UPDATE shareprices SET price = ?, volume ?, buy = ?, sell = ?, low = ?, high = ? WHERE symbol = ? AND timestamp = ?";
-    private static final String DELETE_SHAREPRICE = "DELETE FROM shareprices WHERE symbol = ? AND timestamp = ?";
-    private static SharePriceDAO instance = new SharePriceDAO();
+    private static final String SELECT_QUOTES = "SELECT symbol, name, exchange FROM quotes";
+    private static final String INSERT_QUOTE = "INSERT INTO quotes(symbol, timestamp, price, volume, buy, sell, low, high) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
+    private static final String UPDATE_QUOTE = "UPDATE quotes SET price = ?, volume ?, buy = ?, sell = ?, low = ?, high = ? WHERE symbol = ? AND timestamp = ?";
+    private static final String DELETE_QUOTE = "DELETE FROM quotes WHERE symbol = ? AND timestamp = ?";
+    private static QuoteDAO instance = new QuoteDAO();
     private static SecurityDAO secDAO = SecurityDAO.getInstance();
 
-    public static SharePriceDAO getInstance() {
+    public static QuoteDAO getInstance() {
         return instance;
     }
 
-    public SharePrice findById(SharePrice.SharePricePK pk) throws StockPlayException {
+    public Quote findById(Quote.QuotePK pk) throws StockPlayException {
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
             try {
                 conn = OracleConnection.getConnection();
-                stmt = conn.prepareStatement(SELECT_SHAREPRICE);
+                stmt = conn.prepareStatement(SELECT_QUOTE);
 
                 stmt.setString(1, pk.getSecurity().getSymbol());
                 stmt.setDate(2, new Date(pk.getTime().getTime()));
 
                 rs = stmt.executeQuery();
                 if (rs.next()) {
-                    //TODO: exchange ophalen eens geimplementeerd
-                    return new SharePrice(pk.getSecurity(), pk.getTime(), rs.getDouble(1), rs.getInt(2), rs.getDouble(3), rs.getDouble(4), rs.getDouble(5), rs.getDouble(6));
+
+                    return new Quote(pk.getSecurity(), pk.getTime(), rs.getDouble(1), rs.getInt(2), rs.getDouble(3), rs.getDouble(4), rs.getDouble(5), rs.getDouble(6));
                 } else {
-                    throw new NonexistentEntityException("There is no shareprice with symbol '" + pk.getSecurity().getSymbol() + "' and timestamp '" + pk.getTime() + "'");
+                    throw new NonexistentEntityException("There is no quote with symbol '" + pk.getSecurity().getSymbol() + "' and timestamp '" + pk.getTime() + "'");
                 }
             } finally {
                 if (rs != null) {
@@ -66,14 +66,14 @@ public class SharePriceDAO implements GenericDAO<SharePrice, SharePrice.SharePri
         }
     }
 
-    public Collection<SharePrice> findByExample(SharePrice example) throws StockPlayException {
+    public Collection<Quote> findByExample(Quote example) throws StockPlayException {
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
             try {
                 conn = OracleConnection.getConnection();
-                stmt = conn.prepareStatement(SELECT_SHAREPRICE_FILTER);
+                stmt = conn.prepareStatement(SELECT_QUOTE_FILTER);
 
                 stmt.setString(1, '%' + example.getSecurity().getSymbol() + '%');
                 //stmt.setString(2, '%' + example.getTime().getTime() + '%');
@@ -114,10 +114,10 @@ public class SharePriceDAO implements GenericDAO<SharePrice, SharePrice.SharePri
                 }
 
                 rs = stmt.executeQuery();
-                ArrayList<SharePrice> list = new ArrayList<SharePrice>();
+                ArrayList<Quote> list = new ArrayList<Quote>();
                 while (rs.next()) {
-                    //TODO: exchange ophalen eens geimplementeerd
-                    list.add(new SharePrice(secDAO.findById(rs.getString(1)), rs.getDate(2), rs.getDouble(3), rs.getInt(4), rs.getDouble(5), rs.getDouble(6), rs.getDouble(7), rs.getDouble(8)));
+
+                    list.add(new Quote(secDAO.findById(rs.getString(1)), rs.getDate(2), rs.getDouble(3), rs.getInt(4), rs.getDouble(5), rs.getDouble(6), rs.getDouble(7), rs.getDouble(8)));
 
                 }
                 return list;
@@ -137,20 +137,20 @@ public class SharePriceDAO implements GenericDAO<SharePrice, SharePrice.SharePri
         }
     }
 
-    public Collection<SharePrice> findAll() throws StockPlayException {
+    public Collection<Quote> findAll() throws StockPlayException {
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
             try {
                 conn = OracleConnection.getConnection();
-                stmt = conn.prepareStatement(SELECT_SHAREPRICES);
+                stmt = conn.prepareStatement(SELECT_QUOTES);
 
                 rs = stmt.executeQuery();
-                ArrayList<SharePrice> list = new ArrayList<SharePrice>();
+                ArrayList<Quote> list = new ArrayList<Quote>();
                 while (rs.next()) {
-                    //TODO: exchange ophalen eens geimplementeerd
-                    list.add(new SharePrice(secDAO.findById(rs.getString(1)), rs.getDate(2), rs.getDouble(3), rs.getInt(4), rs.getDouble(5), rs.getDouble(6), rs.getDouble(7), rs.getDouble(8)));
+
+                    list.add(new Quote(secDAO.findById(rs.getString(1)), rs.getDate(2), rs.getDouble(3), rs.getInt(4), rs.getDouble(5), rs.getDouble(6), rs.getDouble(7), rs.getDouble(8)));
                 }
                 return list;
             } finally {
@@ -175,14 +175,14 @@ public class SharePriceDAO implements GenericDAO<SharePrice, SharePrice.SharePri
      * @return 
      * @throws StockPlayException
      */
-    public boolean create(SharePrice entity) throws StockPlayException {
+    public boolean create(Quote entity) throws StockPlayException {
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
             try {
                 conn = OracleConnection.getConnection();
-                stmt = conn.prepareStatement(INSERT_SHAREPRICE);
+                stmt = conn.prepareStatement(INSERT_QUOTE);
 
                 stmt.setString(1, entity.getSecurity().getSymbol());
                 stmt.setDate(2, new Date(entity.getTime().getTime()));
@@ -218,14 +218,14 @@ public class SharePriceDAO implements GenericDAO<SharePrice, SharePrice.SharePri
      * @return
      * @throws StockPlayException
      */
-    public boolean update(SharePrice entity) throws StockPlayException {
+    public boolean update(Quote entity) throws StockPlayException {
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
             try {
                 conn = OracleConnection.getConnection();
-                stmt = conn.prepareStatement(UPDATE_SHAREPRICE);
+                stmt = conn.prepareStatement(UPDATE_QUOTE);
 
 
                 stmt.setDouble(1, entity.getPrice());
@@ -256,14 +256,14 @@ public class SharePriceDAO implements GenericDAO<SharePrice, SharePrice.SharePri
         }
     }
 
-    public boolean delete(SharePrice entity) throws StockPlayException {
+    public boolean delete(Quote entity) throws StockPlayException {
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
             try {
                 conn = OracleConnection.getConnection();
-                stmt = conn.prepareStatement(DELETE_SHAREPRICE);
+                stmt = conn.prepareStatement(DELETE_QUOTE);
 
                 stmt.setString(1, entity.getSecurity().getSymbol());
                 stmt.setDate(2, new Date(entity.getTime().getTime()));

@@ -10,17 +10,17 @@ import java.util.Date;
  *
  * @author Thijs
  */
-public class SharePrice {
+public class Quote {
 
-    public class SharePricePK {
+    public class QuotePK {
 
         private Security security = null;
         private Date time = null;
 
-        public SharePricePK() {
+        public QuotePK() {
         }
 
-        public SharePricePK(Security security, Date time){
+        public QuotePK(Security security, Date time){
             this.security = security;
             this.time = time;
         }
@@ -38,14 +38,14 @@ public class SharePrice {
 
     }
 
-    private SharePricePK pk = null;
+    private QuotePK pk = null;
     private double price = 0.0;
     private int volume = 0;
     private double buy = 0, sell = 0;
     private double low = 0, high = 0;
 
-    public SharePrice(Security security, Date time, double price, int volume, double buy, double sell, double low, double high) {
-        this.pk = new SharePricePK(security, time);
+    public Quote(Security security, Date time, double price, int volume, double buy, double sell, double low, double high) {
+        this.pk = new QuotePK(security, time);
         this.price = price;
         this.volume = volume;
         this.buy = buy;
@@ -110,7 +110,7 @@ public class SharePrice {
         this.volume = volume;
     }
 
-    public SharePricePK getPk() {
+    public QuotePK getPk() {
         return pk;
     }
 
