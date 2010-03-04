@@ -4,10 +4,10 @@
  */
 package com.kapti.bo.persistence;
 
-import com.kapti.bo.persistence.oracle.SecurityDAO;
-import com.kapti.bo.persistence.oracle.ExchangeDAO;
-import com.kapti.bo.Exchange;
-import com.kapti.bo.Security;
+import com.kapti.data.persistence.oracle.SecurityDAO;
+import com.kapti.data.persistence.oracle.ExchangeDAO;
+import com.kapti.data.Exchange;
+import com.kapti.data.Security;
 import java.util.Collection;
 import org.junit.After;
 import org.junit.AfterClass;

@@ -5,6 +5,8 @@
 
 package com.kapti.bo.persistence;
 
+import com.kapti.data.persistence.StockPlayDAO;
+import com.kapti.data.persistence.StockPlayDAOFactory;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -45,7 +47,7 @@ public class StockPlayDAOFactoryTest {
         System.out.println("getDAO");
 
         StockPlayDAO result = StockPlayDAOFactory.getDAO();
-        assertTrue(result instanceof com.kapti.bo.persistence.oracle.OracleStockPlayDAO);
+        assertTrue(result instanceof com.kapti.data.persistence.oracle.OracleStockPlayDAO);
 
     }
 

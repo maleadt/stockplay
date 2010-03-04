@@ -4,8 +4,8 @@
  */
 package com.kapti.bo.persistence;
 
-import com.kapti.bo.persistence.oracle.ExchangeDAO;
-import com.kapti.bo.Exchange;
+import com.kapti.data.persistence.oracle.ExchangeDAO;
+import com.kapti.data.Exchange;
 import java.util.Collection;
 import org.junit.After;
 import org.junit.AfterClass;
