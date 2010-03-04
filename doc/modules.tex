@@ -24,7 +24,7 @@ De module zal de volgende functionaliteit bevatten:
 \section{Module geavanceerde orders}
 
 In de order module zullen we een extra modulaire functionaliteit voorzien zodat we later extra types van geavanceerde orders kunnen toevoegen.
-Deze modules accepteren een aantal parameters (limietkoersen) en de huidige koers. Elke keer ze opgeroepen worden geven ze terug of aan de voorwaarde al dan niet voldaan is. Is de voorwaarde voldaan dan zal dit tot gevolg hebben dat het order omgezet zal worden in een effectieve aankoop van een effect.
+Deze modules accepteren twee parameters (limietkoersen), de huidige koers, het type order (aankoop of verkoop) en het tijdstip op wanneer het order aangemaakt is. Elke keer ze opgeroepen worden geven ze terug of aan de voorwaarde al dan niet voldaan is. Is de voorwaarde voldaan dan zal dit tot gevolg hebben dat het order omgezet zal worden in een effectieve aankoop van een effect.
 Deze modules kunnen ook extra informatie aan de backend vragen die kunnen helpen bij de keuze. Bijvoorbeeld: "Wat was de maximum koers van dit effect in periode x"?
 Elke module krijgt bij het oproepen drie parameters:
 \begin{itemize}
@@ -36,4 +36,17 @@ Elke module krijgt bij het oproepen drie parameters:
 Waarde een en twee zijn waardes die de gebruiker ingesteld heeft en hebben afhankelijk van de gekozen ordermodule een andere betekenis.
 Hierna volgt een overzicht van de modules die we zullen implementeren.
 
-\subsection{Algemene foutcodes}
+\subsection{Onmiddellijk uitvoeren}
+Deze module gebruikt de gegeven parameters niet en evalueert de voorwaarde steeds als waar. Het order wordt onmiddellijk uitgevoerd.
+
+\subsection{Koerslimiet}
+Deze module gebruikt de eerste parameter als limietwaarde. Bij een aankooporder gaat hij een positief antwoord geven als de koers lager is dan de limietwaarde. Deze koersinformatie komt hij via de backend te weten. Bij een verkooporder gebeurd het omgekeerde. 
+
+\subsection{Trailling-stop}
+Bij een verkoop order wordt de trigger waarde ingesteld op een vast aantal beurspunten onder de hoogste koers. Als de hoogste koers dus verhoogd in waarde, dan verhoogd ook de trigger waarde evenveel punten. Hetzelfde kan ook ingesteld worden bij een aankooporder. Deze trigger waarde krijgt de module via de parameters mee en het maximum sinds de periode van het plaatsen van de order en het huidige tijdstip vraagt deze aan de backend.
+
+\subsection{Bracket-limiet}
+Als de koers buiten een van de twee limietwaarden valt dan geeft de module een positief antwoord terug.
+
+\subsection{Stop loss}
+De module vraagt bij een aankooporder aan de backend wat de laagste prijs was tussen het plaatsen van het order en het huidige tijdstip. Is dit minimum lager dan de eerste parameter, dan geeft de module een positief antwoord terug. Bij een verkooporder gebeurd het omgekeerde.
