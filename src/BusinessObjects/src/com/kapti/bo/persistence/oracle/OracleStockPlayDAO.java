@@ -7,12 +7,15 @@ package com.kapti.bo.persistence.oracle;
 
 import com.kapti.bo.Exchange;
 import com.kapti.bo.Index;
+import com.kapti.bo.IndexSecurity;
 import com.kapti.bo.Order;
 import com.kapti.bo.Security;
 import com.kapti.bo.Quote;
 import com.kapti.bo.Quote.QuotePK;
 import com.kapti.bo.Transaction;
 import com.kapti.bo.User;
+import com.kapti.bo.UserSecurity;
+import com.kapti.bo.UserSecurity.UserSecurityPK;
 import com.kapti.bo.persistence.GenericDAO;
 import com.kapti.bo.persistence.StockPlayDAO;
 
@@ -49,6 +52,14 @@ public class OracleStockPlayDAO implements StockPlayDAO{
 
     public GenericDAO<Transaction, Integer> getTransactionDAO() {
        return TransactionDAO.getInstance();
+    }
+
+    public GenericDAO<IndexSecurity, IndexSecurity> getIndexSecurityDAO() {
+        return IndexSecurityDAO.getInstance();
+    }
+
+    public GenericDAO<UserSecurity, UserSecurityPK> getUserSecurityDAO() {
+        return UserSecurityDAO.getInstance();
     }
 
 }

@@ -84,10 +84,10 @@ public class UserDAO implements GenericDAO<User, Integer> {
                 conn = OracleConnection.getConnection();
                 stmt = conn.prepareStatement(SELECT_USERS_FILTER);
 
-                if (example.getId() != 1) {
+                if (example.getId() != 0) {
                     stmt.setString(1, "%" + example.getId() + "%");
                 } else {
-                    stmt.setString(1, "%");
+                    stmt.setString(1, "%%");
                 }
 
                 stmt.setString(2, '%' + example.getNickname() + '%');
