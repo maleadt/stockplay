@@ -22,6 +22,10 @@ plugins.
 
 # Packages
 use Moose::Role;
+use StockPlay::Exchange;
+use StockPlay::Index;
+use StockPlay::Security;
+use StockPlay::Quote;
 
 # Write nicely
 use strict;
@@ -58,13 +62,44 @@ has 'infohash' => (
 
 =head1 METHODS
 
+=head2 C<$plugin->getExchanges()>
+
+This method returns an array containing all the exchanges the plugin can
+fetch.
+
 =cut
 
 requires 'getExchanges';
 
+=pod
+
+=head2 C<$plugin->getIndexes($exchange)>
+
+This method returns an array of available indexes, each of them packed in
+an L<StockPlay::Index> object.
+
+=cut
+
 requires 'getIndexes';
 
-requires 'getQuotes';
+=pod
+
+=head2 C<$plugin->getSecurities($exchange)>
+
+This method returns all quotes available at the given exchange. These quotes,
+packed in an array, are all instantiations of the L<StockPlay::Quote> object.
+
+=cut
+
+requires 'getSecurities';
+
+=pod
+
+=head2 C<$plugin->getQuote($security)>
+
+=cut
+
+requires 'getQuote';
 
 ################################################################################
 # Auxiliary

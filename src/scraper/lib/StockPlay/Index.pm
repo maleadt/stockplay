@@ -1,47 +1,76 @@
-#!/usr/bin/env perl
-
 ################################################################################
 # Configuration
 #
 
-# XXX: library location
-use lib '../lib';
-
-# Packages
-use StockPlay::Scraper::PluginManager;
-
-# Write nicely
-use warnings;
-use strict;
-
-
-################################################################################
-# Main
-#
-
-print "* Loading scraper\n";
-
-# Plugin manager
-print "- Loading plugin manager\n";
-my $pluginmanager = new StockPlay::Scraper::PluginManager;
-
-#$blabla->run();
-
-exit(0);
-
-__END__
-
-################################################################################
-# Documentation
-#
+# Package definition
+package StockPlay::Index;
 
 =pod
 
 =head1 NAME
 
-stockplay-scraper - Scraper component of StockPlay
+StockPlay::Index - StockPlay index data object
 
-=head1 SYNOPSIS
+=head1 DESCRIPTION
+
+The C<StockPlay::Index> package contains a container for all index-related
+data.
+
+=head1 SYNPOSIS
+
+=cut
+
+# Packages
+use Moose;
+
+# Consume roles
+with 'StockPlay::Object';
+
+# Write nicely
+use strict;
+use warnings;
+
+
+################################################################################
+# Attributes
+#
+
+=pod
+
+=head1 ATTRIBUTE
+
+=cut
+
+has 'description' => (
+	is		=> 'ro',
+	isa		=> 'Str'
+);
+
+################################################################################
+# Methods
+#
+
+=pod
+
+=head1 METHODS
+
+=cut
+
+################################################################################
+# Auxiliary
+#
+
+=pod
+
+=head1 AUXILIARY
+
+=cut
+
+1;
+
+__END__
+
+=pod
 
 =head1 COPYRIGHT
 
