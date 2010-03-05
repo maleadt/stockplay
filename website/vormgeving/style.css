@@ -5,10 +5,21 @@ body {
 	font:x-small sans-serif;
 	font-size/* */:/**/small;
 	font-size: /**/small;
+	font-family: 'Lucida Sans', 'Lucida Sans Unicode', 'Lucida Grande', LucidaGrande, Geneva, Arial, sans-serif;
+	font-size: 13px;	
+}
+
+a {
+	color: #4395cd;
+	text-decoration: none;
+}
+
+a:hover {
+	color: #4395cd;
 }
 
 #container {
-	width: 45em;
+	width: 64em;
 	margin: auto;
 }
 
@@ -25,7 +36,6 @@ body {
 }
 
 #content {
-	border-left: solid 1px #ace;
 	border-top: solid 1px #ace;
 	width: 100%;
 }
@@ -35,20 +45,76 @@ body {
 	border-top: solid 2px white;
 	border-left: solid 2px white;
 	width: 15.9em;
-	height: 20em;
+}
+
+#menu {
+	float:left;
+	border-left: solid 1px #ace;
+}
+
+#left ul {
+	padding-left: 1em;
+	margin-bottom: 0;
+	padding-top: 1em;
+	padding-bottom: 3em;
+	list-style: none;
+}
+
+#left li {
+	padding-top: 0.2em;
+}
+
+#left li a {
+	margin-left: 0;
+	padding-left: 0;
+	padding: 0.3em;
+	font-size: 0.8em;
+}
+
+#left li a {
+	color: #666;
+	text-decoration: none;
+}
+
+#left li a:hover {
+	color: #4395cd;
+}
+
+#left li.niv2 {
+	margin-left: 1em;
+}
+
+#leftBottom p {
+	color: #666;
+	font-size: 0.8em;
 }
 
 #leftBottom {
 	background: #f6fbff;
 	border-left: solid 2px white;
 	border-top: solid 1px #ace;
-	width: 15.9em;
-	height: 10em;
+	width: 14.9em;
+	padding: 1em 0 2em 1em;
+}
+
+#leftBottom a:hover {
+	color: #666;
+}
+
+#right {
+	float: right;
+}
+
+#right li.action {
+	border: solid 1px red;
+	display: block;
+	float: left;
+	padding: 2px;
 }
 
 #search {
-	margin: 1.5em 0 1em 2em;
-	width: 12.4em;
+	margin: 1.5em 0 1em 1em;
+	width: 14.4em;
 	height: 1.4em;
 	padding-left: 1.7em;
 	background: url(../afbeeldingen/magnifier.png) 1px 1px no-repeat;

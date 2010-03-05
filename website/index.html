@@ -1,7 +1,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
 		<link href="vormgeving/style.css" rel="stylesheet" type="text/css" />
+		<link rel="stylesheet" href="../grafiek/grafiek.css" type="text/css" media="screen"/>
 		<title>Stockplay</title>
 	</head>
 	<body>
@@ -10,29 +11,54 @@
 				<h1>StockPlay</h1>
 			</div>
 			<div id="content">
-				<div id="left">
-					<input id="search" name="search" type="zoeken" value="Effect zoeken.." />
-					<ul>
-						<li>Default</li>
-						<li>Overview</li>
-						<li>Portfolio</li>
-						<li>Security</li>
-						<li>SecuritysOverview</li>
-						<li>TransactionsHistory</li>
-						<li>Klassement</li>
-						<li>User</li>
-						<li>Overview</li>
-						<li>Portfolio</li>
-						<li>Transactions History</li>
-					</ul>
-				</div>
-				<div id="leftBottom">
+				<div id="menu">
+					<div id="left">
+						<input id="search" name="search" type="text" value="Effect zoeken.." />
+						<ul>
+							<li><a href="#">Default</a></li>
+							<li><a href="#">Overview</a></li>
+							<li class="niv2"><a href="#">Portfolio</a></li>
+							<li class="niv2"><a href="#">Security</a></li>
+							<li><a href="#">Securitys Overview</a></li>
+							<li><a href="#">Transactions History</a></li>
+							<li><a href="#">Klassement</a></li>
+							<li><a href="#">User</a></li>
+							<li class="niv2"><a href="#">Overview</a></li>
+							<li class="niv2"><a href="#">Portfolio</a></li>
+							<li class="niv2"><a href="#">Transactions History</a></li>
+						</ul>
+					</div>
+					<div id="leftBottom">
+						<p><a href="">User</a> > <a href="">Transactions History</a></p>
+						<p>Logged in as: <a href="">Laurens</a></p>
+						<p>Your capital: &#8364;100,045.04</p>
+					</div>
 				</div>
 				<div id="right">
+					<h2>Portfolio overview</h2>
+					<ul>
+						<li class="action buy">Buy Security</li>
+						<li class="action sell">Sell Security</li>
+					</ul>
+					<div id="plotTest" class="plot">
+						<div class="draw"></div>
+							<ul>
+								<li class="zoomOut hand">Uitzoomen</li>
+								<li class="reset hand">Herstel</li>
+							</ul>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
 		<script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
+		<script type="text/javascript" src="dynamiek/taalbestanden/nl-be.js"></script>
 		<script type="text/javascript" src="dynamiek/algemeen.js"></script>
+		<script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
+		<!--[if IE]><script language="javascript" type="text/javascript" src="../grafiek/flot/excanvas.min.js"></script><![endif]-->
+		<script type="text/javascript" src="../grafiek/flot/jquery.flot.min.js"></script>
+		<script type="text/javascript" src="../grafiek/flot/jquery.flot.selection.min.js"></script>
+ 		<script type="text/javascript" src="../grafiek/flot/jquery.flot.navigate.min.js"></script>
+		<script type="text/javascript" src="../grafiek/grafiek.js"></script>
 	</body>
 </html>

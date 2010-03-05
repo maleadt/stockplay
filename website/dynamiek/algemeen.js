@@ -1,7 +1,6 @@
 // Variabelen
 
 var searchBox = $('#search');
-var searchDefault ='Effect zoeken..';
 
 // Standaard tekst in de zoekbalk
 
