@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
-Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "Website", "..\..\..\School\VOP\Website\", "{4918FEC4-A0BA-42CD-975D-CE981BC1BCC5}"
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "Website", "..\Website\", "{4918FEC4-A0BA-42CD-975D-CE981BC1BCC5}"
 	ProjectSection(WebsiteProperties) = preProject
 		SccProjectName = "Svn"
 		SccAuxPath = "Svn"
@@ -9,14 +9,14 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "Website", "..\..\..\School\
 		SccProvider = "SubversionScc"
 		TargetFramework = "3.5"
 		Debug.AspNetCompiler.VirtualPath = "/Website"
-		Debug.AspNetCompiler.PhysicalPath = "..\..\..\School\VOP\Website\"
+		Debug.AspNetCompiler.PhysicalPath = "..\Website\"
 		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\Website\"
 		Debug.AspNetCompiler.Updateable = "true"
 		Debug.AspNetCompiler.ForceOverwrite = "true"
 		Debug.AspNetCompiler.FixedNames = "false"
 		Debug.AspNetCompiler.Debug = "True"
 		Release.AspNetCompiler.VirtualPath = "/Website"
-		Release.AspNetCompiler.PhysicalPath = "..\..\..\School\VOP\Website\"
+		Release.AspNetCompiler.PhysicalPath = "..\Website\"
 		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\Website\"
 		Release.AspNetCompiler.Updateable = "true"
 		Release.AspNetCompiler.ForceOverwrite = "true"
