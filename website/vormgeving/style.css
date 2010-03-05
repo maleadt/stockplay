@@ -1,3 +1,12 @@
+body {
+	background: #fff;
+	margin: 0;
+	padding: 0;
+	font:x-small sans-serif;
+	font-size/* */:/**/small;
+	font-size: /**/small;
+}
+
 #container {
 	width: 45em;
 	margin: auto;
@@ -25,7 +34,7 @@
 	background: #e9f4ff;
 	border-top: solid 2px white;
 	border-left: solid 2px white;
-	width: 13.1em;
+	width: 15.9em;
 	height: 20em;
 }
 
@@ -33,6 +42,15 @@
 	background: #f6fbff;
 	border-left: solid 2px white;
 	border-top: solid 1px #ace;
-	width: 13.1em;
+	width: 15.9em;
 	height: 10em;
+}
+
+#search {
+	margin: 1.5em 0 1em 2em;
+	width: 12.4em;
+	height: 1.4em;
+	padding-left: 1.7em;
+	background: url(../afbeeldingen/magnifier.png) 1px 1px no-repeat;
+	color: grey;
 }
