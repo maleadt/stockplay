@@ -31,6 +31,7 @@ Elke module krijgt bij het oproepen drie parameters:
 \item{waarde een}
 \item{waarde twee}
 \end{itemize}
+\todo{2 parameters? CSV? BLOB?}
 
 Waarde een en twee zijn waardes die de gebruiker ingesteld heeft en hebben afhankelijk van de gekozen ordermodule een andere betekenis.
 Hierna volgt een overzicht van de modules die we zullen implementeren.
@@ -41,7 +42,7 @@ Deze module gebruikt de gegeven parameters niet en evalueert de voorwaarde steed
 \subsection{Koerslimiet}
 Deze module gebruikt de eerste parameter als limietwaarde. Bij een aankooporder gaat hij een positief antwoord geven als de koers lager is dan de limietwaarde. Deze koersinformatie komt hij via de backend te weten. Bij een verkooporder gebeurd het omgekeerde. 
 
-\subsection{Trailling-stop}
+\subsection{Trailing-stop}
 Bij een verkoop order wordt de trigger waarde ingesteld op een vast aantal beurspunten onder de hoogste koers. Als de hoogste koers dus verhoogd in waarde, dan verhoogd ook de trigger waarde evenveel punten. Hetzelfde kan ook ingesteld worden bij een aankooporder. Deze trigger waarde krijgt de module via de parameters mee en het maximum sinds de periode van het plaatsen van de order en het huidige tijdstip vraagt deze aan de backend.
 
 \subsection{Bracket-limiet}
