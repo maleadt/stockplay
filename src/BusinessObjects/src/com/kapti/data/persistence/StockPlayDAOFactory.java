@@ -21,9 +21,11 @@ public class StockPlayDAOFactory {
      * deployment descriptor
      */
     public static StockPlayDAO getDAO() throws StockPlayException {
+
+
         try {
             StockPlayDAO spDAO = null;
-            ResourceBundle rb = ResourceBundle.getBundle("com.kapti.bo.persistence.StockPlayDAOFactory");
+            ResourceBundle rb = ResourceBundle.getBundle("com.kapti.data.persistence.StockPlayDAOFactory");
             spDAO = (StockPlayDAO) Class.forName(rb.getString("Class")).newInstance();
             return spDAO;
         } catch (InstantiationException ex) {

@@ -17,15 +17,14 @@ import java.util.Collection;
  */
 public class QuoteDAO implements GenericDAO<Quote, Quote.QuotePK> {
 
-    private static final String SELECT_QUOTE = "SELECT price, volume, buy, sell, low, high FROM quotes WHERE symbol = ? AND timestamp = ?";
-    private static final String SELECT_QUOTE_FILTER = "SELECT symbol, timestamp, price, volume, buy, sell, low, high  FROM quotes "
-            + "WHERE symbol LIKE ? AND price LIKE ? AND volume LIKE ? AND buy LIKE ? AND sell LIKE ? AND low LIKE ? AND high LIKE ?";
-    private static final String SELECT_QUOTES = "SELECT symbol, name, exchange FROM quotes";
-    private static final String INSERT_QUOTE = "INSERT INTO quotes(symbol, timestamp, price, volume, buy, sell, low, high) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
-    private static final String UPDATE_QUOTE = "UPDATE quotes SET price = ?, volume ?, buy = ?, sell = ?, low = ?, high = ? WHERE symbol = ? AND timestamp = ?";
+    private static final String SELECT_QUOTE = "SELECT price, volume, bid, ask, low, high, open FROM quotes WHERE symbol = ? AND timestamp = ?";
+    private static final String SELECT_QUOTE_FILTER = "SELECT symbol, timestamp, price, volume, bid, ask, low, high, open FROM quotes "
+            + "WHERE symbol LIKE ? AND price LIKE ? AND volume LIKE ? AND bid LIKE ? AND ask LIKE ? AND low LIKE ? AND high LIKE ? AND open LIKE ?";
+    private static final String SELECT_QUOTES = "SELECT symbol, timestamp, price, volume, bid, ask, low, high, open FROM quotes";
+    private static final String INSERT_QUOTE = "INSERT INTO quotes(symbol, timestamp, price, volume, bid, ask, low, high, open) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private static final String UPDATE_QUOTE = "UPDATE quotes SET price = ?, volume ?, bid = ?, ask = ?, low = ?, high = ?, open ? WHERE symbol = ? AND timestamp = ?";
     private static final String DELETE_QUOTE = "DELETE FROM quotes WHERE symbol = ? AND timestamp = ?";
     private static QuoteDAO instance = new QuoteDAO();
-    private static SecurityDAO secDAO = SecurityDAO.getInstance();
 
     public static QuoteDAO getInstance() {
         return instance;
@@ -40,15 +39,15 @@ public class QuoteDAO implements GenericDAO<Quote, Quote.QuotePK> {
                 conn = OracleConnection.getConnection();
                 stmt = conn.prepareStatement(SELECT_QUOTE);
 
-                stmt.setString(1, pk.getSecurity().getSymbol());
+                stmt.setString(1, pk.getSecurity());
                 stmt.setDate(2, new Date(pk.getTime().getTime()));
 
                 rs = stmt.executeQuery();
                 if (rs.next()) {
 
-                    return new Quote(pk.getSecurity(), pk.getTime(), rs.getDouble(1), rs.getInt(2), rs.getDouble(3), rs.getDouble(4), rs.getDouble(5), rs.getDouble(6));
+                    return new Quote(pk.getSecurity(), pk.getTime(), rs.getDouble(1), rs.getInt(2), rs.getDouble(3), rs.getDouble(4), rs.getDouble(5), rs.getDouble(6), rs.getDouble(7));
                 } else {
-                    throw new NonexistentEntityException("There is no quote with symbol '" + pk.getSecurity().getSymbol() + "' and timestamp '" + pk.getTime() + "'");
+                    throw new NonexistentEntityException("There is no quote with symbol '" + pk.getSecurity() + "' and timestamp '" + pk.getTime() + "'");
                 }
             } finally {
                 if (rs != null) {
@@ -75,7 +74,7 @@ public class QuoteDAO implements GenericDAO<Quote, Quote.QuotePK> {
                 conn = OracleConnection.getConnection();
                 stmt = conn.prepareStatement(SELECT_QUOTE_FILTER);
 
-                stmt.setString(1, '%' + example.getSecurity().getSymbol() + '%');
+                stmt.setString(1, '%' + example.getSecurity() + '%');
                 //stmt.setString(2, '%' + example.getTime().getTime() + '%');
                 if (example.getPrice() != 0.0) {
                     stmt.setString(2, "%" + example.getPrice() + "%");
@@ -89,14 +88,14 @@ public class QuoteDAO implements GenericDAO<Quote, Quote.QuotePK> {
                     stmt.setString(3, "%");
                 }
 
-                if (example.getBuy() != 0.0) {
-                    stmt.setString(4, "%" + example.getBuy() + "%");
+                if (example.getBid() != 0.0) {
+                    stmt.setString(4, "%" + example.getBid() + "%");
                 } else {
                     stmt.setString(4, "%");
                 }
 
-                if (example.getSell() != 0.0) {
-                    stmt.setString(5, "%" + example.getSell() + "%");
+                if (example.getAsk() != 0.0) {
+                    stmt.setString(5, "%" + example.getAsk() + "%");
                 } else {
                     stmt.setString(5, "%");
                 }
@@ -113,11 +112,17 @@ public class QuoteDAO implements GenericDAO<Quote, Quote.QuotePK> {
                     stmt.setString(7, "%");
                 }
 
+                                if (example.getOpen() != 0.0) {
+                    stmt.setString(8, "%" + example.getHigh() + "%");
+                } else {
+                    stmt.setString(8, "%");
+                }
+
                 rs = stmt.executeQuery();
                 ArrayList<Quote> list = new ArrayList<Quote>();
                 while (rs.next()) {
 
-                    list.add(new Quote(secDAO.findById(rs.getString(1)), rs.getDate(2), rs.getDouble(3), rs.getInt(4), rs.getDouble(5), rs.getDouble(6), rs.getDouble(7), rs.getDouble(8)));
+                    list.add(new Quote(rs.getString(1), rs.getDate(2), rs.getDouble(3), rs.getInt(4), rs.getDouble(5), rs.getDouble(6), rs.getDouble(7), rs.getDouble(8),rs.getDouble(9)));
 
                 }
                 return list;
@@ -150,7 +155,7 @@ public class QuoteDAO implements GenericDAO<Quote, Quote.QuotePK> {
                 ArrayList<Quote> list = new ArrayList<Quote>();
                 while (rs.next()) {
 
-                    list.add(new Quote(secDAO.findById(rs.getString(1)), rs.getDate(2), rs.getDouble(3), rs.getInt(4), rs.getDouble(5), rs.getDouble(6), rs.getDouble(7), rs.getDouble(8)));
+                    list.add(new Quote(rs.getString(1), rs.getDate(2), rs.getDouble(3), rs.getInt(4), rs.getDouble(5), rs.getDouble(6), rs.getDouble(7), rs.getDouble(8),rs.getDouble(9)));
                 }
                 return list;
             } finally {
@@ -184,14 +189,15 @@ public class QuoteDAO implements GenericDAO<Quote, Quote.QuotePK> {
                 conn = OracleConnection.getConnection();
                 stmt = conn.prepareStatement(INSERT_QUOTE);
 
-                stmt.setString(1, entity.getSecurity().getSymbol());
+                stmt.setString(1, entity.getSecurity());
                 stmt.setDate(2, new Date(entity.getTime().getTime()));
                 stmt.setDouble(3, entity.getPrice());
                 stmt.setInt(4, entity.getVolume());
-                stmt.setDouble(5, entity.getBuy());
-                stmt.setDouble(6, entity.getSell());
+                stmt.setDouble(5, entity.getBid());
+                stmt.setDouble(6, entity.getAsk());
                 stmt.setDouble(7, entity.getLow());
                 stmt.setDouble(8, entity.getHigh());
+                stmt.setDouble(9, entity.getOpen());
 
                 return stmt.executeUpdate() == 1;
 
@@ -230,13 +236,13 @@ public class QuoteDAO implements GenericDAO<Quote, Quote.QuotePK> {
 
                 stmt.setDouble(1, entity.getPrice());
                 stmt.setInt(2, entity.getVolume());
-                stmt.setDouble(3, entity.getBuy());
-                stmt.setDouble(4, entity.getSell());
+                stmt.setDouble(3, entity.getBid());
+                stmt.setDouble(4, entity.getAsk());
                 stmt.setDouble(5, entity.getLow());
                 stmt.setDouble(6, entity.getHigh());
-                stmt.setString(7, entity.getSecurity().getSymbol());
-                stmt.setDate(8, new Date(entity.getTime().getTime()));
-
+                stmt.setString(8, entity.getSecurity());
+                stmt.setDate(9, new Date(entity.getTime().getTime()));
+                stmt.setDouble(7, entity.getOpen());
                 return stmt.executeUpdate() == 1;
 
 
@@ -265,7 +271,7 @@ public class QuoteDAO implements GenericDAO<Quote, Quote.QuotePK> {
                 conn = OracleConnection.getConnection();
                 stmt = conn.prepareStatement(DELETE_QUOTE);
 
-                stmt.setString(1, entity.getSecurity().getSymbol());
+                stmt.setString(1, entity.getSecurity());
                 stmt.setDate(2, new Date(entity.getTime().getTime()));
 
                 return stmt.executeUpdate() == 1;

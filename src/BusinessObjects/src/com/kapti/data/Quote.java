@@ -14,18 +14,18 @@ public class Quote {
 
     public class QuotePK {
 
-        private Security security = null;
+        private String security = null;
         private Date time = null;
 
         public QuotePK() {
         }
 
-        public QuotePK(Security security, Date time){
+        public QuotePK(String security, Date time){
             this.security = security;
             this.time = time;
         }
 
-        public Security getSecurity() {
+        public String getSecurity() {
             return security;
         }
 
@@ -41,25 +41,27 @@ public class Quote {
     private QuotePK pk = null;
     private double price = 0.0;
     private int volume = 0;
-    private double buy = 0, sell = 0;
+    private double bid = 0, ask = 0;
     private double low = 0, high = 0;
+    private double open = 0;
 
-    public Quote(Security security, Date time, double price, int volume, double buy, double sell, double low, double high) {
+    public Quote(String security, Date time, double price, int volume, double bid, double ask, double low, double high, double open) {
         this.pk = new QuotePK(security, time);
         this.price = price;
         this.volume = volume;
-        this.buy = buy;
-        this.sell = sell;
+        this.bid = bid;
+        this.ask = ask;
         this.low = low;
         this.high = high;
+        this.open = open;
     }
 
-    public Security getSecurity() {
+    public String getSecurity() {
         return pk.getSecurity();
     }
 
-    public double getBuy() {
-        return buy;
+    public double getBid() {
+        return bid;
     }
 
     public double getHigh() {
@@ -74,8 +76,8 @@ public class Quote {
         return price;
     }
 
-    public double getSell() {
-        return sell;
+    public double getAsk() {
+        return ask;
     }
 
     public Date getTime() {
@@ -87,7 +89,7 @@ public class Quote {
     }
 
     public void setBuy(double buy) {
-        this.buy = buy;
+        this.bid = buy;
     }
 
     public void setHigh(double high) {
@@ -103,7 +105,7 @@ public class Quote {
     }
 
     public void setSell(double sell) {
-        this.sell = sell;
+        this.ask = sell;
     }
 
     public void setVolume(int volume) {
@@ -113,6 +115,16 @@ public class Quote {
     public QuotePK getPk() {
         return pk;
     }
+
+    public double getOpen() {
+        return open;
+    }
+
+    public void setOpen(double open) {
+        this.open = open;
+    }
+
+
 
     
 }

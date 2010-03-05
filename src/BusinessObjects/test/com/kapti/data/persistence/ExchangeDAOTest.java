@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.kapti.bo.persistence;
+package com.kapti.data.persistence;
 
 import com.kapti.data.persistence.oracle.ExchangeDAO;
 import com.kapti.data.Exchange;

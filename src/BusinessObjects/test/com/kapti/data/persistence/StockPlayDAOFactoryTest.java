@@ -3,10 +3,8 @@
  * and open the template in the editor.
  */
 
-package com.kapti.bo.persistence;
+package com.kapti.data.persistence;
 
-import com.kapti.data.persistence.StockPlayDAO;
-import com.kapti.data.persistence.StockPlayDAOFactory;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -47,6 +45,7 @@ public class StockPlayDAOFactoryTest {
         System.out.println("getDAO");
 
         StockPlayDAO result = StockPlayDAOFactory.getDAO();
+        System.out.println(result.getClass());
         assertTrue(result instanceof com.kapti.data.persistence.oracle.OracleStockPlayDAO);
 
     }
