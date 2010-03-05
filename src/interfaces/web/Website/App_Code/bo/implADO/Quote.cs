@@ -17,7 +17,7 @@ public class Quote : IQuote
 {
     private DateTime time;
     private double price;
-    private double previous; //Slotkoers van de vorige dag
+    private double open; //Slotkoers van de vorige dag = 
 
     //Verhandelde aandelen over bepaalde tijdsperiode
     private int volume;
@@ -30,11 +30,11 @@ public class Quote : IQuote
     private double high;
 
 
-    public Quote(DateTime time, double price, double previous, int volume, double buy, double sell, double low, double high)
+    public Quote(DateTime time, double price, double open, int volume, double buy, double sell, double low, double high)
     {
         this.time = time;
         this.price = price;
-        this.previous = previous;
+        this.open = open;
         this.volume = volume;
         this.buy = buy;
         this.sell = sell;
@@ -42,7 +42,7 @@ public class Quote : IQuote
         this.high = high;
     }
 
-    public readonly DateTime Time
+    public DateTime Time
     {
         get
         {
@@ -50,7 +50,7 @@ public class Quote : IQuote
         }
     }
 
-    public readonly double Price
+    public double Price
     {
         get
         {
@@ -58,16 +58,16 @@ public class Quote : IQuote
         }
     }
 
-    public readonly double Previous
+    public double Open
     {
         get
         {
-            return previous;
+            return open;
         }
 
     }
 
-    public readonly int Volume
+    public int Volume
     {
         get
         {
@@ -75,7 +75,7 @@ public class Quote : IQuote
         }
     }
 
-    public readonly double Buy
+    public double Buy
     {
         get
         {
@@ -83,7 +83,7 @@ public class Quote : IQuote
         }
     }
 
-    public readonly double Sell
+    public double Sell
     {
         get
         {
@@ -91,7 +91,7 @@ public class Quote : IQuote
         }
     }
 
-    public readonly double Low
+    public double Low
     {
         get
         {
@@ -99,7 +99,7 @@ public class Quote : IQuote
         }
     }
 
-    public readonly double High
+    public double High
     {
         get
         {

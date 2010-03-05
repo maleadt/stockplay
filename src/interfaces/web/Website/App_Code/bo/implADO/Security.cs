@@ -42,7 +42,7 @@ public class Security : ISecurity
         return null;
     }
 
-    public readonly string Symbol
+    public string Symbol
     {
         get
         {
@@ -50,7 +50,7 @@ public class Security : ISecurity
         }
     }
 
-    public readonly string Name
+    public string Name
     {
         get
         {
@@ -58,7 +58,7 @@ public class Security : ISecurity
         }
     }
 
-    public readonly string Type
+    public string Type
     {
         get
         {
@@ -66,7 +66,7 @@ public class Security : ISecurity
         }
     }
 
-    public readonly Exchange Exchange
+    public Exchange Exchange
     {
         get
         {
