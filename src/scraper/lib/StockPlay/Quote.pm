@@ -51,7 +51,7 @@ has 'security' => (
 	required	=> 1,
 );
 
-has [qw/price buy sell low high/] => (
+has [qw/price bid ask low high open/] => (
 	is		=> 'ro',
 	isa		=> 'Num',
 	required	=> 1

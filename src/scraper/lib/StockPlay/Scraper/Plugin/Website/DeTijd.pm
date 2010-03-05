@@ -23,10 +23,14 @@ StockPlay::Scraper::Plugin::DeTijd - Scraper voor de website van De Tijd.
 
 # Packages
 use Moose;
+use Moose::Util::TypeConstraints;
 use JSON;
 use HTML::TreeBuilder;
 use StockPlay::Scraper::Plugin::Website;
 use Time::HiRes;
+use DateTime;
+use DateTime::Format::Strptime;
+use POSIX;
 
 # Roles
 with 'StockPlay::Scraper::Plugin::Website';
@@ -34,6 +38,19 @@ with 'StockPlay::Scraper::Plugin::Website';
 # Write nicely
 use strict;
 use warnings;
+
+# DateTime from String coercion
+class_type 'DateTime';
+class_type 'DateTime';
+class_type 'DateTime';
+my ($day, $month, $year) = (localtime())[3..5];
+my $datetime_parser = DateTime::Format::Strptime->new(
+	time_zone	=> strftime("%Z", localtime()),	# TODO: 28 maart, verandert dit naar CEST? Mss via module?
+	pattern		=> '%H:%M:%S',
+	#year		=> $year+1900,
+	#month		=> $month+1,
+	#day		=> $day
+);
 
 
 ################################################################################
@@ -65,7 +82,7 @@ sub getExchanges {
 	my $enumeration = $tree->look_down(
 		'_tag' => 'ul',
 		sub {
-			defined $_[0]->attr('class') && $_[0]->attr('class') =~ q{tabnav};
+			defined $_[0]->attr('class') && $_[0]->attr('class') =~ m{tabnav};
 		}
 	);
 	die("Could not find enumeration") unless $enumeration;
@@ -87,8 +104,8 @@ sub getExchanges {
 			}
 			if (defined $id) {
 				push(@exchanges, new StockPlay::Exchange({
-					id		=> $id,
-					location	=> $name
+					id	=> $id,
+					name	=> $name
 				}));
 			}
 			return 0;
@@ -107,22 +124,22 @@ sub getIndexes {
 
 	# Build a HTML tree
 	my $tree = HTML::TreeBuilder->new();
-	$tree->parse($res->content());
+	$tree->parse($res->decoded_content);
 	
 	# Check if realtime support
 	my $realtime = $tree->look_down(
 		'_tag'	=> 'div',
 		sub {
-			defined $_[0]->attr('id') && $_[0]->attr('id') =~ q{realtime_switch};
+			defined $_[0]->attr('id') && $_[0]->attr('id') =~ m{realtime_switch};
 		}
 	);
-	return () unless (defined $realtime);
+	die("no support for realtime courses") unless (defined $realtime);
 
 	# Find submenu
 	my $div = $tree->look_down(
 		'_tag' => 'div',
 		sub {
-			defined $_[0]->attr('id') && $_[0]->attr('id') =~ q{subtabnav};
+			defined $_[0]->attr('id') && $_[0]->attr('id') =~ m{subtabnav};
 		}
 	);
 	die("Could not find submenu") unless $div;
@@ -138,20 +155,18 @@ sub getIndexes {
 		sub {
 			my $item = shift;
 			my $name = $item->as_text;
-			my $site_id;
+			my $id;
 			foreach my $child ($item->content_list) {
 				if ($child->tag eq "a") {
 					my $url = $child->attr('href');
 					my @paths = split(/\//, $url);
-					$site_id = $paths[-1];
+					$id = $paths[-1];
 				}
 			}
-			if (defined $site_id) {
+			if (defined $id && $id !~ m{\?}) {
 				push(@indexes, new StockPlay::Index({
-					id	=> $name,
-					private	=> {
-						site_id	=> $site_id
-					}
+					id	=> $id,
+					name	=> $name
 				}));
 			}
 			return 0;
@@ -169,23 +184,22 @@ sub getSecurities {
 	my @indexes = $self->getIndexes($exchange);
 		foreach my $index (@indexes) {	
 		# Fetch HTML
-		my $res = $self->browser->get('http:/www.tijd.be/beurzen/' . $exchange->id . '/' . $index->id) || die();
+		my $res = $self->browser->get('http://www.tijd.be/beurzen/' . $exchange->id . '/' . $index->id) || die();
 
 		# Build a HTML tree
 		my $tree = HTML::TreeBuilder->new();
-		$tree->parse($res->content());
+		$tree->parse($res->decoded_content);
 
 		# Find main table
 		my $table = $tree->look_down(
 			'_tag' => 'table',
 			sub {
-				$_[0]->attr('class') =~ m{maintable};
+				defined $_[0]->attr('class') && $_[0]->attr('class') =~ m{maintable};
 			}
 		);
 		die("Could not find main table") unless $table;
-
+		
 		# Extract shares
-		my @securities;
 		$table->look_down(
 			'_tag'	=> 'td',
 			sub {
@@ -220,13 +234,13 @@ sub getSecurities {
 				return 0;
 			}
 		);
-		
 		$tree->delete;
-	}	
+	}
+	print "Returning\n";
 	return @securities;
 }
 
-sub getQuote {
+sub getQuotes {
 	my ($self, @securities) = @_;
 	
 	# Query-parameters invullen
@@ -241,7 +255,7 @@ sub getQuote {
 		$_ . '=' . $parameters{$_}
 	} keys %parameters);
 
-	# JSON data ophalen en verwerken
+	# JSON data ophalen
 	my $json = $self->browser->get($query)->content;
 	my $koersen;
 	if ($json =~ m{try \{ _parseRtq\((.*)\) \} catch\(err\) \{  \}}) {
@@ -250,9 +264,31 @@ sub getQuote {
 		die("Kon JSON data niet extraheren");
 	}
 	
-	use Data::Dumper;
-	print Dumper($koersen);
-	die();	
+	# Data verwerken naar Quotes
+	my @quotes;
+	foreach my $site_id (keys %{$koersen->{stocks}}) {
+		print "Processing $site_id\n";
+		my %data = %{$koersen->{stocks}->{$site_id}};
+		use Data::Dumper;
+		print Dumper(\%data);
+		
+		my $security = (grep { $_->get('site_id') == $site_id } @securities)[0]
+			or die("Could not connect data to security");
+		push(@quotes, new StockPlay::Quote({
+			time		=> $datetime_parser->parse_datetime($data{time}),
+			security	=> $security->id,
+			price		=> $data{last},
+			bid		=> $data{bid},
+			ask		=> $data{ask},
+			low		=> $data{low},
+			high		=> $data{high},
+			open		=> $data{open},
+			volume		=> $data{volume}
+		}));
+		
+	}
+	
+	return @quotes;
 }
 
 

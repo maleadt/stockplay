@@ -41,7 +41,7 @@ use warnings;
 
 =cut
 
-has 'description' => (
+has 'name' => (
 	is		=> 'ro',
 	isa		=> 'Str'
 );

@@ -33,6 +33,15 @@ foreach my $infohash (@infohashes) {
 	use Data::Dumper;
 	my @exchanges = $plugin->getExchanges();
 	print "Exchanges: ", Dumper(\@exchanges), "\n";
+	
+	my @indexes = $plugin->getIndexes($exchanges[0]);
+	print "Indexes: ", Dumper(\@indexes), "\n";
+	
+	my @securities = $plugin->getSecurities($exchanges[0]);
+	print "Securities ", Dumper(\@securities), "\n";
+	
+	my @quotes = $plugin->getQuotes(@securities[0..10]);
+	print "Quotes: ", Dumper(\@quotes), "\n";
 }
 
 #$blabla->run();

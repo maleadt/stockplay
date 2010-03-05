@@ -95,11 +95,11 @@ requires 'getSecurities';
 
 =pod
 
-=head2 C<$plugin->getQuote($security)>
+=head2 C<$plugin->getQuotes(@securities)>
 
 =cut
 
-requires 'getQuote';
+requires 'getQuotes';
 
 ################################################################################
 # Auxiliary
