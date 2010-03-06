@@ -36,10 +36,52 @@
 				</div>
 				<div id="right">
 					<h2>Portfolio overview</h2>
-					<ul>
+					<ul class="actions">
 						<li class="action buy">Buy Security</li>
 						<li class="action sell">Sell Security</li>
 					</ul>
+					<table class="table">
+						<tr class="header">
+							<td><input type="checkbox" name="all"/></td>
+							<td>Quantity</td>
+							<td>Name</td>
+							<td>Price (&#8364;)</td>
+							<td>Total (&#8364;)</td>
+							<td>Change (%)</td>
+							<td>Buy</td>
+							<td>Sell</td>
+						</tr>
+						<tr>
+							<td class="action"><input type="checkbox" name="een"/></td>
+							<td>100</td>
+							<td class="name">Tom Tom</td>
+							<td>58.12</td>
+							<td>5982.24</td>
+							<td class="neg">-0.45</td>
+							<td class="action"><img src="afbeeldingen/money_add.png" alt="Buy"/></td>
+							<td class="action"><img src="afbeeldingen/money_delete.png" alt="Sell"/></td>
+						</tr>
+						<tr>
+							<td class="action"><input type="checkbox" name="twee"/></td>
+							<td>300</td>
+							<td class="name">Ordina</td>
+							<td>26.85</td>
+							<td>1256.45</td>
+							<td class="pos">+0.45</td>
+							<td class="action"><img src="afbeeldingen/money_add.png" alt="Buy"/></td>
+							<td class="action"><img src="afbeeldingen/money_delete.png" alt="Sell"/></td>
+						</tr>
+						<tr>
+							<td class="action"><input type="checkbox" name="drie"/></td>
+							<td>200</td>
+							<td class="name">Belgacom</td>
+							<td>21.98</td>
+							<td>2658.54</td>
+							<td class="pos">+1.94</td>
+							<td class="action"><img src="afbeeldingen/money_add.png" alt="Buy"/></td>
+							<td class="action"><img src="afbeeldingen/money_delete.png" alt="Sell"/></td>
+						</tr>
+					</table>
 					<div id="plotTest" class="plot">
 						<div class="draw"></div>
 							<ul>
@@ -50,7 +92,6 @@
 					</div>
 				</div>
 			</div>
-		</div>
 		<script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
 		<script type="text/javascript" src="dynamiek/taalbestanden/nl-be.js"></script>
 		<script type="text/javascript" src="dynamiek/algemeen.js"></script>

@@ -19,14 +19,14 @@ a:hover {
 }
 
 #container {
-	width: 64em;
+	width: 63em;
 	margin: auto;
 }
 
 #header {
 	background: url(../afbeeldingen/logo.png) left top no-repeat;
 	margin-top: 1.5em;
-	margin-bottom: 0.5em;
+	margin-bottom: 0.7em;
 	height: 40px;
 	width: 200px;
 }
@@ -105,11 +105,79 @@ a:hover {
 	float: right;
 }
 
+.actions {
+	height: 2em;
+	margin: 0.5em 0 0 0.9em;
+}
+
 #right li.action {
-	border: solid 1px red;
+	border: solid 1px #aeceef;
+	background: #fafcff 0.4em 0.2em no-repeat;
 	display: block;
 	float: left;
-	padding: 2px;
+	color: #1f75cc;
+	height: 1.5em;
+	padding: 0.5em 0.5em 0.2em 2.4em;
+	font-size: 0.8em;
+	color: #4395cd;
+}
+
+#right li.action:hover {
+	border: 1px solid #8ca5bf;
+}
+
+#right li.buy {
+	background-image: url(../afbeeldingen/money_add.png);
+}
+
+#right li.sell {
+	background-image: url(../afbeeldingen/money_delete.png);
+}
+
+#right h2 {
+	font-size: 1.1em;
+	background: url(../afbeeldingen/chart_line.png) top left no-repeat;
+	padding-left: 1.6em;
+	margin: 1.2em 0 0.6em 0.7em;
+}
+
+#right table.table {
+	margin-left: 0.7em;
+	width: 44.7em;
+	color: #646464;
+}
+
+#right table.table tr {
+	background: #f8f8f8;
+}
+
+#right table.table td {
+	border-top: 1px solid #e6e6e6;
+	border-bottom: 1px solid #e6e6e6;
+	padding: 0.4em;
+	font-size: 0.9em;
+}
+
+#right table.table td.name {
+	color: #8fb8e2;
+}
+
+#right table.table tr.header td {
+	text-align: center;
+	background: white;
+	border: none;
+}
+
+#right table.table td.pos {
+	color: #21c234;
+}
+
+#right table.table td.neg {
+	color: #d40000;
+}
+
+#right table.table td.action {
+	text-align: center;
 }
 
 #search {
