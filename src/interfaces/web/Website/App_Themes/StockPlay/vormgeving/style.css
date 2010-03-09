@@ -1,0 +1,190 @@
+body {
+	background: #fff;
+	margin: 0;
+	padding: 0;
+	font:x-small sans-serif;
+	font-size/* */:/**/small;
+	font-size: /**/small;
+	font-family: 'Lucida Sans', 'Lucida Sans Unicode', 'Lucida Grande', LucidaGrande, Geneva, Arial, sans-serif;
+	font-size: 13px;	
+}
+
+a {
+	color: #4395cd;
+	text-decoration: none;
+}
+
+a:hover {
+	color: #4395cd;
+}
+
+#container {
+	width: 63em;
+	margin: auto;
+}
+
+#header {
+	background: url(../afbeeldingen/logo.png) left top no-repeat;
+	margin-top: 1.5em;
+	margin-bottom: 0.7em;
+	height: 40px;
+	width: 200px;
+}
+
+#header h1 {
+	display: none;
+}
+
+#content {
+	border-top: solid 1px #ace;
+	width: 100%;
+}
+
+#left {
+	background: #e9f4ff;
+	border-top: solid 2px white;
+	border-left: solid 2px white;
+	width: 15.9em;
+}
+
+#menu {
+	float:left;
+	border-left: solid 1px #ace;
+}
+
+#left ul {
+	padding-left: 1em;
+	margin-bottom: 0;
+	padding-top: 1em;
+	padding-bottom: 3em;
+	list-style: none;
+}
+
+#left li {
+	padding-top: 0.2em;
+}
+
+#left li a {
+	margin-left: 0;
+	padding-left: 0;
+	padding: 0.3em;
+	font-size: 0.8em;
+}
+
+#left li a {
+	color: #666;
+	text-decoration: none;
+}
+
+#left li a:hover {
+	color: #4395cd;
+}
+
+#left li.niv2 {
+	margin-left: 1em;
+}
+
+#leftBottom p {
+	color: #666;
+	font-size: 0.8em;
+}
+
+#leftBottom {
+	background: #f6fbff;
+	border-left: solid 2px white;
+	border-top: solid 1px #ace;
+	width: 14.9em;
+	padding: 1em 0 2em 1em;
+}
+
+#leftBottom a:hover {
+	color: #666;
+}
+
+#right {
+	float: right;
+}
+
+.actions {
+	height: 2em;
+	margin: 0.5em 0 0 0.9em;
+}
+
+#right li.action {
+	border: solid 1px #aeceef;
+	background: #fafcff 0.4em 0.2em no-repeat;
+	display: block;
+	float: left;
+	color: #1f75cc;
+	height: 1.5em;
+	padding: 0.5em 0.5em 0.2em 2.4em;
+	font-size: 0.8em;
+	color: #4395cd;
+}
+
+#right li.action:hover {
+	border: 1px solid #8ca5bf;
+}
+
+#right li.buy {
+	background-image: url(../afbeeldingen/money_add.png);
+}
+
+#right li.sell {
+	background-image: url(../afbeeldingen/money_delete.png);
+}
+
+#right h2 {
+	font-size: 1.1em;
+	background: url(../afbeeldingen/chart_line.png) top left no-repeat;
+	padding-left: 1.6em;
+	margin: 1.2em 0 0.6em 0.7em;
+}
+
+#right table.table {
+	margin-left: 0.7em;
+	width: 44.7em;
+	color: #646464;
+}
+
+#right table.table tr {
+	background: #f8f8f8;
+}
+
+#right table.table td {
+	border-top: 1px solid #e6e6e6;
+	border-bottom: 1px solid #e6e6e6;
+	padding: 0.4em;
+	font-size: 0.9em;
+}
+
+#right table.table td.name {
+	color: #8fb8e2;
+}
+
+#right table.table tr.header td {
+	text-align: center;
+	background: white;
+	border: none;
+}
+
+#right table.table td.pos {
+	color: #21c234;
+}
+
+#right table.table td.neg {
+	color: #d40000;
+}
+
+#right table.table td.action {
+	text-align: center;
+}
+
+#search {
+	margin: 1.5em 0 1em 1em;
+	width: 77.5%;
+	height: 1.4em;
+	padding-left: 1.7em;
+	background: url(../afbeeldingen/magnifier.png) 1px 1px no-repeat;
+	color: gray;
+}

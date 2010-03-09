@@ -4,18 +4,118 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
+    <link rel="stylesheet" href="App_Themes/StockPlay/grafiek/grafiek.css" type="text/css" media="screen"/>
+    <!--[if IE]><link rel="Stylesheet" href="App_Themes/StockPlay/vormgeving/ie.css" type="text/css" media="screen"/><![endif]-->
+    
     <title>StockPlay</title>
+    
     <asp:ContentPlaceHolder id="head" runat="server">
     </asp:ContentPlaceHolder>
 </head>
 <body>
     <form id="form1" runat="server">
-    <div>
-        <asp:ScriptManager ID="ScriptManager" runat="server" />
-        <asp:ContentPlaceHolder id="ContentPlaceHolder" runat="server">
+    <div id="container">
+        <div id="header">
+            <h1>StockPlay</h1>
+        </div>
         
-        </asp:ContentPlaceHolder>
+        <div id="content">
+            <div id="menu">
+                <div id="left">
+                    <input id="search" name="search" type="text" value="Effect zoeken.." />
+                    <ul>
+                        <li><a href="#">Default</a></li>
+                        <li><a href="#">Overview</a></li>
+                        <li class="niv2"><a href="#">Portfolio</a></li>
+                        <li class="niv2"><a href="#">Security</a></li>
+                        <li><a href="#">Securitys Overview</a></li>
+                        <li><a href="#">Transactions History</a></li>
+                        <li><a href="#">Klassement</a></li>
+                        <li><a href="#">User</a></li>
+                        <li class="niv2"><a href="#">Overview</a></li>
+                        <li class="niv2"><a href="#">Portfolio</a></li>
+                        <li class="niv2"><a href="#">Transactions History</a></li>
+                    </ul>
+                </div>
+                <div id="leftBottom">
+                    <p><a href="">User</a> > <a href="">Transactions History</a></p>
+                    <p>Logged in as: <a href="">Laurens</a></p>
+                    <p>Your capital: &#8364;100,045.04</p>
+                </div>
+            </div>
+            <div id="right">
+                <h2>Portfolio overview</h2>
+                <ul class="actions">
+                    <li class="action buy">Buy Security</li>
+                    <li class="action sell">Sell Security</li>
+                </ul>
+                <table class="table">
+                    <tr class="header">
+                        <td><input type="checkbox" name="all"/></td>
+                        <td>Quantity</td>
+                        <td>Name</td>
+                        <td>Price (&#8364;)</td>
+                        <td>Total (&#8364;)</td>
+                        <td>Change (%)</td>
+                        <td>Buy</td>
+                        <td>Sell</td>
+                    </tr>
+                    <tr>
+                        <td class="action"><input type="checkbox" name="een"/></td>
+                        <td>100</td>
+                        <td class="name">Tom Tom</td>
+                        <td>58.12</td>
+                        <td>5982.24</td>
+                        <td class="neg">-0.45</td>
+                        <td class="action"><img runat="server" src="~/App_Themes/StockPlay/afbeeldingen/money_add.png" alt="Buy"/></td>
+                        <td class="action"><img runat="server" src="~/App_Themes/StockPlay/afbeeldingen/money_delete.png" alt="Sell"/></td>
+                    </tr>
+                    <tr>
+                        <td class="action"><input type="checkbox" name="twee"/></td>
+                        <td>300</td>
+                        <td class="name">Ordina</td>
+                        <td>26.85</td>
+                        <td>1256.45</td>
+                        <td class="pos">+0.45</td>
+                        <td class="action"><img runat="server" src="~/App_Themes/StockPlay/afbeeldingen/money_add.png" alt="Buy"/></td>
+                        <td class="action"><img runat="server" src="~/App_Themes/StockPlay/afbeeldingen/money_delete.png" alt="Sell"/></td>
+                    </tr>
+                    <tr>
+                        <td class="action"><input type="checkbox" name="drie"/></td>
+                        <td>200</td>
+                        <td class="name">Belgacom</td>
+                        <td>21.98</td>
+                        <td>2658.54</td>
+                        <td class="pos">+1.94</td>
+                        <td class="action"><img id="Img1" runat="server" src="~/App_Themes/StockPlay/afbeeldingen/money_add.png" alt="Buy"/></td>
+                        <td class="action"><img id="Img2" runat="server" src="~/App_Themes/StockPlay/afbeeldingen/money_delete.png" alt="Sell"/></td>
+                    </tr>
+                </table>
+                <div id="plotTest" class="plot">
+                    <div class="draw">
+                        <ul>
+                            <li class="zoomOut hand">Uitzoomen</li>
+                            <li class="reset hand">Herstel</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <asp:ScriptManager id="ScriptManager" runat="server" />
+        <asp:ContentPlaceHolder id="ContentPlaceHolder" runat="server"></asp:ContentPlaceHolder>
     </div>
+    
+    <!-- JAVASCRIPT -->
+    <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
+    <script type="text/javascript" src="App_Themes/StockPlay/dynamiek/taalbestanden/nl-be.js"></script>
+    <script type="text/javascript" src="App_Themes/StockPlay/dynamiek/algemeen.js"></script>
+    <!--[if IE]><script language="javascript" type="text/javascript" src="App_Themes/StockPlay/grafiek/flot/excanvas.min.js"></script><![endif]-->
+    <script type="text/javascript" src="App_Themes/StockPlay/grafiek/flot/jquery.flot.min.js"></script>
+    <script type="text/javascript" src="App_Themes/StockPlay/grafiek/flot/jquery.flot.selection.min.js"></script>
+    <script type="text/javascript" src="App_Themes/StockPlay/grafiek/flot/jquery.flot.navigate.min.js"></script>
+    <script type="text/javascript" src="App_Themes/StockPlay/grafiek/grafiek.js"></script>
+    
     </form>
 </body>
 </html>
