@@ -1,12 +1,6 @@
-
 package com.kapti.data;
 
-/**
- *
- * @author Thijs
- */
 public class Index {
-
     private int id;
     private String name;
     private String exchange;
@@ -36,8 +30,5 @@ public class Index {
     public int getId() {
         return id;
     }
-
-
-    
 
 }

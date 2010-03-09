@@ -1,13 +1,7 @@
-
-
 package com.kapti.data;
 
 import java.util.Date;
 
-/**
- *
- * @author Thijs
- */
 public class Order extends Instruction{
 
     private OrderStatus status;
@@ -36,9 +30,6 @@ public class Order extends Instruction{
         this.status = status;
     }
 
-
-    
-
     public Date getCreationTime() {
         return creationTime;
     }
@@ -62,8 +53,5 @@ public class Order extends Instruction{
     public void setCreationTime(Date creationTime) {
         this.creationTime = creationTime;
     }
-
-
-
 
 }

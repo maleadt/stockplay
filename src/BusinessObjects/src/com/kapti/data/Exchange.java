@@ -1,9 +1,5 @@
 package com.kapti.data;
 
-/**
- *
- * @author Thijs
- */
 public class Exchange  {
     private String symbol = "";
     private String name ="";
@@ -67,7 +63,5 @@ public class Exchange  {
         hash = 97 * hash + (this.symbol != null ? this.symbol.hashCode() : 0);
         return hash;
     }
-
-    
-    
+   
 }

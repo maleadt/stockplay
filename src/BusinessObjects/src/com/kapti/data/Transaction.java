@@ -1,16 +1,7 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package com.kapti.data;
 
 import java.util.Date;
 
-/**
- *
- * @author Thijs
- */
 public class Transaction extends Instruction {
 
     private Date time;
@@ -24,8 +15,6 @@ public class Transaction extends Instruction {
         this.time = time;
     }
 
-    
-
     public Date getTime() {
         return time;
     }
@@ -33,7 +22,5 @@ public class Transaction extends Instruction {
     public void setTime(Date time) {
         this.time = time;
     }
-
-
-    
+   
 }

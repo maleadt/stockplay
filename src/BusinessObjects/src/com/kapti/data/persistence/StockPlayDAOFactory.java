@@ -1,28 +1,12 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package com.kapti.data.persistence;
 
 import com.kapti.exceptions.FatalException;
 import com.kapti.exceptions.StockPlayException;
 import java.util.ResourceBundle;
 
-/**
- *
- * @author Thijs
- */
 public class StockPlayDAOFactory {
 
-    /**
-     * This method instantiates a particular subclass implementing
-     * the DAO methods based on the information obtained from the
-     * deployment descriptor
-     */
     public static StockPlayDAO getDAO() throws StockPlayException {
-
-
         try {
             StockPlayDAO spDAO = null;
             ResourceBundle rb = ResourceBundle.getBundle("com.kapti.data.persistence.StockPlayDAOFactory");

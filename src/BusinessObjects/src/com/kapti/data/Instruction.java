@@ -1,9 +1,5 @@
 package com.kapti.data;
 
-/**
- *
- * @author Thijs
- */
 public class Instruction {
 
     private int id = -1;

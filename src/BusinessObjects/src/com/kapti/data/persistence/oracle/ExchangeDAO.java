@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.kapti.data.persistence.oracle;
 
 import com.kapti.exceptions.*;
@@ -11,12 +7,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
 
-/**
- *
- * @author Thijs
- */
 public class ExchangeDAO implements GenericDAO<Exchange, String> {
-
     private static final String SELECT_EXCHANGE = "SELECT name, location FROM exchanges WHERE symbol = ?";
     private static final String SELECT_EXCHANGES_FILTER = "SELECT symbol, name, location FROM exchanges WHERE symbol LIKE ? AND name LIKE ? AND location LIKE ?";
     private static final String SELECT_EXCHANGES = "SELECT symbol, name, location FROM exchanges";
@@ -80,25 +71,18 @@ public class ExchangeDAO implements GenericDAO<Exchange, String> {
                 stmt.setString(2, '%' + example.getName() + '%');
                 stmt.setString(3, '%' + example.getLocation() + '%');
 
-
                 rs = stmt.executeQuery();
                 ArrayList<Exchange> list = new ArrayList<Exchange>();
-                while (rs.next()) {
-
+                while (rs.next())
                     list.add(new Exchange(rs.getString(1), rs.getString(2), rs.getString(3)));
-
-                }
                 return list;
             } finally {
-                if (rs != null) {
+                if (rs != null)
                     rs.close();
-                }
-                if (stmt != null) {
+                if (stmt != null)
                     stmt.close();
-                }
-                if (conn != null) {
+                if (conn != null)
                     conn.close();
-                }
             }
         } catch (SQLException ex) {
             throw new DBException(ex);
@@ -122,27 +106,18 @@ public class ExchangeDAO implements GenericDAO<Exchange, String> {
                 }
                 return list;
             } finally {
-                if (rs != null) {
+                if (rs != null)
                     rs.close();
-                }
-                if (stmt != null) {
+                if (stmt != null)
                     stmt.close();
-                }
-                if (conn != null) {
+                if (conn != null)
                     conn.close();
-                }
             }
         } catch (SQLException ex) {
             throw new DBException(ex);
         }
     }
 
-    /**
-     * Maakt de opgegeven security aan in de database
-     * @param entity Het object dat moet worden aangemaakt in de database
-     * @return 
-     * @throws StockPlayException
-     */
     public boolean create(Exchange entity) throws StockPlayException {
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -157,7 +132,6 @@ public class ExchangeDAO implements GenericDAO<Exchange, String> {
                 stmt.setString(3, entity.getLocation());
 
                 return stmt.executeUpdate() == 1;
-
 
             } finally {
                 if (rs != null) {

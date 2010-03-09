@@ -1,15 +1,7 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.kapti.data;
 
 import java.util.Date;
 
-/**
- *
- * @author Thijs
- */
 public class User {
 
     private int id = -1;
@@ -52,9 +44,6 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
-
-    
-
 
     public String getFirstname() {
         return firstname;
@@ -131,6 +120,4 @@ public class User {
     public void setRijksregisternummer(int rrn) {
         this.rrn = rrn;
     }
-
-
 }

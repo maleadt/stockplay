@@ -1,15 +1,7 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.kapti.data;
 
 import java.util.Date;
 
-/**
- *
- * @author Thijs
- */
 public class Quote {
 
     public class QuotePK {
@@ -32,10 +24,6 @@ public class Quote {
         public Date getTime() {
             return time;
         }
-
-
-
-
     }
 
     private QuotePK pk = null;
@@ -123,8 +111,5 @@ public class Quote {
     public void setOpen(double open) {
         this.open = open;
     }
-
-
-
     
 }

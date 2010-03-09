@@ -1,18 +1,6 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package com.kapti.data;
 
-/**
- *
- * @author Thijs
- */
-
-
 public class IndexSecurity {
-
     private int index;
     private String symbol;
 
@@ -28,7 +16,4 @@ public class IndexSecurity {
     public String getSymbol() {
         return symbol;
     }
-
-    
-
 }

@@ -1,10 +1,5 @@
 package com.kapti.data;
 
-import java.util.Date;
-/**
- *
- * @author Thijs
- */
 public class Security  {
     private String symbol = "";
     private String name = "";
@@ -12,7 +7,6 @@ public class Security  {
     private Exchange exchange;
 
     public Security(){
-        
     }
 
     public Security(String symbol){
@@ -46,11 +40,7 @@ public class Security  {
      * @param time
      * @return
      */
-    public Quote getSharePrice(Date time){
-        return null;
-    }
-
-        public Exchange getExchange() {
+    public Exchange getExchange() {
         return exchange;
     }
 

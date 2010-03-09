@@ -1,18 +1,6 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package com.kapti.data;
 
-/**
- *
- * @author Thijs
- */
-
-
 public class UserSecurity {
-
     private UserSecurityPK pk;
     private int amount;
 
@@ -38,8 +26,6 @@ public class UserSecurity {
         this.amount = amount;
     }
 
-    
-
     public class UserSecurityPK{
         private int user;
         private String symbol;
@@ -59,12 +45,5 @@ public class UserSecurity {
 
         public UserSecurityPK() {
         }
-
-        
-
-        
-
-
     }
-
 }
