@@ -42,9 +42,15 @@ use warnings;
 
 =cut
 
+has 'isin' => (
+	is		=> 'ro',
+	isa		=> 'Str',
+	required	=> 1
+);
+
 has 'name' => (
 	is		=> 'ro',
-	isa		=> 'String'
+	isa		=> 'Str'
 );
 
 has 'index' => (

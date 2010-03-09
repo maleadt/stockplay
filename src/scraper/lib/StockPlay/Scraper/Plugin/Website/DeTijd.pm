@@ -77,6 +77,26 @@ sub getExchanges {
 	# Build a HTML-tree
 	my $tree = HTML::TreeBuilder->new();
 	$tree->parse($res->decoded_content);
+	
+	# Extract translation list for exchange symbols
+	my %symbols;
+	$tree->look_down(
+		'_tag'	=> 'select',
+		sub {
+			my $select = shift;
+			return unless defined $select->attr('id') && $select->attr('id') =~ m{sha_market_sel};
+			
+			foreach my $child ($select->content_list) {
+				if (ref($child) eq 'HTML::Element' && $child->tag eq 'option') {
+					my $name = $child->as_text;
+					my $symbol = $child->attr('value');
+					
+					$symbols{$name} = $symbol;
+				}
+			}
+		}
+	);
+	$symbols{"London"} = $symbols{"Londen"};	# HACK HACK HACK
 
 	# Find menu with exchange enumeration
 	my $enumeration = $tree->look_down(
@@ -93,19 +113,21 @@ sub getExchanges {
 		'_tag'	=> 'li',
 		sub {
 			my $item = shift;
-			my $name = $item->as_text;
-			my $id;
+			my $location = $item->as_text;
+			return if grep { $_ =~ $location } qw{Andere Amex};	# HACK HACK HACK
+			my $site_id;
 			foreach my $child ($item->content_list) {
-				if ($child->tag eq "a") {
+				if (ref($child) eq 'HTML::Element' && $child->tag eq 'a') {
 					my $url = $child->attr('href');
 					my @paths = split(/\//, $url);
-					$id = $paths[-2];
+					$site_id = $paths[-2];
 				}
 			}
-			if (defined $id) {
+			if (defined $site_id) {
 				push(@exchanges, new StockPlay::Exchange({
-					id	=> $id,
-					name	=> $name
+					id		=> $symbols{$location},
+					location	=> $location,
+					name		=> $site_id
 				}));
 			}
 			return 0;
@@ -120,7 +142,7 @@ sub getIndexes {
 	my ($self, $exchange) = @_;
 
 	# Fetch HTML
-	my $res = $self->browser->get('http://www.tijd.be/beurzen/' . $exchange->id) || die();
+	my $res = $self->browser->get('http://www.tijd.be/beurzen/' . $exchange->name) || die();
 
 	# Build a HTML tree
 	my $tree = HTML::TreeBuilder->new();
@@ -157,7 +179,7 @@ sub getIndexes {
 			my $name = $item->as_text;
 			my $id;
 			foreach my $child ($item->content_list) {
-				if ($child->tag eq "a") {
+				if (ref($child) eq 'HTML::Element' && $child->tag eq "a") {
 					my $url = $child->attr('href');
 					my @paths = split(/\//, $url);
 					$id = $paths[-1];
@@ -184,7 +206,7 @@ sub getSecurities {
 	my @indexes = $self->getIndexes($exchange);
 		foreach my $index (@indexes) {	
 		# Fetch HTML
-		my $res = $self->browser->get('http://www.tijd.be/beurzen/' . $exchange->id . '/' . $index->id) || die();
+		my $res = $self->browser->get('http://www.tijd.be/beurzen/' . $exchange->name . '/' . $index->id) || die();
 
 		# Build a HTML tree
 		my $tree = HTML::TreeBuilder->new();
@@ -221,9 +243,34 @@ sub getSecurities {
 						);
 					}
 				}
-				if (defined $site_id) {
+				
+				if (defined $site_id) {			
+					my ($symbol, $isin);
+					my $res2 = $self->browser->get('http://www.tijd.be/beurzen/' . $site_id) || die();
+					my $tree2 = HTML::TreeBuilder->new();
+					$tree2->parse($res2->decoded_content);
+					$tree2->look_down(
+						'_tag'	=> 'dl',
+						sub {
+							my $list = shift;
+							return unless(defined $list->attr('class') && $list->attr('class') eq 'stockdeflist');
+							
+							my @items;
+							foreach my $child ($list->content_list) {
+								if (ref($child) eq 'HTML::Element' && $child->tag eq 'dd') {
+									push(@items, $child->as_text);
+								}								
+							}
+							($isin, $symbol) = @items[1..2];
+						}
+					);
+					$tree2->delete();
+					return unless (defined $isin and defined $symbol);
+					
 					push(@securities, new StockPlay::Security({
-						id		=> $name,
+						id		=> $symbol,
+						isin		=> $isin,
+						name		=> $name,
 						exchange	=> $exchange->id,
 						index		=> [ $index->id ],
 						private		=> {
@@ -267,10 +314,7 @@ sub getQuotes {
 	# Data verwerken naar Quotes
 	my @quotes;
 	foreach my $site_id (keys %{$koersen->{stocks}}) {
-		print "Processing $site_id\n";
 		my %data = %{$koersen->{stocks}->{$site_id}};
-		use Data::Dumper;
-		print Dumper(\%data);
 		
 		my $security = (grep { $_->get('site_id') == $site_id } @securities)[0]
 			or die("Could not connect data to security");
@@ -283,7 +327,8 @@ sub getQuotes {
 			low		=> $data{low},
 			high		=> $data{high},
 			open		=> $data{open},
-			volume		=> $data{volume}
+			volume		=> $data{volume},
+			delay		=> $koersen->{delay}
 		}));
 		
 	}

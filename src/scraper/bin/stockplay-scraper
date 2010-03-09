@@ -39,6 +39,7 @@ foreach my $infohash (@infohashes) {
 	
 	my @securities = $plugin->getSecurities($exchanges[0]);
 	print "Securities ", Dumper(\@securities), "\n";
+	exit();
 	
 	my @quotes = $plugin->getQuotes(@securities[0..10]);
 	print "Quotes: ", Dumper(\@quotes), "\n";
