@@ -1,6 +1,6 @@
 /*
- * Database.java
- * StockPlay - Abstracte klasse van de System.Database interface.
+ * Finance.java
+ * StockPlay - Abstracte klasse vab de Finance interface.
  *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
@@ -19,23 +19,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.kapti.backend.api.system;
-
-import com.kapti.backend.api.MethodClass;
-import java.util.Hashtable;
-import org.apache.xmlrpc.XmlRpcException;
+package com.kapti.backend.api;
 
 /**
- * \brief Abstracte klasse van de System.Database interface.
+ * \brief Abstracte klasse vab de Finance interface.
  *
  * Deze klasse voorziet in functiesignaturen zoals voorgeschreven in de
- * protocoldefinitie van de System.Database subklasse.
+ * protocoldefinitie van de Finance klasse.
  */
-public abstract class Database extends MethodClass {
-    //
-    // Methodes
-    //
-
-    public abstract int Status() throws XmlRpcException;
-    public abstract Hashtable<String, Object> Stats() throws XmlRpcException;
+public abstract class Finance extends MethodClass {
 }

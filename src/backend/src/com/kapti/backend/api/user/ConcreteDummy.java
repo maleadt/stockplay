@@ -23,6 +23,8 @@ package com.kapti.backend.api.user;
 
 import com.kapti.backend.api.User;
 import com.kapti.backend.api.Error;
+import java.util.Hashtable;
+import java.util.Vector;
 import org.apache.xmlrpc.XmlRpcException;
 
 /**
@@ -43,6 +45,31 @@ public class ConcreteDummy extends User {
         if (iProtocolVersion != PROTOCOL_VERSION)
             throw Error.VERSION_NOT_SUPPORTED.getException();
         return 1;
+    }
+
+    @Override
+    public int Create(Hashtable<String, Object> iDetails) throws XmlRpcException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public Vector<Hashtable<String, Object>> Details(String iFilter) throws XmlRpcException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public Vector<Hashtable<String, Object>> List(String iFilter) throws XmlRpcException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public int Modify(String iFilter, Hashtable<String, Object> iDetails) throws XmlRpcException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public int Remove(String iFilter) throws XmlRpcException {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }
 

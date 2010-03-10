@@ -22,6 +22,7 @@
 package com.kapti.backend.api.system;
 
 import com.kapti.backend.api.MethodClass;
+import java.util.Hashtable;
 import org.apache.xmlrpc.XmlRpcException;
 
 /**
@@ -36,6 +37,7 @@ public abstract class Scraper extends MethodClass {
     //
 
     public abstract int Status() throws XmlRpcException;
+    public abstract Hashtable<String, Object> Stats() throws XmlRpcException;
     public abstract boolean Restart() throws XmlRpcException;
     public abstract boolean Stop() throws XmlRpcException;
 }

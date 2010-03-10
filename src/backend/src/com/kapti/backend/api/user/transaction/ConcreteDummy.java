@@ -1,6 +1,6 @@
 /*
  * ConcreteDummy.java
- * StockPlay - Dummy implementatie van de System.Scraper subklasse.
+ * StockPlay - Dummy implementatie van de User.Transaction subklasse.
  *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
@@ -19,40 +19,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.kapti.backend.api.system.scraper;
+package com.kapti.backend.api.user.transaction;
 
-import com.kapti.backend.api.system.Database;
+import com.kapti.backend.api.user.Transaction;
 import java.util.Hashtable;
+import java.util.Vector;
 import org.apache.xmlrpc.XmlRpcException;
 
 /**
- * \brief   Dummy implementatie van de System.Scraper interface.
+ * \brief   Dummy implementatie van de User.Transaction interface.
  *
- * Deze klasse is een dummy implementatie van de System.Scraper interface. Een
+ * Deze klasse is een dummy implementatie van de User.Transaction interface. Een
  * dergelijke implementatie geeft valide data terug, zonder daarvoor de database
  * te raadplegen. Deze implementatie kan zo gebruikt worden om een client-systeem
  * te testen.
  */
-public class ConcreteDummy extends Database {
+public class ConcreteDummy extends Transaction {
     //
     // Methodes
     //
 
-    public int Status() throws XmlRpcException {
-        return 1;
-    }
-
-    public boolean Stop() throws XmlRpcException {
-        return false;
-    }
-
-    public boolean Restart() throws XmlRpcException {
-        return true;
-    }
-
     @Override
-    public Hashtable<String, Object> Stats() throws XmlRpcException {
+    public Vector<Hashtable<String, Object>> List(String iFilter) throws XmlRpcException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
+
 }
 

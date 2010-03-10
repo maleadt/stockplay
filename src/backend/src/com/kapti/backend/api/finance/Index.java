@@ -1,6 +1,6 @@
 /*
- * User.java
- * StockPlay - Abstracte klasse vab de User interface.
+ * Index.java
+ * StockPlay - Abstracte klasse van de Finance.Index interface.
  *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
@@ -19,27 +19,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.kapti.backend.api;
+package com.kapti.backend.api.finance;
 
+import com.kapti.backend.api.MethodClass;
 import java.util.Hashtable;
 import java.util.Vector;
 import org.apache.xmlrpc.XmlRpcException;
 
 /**
- * \brief Abstracte klasse vab de System interface.
+ * \brief Abstracte klasse van de Finance.Index interface.
  *
  * Deze klasse voorziet in functiesignaturen zoals voorgeschreven in de
- * protocoldefinitie van de System klasse.
+ * protocoldefinitie van de Finance.Index subklasse.
  */
-public abstract class User extends MethodClass {
+public abstract class Index extends MethodClass {
     //
     // Methodes
     //
-    
-    public abstract int Hello(String iClient, int iProtocolVersion) throws XmlRpcException;
+
     public abstract Vector<Hashtable<String, Object>> List(String iFilter) throws XmlRpcException;
-    public abstract Vector<Hashtable<String, Object>> Details(String iFilter) throws XmlRpcException;
-    public abstract int Create(Hashtable<String, Object> iDetails) throws XmlRpcException;
     public abstract int Modify(String iFilter, Hashtable<String, Object> iDetails) throws XmlRpcException;
-    public abstract int Remove(String iFilter) throws XmlRpcException;
 }

@@ -1,6 +1,6 @@
 /*
  * ConcreteDummy.java
- * StockPlay - Dummy implementatie van de System.Scraper subklasse.
+ * StockPlay - Dummy implementatie van de Finance.Exchange subklasse.
  *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
@@ -19,40 +19,35 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.kapti.backend.api.system.scraper;
+package com.kapti.backend.api.finance.exchange;
 
-import com.kapti.backend.api.system.Database;
+import com.kapti.backend.api.finance.Exchange;
 import java.util.Hashtable;
+import java.util.Vector;
 import org.apache.xmlrpc.XmlRpcException;
 
 /**
- * \brief   Dummy implementatie van de System.Scraper interface.
+ * \brief   Dummy implementatie van de Finance.Exchange interface.
  *
- * Deze klasse is een dummy implementatie van de System.Scraper interface. Een
+ * Deze klasse is een dummy implementatie van de Finance.Exchange interface. Een
  * dergelijke implementatie geeft valide data terug, zonder daarvoor de database
  * te raadplegen. Deze implementatie kan zo gebruikt worden om een client-systeem
  * te testen.
  */
-public class ConcreteDummy extends Database {
+public class ConcreteDummy extends Exchange {
     //
     // Methodes
     //
 
-    public int Status() throws XmlRpcException {
-        return 1;
-    }
-
-    public boolean Stop() throws XmlRpcException {
-        return false;
-    }
-
-    public boolean Restart() throws XmlRpcException {
-        return true;
+    @Override
+    public Vector<Hashtable<String, Object>> List(String iFilter) throws XmlRpcException {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public Hashtable<String, Object> Stats() throws XmlRpcException {
+    public int Modify(String iFilter, Hashtable<String, Object> iDetails) throws XmlRpcException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
+
 }
 

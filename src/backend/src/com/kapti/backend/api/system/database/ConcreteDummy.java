@@ -22,6 +22,7 @@
 package com.kapti.backend.api.system.database;
 
 import com.kapti.backend.api.system.Database;
+import java.util.Hashtable;
 import org.apache.xmlrpc.XmlRpcException;
 
 /**
@@ -39,6 +40,11 @@ public class ConcreteDummy extends Database {
 
     public int Status() throws XmlRpcException {
         return 1;
+    }
+
+    @Override
+    public Hashtable<String, Object> Stats() throws XmlRpcException {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
 }
