@@ -21,7 +21,7 @@
  */
 package com.kapti.backend.xmlrpc;
 
-import com.kapti.backend.Pobject;
+import com.kapti.data.persistence.StockPlayDAO;
 import org.apache.xmlrpc.XmlRpcRequest;
 import org.apache.xmlrpc.common.XmlRpcHttpRequestConfig;
 import org.apache.xmlrpc.server.AbstractReflectiveHandlerMapping.AuthenticationHandler;
@@ -35,16 +35,16 @@ public class AuthHandler implements AuthenticationHandler {
     // Dataleden
     //
     
-    private Pobject pobject;
+    private StockPlayDAO mDAO;
     
     
     //
     // Constructie
     //
 
-    public AuthHandler(Pobject pobject) {
+    public AuthHandler(StockPlayDAO iDAO) {
         super();
-        this.pobject = pobject;
+        mDAO = iDAO;
     }
 
 

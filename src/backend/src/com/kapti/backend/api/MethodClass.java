@@ -21,7 +21,7 @@
  */
 package com.kapti.backend.api;
 
-import com.kapti.backend.Pobject;
+import com.kapti.data.persistence.StockPlayDAO;
 import org.apache.log4j.Logger;
 
 /**
@@ -43,7 +43,7 @@ public abstract class MethodClass {
     // Dataleden
     //
 
-    private Pobject pobject = null;
+    private StockPlayDAO mDAO = null;
 
     static Logger mLogger;
 
@@ -66,12 +66,12 @@ public abstract class MethodClass {
      * een functie moet afhandelen, en moet dusdanig geimplementeerd worden
      * zodat het doorgegeven object lokaal opgeslaan wordt voor verder gebruik.
      */
-    public void init(Pobject pobject) {
-        this.pobject = pobject;
+    public void init(StockPlayDAO iDAO) {
+        mDAO = iDAO;
     }
     
-    protected Pobject getData() {
-        return pobject;
+    protected StockPlayDAO getDAO() {
+        return mDAO;
     }
 
     protected Logger getLogger() {

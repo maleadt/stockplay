@@ -21,8 +21,8 @@
  */
 package com.kapti.backend.xmlrpc;
 
-import com.kapti.backend.Pobject;
 import com.kapti.backend.api.MethodClass;
+import com.kapti.data.persistence.StockPlayDAO;
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.XmlRpcRequest;
 import org.apache.xmlrpc.server.RequestProcessorFactoryFactory.RequestSpecificProcessorFactoryFactory;
@@ -39,16 +39,15 @@ public class ProcessorFactory extends RequestSpecificProcessorFactoryFactory {
     // Dataleden
     //
 
-    private Pobject pobject = null;
+    private StockPlayDAO mDAO = null;
 
 
     //
     // Constructie
     //
 
-    public ProcessorFactory(Pobject pobject) {
-        // init method, called in BmXmlRpcServlet
-        this.pobject = pobject;
+    public ProcessorFactory(StockPlayDAO iDAO) {
+        mDAO = iDAO;
     }
 
 
@@ -65,7 +64,7 @@ public class ProcessorFactory extends RequestSpecificProcessorFactoryFactory {
     @Override
     protected Object getRequestProcessor(Class iClass, XmlRpcRequest iRequest) throws XmlRpcException {
         MethodClass proc = (MethodClass) super.getRequestProcessor(iClass, iRequest);
-        proc.init(pobject);
+        proc.init(mDAO);
         return proc;
     }
 }

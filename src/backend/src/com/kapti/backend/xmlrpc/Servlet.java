@@ -21,7 +21,10 @@
  */
 package com.kapti.backend.xmlrpc;
 
-import com.kapti.backend.Pobject;
+import com.kapti.data.persistence.StockPlayDAO;
+import com.kapti.data.persistence.StockPlayDAOFactory;
+import com.kapti.exceptions.StockPlayException;
+import com.kapti.backend.api.Error;
 import java.io.IOException;
 import java.net.URL;
 import javax.servlet.ServletConfig;
@@ -47,7 +50,22 @@ public class Servlet extends XmlRpcServlet {
     // Dataleden
     //
 
-    private Pobject pobject = new Pobject();
+    private StockPlayDAO mDAO;
+
+
+    //
+    // Constructie
+    //
+
+    public Servlet() throws XmlRpcException {
+        super();
+        try {
+            mDAO = StockPlayDAOFactory.getDAO();
+        }
+        catch (StockPlayException e) {
+            throw Error.INTERNAL_FAILURE.getException();
+        }
+    }
 
 
     //
@@ -77,7 +95,7 @@ public class Servlet extends XmlRpcServlet {
         }
 
         // Authenticatie-handler registreren
-        AuthenticationHandler tHandler = new AuthHandler(pobject);
+        AuthenticationHandler tHandler = new AuthHandler(mDAO);
         oMapping.setAuthenticationHandler(tHandler);
 
         return oMapping;
@@ -100,7 +118,7 @@ public class Servlet extends XmlRpcServlet {
         PropertyHandlerMapping oMapping = super.newPropertyHandlerMapping(iUrl);
 
         // Property-handler aanpassen naar onze wensen
-        ProcessorFactory factory = new ProcessorFactory(pobject);
+        ProcessorFactory factory = new ProcessorFactory(mDAO);
         oMapping.setRequestProcessorFactoryFactory(factory);
         oMapping.load(Thread.currentThread().getContextClassLoader(), iUrl);
 
