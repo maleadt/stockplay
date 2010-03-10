@@ -236,7 +236,7 @@ Hier vindt men de nodige methodes terug om gebruikers te beheren. Dit is echter 
 	{ geen benodigd }
 
 \function{Details}
-	{ lijst met publieke informatie opvragen van de gebruikers }
+	{ lijst met publieke informatie opvragen van een gebruiker }
 	{ een filter, met de volgende mogelijke sleutels:
 		\begin{itemize}
 		\item{id: een gebruikers-id}
@@ -262,10 +262,9 @@ Hier vindt men de nodige methodes terug om gebruikers te beheren. Dit is echter 
 	{ id van de aangemaakte gebruiker }
 	{ administrator-rechten }
 
-\todo{voor alle modify functies: slechts 1 item laten wijzigen, of cfr UPDATE ook een filter aanvaarden? - ik zie geen concreet geval waar we dat tweede kunnen gebruiken, dus ik denk het eerste? - laur}
 \function{Modify}
 	{ wijzigen van een bestaande gebruiker }
-	{ identificatie-code van de gebruiker, en een struct met de te-wijzigen gebruikersinformatie:
+	{ een filter die gebruikers selecteert, en een struct met de te-wijzigen gebruikersinformatie:
 		\begin{itemize}
 		\item{}
 		\end{itemize} }
@@ -274,7 +273,7 @@ Hier vindt men de nodige methodes terug om gebruikers te beheren. Dit is echter 
 
 \function{Remove}
 	{ verwijderen van een bestaande gebruiker }
-	{ id van de te-verwijderen gebruiker }
+	{ een filter die gebruikers selecteert }
 	{ een boolean die aangeeft of de actie al dan niet gelukt is }
 	{ administrator-rechten }
 
@@ -324,6 +323,7 @@ Hier vindt men de nodige methodes terug om gebruikers te beheren. Dit is echter 
 	{ een nieuw order aanmaken }
 	{ struct met orderdetails:
 		\begin{itemize}
+		\item{id: gebruikers-id}
 		\item{type: aankoop of verkoop}
 		\item{effect: symbool van het effect}
 		\item{aantal: het aantal effecten dat het order verhandelt}
@@ -333,7 +333,11 @@ Hier vindt men de nodige methodes terug om gebruikers te beheren. Dit is echter 
 
 \function{Order.Cancel}
 	{ een bestaande order annuleren }
-	{ order-identificatie }
+	{ een filter, met de volgende mogelijjke sleutels:
+		\begin{itemize}
+		\item{id: gebruikers-id}
+		\item{order: order-id}
+		\end{itemize} }}
 	{ geen }
 	{ administrator-rechten of identificatie als de gebruiker beschreven is in het 'id' veld van de filter }
 
@@ -345,6 +349,7 @@ Hier vindt men de nodige methodes terug om gebruikers te beheren. Dit is echter 
 		\end{itemize} }
 	{ array van structs die transactie-informatie bevatten:
 		\begin{itemize}
+		\item{id: identificatie van de transactie}
 		\item{timestamp: datum van de transactie}
 		\item{price: aankoopprijs}
 		\item{amount: hoeveelheid}
@@ -373,7 +378,7 @@ Tenslotte zijn er nog de methodes gerelateerd met het effectieve beurswezen, die
 
 \function{Exchange.Modify}
 	{ informatie van een beurs wijzigen }
-	{ beurs-id }
+	{ een filter }
 	{ struct met beursinformatie:
 		\begin{itemize}
 		\item{description}
@@ -397,7 +402,7 @@ Tenslotte zijn er nog de methodes gerelateerd met het effectieve beurswezen, die
 
 \function{Index.Modify}
 	{ informatie van een index wijzigen }
-	{ index-id }
+	{ een filter }
 	{ struct met indexinformatie:
 		\begin{itemize}
 		\item{description}
@@ -422,16 +427,16 @@ Tenslotte zijn er nog de methodes gerelateerd met het effectieve beurswezen, die
 
 \function{Security.Modify}
 	{ informatie van een effect wijzigen }
-	{ effect-id }
+	{ een filter }
 	{ struct met informatie over het effect:
 		\begin{itemize}
 		\item{...}
 		\end{itemize} }
 	{ administrator-rechten }
 
-\function{Security.List}
+\function{Security.Details}
 	{ defail-informatie van een effect opvragen }
-	{ effect-id }
+	{ een filter }
 	{ struct met defail-informatie over het effect:
 		\begin{itemize}
 		\item{salesvolume: omzet}

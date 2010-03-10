@@ -1,8 +1,6 @@
-all: clean document.pdf
+all: clean pdf qclean
 
-pdf: document.pdf
-
-document.pdf: document.tex
+pdf: document.tex
 	pdflatex document.tex
 	makeindex document.idx
 	pdflatex document.tex
@@ -14,6 +12,8 @@ document.pdf: document.tex
 	      latex_count=`expr $$latex_count - 1` ;\
 	    done
 
-
 clean:
 	rm -f *.ps *.dvi *.aux *.toc *.idx *.ind *.ilg *.log *.out document.pdf
+
+qclean:
+	rm -f *.ps *.dvi *.aux *.toc *.idx *.ind *.ilg *.log *.out
