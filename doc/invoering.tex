@@ -1,0 +1,32 @@
+%
+% Oracle database
+%
+
+\chapter{Databases}
+
+De opdracht specifi\"eerde dat we ook binnen het scholencomplex een database moesten opzetten, en aangezien StockPlay belang heeft aan veel en up-to-date data moesten we een manier vinden om de gescrapete data te synchroniseren tussen de twee databases.
+
+Omdat we voor onze databaseservers Oracle 10g Express gebruikten, waren we gelimiteerd qua replicatie-mogelijkheden. Die limitaties hielden in dat de replicatie \emph{one-way} zou zijn, en enkel data zou gerepliceerd worden (dus geen \emph{stored procedures} of \emph{views}). Hoewel dit een serieuze beperking is, besloten we om toch door te gaan met deze piste en een replicatieschema op te zetten. Hierbij zou de "master"-database die op locatie zijn, en de databaseserver binnen het scholencomplex diens data gewoon repliceren. Aangezien de data dus vloeit van de externe naar de interne database, houdt dit in dat wijzigingen die we maken aan de interne database (met andere woorden: het spelverloop) niet zouden terechtkomen in de effectieve database.
+
+
+%
+% Backend
+%
+
+\chapter{Backend}
+
+\todo{builden van branched nightlies, oid}
+
+
+%
+% Scraper
+%
+
+\chapter{Scraper}
+
+
+%
+% Interfaces
+%
+
+\chapter{Interfaces}

@@ -1,3 +1,7 @@
+%
+% Dataontwerp
+%
+
 \chapter{Dataontwerp}
 
 \begin{figure}[h!]
@@ -21,40 +25,16 @@ Ook bij het omzetten van een order naar een transactie wordt een trigger geactiv
 
 De cash positie van een gebruiker kan niet zomaar aangepast worden, dit wordt ook beveiligd met een trigger.
 
+
+%
+% Procedureontwerp
+%
+
 \chapter{Procedureontwerp}
 
-\section{Backend protocol}
+\section{XML-RPC interface}
 
-Alle databasetoegang wordt uitgevoerd via een gemeenschappelijke backend. Hiervoor hebben we een interface opgesteld volgens een aantal richtlijnen:
-\begin{itemize}
-\item{taalonafhankelijk: aangezien de interfaces met behulp van verschillende programmeertalen gerealiseerd worden, moet de interface toegankelijk zijn vanuit verschillende programmeertalen.}
-\item{lichtgewicht: voor de communcicatie met onze mobiele interface, moet de gegenereerde data compact gehouden worden.}
-\item{toegankelijk: de interfaces moeten toegankelijk zijn vanaf een andere machine dan die waar de backand op draait.}
-\end{itemize}
-
-Voor de interface met de backand hebben we een aantal interfaces overwogen:
-
-\begin{itemize}
-\item{een eigen binair protocol}
-\item{SOAP API}
-\item{XML-RPC}
-\item{RMI}
-\end{itemize}
-
-We hebben uiteindelijk gekozen voor het XML-RPC protocol. Dit is een lichtgewicht Remote Procedure protocol, die methodeaanvragen en -antwoorden verpakt in XML-data en ze als POST request verstuurd over het HTTP protocol (zie ook bijlage \ref{chap:xml-rpc} voor de specificaties).
-
-Voor het binair protocol hebben we niet gekozen om dat we hiervoor een stuk meer zouden moeten implementeren. Alsook werkt dit niet over het HTTP protocol, zodat dit eventueel op bepaalde netwerken geblokkeerd zou kunnen worden. Een SOAP API zou een stuk zwaarder uitvallen dan XML-RPC en RMI is enkel niet taalonafhankelijk. 
-
-Het XML-RPC protocol voldoet aan de opgestelde eisen: aangezien het verder =bouwt op het bestaande HTTP-protocol kan het gebruik maken van diens mogelijkheden (zoals compressie en encryptie) en kan het indien een specifieke bibliotheek onbestaande is eenvoudig verwerkt worden via reeds bestaande HTTP- en XML-bibliotheken. Bovendien verschilt de communicatie niet van regulier http verkeerd waardoor de toegankelijkheid in gelimiteerde netwerkomgevingen ook toeneemt.
-
-Voor de programmeertalen die we gaan gebruiken bij het implementeren blijken er reeds verschillende bibliotheken beschikbaar te zijn, wat het gemak van gebruik opnieuw verhoogt. Een opsomming van de specifieke bibliotheken die we zullen gebruiken om informatie te versturen en ontvangen over het XML-RPC protocol:
-\begin{itemize}
-\item{\textbf{Perl}: \makeurl{XML::RPC}{http://search.cpan.org/~daan/XML-RPC-0.9/lib/XML/RPC.pm}}
-\item{\textbf{C\#}: \makeurl{XML-RPC.NET}{http://www.xml-rpc.net/}}
-\item{\textbf{Java}: \makeurl{Apache XML-RPC}{http://ws.apache.org/xmlrpc/}}
-\end{itemize}
-
-\todo{XML, Redstone en Marque}
+Zoals vermeld bij het technisch ontwerp, gebruiken we het XML-RPC protocol als communicatiemiddel tussen de backend en zijn interfaces. Hiertoe moeten we de set aan functies vastleggen die een client kan uitvoeren, en de bijhorende signatuur documenteren.
 
 Aangezien XML-RPC geen ondersteuning biedt voor namespaces of andere vormen van functieorganisatie, hanteren we zelf een mechanisme om dit te bekomen: een methode-naam bestaat altijd uit twee delen, gescheiden door een punt. Het deel voor het scheidingsteken duidt het pakket aan, het deel erna de methode die we willen oproepen.
 Zo delen we de backend op in de volgende drie primaire klassen:
@@ -490,3 +470,77 @@ De mogelijke vlaggen zijn:
 \item{1: kunnen gebruikers het effect zien}
 \item{2: kunnen gebruikers het effect aankopen (impliceert flag 1)}
 \end{itemize}
+
+
+%
+% Grafieken
+%
+
+\todo{details over de implementatie van Laurens zijn grafieken. Misschien ook alles van styling (template/masterpage) hier?}
+
+\chapter{Dynamische grafieken}
+
+Zoals reeds vermeld maken we gebruik van de JQuery en FLOT bibliotheken om interactieve grafieken te maken. Die zullen volgende functionaliteit bevatten:
+\begin{itemize}
+\item{zoomen in de grafiek doormiddel van het scrolwiel}
+\item{zoomen in de grafiek doormiddel van een dubbelklik op een locatie}
+\item{uitzoomen met een knop}
+\item{de grafiek zal je kunnen vastnemen en over de x-as verslepen}
+\item{je zal kunnen wisselen tussen een sleepmodus en een modus waarin je een kader kan selecteren waarin je wil inzoomen (enkel over de x-as)}
+\item{er zal onderaan een tweede, gekoppelde grafiek te zien zijn waarin een bargrafiek te zien is waar de volumes van de effecten in te zien zijn}
+\item{eventueel: je zal extra referentie lijnen kunnen toevoegen}
+\item{je zal een beperkt aantal maal op je laatste handelingen kunnen terugkeren}
+\item{de opgehaalde punten zullen gecached worden en enkel indien vereist zal via AJAX nieuwe punten opgehaald worden}
+\end{itemize}
+
+
+%
+% Scraper
+%
+
+\chapter{Scraper}
+
+
+%
+% Artificiële intelligentie
+%
+
+\chapter{Artifici\"ele intelligentie}
+
+
+%
+% Geavanceerde orders
+%
+
+\chapter{Geavanceerde orders}
+
+\todo{herformuleren, is niet echt een "module"}
+
+In de order module zullen we een extra modulaire functionaliteit voorzien zodat we later extra types van geavanceerde orders kunnen toevoegen.
+Deze modules accepteren twee parameters (limietkoersen), de huidige koers, het type order (aankoop of verkoop) en het tijdstip op wanneer het order aangemaakt is. Elke keer ze opgeroepen worden geven ze terug of aan de voorwaarde al dan niet voldaan is. Is de voorwaarde voldaan dan zal dit tot gevolg hebben dat het order omgezet zal worden in een effectieve aankoop van een effect.
+Deze modules kunnen ook extra informatie aan de backend vragen die kunnen helpen bij de keuze. Bijvoorbeeld: "Wat was de maximum koers van dit effect in periode x"?
+Elke module krijgt bij het oproepen drie parameters:
+\begin{itemize}
+\item{effectcode}
+\item{waarde een}
+\item{waarde twee}
+\end{itemize}
+\todo{2 parameters? CSV? BLOB?}
+
+Waarde een en twee zijn waardes die de gebruiker ingesteld heeft en hebben afhankelijk van de gekozen ordermodule een andere betekenis.
+Hierna volgt een overzicht van de modules die we zullen implementeren.
+
+\section{Onmiddellijk uitvoeren}
+Deze module gebruikt de gegeven parameters niet en evalueert de voorwaarde steeds als waar. Het order wordt onmiddellijk uitgevoerd.
+
+\section{Koerslimiet}
+Deze module gebruikt de eerste parameter als limietwaarde. Bij een aankooporder gaat hij een positief antwoord geven als de koers lager is dan de limietwaarde. Deze koersinformatie komt hij via de backend te weten. Bij een verkooporder gebeurd het omgekeerde. 
+
+\section{Trailing-stop}
+Bij een verkoop order wordt de trigger waarde ingesteld op een vast aantal beurspunten onder de hoogste koers. Als de hoogste koers dus verhoogd in waarde, dan verhoogd ook de trigger waarde evenveel punten. Hetzelfde kan ook ingesteld worden bij een aankooporder. Deze trigger waarde krijgt de module via de parameters mee en het maximum sinds de periode van het plaatsen van de order en het huidige tijdstip vraagt deze aan de backend.
+
+\section{Bracket-limiet}
+Als de koers buiten een van de twee limietwaarden valt dan geeft de module een positief antwoord terug.
+
+\section{Stop loss}
+De module vraagt bij een aankooporder aan de backend wat de laagste prijs was tussen het plaatsen van het order en het huidige tijdstip. Is dit minimum lager dan de eerste parameter, dan geeft de module een positief antwoord terug. Bij een verkooporder gebeurd het omgekeerde.

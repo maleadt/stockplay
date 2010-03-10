@@ -5,11 +5,15 @@
 \chapter{Functioneel ontwerp}
 
 \section{Actoren}
-\paragraph{Gebruikers}Het spel kent de volgende types gebruikers:
+
+\paragraph{Gebruikers}Een gebruiker wordt ge\"identificeerd door een gebruikersnaam en wachtwoord, en wordt intern gelinkt aan een set van rechten, die bepalen wat de gebruiker allemaal kan doen. Zo kennen we de volgende types gebruikers, die elk een verschillende set rechten toegekend worden:
 \begin{itemize}
-	\item{\emph{Speler}: een geauthenticeerde gebruiker die deelneemt aan het spel. Hij kan hiervoor gebruik maken van de interactieve delen van de website en van een client op een mobiele telefoon.}
+	\item{\emph{Speler}: een gebruiker die deelneemt aan het spel. Hij kan hiervoor gebruik maken van de interactieve delen van de website en van een client op een mobiele telefoon.}
 	\item{\emph{Administrator}: deze gebruiker beheert het spel. Hij kan de gebruikers en effecten in het spel beheren, de status van de verschillende componenten bekijken en statistieken raadplegen.}
+	\item{\emph{Scraper}: deze gebruiker kan enkel beurzen, index, en aandelen bekijken en aanpassen, en zal dus gebruikt worden door de "scraper" om in het systeem in te loggen en data te pushen naar de database.}
+	\item{\emph{Computer}: deze gebruiker neemt, net zoals de "Speler", een deel aan het spel, maar wordt niet bestuurd door een mens maar door een artifici\"ele intelligentie. Dit onderscheid is nodig aangezien een AI extra informatie nodig heeft (zoals het gedrag van andere spelers) om van te leren.}
 \end{itemize}
+
 \paragraph{Informaticasystemen}Deze applicatie maakt gebruik van een software design pattern: de 'Three-tier architecture'. De applicatie heeft 3 tiers:
 \begin{enumerate}
 	\item\emph{Data tier}: Dit is de database waar alle persistente informatie uit het spel wordt in opgeslagen
@@ -29,10 +33,16 @@ De presentation tier bestaat hier uit 3 onafhankelijke applicaties:
 \end{figure}
 
 \subparagraph{Scrapers}
-StockPlay gebruikt de echte re�le beurs. De koersen van deze effecten moeten dus periodiek worden opgehaald om het spel te laten werken. Hiervoor maken we gebruik van in Perl geschreven scrapers die vanaf enkele vooraf bepaalde internetsites de koersen extraheren. (vb. \makeurl{De Tijd}{http://www.tijd.be/beurzen/euronext-brussel/continumarkt} of \makeurl{Beursduivel}{http://www.beursduivel.be/koersen-belmid.index}) Hiervoor wordt oa. handig gebruik gemaakt van de AJAX-requests die deze websites gebruiken om de koersen live te tonen. Dit zorgt ervoor dat bijna enkel de koersen worden opgehaald, zonder extra overhead (zoals de layout van de website, etc). Bijkomend voordeel van het gebruik van AJAX is dat Perl libraries voorziet waarmee JSON gemakkelijk ontleed kan worden.
-De opgehaalde informatie wordt vervolgens doorgestuurd naar de backend dewelke deze koersinformatie vervolgens opslaat in de database. 
+StockPlay gebruikt de echte reële beurs, waardoor de koersen van deze effecten moeten dus periodiek worden opgehaald om het spel te laten werken. Hiervoor maken we gebruik van in Perl geschreven scrapers die vanaf enkele vooraf bepaalde internetsites de koersen extraheren. (zoals \makeurl{De Tijd}{http://www.tijd.be/beurzen/euronext-brussel/continumarkt} of \makeurl{Beursduivel}{http://www.beursduivel.be/koersen-belmid.index}).
+De opgehaalde informatie wordt vervolgens doorgestuurd naar de backend dewelke deze koersinformatie vervolgens opslaat in de database.
+
+\subparagraph{Atrifici\"ele intelligentie}
+
+Dit zijn computergestuurde spelers, die via het backend-protocol rechtstreeks communiceren met de backend om zo een competitieve medespeler te vormen.
+
 
 \section{Uitwerking User interfaces}
+
 \subsection{Webapplicatie}
 
 \begin{figure}[h!]
@@ -186,10 +196,6 @@ De desktopapplicatie is opgesplitst in drie grote componenten.
 	\caption{Screenshot van concept gebruikersbeheer.}
 \end{figure}
 
-\section{Backend}
-\todo{hoort dit hier?}
-Om te vermijden dat alle interfaces gedetailleerde informatie over het databaseontwerp moeten hebben, abstraheren we alle toegang tot de database via een backend. Als een client applicatie dan bepaalde informatie nodig heeft, of wijzigingen wilt toepassen, zal dat gebeuren via een uniforme interface die de backend implementeert. Het exacte ontwerp van deze interface, en de implementatie ervan, kan gevonden worden in een verder hoofdstuk.
-
 
 %
 % Technisch
@@ -199,7 +205,44 @@ Om te vermijden dat alle interfaces gedetailleerde informatie over het databaseo
 
 \section{Hergebruik}
 
-\todo{Beschrijving van het wat en waarom van bibliotheken}
+\subsection{Backend protocol}
+
+Om toegang te krijgen tot de backend vanuit de verschillende andere delen van het project (zoals de scraper, AI, of interfaces) moesten we op zoek naar een goed communicatieprotocol die aan verschillende vereisten moet voldoen:
+\begin{itemize}
+\item{taalonafhankelijk: aangezien de interfaces met behulp van verschillende programmeertalen gerealiseerd worden, moet de interface toegankelijk zijn vanuit verschillende programmeertalen.}
+\item{lichtgewicht: voor de communcicatie met onze mobiele interface, moet de gegenereerde data compact gehouden worden.}
+\item{toegankelijk: de interfaces moeten toegankelijk zijn vanaf een andere machine dan die waar de backand op draait.}
+\end{itemize}
+
+Zo hebben we een aantal protocollen overwogen:
+\begin{itemize}
+\item{een eigen binair protocol}
+\item{RMI}
+\item{SOAP}
+\item{XML-RPC}
+\end{itemize}
+
+Het binair protocol viel nogal snel af, aangezien lastig is om te implementeren, relatief foutgevoelig is, en geen garanties biedt qua toegankelijkheid. RMI was ons niet toegestaan te gebruiken, waardoor nog twee kandidaten overbleven: SOAP en XML-RPC. Bij het vergelijken van beide bleek SOAP nogal zwaarwichtig te zijn, en bovendien veel te uitgebreid voor onze (relatief eenvoudige) eisen.
+
+Zo hebben we uiteindelijk gekozen voor het XML-RPC protocol. Dit is een lichtgewicht Remote Procedure protocol, die methodeaanvragen en -antwoorden verpakt in XML-data en ze als POST request verstuurd over het HTTP protocol (zie ook bijlage \ref{chap:xml-rpc} voor de specificaties).
+Het protocol voldoet ook aan de opgestelde eisen: aangezien het verder bouwt op het bestaande HTTP-protocol kan het gebruik maken van diens mogelijkheden (zoals compressie en encryptie) en kan het (indien een specifieke bibliotheek onbestaande zou zijn) eenvoudig verwerkt worden met behulp van reeds bestaande HTTP- en XML-bibliotheken. Bovendien verschilt de communicatie niet van regulier HTTP-verkeer waardoor de toegankelijkheid in gelimiteerde netwerkomgevingen ook toeneemt.
+
+Voor de programmeertalen die we gaan gebruiken bij het implementeren bleken er reeds verschillende bibliotheken beschikbaar te zijn, wat het gemak van gebruik opnieuw verhoogt. Een opsomming van de specifieke bibliotheken die we zullen gebruiken om informatie te versturen en ontvangen over het XML-RPC protocol:
+\begin{itemize}
+\item{\textbf{Perl}: \makeurl{XML::RPC}{http://search.cpan.org/dist/XML-RPC/}}
+\item{\textbf{C\#}: \makeurl{XML-RPC.NET}{http://www.xml-rpc.net/}}
+\item{\textbf{Java}: \makeurl{Apache XML-RPC}{http://ws.apache.org/xmlrpc/}}
+\item{\textbf{Java ME}: \makeurl{kXML-RPC}{http://kxmlrpc.sourceforge.net/}}
+\end{itemize}
+
+Deze keuzes zijn eveneens voorzichtig gemaakt. Zo kent Perl nog verschillende andere XML-RPC bibliotheken (zoals de officiële \makeurl{RPC::XML}{http://search.cpan.org/dist/RPC-XML/} bibliotheek), waarvan XML::RPC verschilt in het beperkt aantal afhankelijkheden. Om XML-RPC te gebruiken in Java zijn er ook alternatieven, zoals de \makeurl{Redstone XML-RPC bibliotheek}{http://xmlrpc.sourceforge.net/} die afviel door .... Voor C\# en Java.ME hebben we geen alternatieve bibliotheken gevonden.
+
+\section{Dynamische grafieken}
+
+Op de internetwebsite zullen we een extra module ontwikkelen waarin grafieken dynamisch gemanipuleerd kunnen worden. De gebruikers zullen met eenvoudige muishandelingen andere grafische weergaven van de grafieken kunnen opvragen, zonder de pagina te herladen. Hiervoor zal gebruik gemaakt worden van de interpreter taal Javascript en de javascript bibliotheken \makeurl{JQuery}{http://jquery.com/} en \makeurl{Flot}{http://code.google.com/p/flot/}. JQuery is benodigd om de Flot bibliotheek werkend te krijgen en kunnen we ook op andere plaatsen op de website gebruiken. Deze bibliotheek gaat wat extra functies aan de HTML-elementen hangen en geeft onze eenvoudige middelen om met AJAX extra informatie op te halen.
+
+We gebruiken Flot omdat aan deze bibliotheek nog acief ontwikkeld wordt. Alsook is ze heel eenvoudig gehouden en kan je er makkelijk op voortbouwen. Je kan er op voortbouwen door de ingebouwde events op te vangen en door gebruik te maken van de ingebouwde plugin functionaliteit. Er is ook ondersteuning voor datumweergave en er zijn plugins waarmee je een selectievenster op de grafiek kan activeren (om in te zoomen) en om de grafiek te kunnen verslepen.
+De grafieken worden getekend met een combinatie van HTML elementen en het CANVAS element. De HTML elementen kunnen we gemakkelijk vormgeven met CSS. Canvas wordt geëmuleerd in Internet Explorer. Alsook kunnen we de grafieken van deze bibliotheek op een eenvoudige manier vullen met JSON.
 
 \section{Hardware}
 
