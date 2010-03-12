@@ -43,7 +43,6 @@ public abstract class Data extends Convertable {
     //  
 
     public Data() {
-        
     }  
 
     public Data(Object iData) {

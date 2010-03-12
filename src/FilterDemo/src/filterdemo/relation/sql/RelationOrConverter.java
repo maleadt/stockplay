@@ -28,9 +28,9 @@ import filterdemo.relation.RelationAnd;
  *
  * @author tim
  */
-public class RelationAndConverter extends RelationAnd {
+public class RelationOrConverter extends RelationAnd {
     @Override
     public Object process(Condition a, Condition b) throws Exception {
-        return (String)a.convert() + " AND " + (String)b.convert();
+        return (String)a.convert() + " OR " + (String)b.convert();
     }
 }
