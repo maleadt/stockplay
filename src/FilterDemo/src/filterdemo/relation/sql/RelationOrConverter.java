@@ -1,6 +1,6 @@
 /*
  * RelationAndConverter.java
- * StockPlay - Converter voor AND relatie.
+ * StockPlay - Converter voor OR relatie.
  *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
@@ -22,13 +22,13 @@
 package filterdemo.relation.sql;
 
 import filterdemo.condition.Condition;
-import filterdemo.relation.RelationAnd;
+import filterdemo.relation.RelationOr;
 
 /**
  *
  * @author tim
  */
-public class RelationOrConverter extends RelationAnd {
+public class RelationOrConverter extends RelationOr {
     @Override
     public Object process(Condition a, Condition b) throws Exception {
         return (String)a.convert() + " OR " + (String)b.convert();

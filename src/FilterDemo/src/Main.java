@@ -21,13 +21,10 @@
  */
 
 import filterdemo.Filter;
-import filterdemo.condition.ConditionEquals;
-import filterdemo.condition.Condition;
-import filterdemo.data.DataInt;
-import filterdemo.data.DataKey;
-import filterdemo.data.DataString;
+import filterdemo.condition.*;
+import filterdemo.data.*;
 import filterdemo.exception.FilterException;
-import filterdemo.relation.RelationAnd;
+import filterdemo.relation.*;
 
 
 /**
@@ -50,7 +47,7 @@ public class Main {
             Condition tCheckIfTim = new ConditionEquals();
             tCheckIfTim.addParameter(new DataKey("name"));
             tCheckIfTim.addParameter(new DataString("Tim Besard"));
-            tFilter.addCondition(new RelationAnd(), tCheckIfTim);
+            tFilter.addCondition(new RelationOr(), tCheckIfTim);
         }
         catch (FilterException e) {
             System.err.println("Filter construction failed");

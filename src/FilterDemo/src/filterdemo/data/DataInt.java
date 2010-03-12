@@ -21,6 +21,7 @@
  */
 package filterdemo.data;
 
+import filterdemo.exception.FilterException;
 import filterdemo.graph.Graph;
 import filterdemo.graph.Node;
 
@@ -46,7 +47,7 @@ public class DataInt extends Data {
     //
 
     @Override
-    public void check() {
+    public void check() throws FilterException {
         super.check();
         if (!(mData instanceof Integer))
             throw new RuntimeException("Integer data object can only contain an integer");

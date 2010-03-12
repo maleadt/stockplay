@@ -1,6 +1,6 @@
 /*
- * RelationAnd.java
- * StockPlay - AND relatie.
+ * RelationOr.java
+ * StockPlay - OR relatie.
  *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
