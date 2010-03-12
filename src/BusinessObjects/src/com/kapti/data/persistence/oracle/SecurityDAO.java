@@ -6,7 +6,7 @@ package com.kapti.data.persistence.oracle;
 
 import com.kapti.exceptions.*;
 import com.kapti.data.*;
-import com.kapti.data.persistence.GenericDAO;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -15,7 +15,7 @@ import java.util.Collection;
  *
  * @author Thijs
  */
-public class SecurityDAO implements GenericDAO<Security, String> {
+public class SecurityDAO implements com.kapti.data.persistence.SecurityDAO {
 
     private static final String SELECT_SECURITY = "SELECT name, exchange FROM securities WHERE symbol = ?";
     private static final String SELECT_SECURITIES_FILTER = "SELECT symbol, name, exchange FROM securities WHERE symbol LIKE ? AND name LIKE ? AND exchange LIKE ?";
@@ -250,5 +250,4 @@ public class SecurityDAO implements GenericDAO<Security, String> {
             throw new DBException(ex);
         }
     }
-
 }

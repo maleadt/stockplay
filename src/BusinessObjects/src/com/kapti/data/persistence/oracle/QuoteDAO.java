@@ -15,7 +15,7 @@ import java.util.Collection;
  *
  * @author Thijs
  */
-public class QuoteDAO implements GenericDAO<Quote, Quote.QuotePK> {
+public class QuoteDAO implements com.kapti.data.persistence.QuoteDAO {
 
     private static final String SELECT_QUOTE = "SELECT price, volume, bid, ask, low, high, open FROM quotes WHERE symbol = ? AND timestamp = ?";
     private static final String SELECT_QUOTE_FILTER = "SELECT symbol, timestamp, price, volume, bid, ask, low, high, open FROM quotes "
@@ -24,6 +24,10 @@ public class QuoteDAO implements GenericDAO<Quote, Quote.QuotePK> {
     private static final String INSERT_QUOTE = "INSERT INTO quotes(symbol, timestamp, price, volume, bid, ask, low, high, open) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String UPDATE_QUOTE = "UPDATE quotes SET price = ?, volume ?, bid = ?, ask = ?, low = ?, high = ?, open ? WHERE symbol = ? AND timestamp = ?";
     private static final String DELETE_QUOTE = "DELETE FROM quotes WHERE symbol = ? AND timestamp = ?";
+
+    private static final String SELECT_LATEST_QUOTE = "SELECT price, volume, bid, ask, low, high, open, timestamp FROM quotes WHERE symbol = ? AND timestamp = max(timestamp) over(partition by symbol)";
+
+
     private static QuoteDAO instance = new QuoteDAO();
 
     public static QuoteDAO getInstance() {
@@ -290,5 +294,44 @@ public class QuoteDAO implements GenericDAO<Quote, Quote.QuotePK> {
         } catch (SQLException ex) {
             throw new DBException(ex);
         }
+    }
+
+        public Quote findLatest(String symbol) throws StockPlayException {
+
+                Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            try {
+                conn = OracleConnection.getConnection();
+                stmt = conn.prepareStatement(SELECT_LATEST_QUOTE);
+
+                stmt.setString(1, symbol);
+
+
+                rs = stmt.executeQuery();
+                if (rs.next()) {
+
+                    return new Quote(symbol, rs.getTimestamp(8), rs.getDouble(1), rs.getInt(2), rs.getDouble(3), rs.getDouble(4), rs.getDouble(5), rs.getDouble(6), rs.getDouble(7));
+                } else {
+                    throw new NonexistentEntityException("There is no quote with symbol '" + symbol + "'");
+                }
+            } finally {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            }
+        } catch (SQLException ex) {
+            throw new DBException(ex);
+        }
+
+
+
     }
 }

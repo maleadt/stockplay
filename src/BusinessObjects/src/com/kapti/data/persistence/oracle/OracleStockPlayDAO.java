@@ -30,11 +30,11 @@ public class OracleStockPlayDAO implements StockPlayDAO{
         return ExchangeDAO.getInstance();
     }
 
-    public GenericDAO<Security, String> getSecurityDAO() {
+    public SecurityDAO getSecurityDAO() {
         return SecurityDAO.getInstance();
     }
 
-    public GenericDAO<Quote, QuotePK> getQuoteDAO() {
+    public QuoteDAO getQuoteDAO() {
         return QuoteDAO.getInstance();
     }
 
