@@ -6,7 +6,7 @@ Het spel start op een vastgestelde moment: op 1 maart 2010 om 8u 's morgens, Cen
 
 Van zodra gebruikers geregistreerd zijn, hebben de gebruikers toegang tot hun portfolio en kunnen daar effecten aan worden toegevoegd.
 
-De gebruiker kan effecten aankopen van onderstaande types:
+De gebruiker kan effecten aankopen en verkopen van onderstaande types:
 \begin{itemize}
   \setlength{\itemsep}{1pt}
   \setlength{\parskip}{0pt}
@@ -32,44 +32,81 @@ Het spel eindigt op 31 mei 2010, waarna een eindklassement wordt opgemaakt. De k
 \subsection{Uitwerking use cases}
 
 \subsubsection{Lidmaatschap aanvragen}
-\paragraph{Samenvatting}Een natuurlijk persoon kan zich inschrijven voor een lidmaatschap. Dit lidmaatschap is een vereiste om de interactieve delen van de website te kunnen beleven. Deze procedure bestaat uit een aantal velden die naar waarheid in te vullen zijn en een aantal velden waar men een waarde voor kan kiezen.
-\paragraph{Actoren}Een natuurlijk persoon die de interactieve delen van de website wil gebruiken
+\paragraph{Beschrijving}Een natuurlijk persoon kan zich inschrijven voor een lidmaatschap. Dit lidmaatschap is een vereiste om de interactieve delen van de website te kunnen beleven. Deze procedure bestaat uit een aantal velden die naar waarheid in te vullen zijn en een aantal velden waar men een waarde voor kan kiezen.
+\paragraph{Primaire actoren}Een natuurlijk persoon die de interactieve delen van de website wil gebruiken
 \paragraph{Doel}De speler verkrijgt een lidmaatschap. Via dit lidmaatschap kunnen we een persoon (een speler) koppelen aan zijn portfolio.
-\paragraph{Precondities}De speler dient een geldig email adres te bezitten, een eID lezer en hij mag nog geen lidmaatschap bezitten (een persoon bezit een lidmaatschap als hij de combinatie gebruikersnaam en wachtwoord kent of over een eID bezig waar een lidmaatschap aan gekoppeld is). \small{Lidmaatschap aanvragen is pas mogelijk vanaf 1 maart 2010, 8u, Central European Time.}
-\paragraph{Postcondities}In de database zit een nieuw record waarmee we de speler kunnen authentiekeren en waaraan zijn instellingen en portfolio gekoppeld worden.
+\paragraph{Precondities}De speler bezitte een geldig email adres, een eID lezer en hij was nog niet in bezit van een lidmaatschap (een persoon bezit een lidmaatschap als hij de combinatie gebruikersnaam en wachtwoord kent of over een eID bezit waar een lidmaatschap aan gekoppeld is). \small{Lidmaatschap aanvragen is pas mogelijk vanaf 1 maart 2010, 8u, Central European Time.}
+\paragraph{Postcondities}In de database zit een nieuw record waarmee we de speler kunnen authenticeren en waaraan zijn instellingen en portfolio gekoppeld worden.
 \paragraph{Triggers}Een persoon zit op de inleidende website en kiest daar voor de optie "Registreren".
 \paragraph{Notities}De velden die de gebruiker op de afzonderlijke registratie pagina dient in te vullen zijn terug te vinden in het database schema van de gebruikers. Alle velden zijn verplicht.
-\paragraph{Business rules}: Het registreren (en dus onrechtstreeks het spelen van het beursspel) moet aangemoedigd worden vanuit gastsite.
-
-
+\paragraph{Business rules}Het registreren (en dus onrechtstreeks het spelen van het beursspel) moet aangemoedigd worden vanuit gastsite.
+\paragraph{Prioriteit}Gemiddeld
+\paragraph{Complexiteit}Laag
+\paragraph{Successcenario}
+\begin{itemize}
+ \item Speler bezoekt de website
+ \item Speler maakt de keuze dat hij mee wil spelen
+ \item Speler geeft aan te willen registreren
+ \item Speler vult alle vereiste velden in
+ \item Speler vult eventueel enkele optionele velden in
+ \item Speler bevestig zijn registratie
+ \item \label{def:lidmaatschap:bevestiging} Speler krijgt een bevestiging van zijn registratie
+\end{itemize}
+\paragraph{Alternatieve scenario’s}
+Alternatief voor \ref{def:lidmaatschap:bevestiging}:
+\begin{itemize}
+ \item Speler is een vereist veld vergeten en krijgt de mogelijkheid om dit aan te passen
+ \item Speler heeft een ongeschikte of foutieve invoer gedaan voor een veld en krijgt de mogelijkheid om dit aan te passen
+\end{itemize}
+ 
 \subsubsection{Het bekijken van de gastsite}
-\paragraph{Samenvatting}De website zal uit drie delen bestaan. Een deel bestaat uit een of meerdere pagina's. Een deel zal enkel zichtbaar zijn voor niet geauthenticeerde gebruikers of bezoekers zonder lidmaatschap. Een ander deel zal zichtbaar zijn voor zowel niet geauthenticeerde bezoekers als geauthenticeerde bezoekers. Geauthenticeerde bezoekers hebben dan ook nog toegang tot een enkel voor hen zichtbare derde deel. Het is in dat deel dat de interactieve site zich bevindt.
-\paragraph{Actoren} Bezoekers zonder lidmaatschap die er wel een willen aanvragen, bezoekers zonder lidmaatschap die enkel op zoek zijn naar informatie over het spel en bezoekers met lidmaatschap die zich willen authenticeren voor toegang tot het voor hen zichtbare deel.
+\paragraph{Beschrijving}De website zal uit drie delen bestaan. Een deel bestaat uit een of meerdere pagina's. Een deel zal enkel zichtbaar zijn voor niet geauthenticeerde gebruikers of bezoekers zonder lidmaatschap. Een ander deel zal zichtbaar zijn voor zowel niet geauthenticeerde bezoekers als geauthenticeerde bezoekers. Geauthenticeerde bezoekers hebben dan ook nog toegang tot een enkel voor hen zichtbare derde deel. Het is in dat deel dat de interactieve site zich bevindt.
+\paragraph{Primaire actoren} Bezoekers zonder lidmaatschap die er wel een willen aanvragen, bezoekers zonder lidmaatschap die enkel op zoek zijn naar informatie over het spel en bezoekers met lidmaatschap die zich willen authenticeren voor toegang tot het voor hen zichtbare deel.
 \paragraph{Doel} Bezoekers snel laten inloggen, bezoekers informeren over het spel, bezoekers doorheen de registratieprocedure leiden.
-\paragraph{Precondities} De gastsite heeft de zelfde precondities als de overige delen van de website. De surfer moet voorzien zijn van een breedband internetverbinding, een desktop of draagbare computer met daarop een gangbaar en recent besturingssysteem en internetbrowser.
-\paragraph{Postcondities} De gebruiker is ingelogd, geregistreerd of is voldoende geïnformeerd over het spel.
+\paragraph{Precondities} De gastsite heeft de zelfde precondities als de overige delen van de website. De surfer was voorzien van een breedband internetverbinding, een desktop of draagbare computer met daarop een gangbaar en recent besturingssysteem en bijhorende internetbrowser.
+\paragraph{Postcondities} De gebruiker was ingelogd, geregistreerd of was voldoende geïnformeerd over het spel.
 \paragraph{Triggers} De surfer bezoekt de website door het ingeven van het webadres, het aanklikken van een favoriet in zijn internetbrowser of na het klikken op een webverwijzing op een andere internetwebsite.
 \paragraph{Notities} Het gastgedeelte zal op elke pagina een module bevatten waarmee bezoekers met lidmaatschap zich snel kunnen authenticeren.\small{Om de surfer te informeren over het spel zullen verschillende pagina's voorzien worden. Op die pagina's zijn visuele hulpmiddelen voorzien zoals afbeeldingen waarop te zien is hoe bepaalde spelprocedures verlopen en eventueel ook ondersteunde filmen.}
 \paragraph{Business rules}Het is op dit gedeelte van de site dat de surfer en potentiële speler overtuigd moet worden om actief mee te spelen.
-
+\paragraph{Prioriteit}Laag
+\paragraph{Complexiteit}Laag
+\paragraph{Successcenario}
+\begin{itemize}
+ \item Speler bezoekt de website
+ \item Speler navigeert naar de juiste pagina
+ \item Speler is voldoende geïnformeerd
+\end{itemize}
 
 \subsubsection{Inloggen}
-\paragraph{Samenvatting} De website zal uit drie delen bestaan. Een deel bestaat uit een of meerdere pagina's. Een deel zal enkel zichtbaar zijn voor niet geauthenticeerde gebruikers of bezoekers zonder lidmaatschap. Een ander deel zal zichtbaar zijn voor zowel niet geauthenticeerde bezoekers als geauthenticeerde bezoekers. Geauthenticeerde bezoekers hebben dan ook nog toegang tot een enkel voor hen zichtbare derde deel. Het is in dat deel dat de interactieve site zich bevindt. Dat deel is enkel toegankelijk voor geauthenticeerde bezoekers.
+\paragraph{Beschrijving} De website zal uit drie delen bestaan. Een deel bestaat uit een of meerdere pagina's. Een deel zal enkel zichtbaar zijn voor niet geauthenticeerde gebruikers of bezoekers zonder lidmaatschap. Een ander deel zal zichtbaar zijn voor zowel niet geauthenticeerde bezoekers als geauthenticeerde bezoekers. Geauthenticeerde bezoekers hebben dan ook nog toegang tot een enkel voor hen zichtbare derde deel. Het is in dat deel dat de interactieve site zich bevindt. Dat deel is enkel toegankelijk voor geauthenticeerde bezoekers.
 \paragraph{Actoren} Bezoekers met lidmaatschap die toegang willen tot het interactieve deel van de website.
 \paragraph{Doel} Een bezoeker koppelen aan zijn lidmaatschap en dus onrechtstreeks aan zijn portfolio, puntentotaal en instellingen.
 \paragraph{Precondities} De bezoeker bezit reeds een lidmaatschap en beschikt over voldoende informatie en hulpmiddelen om aan te kunnen tonen dat dit lidmaatschap van hem of haar is.
 \paragraph{Postcondities} De gebruiker is geauthenticeerd.
 \paragraph{Triggers} De gebruiker vult zijn gebruikersnaam en wachtwoord in of verbind zijn eID met de applicatie. Dit gebeurd vanaf de gastpagina.
 \paragraph{Notities} Het kan zijn dat de gebruiker niet moet inloggen omdat dit reeds voorheen gebeurd is en een bepaald mechanisme met een cookie de authenticatie reeds verzocht heeft. Dit laatste gebeurd dan onzichtbaar voor de gebruiker.
-
+\paragraph{Prioriteit}Hoog
+\paragraph{Complexiteit}Hoog
+\paragraph{Successcenario}
+\begin{itemize}
+ \item Speler bezoekt de website
+ \item Speler geeft voldoende gegevens waarmee hij zich kan authenticeren
+ \item \label{def:inloggen:bevestiging} Speler krijgt een bevestiging en wordt doorgestuurd naar het interactieve deel van de website
+\end{itemize}
+\paragraph{Alternatieve scenario’s}
+Alternatief voor \ref{def:inloggen:bevestiging}:
+\begin{itemize}
+ \item Speler heeft een ongeschikte of foutieve invoer gedaan voor een veld en krijgt de mogelijkheid om dit aan te passen
+\end{itemize}
 
 \subsubsection{De gebruiker bekijkt zijn eigen Portfolio}
-\paragraph{Samenvatting} De gebruiker ziet een webpagina met daarop de effecten die deze momenteel in bezit heeft, de historische aankoopprijs per stuk, de historische aankoopprijs in totaal, de huidige koers, het rendement en het verschil op de waarde sinds de aankoop van het effect.
+\paragraph{Beschrijving} De gebruiker ziet een webpagina met daarop de effecten die deze momenteel in bezit heeft, de historische aankoopprijs per stuk, de historische aankoopprijs in totaal, de huidige koers, het rendement en het verschil op de waarde sinds de aankoop van het effect.
 \paragraph{Actoren} De speler bekijkt het portfolio. De huidige waarde hangt af van de reële beursevolutie (de scappers volgen deze evolutie).
 \paragraph{Doel} De gebruiker ziet zijn portfolio en de gegevens die interessant zijn om erbij te zien.
 \paragraph{Precondities} De gebruiker is ingelogd.
 \paragraph{Triggers} De gebruiker kiest in het linkermenu de optie "Portfolio" aan.
-
+\paragraph{Prioriteit}Hoog
+\paragraph{Complexiteit}Laag
 
 
 \subsubsection{Effecten aankopen}
@@ -88,17 +125,34 @@ Mogelijke geavanceerde orders die we in een verdere fase zouden kunnen invoeren 
   \item Bracket-limiet: De speler kan met dit type order de maximale fluctuaties van zijn effect beperken. Hij stelt twee waardes in waar het order omgezet zal worden in een effectieve handeling. Dit is een waarde boven de huidige koers en een waarde onder de huidige koers. Zo beperkt de speler dus zijn maximaal verlies, maar ook zijn maximale winst. De waardes tussen de hoogste en laagste limietwaarde is de bandbreedte waar het effect kan tussen schommelen terwijl het in de portefeuille blijft van de speler.
   \item Stop loss order: Een order wordt omgezet in een effectieve handeling ongeacht de limietwaarde. Het order wordt hierdoor sneller uitgevoerd, maar er is geen minimumprijs (maximumprijs) gegarandeerd.
 \end{itemize}
+\paragraph{Prioriteit}Laag
+\paragraph{Complexiteit}Laag
+\paragraph{Successcenario}
+\begin{itemize}
+ \item Speler geeft vanuit een overzichtspagina of detailpagina aan dat hij een order wil plaatsen op een effect
+ \item Speler geeft de order specificaties op (aantal effecten, type, limieten, )
+ \item Speler bevestigd zijn order
+ \item \label{def:aankopen:bevestiging} Speler krijgt een bevestiging van zijn order
+\end{itemize}
+\paragraph{Alternatieve scenario’s}
+Alternatief voor \ref{def:aankopen:bevestiging}:
+\begin{itemize}
+ \item Speler heeft een ongeschikte of foutieve invoer gedaan voor een veld en krijgt de mogelijkheid om dit aan te passen
+\end{itemize}
 
+\subsubsection{Effecten verkopen}
+Een effect verkopen verloopt op dezelfde manier als een effect aankopen. Er wordt ook een order aangemaakt voor een aantal effecten. Resulteert de voorwaarde van het order positief, dan worden zoveel effecten verkocht. Als een gebruiker geen effecten meer overhoudt van een bepaald symbool, dan wordt dit uit het portfolio gehaald.
 \paragraph{Actoren} De speler plaatst een order
 \paragraph{Doel} Een order plaatsen welke tot doel heeft omgezet te worden in een effectief order. Dit wordt bepaald door de voorwaarde die gevalueerd wordt ten op zichtte van de huidige beursevolutie. Het onrechtstreekse doel is het uitbreiden van het virtueel portfolio van de speler.
 \paragraph{Precondities} De gebruiker zijn cash positie moet voldoen om het order te plaatsen en uit te voeren.
 \paragraph{Postcondities} Een order is geplaatst en kan later uitgevoerd worden, mislukken of verlopen.
 \paragraph{Triggers} De aankooppagina wordt getoond door het activeren van een optie op een effectenpagina.
-
+\paragraph{Prioriteit}Laag
+\paragraph{Complexiteit}Laag
 
 
 \subsubsection{Overzicht opvragen van de effecten die je in het spel actief kan verhandelen}
-\paragraph{Samenvatting} Een effect op de beurs kan ofwel opgenomen worden door onze scrappers of buiten bereik liggen van onze scrappers.
+\paragraph{Beschrijving} Een effect op de beurs kan ofwel opgenomen worden door onze scrappers of buiten bereik liggen van onze scrappers.
 Als deze binnen het bereik van een of meerdere scrappers valt, dan worden er gegevens van bijgehouden in onze dataopslag. Een effect kan dan nog onderverdeeld worden onder effecten die onzichtbaar zijn op de site, effecten die geschorst zijn en dus niet actief verhandeld kunnen worden en actief te verhandelen effecten. Bij het overzicht worden de gescrapte actieve of geschorste effecten getoond. Hierop kunnen dan filters geplaatst worden om de lijst in te korten.
 \paragraph{Doel} Een effect kunnen vinden waarvan je de detail pagina van wil bekijken. Met het onrechtstreekse doel op geschikt effect een order te plaatsen. Een detail pagina vind je door in het overzicht een aandeel aan te klikken.
 \paragraph{Postcondities} De speler ziet een pagina met daarin een lijst van effecten die voldoen aan zijn ingestelde of geselecteerde filter
@@ -118,11 +172,12 @@ Als deze binnen het bereik van een of meerdere scrappers valt, dan worden er geg
 
 \paragraph{Notities}In het overzicht zijn naast de link naar de detailpagina ook knoppen voorzien om rechtstreeks een aankoop of verkoop order te plaatsen op een bepaald effect.
 \paragraph{Business rules}Een aantal combinaties van filters moeten reeds voor ingesteld worden door de beheerders en gemakkelijk te selecteren zijn vanuit het menu.
-
+\paragraph{Prioriteit}Laag
+\paragraph{Complexiteit}Laag
 
 \subsubsection{Een klassement opvragen}
 
-\paragraph{Samenvatting} Er bestaat een overzichtspagina waar gastgebruikers en geauthenticeerde spelers een overzicht kunnen zien van:
+\paragraph{Beschrijving} Er bestaat een overzichtspagina waar gastgebruikers en geauthenticeerde spelers een overzicht kunnen zien van:
 \begin{itemize}
 	\item De top 10 effecten die het meest aangekocht zijn op een specifiek tijdsinterval
   \item De top 10 effecten die het meest verkocht zijn op een specifiek tijdsinterval
@@ -131,18 +186,19 @@ Als deze binnen het bereik van een of meerdere scrappers valt, dan worden er geg
 Het tijdsinterval kan de speler bepalen door een dubbele slider te verslepen. Deze slider heeft een beginpunt en een eindpunt. De periode wordt bepaald door deze twee punten en dus de grote van de periode door het verschil van het eindpunt en het beginpunt.
 \paragraph{Triggers} De surfer selecteert het overzichtsscherm in het menu op de linkerzijde van het scherm.
 \paragraph{Notities} De resultaten wordt getoond in tabellen die via een synchrome AJAX request opgehaald worden na het verplaatsen van een van beide punten van de slider.
+\paragraph{Prioriteit}Laag
+\paragraph{Complexiteit}Laag
 
 \subsubsection{Een detail fiche bekijken}
-\paragraph{Samenvatting} De detail fiche heeft tot doel de speler of bezoeker zoveel mogelijk informatie te verschaffen over de huidige en historische stand van een effect.
+\paragraph{Beschrijving} De detail fiche heeft tot doel de speler of bezoeker zoveel mogelijk informatie te verschaffen over de huidige en historische stand van een effect.
 \paragraph{Doel} De speler of bezoeker genoeg informatie verschaffen zodat hij op basis daarvan kan bepalen of het interessant zou zijn een order te plaatsen op het aandeel. Eventueel kan de speler het effect een vlagje geven (favoriet aandeel). Zodoende vindt hij/zij het dan later vlugger terug door het zetten van de geschikte filter.
 \paragraph{Triggers} De detailpagina kan de speler bereiken door in zijn portfolio op een effect te klikken. Spelers of gastgebruikers vinden de pagina door de weblink te gebruiken op een al dan niet gefilterde overzichtspagina. Eventueel kan ook de directe link van de detail pagina gebruikt worden. Die directe link kan direct bezocht worden, opgevraagd worden uit de favorieten van de browser of via een weblink op een andere webpagina aangeboden worden.
 \paragraph{Notities} Op deze pagina wordt het mogelijk gemaakt een favorietenvlag te zetten of weg te halen, naar de aankooppagina te gaan van dit effect of naar de verkooppagina te gaan van dit effect.
-
-
+\paragraph{Prioriteit}Laag
+\paragraph{Complexiteit}Laag
 
 \subsubsection{Gebruiker bekijkt zijn transactiegeschiedenis}
-\paragraph{Samenvatting} Een gebruiker bekijkt zijn transactiegeschiedenis op een daarvoor ingerichte pagina. De gebeurtenissen op die pagina zijn te filteren op:
-
+\paragraph{Beschrijving} Een gebruiker bekijkt zijn transactiegeschiedenis op een daarvoor ingerichte pagina. De gebeurtenissen op die pagina zijn te filteren op:
 \begin{itemize}
 	\item Type
 	\item Transacties die winst opleveren volgens de huidige beursevolutie
@@ -151,9 +207,11 @@ Het tijdsinterval kan de speler bepalen door een dubbele slider te verslepen. De
 	\item Het aantal
 	\item Het verschil in waarde sinds de aankoop en het huidige moment
 \end{itemize}
+\paragraph{Prioriteit}Laag
+\paragraph{Complexiteit}Laag
 
 \subsubsection{Gebruiker bekijkt zijn algemeen overzicht}
-\paragraph{Samenvatting} Een gebruiker bekijkt zijn algemeen overzichtspagina en vindt hierop zeker volgende waardes opgesomd:
+\paragraph{Beschrijving} Een gebruiker bekijkt zijn algemeen overzichtspagina en vindt hierop zeker volgende waardes opgesomd:
 \begin{itemize}
 	\item De huidige waarde dat zijn portfolio en cashpositie samen vertegenwoordigen
 	\item Cashpositie
@@ -167,6 +225,8 @@ Het tijdsinterval kan de speler bepalen door een dubbele slider te verslepen. De
   \item Een algemeen klassement en de positie van de speler daarin
   \item Een klassement van de huidige periode en de positie van de speler daarin
 \end{itemize}
+\paragraph{Prioriteit}Laag
+\paragraph{Complexiteit}Laag
 
 \section{Desktopapplicatie}
 

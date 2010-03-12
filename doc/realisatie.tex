@@ -19,7 +19,8 @@ De klassen die de persistente data uit de database moeten weergeven staan opgeso
 		\includegraphics[width=0.5\textwidth]{images/realisatie/Class_Diagram}
 	\caption{Klassendiagram persistente data in backend.}
 \end{figure}
-Op onze databank hebben we ook een aantal triggers. De punten mogen niet zomaar mogen aangepast in de gebruikerstabel. Elke wijziging gebeurt via de pointshistory tabel. Het toevoegen van een nieuw record daarin zorgt ervoor dat een trigger de delta waarde in de pointshistory optelt bij de punten in de userstabel. Zodoende hebben we een cache van het puntentotaal die we snel kunnen raadplegen.
+
+Op onze databank hebben we ook een aantal triggers. De punten mogen niet zomaar mogen aangepast in de gebruikerstabel. Elke wijziging gebeurt via de pointshistory tabel. Het toevoegen van een nieuw record daarin zorgt ervoor dat een trigger de delta waarde in de pointshistory optelt bij de punten in de userstabel. Zodoende hebben we een cache van het puntentotaal die we snel kunnen raadplegen.
 
 Ook bij het omzetten van een order naar een transactie wordt een trigger geactiveerd die nakijkt of de gebruiker wel voldoende cash positie bezit.
 
