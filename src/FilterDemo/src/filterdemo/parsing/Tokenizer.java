@@ -21,6 +21,7 @@
  */
 package filterdemo.parsing;
 
+import filterdemo.exception.TokenizerException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -46,7 +47,7 @@ public class Tokenizer {
     // Methods
     //
 
-    List<Token> tokenize(String iSource) {
+    List<Token> tokenize(String iSource) throws TokenizerException {
         // Setup
         int tPosition = 0;
         final int tEnd = iSource.length();
@@ -68,7 +69,7 @@ public class Tokenizer {
                     String tContent = null;
                     int tGroup = tMatcher.groupCount();
                     if (tGroup > 1) {
-                        throw new RuntimeException("found multiple matching groups within rule");
+                        throw new TokenizerException("found multiple matching groups within rule");
                     }
                     tContent = iSource.substring(tMatcher.start(tGroup), tMatcher.end(tGroup));
                     

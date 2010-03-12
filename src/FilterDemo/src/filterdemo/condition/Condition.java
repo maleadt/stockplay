@@ -23,6 +23,7 @@ package filterdemo.condition;
 
 import filterdemo.Convertable;
 import filterdemo.data.Data;
+import filterdemo.exception.FilterException;
 import filterdemo.graph.Graph;
 import filterdemo.graph.Node;
 
@@ -35,10 +36,10 @@ public abstract class Condition extends Convertable {
     // Methods
     //
 
-    public void check() {
+    public void check() throws FilterException {
         for (Object tObject : mParameters) {
             if (!(tObject instanceof Data)) {
-                throw new RuntimeException("Conditions only accept data as parameters");
+                throw new FilterException("Conditions only accept data as parameters");
             }
         }
     }

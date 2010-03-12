@@ -22,6 +22,7 @@
 package filterdemo.relation;
 
 import filterdemo.condition.Condition;
+import filterdemo.exception.FilterException;
 import filterdemo.graph.Graph;
 import filterdemo.graph.Node;
 
@@ -46,10 +47,10 @@ public abstract class Relation extends Condition {
     //
 
     @Override
-    public void check() {
+    public void check() throws FilterException {
         for (Object tObject : mParameters) {
             if (!(tObject instanceof Condition)) {
-                throw new RuntimeException("Relation only accepts other conditions as parameters");
+                throw new FilterException("Relation only accepts other conditions as parameters");
             }
         }
     }

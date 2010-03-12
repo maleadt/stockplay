@@ -22,6 +22,8 @@
 package filterdemo.parsing;
 
 import filterdemo.Filter;
+import filterdemo.exception.ParserException;
+import filterdemo.exception.TokenizerException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -66,7 +68,7 @@ public class Parser {
     // Methods
     //
 
-    public Filter parse(String iSource) {
+    public Filter parse(String iSource) throws ParserException, TokenizerException {
         // Tokenize the string
         List<Token> result = mTokenizer.tokenize(iSource);
         System.out.println("Parsed tokens: ");
@@ -81,7 +83,7 @@ public class Parser {
     }
 
     // The FSM
-    public Filter interprete(Iterator<Token> iIterator) {
+    public Filter interprete(Iterator<Token> iIterator) throws ParserException {
         Filter oFilter = new Filter();
 
         // State
@@ -96,14 +98,14 @@ public class Parser {
             switch (tToken.getType()) {
                 case INT: {
                     if (tParameters == null)
-                        throw new RuntimeException("found raw integer out of parameter scope");
+                        throw new ParserException("found raw integer out of parameter scope");
                     tParameters.add(Integer.parseInt(tToken.getContent()));
 
                     break;
                 }
                 case FLOAT: {
                     if (tParameters == null)
-                        throw new RuntimeException("found raw float out of parameter scope");
+                        throw new ParserException("found raw float out of parameter scope");
                     tParameters.add(Double.parseDouble(tToken.getContent()));
 
                     break;
@@ -118,7 +120,7 @@ public class Parser {
                     // TODO: dit is onmogelijk, strings zijn altijd quoted
                     else {
                         if (tParameters == null)
-                            throw new RuntimeException("found unknown string out of parameter scope");
+                            throw new ParserException("found unknown string out of parameter scope");
                         tParameters.add(tToken.getContent());
                     }
 
@@ -126,7 +128,7 @@ public class Parser {
                 }
                 case QUOTE: {
                     if (tParameters == null)
-                        throw new RuntimeException("found unknown quoted string out of parameter scope");
+                        throw new ParserException("found unknown quoted string out of parameter scope");
                     tParameters.add(tToken.getContent());
 
                     break;
@@ -147,7 +149,7 @@ public class Parser {
                     break;
                 }
                 default: {
-                    throw new RuntimeException("unknown token");
+                    throw new ParserException("unknown token");
                 }
             }
         }

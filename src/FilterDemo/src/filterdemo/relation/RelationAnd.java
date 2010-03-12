@@ -22,6 +22,7 @@
 package filterdemo.relation;
 
 import filterdemo.condition.Condition;
+import filterdemo.exception.FilterException;
 import filterdemo.graph.Edge;
 import filterdemo.graph.Graph;
 import filterdemo.graph.Node;
@@ -36,10 +37,10 @@ public class RelationAnd extends Relation {
     //
 
     @Override
-    public void check() {
+    public void check() throws FilterException {
         super.check();
         if (mParameters.size() != 2) {
-            throw new RuntimeException("AND relation only acceps exactly two parameters, I got " + mParameters.size());
+            throw new FilterException("AND relation only acceps exactly two parameters, I got " + mParameters.size());
         }
     }
 

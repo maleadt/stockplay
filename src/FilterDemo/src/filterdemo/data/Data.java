@@ -22,6 +22,7 @@
 package filterdemo.data;
 
 import filterdemo.Convertable;
+import filterdemo.exception.FilterException;
 import filterdemo.graph.Graph;
 import filterdemo.graph.Node;
 
@@ -63,9 +64,9 @@ public abstract class Data extends Convertable {
         mData = ((Data)iObject).mData;
     }
 
-    public void check() {
+    public void check() throws FilterException {
         if (mParameters.size() != 0)
-            throw new RuntimeException("Data cannot have children");
+            throw new FilterException("Data cannot have children");
     }
 
     public Node addNode(Graph iGraph) {

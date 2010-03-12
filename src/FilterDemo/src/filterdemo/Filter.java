@@ -56,9 +56,9 @@ public class Filter {
      *
      * @param iCondition
      */
-    public void addCondition(Condition iCondition) {
+    public void addCondition(Condition iCondition) throws FilterException {
         if (mCondition != null)
-            throw new RuntimeException("Overwriting existing condition");
+            throw new FilterException("Overwriting existing condition");
         mCondition = iCondition;
     }
 

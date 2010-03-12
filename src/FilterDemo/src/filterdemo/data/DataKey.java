@@ -21,6 +21,7 @@
  */
 package filterdemo.data;
 
+import filterdemo.exception.FilterException;
 import filterdemo.graph.Graph;
 import filterdemo.graph.Node;
 
@@ -46,12 +47,10 @@ public class DataKey extends Data {
     //
     
     @Override
-    public void check() {
+    public void check() throws FilterException {
         super.check();
-        System.err.println("I contain a " + mData);
-        // TODO: dit crasht wanner check() op de Converter gecallet wordt, bij gebrek aan data
         if (!(mData instanceof String))
-            throw new RuntimeException("Key data object can only contain a string");
+            throw new FilterException("Key data object can only contain a string");
     }
 
     @Override

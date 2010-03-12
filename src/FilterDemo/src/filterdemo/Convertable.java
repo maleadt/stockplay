@@ -21,6 +21,7 @@
  */
 package filterdemo;
 
+import filterdemo.exception.FilterException;
 import filterdemo.graph.Graph;
 import filterdemo.graph.Node;
 import java.lang.reflect.Constructor;
@@ -87,7 +88,7 @@ public abstract class Convertable {
     // Interface
     //
     
-    abstract public void check();
+    abstract public void check() throws FilterException;
 
     public abstract Node addNode(Graph iGraph);
 

@@ -21,6 +21,7 @@
  */
 package filterdemo.data;
 
+import filterdemo.exception.FilterException;
 import filterdemo.graph.Graph;
 import filterdemo.graph.Node;
 
@@ -29,19 +30,28 @@ import filterdemo.graph.Node;
  * @author tim
  */
 public class DataString extends Data {
+    //
+    // Construction
+    //
+
     public DataString() {
         
     }
+    
     public DataString(String iString) {
         super(iString);
     }
 
+
+    //
+    // Methods
+    //
+
     @Override
-    public void check() {
+    public void check() throws FilterException {
         super.check();
-        System.err.println("String data object contains " + mData);
         if (!(mData instanceof String))
-            throw new RuntimeException("String data object can only contain a string");
+            throw new FilterException("String data object can only contain a string");
     }
 
     @Override
@@ -51,10 +61,6 @@ public class DataString extends Data {
         return tConverter.process((String) mData);
     }
 
-    public Object process(String a) throws Exception {
-        throw new RuntimeException();
-    }
-
     @Override
     public Node addNode(Graph iGraph) {
         // Self
@@ -62,6 +68,15 @@ public class DataString extends Data {
         tNodeSelf.setAttribute("label", "String::"+(String)mData);
 
         return tNodeSelf;
+    }
+
+
+    //
+    // Interface
+    //
+
+    public Object process(String a) throws Exception {
+        throw new RuntimeException();
     }
 
 }
