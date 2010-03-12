@@ -17,7 +17,8 @@ my $build = Module::Build->new (
     recommends => {
         'WWW::Mechanize'        => 1,
         'JSON'                  => 1,
-        'HTML::TreeBuilder'     => 1
+        'HTML::TreeBuilder'     => 1,
+        'DBI'                   => 1
     }
 );
 $build->create_build_script;

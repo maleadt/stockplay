@@ -8,11 +8,19 @@
 use lib '../lib';
 
 # Packages
+use DBI;
 use StockPlay::Scraper::PluginManager;
 
 # Write nicely
 use warnings;
 use strict;
+
+# Setup database handle
+my $dbargs = {
+	AutoCommit	=> 0,
+	PrintError	=> 1
+};
+my $dbh = DBI->connect("dbi:SQLite:dbname=scraper.db","","",$dbargs);
 
 
 ################################################################################
