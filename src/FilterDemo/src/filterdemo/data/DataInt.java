@@ -54,7 +54,7 @@ public class DataInt extends Data {
     }
 
     @Override
-    public final Object convert() throws Exception {
+    public final Object compile() throws Exception {
         DataInt tConverter = (DataInt) getConverter();
 
         return tConverter.process((Integer) mData);

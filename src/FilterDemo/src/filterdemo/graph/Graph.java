@@ -59,6 +59,13 @@ public class Graph extends Element {
     public void render(PrintStream iStream) {
         iStream.println("graph " + mName + " {");
 
+        // Print all node attributes
+        for (String tKey : mAttributes.keySet()) {
+            String tValue = mAttributes.get(tKey);
+            iStream.println(tKey + "=\"" + tValue + "\";");
+        }
+
+        // Print all elements, in reversed order
         for (Element tElement : mElements) {
             tElement.render(iStream);
         }

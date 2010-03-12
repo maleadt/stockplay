@@ -22,11 +22,20 @@
 package filterdemo.parsing;
 
 import filterdemo.Filter;
+import filterdemo.data.Data;
+import filterdemo.data.DataFloat;
+import filterdemo.data.DataInt;
+import filterdemo.data.DataKey;
+import filterdemo.data.DataString;
 import filterdemo.exception.ParserException;
 import filterdemo.exception.TokenizerException;
+import filterdemo.relation.Relation;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.locks.Condition;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -37,8 +46,6 @@ public class Parser {
     // Member data
     //
 
-    private Tokenizer mTokenizer;
-
     public static enum Type {
         INT, FLOAT,
         WORD, QUOTE,
@@ -46,21 +53,22 @@ public class Parser {
         WHITESPACE
     }
 
+    private List<Rule> mRules;
+
 
     //
     // Construction
     //
 
     public Parser() {
-        List<Rule> tRules = new ArrayList<Rule>();
-        tRules.add(new Rule(Type.INT, "[0-9]+"));
-        tRules.add(new Rule(Type.FLOAT, "[0-9.]+"));
-        tRules.add(new Rule(Type.WORD, "[A-Za-z_]+"));
-        tRules.add(new Rule(Type.QUOTE, "\"([^\"]*+)\""));
-        tRules.add(new Rule(Type.PARAM_OPEN, "\\("));
-        tRules.add(new Rule(Type.PARAM_CLOSE, "\\)"));
-        tRules.add(new Rule(Type.WHITESPACE, "\\s+"));
-        mTokenizer = new Tokenizer(tRules);
+        mRules = new ArrayList<Rule>();
+        mRules.add(new Rule(Type.INT, "[0-9]+"));
+        mRules.add(new Rule(Type.FLOAT, "[0-9.]+"));
+        mRules.add(new Rule(Type.WORD, "[A-Za-z_]+"));
+        mRules.add(new Rule(Type.QUOTE, "\"([^\"]*+)\""));
+        mRules.add(new Rule(Type.PARAM_OPEN, "\\("));
+        mRules.add(new Rule(Type.PARAM_CLOSE, "\\)"));
+        mRules.add(new Rule(Type.WHITESPACE, "\\s+"));
     }
 
 
@@ -68,28 +76,77 @@ public class Parser {
     // Methods
     //
 
+    // Main method
     public Filter parse(String iSource) throws ParserException, TokenizerException {
-        // Tokenize the string
-        List<Token> result = mTokenizer.tokenize(iSource);
+        // Lexical analysis
+        List<Token> result = tokenize(iSource);
         System.out.println("Parsed tokens: ");
         for (Token tToken : result) {
             System.out.println(tToken + ": " + tToken.getContent());
         }
 
-        // Interprete the string
+        // Syntactic analysis
         Filter oFilter = interprete(result.iterator());
 
-        return null;
+        return oFilter;
     }
 
-    // The FSM
+    // Lexical analysis: the tokenizer
+    List<Token> tokenize(String iSource) throws TokenizerException {
+        // Setup
+        int tPosition = 0;
+        final int tEnd = iSource.length();
+        List<Token> oTokens = new ArrayList<Token>();
+
+        // Create a new matcher container
+        Matcher tMatcher = Pattern.compile("dummy").matcher(iSource);
+        tMatcher.useTransparentBounds(true).useAnchoringBounds(false);
+
+        // Walk the string
+        while (tPosition < tEnd) {
+            tMatcher.region(tPosition, tEnd);
+
+            // Check all rules
+            List<Token> tMatches = new ArrayList<Token>();
+            for (Rule tRule : mRules) {
+                if (tMatcher.usePattern(tRule.getPattern()).lookingAt()) {
+                    // Fetch the relevant content
+                    String tContent = null;
+                    int tGroup = tMatcher.groupCount();
+                    if (tGroup > 1) {
+                        throw new TokenizerException("found multiple matching groups within rule");
+                    }
+                    tContent = iSource.substring(tMatcher.start(tGroup), tMatcher.end(tGroup));
+
+                    tMatches.add(new Token(tRule.getType(), tMatcher.start(), tMatcher.end(), tContent));
+                }
+            }
+
+            // Pick the longest match
+            Token tTokenLongest = null;
+            for (Token tToken : tMatches) {
+                if (tTokenLongest == null || tToken.getLength() > tTokenLongest.getLength()) {
+                    tTokenLongest = tToken;
+                }
+            }
+            if (tTokenLongest != null) {
+                oTokens.add(tTokenLongest);
+                tPosition = tTokenLongest.getEnd();
+            } else
+                tPosition++;    // TODO: warn, as we couldn't match anything?
+        }
+        return oTokens;
+    }
+
+    // Syntactic analysis: the interpreter
     public Filter interprete(Iterator<Token> iIterator) throws ParserException {
         Filter oFilter = new Filter();
 
         // State
         Token tToken;
-        String tCondition, tRelation;
-        List tParameters = null;
+        Relation tRelation;
+        Condition tCondition;
+        List<Data> tParameters = null;
 
         // Process the tokens
         while (iIterator.hasNext()) {
@@ -99,14 +156,24 @@ public class Parser {
                 case INT: {
                     if (tParameters == null)
                         throw new ParserException("found raw integer out of parameter scope");
-                    tParameters.add(Integer.parseInt(tToken.getContent()));
+                    tParameters.add(new DataInt(Integer.parseInt(tToken.getContent())));
 
                     break;
                 }
                 case FLOAT: {
                     if (tParameters == null)
                         throw new ParserException("found raw float out of parameter scope");
-                    tParameters.add(Double.parseDouble(tToken.getContent()));
+                    tParameters.add(new DataFloat(Double.parseDouble(tToken.getContent())));
+
+                    break;
+                }
+                case QUOTE: {
+                    if (tParameters == null)
+                        throw new ParserException("found unknown quoted string out of parameter scope");
+                    if (tParameters.size() == 0)
+                        tParameters.add(new DataString(tToken.getContent()));
+                    else    // TODO: keys are LVALUE
+                        tParameters.add(new DataKey(tToken.getContent()));
 
                     break;
                 }
@@ -115,21 +182,6 @@ public class Parser {
                     if (true) {
 
                     }
-
-                    // A regular string
-                    // TODO: dit is onmogelijk, strings zijn altijd quoted
-                    else {
-                        if (tParameters == null)
-                            throw new ParserException("found unknown string out of parameter scope");
-                        tParameters.add(tToken.getContent());
-                    }
-
-                    break;
-                }
-                case QUOTE: {
-                    if (tParameters == null)
-                        throw new ParserException("found unknown quoted string out of parameter scope");
-                    tParameters.add(tToken.getContent());
 
                     break;
                 }
@@ -153,7 +205,6 @@ public class Parser {
                 }
             }
         }
-
 
         return oFilter;
     }

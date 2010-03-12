@@ -56,7 +56,7 @@ public class Main {
 
         // Convert filter
         try {
-            String tSQL = (String) tFilter.convert();
+            String tSQL = (String) tFilter.compile();
             System.out.println("Conversion report: " + tSQL);
         }
         catch (Exception e) {

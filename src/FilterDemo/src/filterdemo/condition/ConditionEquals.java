@@ -48,7 +48,7 @@ public class ConditionEquals extends Condition {
     }
 
     @Override
-    public final Object convert() throws Exception {
+    public final Object compile() throws Exception {
         ConditionEquals tConverter = (ConditionEquals) getConverter();
 
         return tConverter.process(getData(0), getData(1));

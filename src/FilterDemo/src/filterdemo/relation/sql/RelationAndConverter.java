@@ -31,6 +31,6 @@ import filterdemo.relation.RelationAnd;
 public class RelationAndConverter extends RelationAnd {
     @Override
     public Object process(Condition a, Condition b) throws Exception {
-        return (String)a.convert() + " AND " + (String)b.convert();
+        return (String)a.compile() + " AND " + (String)b.compile();
     }
 }

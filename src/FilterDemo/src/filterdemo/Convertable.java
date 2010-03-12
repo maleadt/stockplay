@@ -72,8 +72,8 @@ public abstract class Convertable {
         return tConverter;
     }
 
-    public Object convert() throws Exception {
-        return getConverter().convert();
+    public Object compile() throws Exception {
+        return getConverter().compile();
     }
     
     public void addParameter(Convertable iParameter) {

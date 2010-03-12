@@ -55,7 +55,7 @@ public class DataString extends Data {
     }
 
     @Override
-    public final Object convert() throws Exception {
+    public final Object compile() throws Exception {
         DataString tConverter = (DataString) getConverter();
 
         return tConverter.process((String) mData);

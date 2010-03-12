@@ -45,7 +45,7 @@ public class RelationAnd extends Relation {
     }
 
     @Override
-    public final Object convert() throws Exception {
+    public final Object compile() throws Exception {
         RelationAnd tConverter = (RelationAnd) getConverter();
 
         return tConverter.process(getCondition(0), getCondition(1));

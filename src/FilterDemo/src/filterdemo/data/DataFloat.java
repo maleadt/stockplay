@@ -1,6 +1,6 @@
 /*
- * RelationOr.java
- * StockPlay - OR relatie.
+ * DataFloat.java
+ * StockPlay - Float dataobject.
  *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
@@ -19,11 +19,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package filterdemo.relation;
+package filterdemo.data;
 
-import filterdemo.condition.Condition;
 import filterdemo.exception.FilterException;
-import filterdemo.graph.Edge;
 import filterdemo.graph.Graph;
 import filterdemo.graph.Node;
 
@@ -31,7 +29,19 @@ import filterdemo.graph.Node;
  *
  * @author tim
  */
-public class RelationOr extends Relation {
+public class DataFloat extends Data {
+    //
+    // Construction
+    //
+
+    public DataFloat() {
+
+    }
+    public DataFloat(Double iData) {
+        super(iData);
+    }
+
+
     //
     // Methods
     //
@@ -39,41 +49,32 @@ public class RelationOr extends Relation {
     @Override
     public void check() throws FilterException {
         super.check();
-        if (mParameters.size() != 2) {
-            throw new RuntimeException("OR relation only acceps exactly two parameters, I got " + mParameters.size());
-        }
+        if (!(mData instanceof Double))
+            throw new RuntimeException("Double data object can only contain a double");
     }
 
     @Override
     public final Object compile() throws Exception {
-        RelationOr tConverter = (RelationOr) getConverter();
+        DataFloat tConverter = (DataFloat) getConverter();
 
-        return tConverter.process(getCondition(0), getCondition(1));
+        return tConverter.process((Double) mData);
     }
 
     @Override
     public Node addNode(Graph iGraph) {
         // Self
         Node tNodeSelf = super.addNode(iGraph);
-        tNodeSelf.setAttribute("label", "OR");
-
-        // Children
-        Node tNodeLeft = getCondition(0).addNode(iGraph);
-        Node tNodeRight = getCondition(1).addNode(iGraph);
-
-        // Edges
-        iGraph.addElement(new Edge(tNodeLeft, tNodeSelf));
-        iGraph.addElement(new Edge(tNodeRight, tNodeSelf));
+        tNodeSelf.setAttribute("label", "Double::"+(Double)mData);
 
         return tNodeSelf;
     }
-    
-    
+
+
     //
     // Interface
     //
 
-    public Object process(Condition a, Condition b) throws Exception {
+    public Object process(Double a) throws Exception {
         throw new RuntimeException();
     }
 

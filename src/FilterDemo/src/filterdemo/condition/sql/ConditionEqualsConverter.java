@@ -31,6 +31,6 @@ import filterdemo.data.Data;
 public class ConditionEqualsConverter extends ConditionEquals {
     @Override
     public Object process(Data a, Data b) throws Exception {
-        return (String)a.convert() + " = " + (String)b.convert();
+        return (String)a.compile() + " = " + (String)b.compile();
     }
 }

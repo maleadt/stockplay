@@ -31,6 +31,6 @@ import filterdemo.relation.RelationOr;
 public class RelationOrConverter extends RelationOr {
     @Override
     public Object process(Condition a, Condition b) throws Exception {
-        return (String)a.convert() + " OR " + (String)b.convert();
+        return (String)a.compile() + " OR " + (String)b.compile();
     }
 }

@@ -54,7 +54,7 @@ public class DataKey extends Data {
     }
 
     @Override
-    public final Object convert() throws Exception {
+    public final Object compile() throws Exception {
         DataKey tConverter = (DataKey) getConverter();
 
         return tConverter.process((String) mData);

@@ -82,13 +82,14 @@ public class Filter {
         mCondition = iRelation;
     }
 
-    public Object convert() throws Exception {
-        return mCondition.convert();
+    public Object compile() throws Exception {
+        return mCondition.compile();
     }
 
     public void debug(String iFilename) throws FilterException {
         // Create graph
         Graph graph = new Graph("FilterTree");
+        graph.setAttribute("rankdir", "BT");
         mCondition.addNode(graph);
 
         // Render panel to file
