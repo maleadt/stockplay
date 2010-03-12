@@ -42,14 +42,20 @@ public class Main {
     public static void main(String[] args) {
         // Test filter
         Filter tFilter = new Filter();
-        Condition tCheckIf42 = new ConditionEquals();
-        tCheckIf42.addParameter(new DataKey("id"));
-        tCheckIf42.addParameter(new DataInt(42));
-        tFilter.addCondition(tCheckIf42);
-        Condition tCheckIfTim = new ConditionEquals();
-        tCheckIfTim.addParameter(new DataKey("name"));
-        tCheckIfTim.addParameter(new DataString("Tim Besard"));
-        tFilter.addCondition(new RelationAnd(), tCheckIfTim);
+        try {
+            Condition tCheckIf42 = new ConditionEquals();
+            tCheckIf42.addParameter(new DataKey("id"));
+            tCheckIf42.addParameter(new DataInt(42));
+            tFilter.addCondition(tCheckIf42);
+            Condition tCheckIfTim = new ConditionEquals();
+            tCheckIfTim.addParameter(new DataKey("name"));
+            tCheckIfTim.addParameter(new DataString("Tim Besard"));
+            tFilter.addCondition(new RelationAnd(), tCheckIfTim);
+        }
+        catch (FilterException e) {
+            System.err.println("Filter construction failed");
+            e.printStackTrace();
+        }
 
         // Convert filter
         try {
