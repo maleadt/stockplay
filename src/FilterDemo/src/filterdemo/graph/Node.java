@@ -28,9 +28,18 @@ import java.io.PrintStream;
  * @author tim
  */
 public class Node extends Element {
+    //
+    // Member data
+    //
+
     private static int mSingletonID = 1;
 
     private final String mID;
+
+
+    //
+    // Construction
+    //
 
     public Node() {
         mID = Integer.toString(mSingletonID++);
@@ -39,6 +48,11 @@ public class Node extends Element {
     public Node(String iPrefix) {
         mID = iPrefix + "_" + Integer.toString(mSingletonID++);
     }
+
+
+    //
+    // Methods
+    //
 
     public void render(PrintStream iStream) {
         // Print all node attributes

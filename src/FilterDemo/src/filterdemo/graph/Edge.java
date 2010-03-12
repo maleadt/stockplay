@@ -30,8 +30,16 @@ import java.util.List;
  * @author tim
  */
 public class Edge extends Element {
+    //
+    // Member data
+    //
 
     private List<Node> mNodes;
+
+
+    //
+    // Construction
+    //
 
     public Edge() {
         mNodes = new ArrayList<Node>();
@@ -42,6 +50,11 @@ public class Edge extends Element {
         for (Node tNode : iNodes)
             addNode(tNode);
     }
+
+
+    //
+    // Methods
+    //
 
     public void addNode(Node iNode) {
         mNodes.add(iNode);

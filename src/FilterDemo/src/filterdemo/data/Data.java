@@ -30,7 +30,30 @@ import filterdemo.graph.Node;
  * @author tim
  */
 public abstract class Data extends Convertable {
+    //
+    // Member data
+    //
+
     protected Object mData;
+    
+    
+    //
+    // Construction
+    //  
+
+    public Data() {
+        
+    }  
+
+    public Data(Object iData) {
+        setData(iData);
+    }
+
+
+    //
+    // Methods
+    //
+
     public void setData(Object iData) {
         mData = iData;
     }
@@ -38,14 +61,6 @@ public abstract class Data extends Convertable {
     public void copyData(Convertable iObject) {
         super.copyData(iObject);
         mData = ((Data)iObject).mData;
-    }
-
-    public Data(Object iData) {
-        setData(iData);
-    }
-
-    public Data() {
-        
     }
 
     public void check() {

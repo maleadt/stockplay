@@ -31,6 +31,10 @@ import filterdemo.graph.Node;
  * @author tim
  */
 public abstract class Condition extends Convertable {
+    //
+    // Methods
+    //
+
     public void check() {
         for (Object tObject : mParameters) {
             if (!(tObject instanceof Data)) {
@@ -38,6 +42,7 @@ public abstract class Condition extends Convertable {
             }
         }
     }
+    
     public Data getData(int index) {
         return (Data) mParameters.get(index);
     }

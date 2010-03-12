@@ -29,12 +29,21 @@ import filterdemo.graph.Node;
  * @author tim
  */
 public class DataKey extends Data {
+    //
+    // Construction
+    //
+
     public DataKey() {
         
     }
     public DataKey(String iData) {
         super(iData);
     }
+
+
+    //
+    // Methods
+    //
     
     @Override
     public void check() {
@@ -52,10 +61,6 @@ public class DataKey extends Data {
         return tConverter.process((String) mData);
     }
 
-    public Object process(String a) throws Exception {
-        throw new RuntimeException();
-    }
-
     @Override
     public Node addNode(Graph iGraph) {
         // Self
@@ -63,6 +68,15 @@ public class DataKey extends Data {
         tNodeSelf.setAttribute("label", "Key::"+(String)mData);
 
         return tNodeSelf;
+    }
+
+
+    //
+    // Interface
+    //
+
+    public Object process(String a) throws Exception {
+        throw new RuntimeException();
     }
 
 }

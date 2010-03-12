@@ -32,15 +32,26 @@ import filterdemo.graph.Node;
  * @author tim
  */
 public abstract class Relation extends Condition {
+    //
+    // Construction
+    //
+
+    public Condition getCondition(int index) {
+        return (Condition) mParameters.get(index);
+    }
+
+
+    //
+    // Methods
+    //
+
+    @Override
     public void check() {
         for (Object tObject : mParameters) {
             if (!(tObject instanceof Condition)) {
                 throw new RuntimeException("Relation only accepts other conditions as parameters");
             }
         }
-    }
-    public Condition getCondition(int index) {
-        return (Condition) mParameters.get(index);
     }
 
     @Override

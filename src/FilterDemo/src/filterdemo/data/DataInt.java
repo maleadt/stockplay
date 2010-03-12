@@ -29,12 +29,21 @@ import filterdemo.graph.Node;
  * @author tim
  */
 public class DataInt extends Data {
+    //
+    // Construction
+    //
+
     public DataInt() {
         
     }
     public DataInt(Integer iData) {
         super(iData);
     }
+
+
+    //
+    // Methods
+    //
 
     @Override
     public void check() {
@@ -50,10 +59,6 @@ public class DataInt extends Data {
         return tConverter.process((Integer) mData);
     }
 
-    public Object process(Integer a) throws Exception {
-        throw new RuntimeException();
-    }
-
     @Override
     public Node addNode(Graph iGraph) {
         // Self
@@ -61,6 +66,15 @@ public class DataInt extends Data {
         tNodeSelf.setAttribute("label", "Int::"+(Integer)mData);
 
         return tNodeSelf;
+    }
+    
+    
+    //
+    // Interface
+    //
+
+    public Object process(Integer a) throws Exception {
+        throw new RuntimeException();
     }
 
 }

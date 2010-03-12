@@ -34,7 +34,11 @@ import filterdemo.graph.Node;
  * 
  * @author tim
  */
-public class ConditionEquals extends Condition {    
+public class ConditionEquals extends Condition {
+    //
+    // Methods
+    //
+
     @Override
     public void check() {
         if (mParameters.size() != 2)
@@ -48,10 +52,6 @@ public class ConditionEquals extends Condition {
         ConditionEquals tConverter = (ConditionEquals) getConverter();
 
         return tConverter.process(getData(0), getData(1));
-    }
-
-    public Object process(Data a, Data b) throws Exception {
-        throw new RuntimeException();
     }
 
     @Override
@@ -69,5 +69,14 @@ public class ConditionEquals extends Condition {
         iGraph.addElement(new Edge(tNodeRight, tNodeSelf));
 
         return tNodeSelf;
+    }
+    
+    
+    //
+    // Interface
+    //
+
+    public Object process(Data a, Data b) throws Exception {
+        throw new RuntimeException();
     }
 }

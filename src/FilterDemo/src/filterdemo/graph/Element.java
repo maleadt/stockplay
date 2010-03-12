@@ -30,16 +30,34 @@ import java.util.Map;
  * @author tim
  */
 public abstract class Element {
+    //
+    // Member data
+    //
 
     protected Map<String, String> mAttributes;
+
+
+    //
+    // Construction
+    //
 
     public Element() {
         mAttributes = new HashMap<String, String>();
     }
 
+
+    //
+    // Methods
+    //
+
     public void setAttribute(String iKey, String iValue) {
         mAttributes.put(iKey, iValue);
     }
+
+
+    //
+    // Interface
+    //
 
     abstract void render(PrintStream iStream);
 }

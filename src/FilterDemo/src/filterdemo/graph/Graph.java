@@ -30,13 +30,27 @@ import java.util.List;
  * @author tim
  */
 public class Graph extends Element {
+    //
+    // Member data
+    //
+
     private final String mName;
     private List<Element> mElements;
+
+
+    //
+    // Construction
+    //
 
     public Graph(String iName) {
         mName = iName;
         mElements = new ArrayList<Element>();
     }
+
+
+    //
+    // Methods
+    //
 
     public void addElement(Element iElement) {
         mElements.add(iElement);

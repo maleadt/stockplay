@@ -33,6 +33,17 @@ import java.util.ResourceBundle;
  * @author tim
  */
 public abstract class Convertable {
+    //
+    // Member data
+    //
+    
+    protected List<Convertable> mParameters = new ArrayList<Convertable>();
+
+
+    //
+    // Methods
+    //
+
     public void copyData(Convertable iObject) {
         mParameters = iObject.mParameters;
     }
@@ -64,15 +75,19 @@ public abstract class Convertable {
         return getConverter().convert();
     }
     
-    abstract public void check();
-    
-    protected List<Convertable> mParameters = new ArrayList<Convertable>();
     public void addParameter(Convertable iParameter) {
         mParameters.add(iParameter);
     }
     public void setParameters(List<Convertable> iParameters) {
         mParameters = iParameters;
     }
+
+
+    //
+    // Interface
+    //
+    
+    abstract public void check();
 
     public abstract Node addNode(Graph iGraph);
 

@@ -31,6 +31,10 @@ import filterdemo.graph.Node;
  * @author tim
  */
 public class RelationAnd extends Relation {
+    //
+    // Methods
+    //
+
     @Override
     public void check() {
         super.check();
@@ -44,10 +48,6 @@ public class RelationAnd extends Relation {
         RelationAnd tConverter = (RelationAnd) getConverter();
 
         return tConverter.process(getCondition(0), getCondition(1));
-    }
-
-    public Object process(Condition a, Condition b) throws Exception {
-        throw new RuntimeException();
     }
 
     @Override
@@ -65,6 +65,15 @@ public class RelationAnd extends Relation {
         iGraph.addElement(new Edge(tNodeRight, tNodeSelf));
 
         return tNodeSelf;
+    }
+    
+    
+    //
+    // Interface
+    //
+
+    public Object process(Condition a, Condition b) throws Exception {
+        throw new RuntimeException();
     }
 
 }
