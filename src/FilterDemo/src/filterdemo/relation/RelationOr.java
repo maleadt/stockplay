@@ -62,8 +62,8 @@ public class RelationOr extends Relation {
         Node tNodeRight = getCondition(1).addNode(iGraph);
 
         // Edges
-        iGraph.addElement(new Edge(tNodeLeft, tNodeSelf));
-        iGraph.addElement(new Edge(tNodeRight, tNodeSelf));
+        iGraph.addElement(new Edge(tNodeSelf, tNodeLeft));
+        iGraph.addElement(new Edge(tNodeSelf, tNodeRight));
 
         return tNodeSelf;
     }

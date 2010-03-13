@@ -32,6 +32,9 @@ import filterdemo.data.DataKey;
 import filterdemo.data.DataString;
 import filterdemo.exception.FilterException;
 import filterdemo.exception.ParserException;
+import filterdemo.relation.Relation;
+import filterdemo.relation.RelationAnd;
+import filterdemo.relation.RelationOr;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -81,11 +84,7 @@ public class Parser {
     public Filter parse(String iSource) throws ParserException {
         // Lexical analysis
         List<Token> result = tokenize(iSource);
-        System.out.println("Parsed tokens: ");
-        for (Token tToken : result) {
-            System.out.println(tToken + ": " + tToken.getContent());
-        }
-
+        
         // Syntactic analysis
         Filter oFilter = interprete(result.iterator());
 
@@ -146,6 +145,7 @@ public class Parser {
         // State
         Token tToken;
         Condition tCondition = null;
+        Relation tRelation = null;
         List<Data> tParameters = null;
 
         // Process the tokens
@@ -181,12 +181,24 @@ public class Parser {
 
                 // Word
                 case WORD: {
-                    // TODO: Clean this up
+                    // TODO: Clean this up, maybe also in ruleset?
                     if (tToken.getContent().equalsIgnoreCase("EQUALS")) {
                         tCondition = new ConditionEquals();
-                    } else {
+                    }
+                    
+                    else if (tToken.getContent().equalsIgnoreCase("AND")) {
+                        tRelation = new RelationAnd();
+                    }
+                    else if (tToken.getContent().equalsIgnoreCase("OR")) {
+                        tRelation = new RelationOr();
+                    }
+
+
+
+                    else {
                         throw new ParserException("unknown symbol '" + tToken.getContent() + "'");
                     }
+
 
                     break;
                 }
@@ -202,11 +214,16 @@ public class Parser {
                         for (Data tParameter : tParameters)
                             tCondition.addParameter((Convertable)tParameter);
                         try {
-                            oFilter.addCondition(tCondition);
+                            if (tRelation == null)
+                                oFilter.addCondition(tCondition);
+                            else
+                                oFilter.addCondition(tRelation, tCondition);
                         } catch (FilterException e) {
                             throw new ParserException("invalid input string, could not build the filter tree", e.getCause());
                         }
 
+                        tCondition = null;
+                        tRelation = null;
                         tParameters = null;
                     }
                     else {

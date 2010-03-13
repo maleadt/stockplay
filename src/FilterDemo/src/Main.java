@@ -42,7 +42,7 @@ public class Main {
         // Parse input
         Filter tFilter = null;
         try {
-            tFilter = tParser.parse("EQUALS('id' 42)");
+            tFilter = tParser.parse("EQUALS('id' 42) AND EQUALS('name', 'Tim Besard') OR EQUALS('gender' 'M')");
         }
         catch (ParserException e) {
             System.err.println("Parsing failed");
