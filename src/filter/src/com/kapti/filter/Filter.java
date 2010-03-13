@@ -38,7 +38,7 @@ public class Filter {
     // Member data
     //
 
-    private Condition mCondition;
+    private Condition mCondition = null;
     public Filter() {
 
     }
@@ -118,5 +118,9 @@ public class Filter {
         catch (InterruptedException e) {
             throw new FilterException("Was not allowed to wait for DOT output due to interrupt", e.getCause());
         }
+    }
+
+    public boolean empty() {
+        return mCondition == null;
     }
 }

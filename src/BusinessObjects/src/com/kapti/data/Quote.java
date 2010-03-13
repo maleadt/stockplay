@@ -1,29 +1,15 @@
 package com.kapti.data;
 
 import java.util.Date;
+import java.util.Hashtable;
 
 public class Quote {
+    //
+    // Member data
+    //
 
-    public class QuotePK {
-
-        private String security = null;
-        private Date time = null;
-
-        public QuotePK() {
-        }
-
-        public QuotePK(String security, Date time){
-            this.security = security;
-            this.time = time;
-        }
-
-        public String getSecurity() {
-            return security;
-        }
-
-        public Date getTime() {
-            return time;
-        }
+    public static enum Fields {
+        SECURITY, TIME, PRICE, VOLUME, BID, ASK, LOW, HIGH, OPEN
     }
 
     private QuotePK pk = null;
@@ -32,6 +18,11 @@ public class Quote {
     private double bid = 0, ask = 0;
     private double low = 0, high = 0;
     private double open = 0;
+
+
+    //
+    // Construction
+    //
 
     public Quote(){}
 
@@ -49,6 +40,11 @@ public class Quote {
         this.high = high;
         this.open = open;
     }
+
+
+    //
+    // Methods
+    //
 
     public String getSecurity() {
         return pk.getSecurity();
@@ -116,6 +112,69 @@ public class Quote {
 
     public void setOpen(double open) {
         this.open = open;
+    }
+
+    public Hashtable toStruct(Fields... iFields) {
+        Hashtable<String, Object> oStruct = new Hashtable<String, Object>();
+        for (Fields tField : iFields) {
+            switch (tField) {
+                case SECURITY:
+                    oStruct.put("security", getSecurity());
+                    break;
+                case TIME:
+                    oStruct.put("time", getTime());
+                    break;
+                case PRICE:
+                    oStruct.put("price", getPrice());
+                    break;
+                case VOLUME:
+                    oStruct.put("volume", getVolume());
+                    break;
+                case BID:
+                    oStruct.put("bid", getBid());
+                    break;
+                case ASK:
+                    oStruct.put("ask", getAsk());
+                    break;
+                case LOW:
+                    oStruct.put("low", getLow());
+                    break;
+                case HIGH:
+                    oStruct.put("high", getHigh());
+                    break;
+                case OPEN:
+                    oStruct.put("open", getOpen());
+                    break;
+            }
+        }
+        return oStruct;
+    }
+
+
+    //
+    // Subclasses
+    //
+
+    public class QuotePK {
+
+        private String security = null;
+        private Date time = null;
+
+        public QuotePK() {
+        }
+
+        public QuotePK(String security, Date time){
+            this.security = security;
+            this.time = time;
+        }
+
+        public String getSecurity() {
+            return security;
+        }
+
+        public Date getTime() {
+            return time;
+        }
     }
     
 }

@@ -1,13 +1,27 @@
 package com.kapti.data;
 
-public class Instruction {
+import java.util.Hashtable;
 
+public class Instruction {
+    //
+    // Member data
+    //
+
+    public static enum Fields {
+        ID, USER, SECURITY, AMOUNT, PRICE, TYPE
+    }
+    
     private int id = -1;
     private int user;
     private String security;
     private int amount;
     private double price;
     private InstructionType type;
+
+
+    //
+    // Construction
+    //
 
     public Instruction(int id) {
         this.id = id;
@@ -21,6 +35,11 @@ public class Instruction {
         this.price = price;
         this.type = type;
     }
+
+
+    //
+    // Methods
+    //
 
     public int getAmount() {
         return amount;
@@ -64,5 +83,32 @@ public class Instruction {
 
     public void setSecurity(String security) {
         this.security = security;
+    }
+
+    public Hashtable toStruct(Fields... iFields) {
+        Hashtable<String, Object> oStruct = new Hashtable<String, Object>();
+        for (Fields tField : iFields) {
+            switch (tField) {
+                case ID:
+                    oStruct.put("id", getId());
+                    break;
+                case USER:
+                    oStruct.put("user", getUser());
+                    break;
+                case SECURITY:
+                    oStruct.put("security", getSecurity());
+                    break;
+                case AMOUNT:
+                    oStruct.put("amount", getAmount());
+                    break;
+                case PRICE:
+                    oStruct.put("price", getPrice());
+                    break;
+                case TYPE:
+                    oStruct.put("type", getType());
+                    break;
+            }
+        }
+        return oStruct;
     }
 }

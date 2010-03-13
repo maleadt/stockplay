@@ -1,20 +1,33 @@
 package com.kapti.data;
 
 import java.util.Date;
+import java.util.Hashtable;
 
 public class User {
+    //
+    // Member data
+    //
 
+    public static enum Fields {
+        ID, NICKNAME, PASSWORD, LASTNAME, FIRSTNAME, REGDATE, ADMIN, POINTS, STARTAMOUNT, CASH, RRN
+    }
+    
     private int id = -1;
     private String nickname = "";
     private String password = "";
     private String lastname = "";
     private String firstname = "";
     private Date regdate = null;
-    private boolean admin = false;
+    private boolean admin = false;  // TODO: via rechten!
     private int points = 0;
     private double startamount = 0;
     private double cash = 0;
     private int rrn = 0;
+
+
+    //
+    // Construction
+    //
 
     public User() {
     }
@@ -36,6 +49,11 @@ public class User {
         this.startamount = startamount;
         this.cash = cash;
     }
+
+
+    //
+    // Methods
+    //
 
     public String getPassword() {
         return password;
@@ -119,5 +137,47 @@ public class User {
 
     public void setRijksregisternummer(int rrn) {
         this.rrn = rrn;
+    }
+
+    public Hashtable toStruct(Fields... iFields) {
+        Hashtable<String, Object> oStruct = new Hashtable<String, Object>();
+        for (Fields tField : iFields) {
+            switch (tField) {
+                case ID:
+                    oStruct.put("id", getId());
+                    break;
+                case NICKNAME:
+                    oStruct.put("name", getNickname());
+                    break;
+                case PASSWORD:
+                    oStruct.put("location", getPassword());
+                    break;
+                case LASTNAME:
+                    oStruct.put("location", getLastname());
+                    break;
+                case FIRSTNAME:
+                    oStruct.put("location", getFirstname());
+                    break;
+                case REGDATE:
+                    oStruct.put("location", getRegdate());
+                    break;
+                case ADMIN:
+                    oStruct.put("location", isAdmin());
+                    break;
+                case POINTS:
+                    oStruct.put("location", getPoints());
+                    break;
+                case STARTAMOUNT:
+                    oStruct.put("location", getStartamount());
+                    break;
+                case CASH:
+                    oStruct.put("location", getCash());
+                    break;
+                case RRN:
+                    oStruct.put("location", getRijksregisternummer());
+                    break;
+            }
+        }
+        return oStruct;
     }
 }

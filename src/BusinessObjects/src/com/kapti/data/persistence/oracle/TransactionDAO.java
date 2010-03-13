@@ -7,6 +7,8 @@ package com.kapti.data.persistence.oracle;
 import com.kapti.exceptions.*;
 import com.kapti.data.*;
 import com.kapti.data.persistence.GenericDAO;
+import com.kapti.filter.Filter;
+import com.kapti.filter.exception.FilterException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -73,6 +75,48 @@ public class TransactionDAO implements GenericDAO<Transaction, Integer> {
         } catch (SQLException ex) {
             throw new DBException(ex);
         }
+    }
+
+    public Collection<Transaction> findByFilter(Filter iFilter) throws StockPlayException, FilterException {
+        if (iFilter.empty())
+            return findAll();
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            try {
+                conn = OracleConnection.getConnection();
+                stmt = conn.prepareStatement(SELECT_TRANSACTIONS + " WHERE " + (String)iFilter.compile());
+
+                rs = stmt.executeQuery();
+                ArrayList<Transaction> list = new ArrayList<Transaction>();
+                while (rs.next()) {
+                    Transaction t = new Transaction(rs.getInt(1));
+                    t.setUser(rs.getInt(2));
+                    t.setTime(new Date(rs.getTimestamp(3).getTime()));
+                    t.setSecurity(rs.getString(4));
+                    t.setType(InstructionType.valueOf(rs.getString(5).toUpperCase()));
+                    t.setAmount(rs.getInt(6));
+                    t.setPrice(rs.getDouble(7));
+
+                    list.add(t);
+                }
+                return list;
+            } finally {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            }
+        } catch (SQLException ex) {
+            throw new DBException(ex);
+        }
+
     }
 
     public Collection<Transaction> findByExample(Transaction example) throws StockPlayException {

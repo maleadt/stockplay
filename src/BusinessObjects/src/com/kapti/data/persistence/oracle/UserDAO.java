@@ -7,6 +7,8 @@ package com.kapti.data.persistence.oracle;
 import com.kapti.exceptions.*;
 import com.kapti.data.*;
 import com.kapti.data.persistence.GenericDAO;
+import com.kapti.filter.Filter;
+import com.kapti.filter.exception.FilterException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -66,6 +68,40 @@ public class UserDAO implements GenericDAO<User, Integer> {
         } catch (SQLException ex) {
             throw new DBException(ex);
         }
+    }
+
+    public Collection<User> findByFilter(Filter iFilter) throws StockPlayException, FilterException {
+        if (iFilter.empty())
+            return findAll();
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            try {
+                conn = OracleConnection.getConnection();
+                stmt = conn.prepareStatement(SELECT_USERS + " WHERE " + (String)iFilter.compile());
+
+                rs = stmt.executeQuery();
+                ArrayList<User> list = new ArrayList<User>();
+                while (rs.next()) {
+                    list.add(new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getBoolean(6), rs.getDate(7), rs.getInt(8), rs.getInt(9), rs.getDouble(10), rs.getDouble(11)));
+                }
+                return list;
+            } finally {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            }
+        } catch (SQLException ex) {
+            throw new DBException(ex);
+        }
+
     }
 
     /**

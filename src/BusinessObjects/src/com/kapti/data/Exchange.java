@@ -1,9 +1,46 @@
 package com.kapti.data;
 
+import java.util.Hashtable;
+
 public class Exchange  {
+    //
+    // Member data
+    //
+
+    public static enum Fields {
+        ID, NAME, LOCATION
+    }
+
     private String symbol = "";
     private String name ="";
     private String location = "";
+
+
+    //
+    // Construction
+    //
+
+    public Exchange(){}
+
+    public Exchange(String symbol) {
+        this.symbol = symbol;
+    }
+
+    public Exchange(String symbol, String name){
+        this.symbol = symbol;
+        this.name = name;
+    }
+
+    public Exchange(String symbol, String name, String location){
+        this.symbol = symbol;
+        this.name = name;
+        this.location = location;
+    }
+
+
+    //
+    // Methods
+    //
 
     public String getLocation() {
         return location;
@@ -23,23 +60,6 @@ public class Exchange  {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Exchange(){}
-
-    public Exchange(String symbol) {
-        this.symbol = symbol;
-    }
-
-    public Exchange(String symbol, String name){
-        this.symbol = symbol;
-        this.name = name;
-    }
-
-    public Exchange(String symbol, String name, String location){
-        this.symbol = symbol;
-        this.name = name;
-        this.location = location;
     }
 
     @Override
@@ -62,6 +82,24 @@ public class Exchange  {
         int hash = 5;
         hash = 97 * hash + (this.symbol != null ? this.symbol.hashCode() : 0);
         return hash;
+    }
+
+    public Hashtable toStruct(Fields... iFields) {
+        Hashtable<String, Object> oStruct = new Hashtable<String, Object>();
+        for (Fields tField : iFields) {
+            switch (tField) {
+                case ID:
+                    oStruct.put("id", getSymbol());
+                    break;
+                case NAME:
+                    oStruct.put("name", getName());
+                    break;
+                case LOCATION:
+                    oStruct.put("location", getLocation());
+                    break;
+            }
+        }
+        return oStruct;
     }
    
 }

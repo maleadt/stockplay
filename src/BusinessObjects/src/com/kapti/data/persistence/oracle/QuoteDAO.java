@@ -6,7 +6,8 @@ package com.kapti.data.persistence.oracle;
 
 import com.kapti.exceptions.*;
 import com.kapti.data.*;
-import com.kapti.data.persistence.GenericDAO;
+import com.kapti.filter.Filter;
+import com.kapti.filter.exception.FilterException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -67,6 +68,41 @@ public class QuoteDAO implements com.kapti.data.persistence.QuoteDAO {
         } catch (SQLException ex) {
             throw new DBException(ex);
         }
+    }
+
+    public Collection<Quote> findByFilter(Filter iFilter) throws StockPlayException, FilterException {
+        if (iFilter.empty())
+            return findAll();
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            try {
+                conn = OracleConnection.getConnection();
+                stmt = conn.prepareStatement(SELECT_QUOTES + " WHERE " + (String)iFilter.compile());
+
+                rs = stmt.executeQuery();
+                ArrayList<Quote> list = new ArrayList<Quote>();
+                while (rs.next()) {
+
+                    list.add(new Quote(rs.getString(1), rs.getDate(2), rs.getDouble(3), rs.getInt(4), rs.getDouble(5), rs.getDouble(6), rs.getDouble(7), rs.getDouble(8),rs.getDouble(9)));
+                }
+                return list;
+            } finally {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            }
+        } catch (SQLException ex) {
+            throw new DBException(ex);
+        }
+
     }
 
     public Collection<Quote> findByExample(Quote example) throws StockPlayException {

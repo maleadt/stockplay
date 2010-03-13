@@ -7,6 +7,8 @@ package com.kapti.data.persistence.oracle;
 import com.kapti.exceptions.*;
 import com.kapti.data.*;
 import com.kapti.data.persistence.GenericDAO;
+import com.kapti.filter.Filter;
+import com.kapti.filter.exception.FilterException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -80,6 +82,53 @@ public class OrderDAO implements GenericDAO<Order, Integer> {
         } catch (SQLException ex) {
             throw new DBException(ex);
         }
+    }
+
+    public Collection<Order> findByFilter(Filter iFilter) throws StockPlayException, FilterException {
+        if (iFilter.empty())
+            return findAll();
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            try {
+                conn = OracleConnection.getConnection();
+                stmt = conn.prepareStatement(SELECT_ORDERS + " WHERE " + (String)iFilter.compile());
+
+                rs = stmt.executeQuery();
+                ArrayList<Order> list = new ArrayList<Order>();
+                while (rs.next()) {
+                    Order o = new Order(rs.getInt(1));
+                    o.setUser(rs.getInt(2));
+                    o.setSecurity(rs.getString(3));
+                    o.setPrice(rs.getDouble(4));
+                    o.setAmount(rs.getInt(5));
+                    // type op 5
+                    o.setType(InstructionType.valueOf(rs.getString(6).toUpperCase()));
+                    //status op 6
+                    o.setStatus(OrderStatus.valueOf(rs.getString(7).toUpperCase()));
+                    o.setCreationTime(rs.getDate(8));
+                    o.setExpirationTime(rs.getDate(9));
+                    o.setExecutionTime(rs.getDate(10));
+
+                    list.add(o);
+                }
+                return list;
+            } finally {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            }
+        } catch (SQLException ex) {
+            throw new DBException(ex);
+        }
+
     }
 
     public Collection<Order> findByExample(Order example) throws StockPlayException {

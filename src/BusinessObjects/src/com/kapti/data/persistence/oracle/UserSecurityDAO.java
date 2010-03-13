@@ -8,6 +8,8 @@ import com.kapti.exceptions.*;
 import com.kapti.data.*;
 import com.kapti.data.UserSecurity.UserSecurityPK;
 import com.kapti.data.persistence.GenericDAO;
+import com.kapti.filter.Filter;
+import com.kapti.filter.exception.FilterException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -68,6 +70,40 @@ public class UserSecurityDAO implements GenericDAO<UserSecurity, UserSecurityPK>
         } catch (SQLException ex) {
             throw new DBException(ex);
         }
+    }
+
+    public Collection<UserSecurity> findByFilter(Filter iFilter) throws StockPlayException, FilterException {
+        if (iFilter.empty())
+            return findAll();
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            try {
+                conn = OracleConnection.getConnection();
+                stmt = conn.prepareStatement(SELECT_USERSECURITIES + " WHERE " + (String)iFilter.compile());
+
+                rs = stmt.executeQuery();
+                ArrayList<UserSecurity> list = new ArrayList<UserSecurity>();
+                while (rs.next()) {
+                    list.add(new UserSecurity(rs.getInt(1), rs.getString(2), rs.getInt(3)));
+                }
+                return list;
+            } finally {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            }
+        } catch (SQLException ex) {
+            throw new DBException(ex);
+        }
+
     }
 
     /**

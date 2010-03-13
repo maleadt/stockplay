@@ -6,8 +6,9 @@ package com.kapti.data.persistence.oracle;
 
 import com.kapti.exceptions.*;
 import com.kapti.data.*;
-import com.kapti.data.UserSecurity.UserSecurityPK;
 import com.kapti.data.persistence.GenericDAO;
+import com.kapti.filter.Filter;
+import com.kapti.filter.exception.FilterException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -68,6 +69,40 @@ public class IndexSecurityDAO implements GenericDAO<IndexSecurity, IndexSecurity
         } catch (SQLException ex) {
             throw new DBException(ex);
         }
+    }
+
+    public Collection<IndexSecurity> findByFilter(Filter iFilter) throws StockPlayException, FilterException {
+        if (iFilter.empty())
+            return findAll();
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            try {
+                conn = OracleConnection.getConnection();
+                stmt = conn.prepareStatement(SELECT_USERSECURITIES + " WHERE " + (String)iFilter.compile());
+
+                rs = stmt.executeQuery();
+                ArrayList<IndexSecurity> list = new ArrayList<IndexSecurity>();
+                while (rs.next()) {
+                    list.add(new IndexSecurity(rs.getInt(1), rs.getString(2)));
+                }
+                return list;
+            } finally {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            }
+        } catch (SQLException ex) {
+            throw new DBException(ex);
+        }
+
     }
 
     /**

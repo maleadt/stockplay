@@ -1,10 +1,25 @@
 package com.kapti.data;
 
+import java.util.Hashtable;
+
 public class Security  {
+    //
+    // Member data
+    //
+
+    public static enum Fields {
+        ID, NAME, EXCHANGE
+    }
+    
     private String symbol = "";
     private String name = "";
 
     private String exchange = "";
+
+
+    //
+    // Construction
+    //
 
     public Security(){
     }
@@ -18,6 +33,11 @@ public class Security  {
         this.name = name;
         this.exchange = exchange;
     }
+
+
+    //
+    // Methods
+    //
 
     public String getName() {
         return name;
@@ -42,5 +62,23 @@ public class Security  {
 
     public void setExchange(String exchange) {
         this.exchange = exchange;
+    }
+
+    public Hashtable toStruct(Fields... iFields) {
+        Hashtable<String, Object> oStruct = new Hashtable<String, Object>();
+        for (Fields tField : iFields) {
+            switch (tField) {
+                case ID:
+                    oStruct.put("id", getSymbol());
+                    break;
+                case NAME:
+                    oStruct.put("name", getName());
+                    break;
+                case EXCHANGE:
+                    oStruct.put("location", getExchange());
+                    break;
+            }
+        }
+        return oStruct;
     }
 }

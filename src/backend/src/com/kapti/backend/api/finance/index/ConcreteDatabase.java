@@ -44,13 +44,12 @@ public class ConcreteDatabase extends Index {
 
     @Override
     public Vector<Hashtable<String, Object>> List(String iFilter) throws XmlRpcException, StockPlayException {
+        // Get DAO reference
         GenericDAO<com.kapti.data.Index, Integer> indexDAO = getDAO().getIndexDAO();
 
-
-        Vector<Hashtable<String, Object>> result = new Vector<Hashtable<String, Object>>();
-
+        // Fetchd an convert all indexes
         Collection<com.kapti.data.Index> indexes = indexDAO.findAll();
-
+        Vector<Hashtable<String, Object>> result = new Vector<Hashtable<String, Object>>();
         for (com.kapti.data.Index index : indexes) {
             Hashtable<String, Object> ex = new Hashtable<String, Object>();
             ex.put("id", index.getId());
@@ -60,13 +59,12 @@ public class ConcreteDatabase extends Index {
             result.add(ex);
         }
 
-
         return result;
     }
 
     @Override
     public int Modify(String iFilter, Hashtable<String, Object> iDetails) throws XmlRpcException, StockPlayException {
-          com.kapti.data.Index index = new com.kapti.data.Index((Integer)iDetails.get("id"));
+        com.kapti.data.Index index = new com.kapti.data.Index((Integer)iDetails.get("id"));
 
         index.setExchange((String)iDetails.get("exchange"));
         index.setName((String)iDetails.get("name"));
