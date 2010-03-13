@@ -22,6 +22,7 @@
 package filterdemo.data.sql;
 
 import filterdemo.data.DataInt;
+import filterdemo.exception.FilterException;
 
 /**
  *
@@ -29,7 +30,7 @@ import filterdemo.data.DataInt;
  */
 public class DataIntConverter extends DataInt {
     @Override
-    public Object process(Integer a) throws Exception {
+    public Object process(Integer a) throws FilterException {
         return a.toString();
     }
 

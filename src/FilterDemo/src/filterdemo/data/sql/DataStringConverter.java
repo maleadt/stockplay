@@ -22,6 +22,7 @@
 package filterdemo.data.sql;
 
 import filterdemo.data.DataString;
+import filterdemo.exception.FilterException;
 
 /**
  *
@@ -29,7 +30,7 @@ import filterdemo.data.DataString;
  */
 public class DataStringConverter extends DataString {
     @Override
-    public Object process(String a) throws Exception {
+    public Object process(String a) throws FilterException {
         return "\"" + a + "\"";
     }
 

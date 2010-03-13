@@ -23,6 +23,7 @@ package filterdemo.condition.sql;
 
 import filterdemo.condition.ConditionEquals;
 import filterdemo.data.Data;
+import filterdemo.exception.FilterException;
 
 /**
  *
@@ -30,7 +31,7 @@ import filterdemo.data.Data;
  */
 public class ConditionEqualsConverter extends ConditionEquals {
     @Override
-    public Object process(Data a, Data b) throws Exception {
+    public Object process(Data a, Data b) throws FilterException {
         return (String)a.compile() + " = " + (String)b.compile();
     }
 }

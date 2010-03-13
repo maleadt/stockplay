@@ -22,6 +22,7 @@
 package filterdemo.relation.sql;
 
 import filterdemo.condition.Condition;
+import filterdemo.exception.FilterException;
 import filterdemo.relation.RelationOr;
 
 /**
@@ -30,7 +31,7 @@ import filterdemo.relation.RelationOr;
  */
 public class RelationOrConverter extends RelationOr {
     @Override
-    public Object process(Condition a, Condition b) throws Exception {
+    public Object process(Condition a, Condition b) throws FilterException {
         return (String)a.compile() + " OR " + (String)b.compile();
     }
 }

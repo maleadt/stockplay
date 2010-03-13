@@ -21,10 +21,9 @@
  */
 
 import filterdemo.Filter;
-import filterdemo.condition.*;
-import filterdemo.data.*;
 import filterdemo.exception.FilterException;
-import filterdemo.relation.*;
+import filterdemo.exception.ParserException;
+import filterdemo.parsing.Parser;
 
 
 /**
@@ -37,34 +36,20 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // Test filter
-        Filter tFilter = new Filter();
+        // Test parser
+        Parser tParser = new Parser();
+
+        // Parse input
+        Filter tFilter = null;
         try {
-            Condition tCheckIf42 = new ConditionEquals();
-            tCheckIf42.addParameter(new DataKey("id"));
-            tCheckIf42.addParameter(new DataInt(42));
-            tFilter.addCondition(tCheckIf42);
-            Condition tCheckIfTim = new ConditionEquals();
-            tCheckIfTim.addParameter(new DataKey("name"));
-            tCheckIfTim.addParameter(new DataString("Tim Besard"));
-            tFilter.addCondition(new RelationOr(), tCheckIfTim);
+            tFilter = tParser.parse("EQUALS('id' 42)");
         }
-        catch (FilterException e) {
-            System.err.println("Filter construction failed");
+        catch (ParserException e) {
+            System.err.println("Parsing failed");
             e.printStackTrace();
         }
 
-        // Convert filter
-        try {
-            String tSQL = (String) tFilter.compile();
-            System.out.println("Conversion report: " + tSQL);
-        }
-        catch (Exception e) {
-            System.out.println("Filtering failed");
-            e.printStackTrace();
-        }
-
-        // Test debug
+        // Print a filter tree
         try {
             tFilter.debug("/tmp/AST");
         }
@@ -73,9 +58,14 @@ public class Main {
             e.printStackTrace();
         }
 
-        // Test parser
-        //Parser tParser = new Parser();
-        //tParser.parse("EQUALS(id 42) AND EQUALS(name \"Tim Besard\"");
+        // Compile output
+        try {
+            System.out.println("Compiled result: " + (String)tFilter.compile());
+        }
+        catch (FilterException e) {
+            System.err.println("Compilation failed");
+            e.printStackTrace();
+        }
     }
 
 }

@@ -65,7 +65,7 @@ public class Edge extends Element {
         for (int i = 0; i < mNodes.size(); i++) {
             iStream.print(mNodes.get(i).getID() + " ");
             if (i != mNodes.size() - 1) {
-                iStream.print("-- ");
+                iStream.print("-> ");
             }
         }
 

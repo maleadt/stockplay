@@ -22,6 +22,7 @@
 package filterdemo.relation.sql;
 
 import filterdemo.condition.Condition;
+import filterdemo.exception.FilterException;
 import filterdemo.relation.RelationAnd;
 
 /**
@@ -30,7 +31,7 @@ import filterdemo.relation.RelationAnd;
  */
 public class RelationAndConverter extends RelationAnd {
     @Override
-    public Object process(Condition a, Condition b) throws Exception {
+    public Object process(Condition a, Condition b) throws FilterException {
         return (String)a.compile() + " AND " + (String)b.compile();
     }
 }

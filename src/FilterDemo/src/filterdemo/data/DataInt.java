@@ -54,7 +54,7 @@ public class DataInt extends Data {
     }
 
     @Override
-    public final Object compile() throws Exception {
+    public final Object compile() throws FilterException {
         DataInt tConverter = (DataInt) getConverter();
 
         return tConverter.process((Integer) mData);
@@ -74,7 +74,7 @@ public class DataInt extends Data {
     // Interface
     //
 
-    public Object process(Integer a) throws Exception {
+    public Object process(Integer a) throws FilterException {
         throw new RuntimeException();
     }
 

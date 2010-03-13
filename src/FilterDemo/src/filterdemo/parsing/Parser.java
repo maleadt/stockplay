@@ -21,19 +21,20 @@
  */
 package filterdemo.parsing;
 
+import filterdemo.Convertable;
 import filterdemo.Filter;
+import filterdemo.condition.Condition;
+import filterdemo.condition.ConditionEquals;
 import filterdemo.data.Data;
 import filterdemo.data.DataFloat;
 import filterdemo.data.DataInt;
 import filterdemo.data.DataKey;
 import filterdemo.data.DataString;
+import filterdemo.exception.FilterException;
 import filterdemo.exception.ParserException;
-import filterdemo.exception.TokenizerException;
-import filterdemo.relation.Relation;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.locks.Condition;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -65,7 +66,7 @@ public class Parser {
         mRules.add(new Rule(Type.INT, "[0-9]+"));
         mRules.add(new Rule(Type.FLOAT, "[0-9.]+"));
         mRules.add(new Rule(Type.WORD, "[A-Za-z_]+"));
-        mRules.add(new Rule(Type.QUOTE, "\"([^\"]*+)\""));
+        mRules.add(new Rule(Type.QUOTE, "'([^\']*+)'"));
         mRules.add(new Rule(Type.PARAM_OPEN, "\\("));
         mRules.add(new Rule(Type.PARAM_CLOSE, "\\)"));
         mRules.add(new Rule(Type.WHITESPACE, "\\s+"));
@@ -77,7 +78,7 @@ public class Parser {
     //
 
     // Main method
-    public Filter parse(String iSource) throws ParserException, TokenizerException {
+    public Filter parse(String iSource) throws ParserException {
         // Lexical analysis
         List<Token> result = tokenize(iSource);
         System.out.println("Parsed tokens: ");
@@ -92,7 +93,7 @@ public class Parser {
     }
 
     // Lexical analysis: the tokenizer
-    List<Token> tokenize(String iSource) throws TokenizerException {
+    List<Token> tokenize(String iSource) throws ParserException {
         // Setup
         int tPosition = 0;
         final int tEnd = iSource.length();
@@ -114,7 +115,7 @@ public class Parser {
                     String tContent = null;
                     int tGroup = tMatcher.groupCount();
                     if (tGroup > 1) {
-                        throw new TokenizerException("found multiple matching groups within rule");
+                        throw new ParserException("found multiple matching groups within rule");
                     }
                     tContent = iSource.substring(tMatcher.start(tGroup), tMatcher.end(tGroup));
 
@@ -144,8 +145,7 @@ public class Parser {
 
         // State
         Token tToken;
-        Relation tRelation;
-        Condition tCondition;
+        Condition tCondition = null;
         List<Data> tParameters = null;
 
         // Process the tokens
@@ -153,6 +153,7 @@ public class Parser {
             tToken = iIterator.next();
 
             switch (tToken.getType()) {
+                // Data
                 case INT: {
                     if (tParameters == null)
                         throw new ParserException("found raw integer out of parameter scope");
@@ -170,34 +171,53 @@ public class Parser {
                 case QUOTE: {
                     if (tParameters == null)
                         throw new ParserException("found unknown quoted string out of parameter scope");
-                    if (tParameters.size() == 0)
-                        tParameters.add(new DataString(tToken.getContent()));
-                    else    // TODO: keys are LVALUE
+                    if (tParameters.size() == 0)    // TODO: keys are LVALUE
                         tParameters.add(new DataKey(tToken.getContent()));
+                    else
+                        tParameters.add(new DataString(tToken.getContent()));
 
                     break;
                 }
-                case WORD: {
-                    // Check if word is a routine
-                    if (true) {
 
+                // Word
+                case WORD: {
+                    // TODO: Clean this up
+                    if (tToken.getContent().equalsIgnoreCase("EQUALS")) {
+                        tCondition = new ConditionEquals();
+                    } else {
+                        throw new ParserException("unknown symbol '" + tToken.getContent() + "'");
                     }
 
                     break;
                 }
+
+                // Parameter list
                 case PARAM_OPEN: {
                     tParameters = new ArrayList();
 
                     break;
                 }
                 case PARAM_CLOSE: {
-                    tParameters = null;
+                    if (tCondition != null) {
+                        for (Data tParameter : tParameters)
+                            tCondition.addParameter((Convertable)tParameter);
+                        try {
+                            oFilter.addCondition(tCondition);
+                        } catch (FilterException e) {
+                            throw new ParserException("invalid input string, could not build the filter tree", e.getCause());
+                        }
+
+                        tParameters = null;
+                    }
+                    else {
+                        throw new ParserException("parameter list ended out of context");
+                    }
 
                     break;
                 }
+
+                // Other
                 case WHITESPACE: {
-
-
                     break;
                 }
                 default: {

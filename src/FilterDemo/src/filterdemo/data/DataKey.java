@@ -54,7 +54,7 @@ public class DataKey extends Data {
     }
 
     @Override
-    public final Object compile() throws Exception {
+    public final Object compile() throws FilterException {
         DataKey tConverter = (DataKey) getConverter();
 
         return tConverter.process((String) mData);
@@ -74,7 +74,7 @@ public class DataKey extends Data {
     // Interface
     //
 
-    public Object process(String a) throws Exception {
+    public Object process(String a) throws FilterException {
         throw new RuntimeException();
     }
 

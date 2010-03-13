@@ -34,7 +34,7 @@ public class Graph extends Element {
     // Member data
     //
 
-    private final String mName;
+    private final String mType;
     private List<Element> mElements;
 
 
@@ -42,8 +42,8 @@ public class Graph extends Element {
     // Construction
     //
 
-    public Graph(String iName) {
-        mName = iName;
+    public Graph(String iType) {
+        mType = iType;
         mElements = new ArrayList<Element>();
     }
 
@@ -57,7 +57,7 @@ public class Graph extends Element {
     }
 
     public void render(PrintStream iStream) {
-        iStream.println("graph " + mName + " {");
+        iStream.println(mType + " G " + " {");
 
         // Print all node attributes
         for (String tKey : mAttributes.keySet()) {

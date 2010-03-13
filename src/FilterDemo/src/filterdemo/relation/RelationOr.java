@@ -45,7 +45,7 @@ public class RelationOr extends Relation {
     }
 
     @Override
-    public final Object compile() throws Exception {
+    public final Object compile() throws FilterException {
         RelationOr tConverter = (RelationOr) getConverter();
 
         return tConverter.process(getCondition(0), getCondition(1));
@@ -73,7 +73,7 @@ public class RelationOr extends Relation {
     // Interface
     //
 
-    public Object process(Condition a, Condition b) throws Exception {
+    public Object process(Condition a, Condition b) throws FilterException {
         throw new RuntimeException();
     }
 

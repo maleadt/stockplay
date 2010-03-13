@@ -54,7 +54,7 @@ public class DataFloat extends Data {
     }
 
     @Override
-    public final Object compile() throws Exception {
+    public final Object compile() throws FilterException {
         DataFloat tConverter = (DataFloat) getConverter();
 
         return tConverter.process((Double) mData);
@@ -74,7 +74,7 @@ public class DataFloat extends Data {
     // Interface
     //
 
-    public Object process(Double a) throws Exception {
+    public Object process(Double a) throws FilterException {
         throw new RuntimeException();
     }
 

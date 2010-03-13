@@ -23,6 +23,7 @@ package filterdemo.condition;
 
 import filterdemo.data.Data;
 import filterdemo.data.DataKey;
+import filterdemo.exception.FilterException;
 import filterdemo.graph.Edge;
 import filterdemo.graph.Graph;
 import filterdemo.graph.Node;
@@ -48,7 +49,7 @@ public class ConditionEquals extends Condition {
     }
 
     @Override
-    public final Object compile() throws Exception {
+    public final Object compile() throws FilterException {
         ConditionEquals tConverter = (ConditionEquals) getConverter();
 
         return tConverter.process(getData(0), getData(1));
@@ -65,8 +66,8 @@ public class ConditionEquals extends Condition {
         Node tNodeRight = getData(1).addNode(iGraph);
 
         // Edges
-        iGraph.addElement(new Edge(tNodeLeft, tNodeSelf));
-        iGraph.addElement(new Edge(tNodeRight, tNodeSelf));
+        iGraph.addElement(new Edge(tNodeSelf, tNodeLeft));
+        iGraph.addElement(new Edge(tNodeSelf, tNodeRight));
 
         return tNodeSelf;
     }
@@ -76,7 +77,7 @@ public class ConditionEquals extends Condition {
     // Interface
     //
 
-    public Object process(Data a, Data b) throws Exception {
+    public Object process(Data a, Data b) throws FilterException {
         throw new RuntimeException();
     }
 }

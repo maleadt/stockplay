@@ -31,6 +31,10 @@ public class ParserException extends Exception {
         super(message);
     }
 
+    public ParserException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
     public ParserException() {
         super("unknown parser exception");
     }

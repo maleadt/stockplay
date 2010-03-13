@@ -74,22 +74,21 @@ public class Filter {
      * @param iRelation
      * @param iCondition
      */
-    public void addCondition(Relation iRelation, Condition iCondition) {
+    public void addCondition(Relation iRelation, Condition iCondition) throws FilterException {
         if (mCondition == null)
-            throw new RuntimeException("When passing a relation, a condition should be defined already");
+            throw new FilterException("When passing a relation, a condition should be defined already");
         iRelation.addParameter(mCondition);
         iRelation.addParameter(iCondition);
         mCondition = iRelation;
     }
 
-    public Object compile() throws Exception {
+    public Object compile() throws FilterException {
         return mCondition.compile();
     }
 
     public void debug(String iFilename) throws FilterException {
         // Create graph
-        Graph graph = new Graph("FilterTree");
-        graph.setAttribute("rankdir", "BT");
+        Graph graph = new Graph("digraph");
         mCondition.addNode(graph);
 
         // Render panel to file

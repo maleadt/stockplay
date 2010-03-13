@@ -25,6 +25,7 @@ import filterdemo.exception.FilterException;
 import filterdemo.graph.Graph;
 import filterdemo.graph.Node;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -53,17 +54,38 @@ public abstract class Convertable {
      * Algemene conversiemethode. Wordt gebruik om de conditie om te zetten naar
      * een alternatief formaat, zoals een SQL WHERE filter.
      */
-    public final Convertable getConverter() throws Exception {
+    public final Convertable getConverter() throws FilterException {
         // Open the property file
         ResourceBundle rb = ResourceBundle.getBundle("filterdemo.Converters");
 
         // Get the constructor of a converter
         String tObjectName = this.getClass().getPackage().getName() + "." + rb.getString("converter") + "." + this.getClass().getSimpleName() + "Converter";
-        Class tObjectClass = Class.forName(tObjectName);
-        Constructor tConstructor = tObjectClass.getConstructor();
+        Constructor tConstructor = null;
+        try {
+            Class tObjectClass = Class.forName(tObjectName);
+            tConstructor = tObjectClass.getConstructor();
+        }
+        catch (ClassNotFoundException e) {
+            throw new FilterException("could not find an appropriate converter for object '" + this.getClass().getSimpleName() + "'", e.getCause());
+        }
+        catch (NoSuchMethodException e) {
+            throw new FilterException("could not find converter constructor at class '" + tObjectName + "'", e.getCause());
+        }
         
         // Create a new object
-        Object tObject = tConstructor.newInstance();
+        Object tObject = null;
+        try {
+            tObject = tConstructor.newInstance();
+        }
+        catch (InstantiationException e) {
+            throw new FilterException("requested instantiation of converter '" + tObjectName + "' failed as it is not a concrete class", e.getCause());
+        }
+        catch (IllegalAccessException e) {
+            throw new FilterException("illegal access to class '" + tObjectName + "'", e.getCause());
+        }
+        catch (InvocationTargetException e) {
+            throw new FilterException("an exception occured when instantiating a converter of class '" + tObjectName + "'", e.getCause());
+        }
 
         // Call the object
         Convertable tConverter = (Convertable) tObject;
@@ -72,7 +94,7 @@ public abstract class Convertable {
         return tConverter;
     }
 
-    public Object compile() throws Exception {
+    public Object compile() throws FilterException {
         return getConverter().compile();
     }
     

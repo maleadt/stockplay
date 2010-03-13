@@ -55,7 +55,7 @@ public class DataString extends Data {
     }
 
     @Override
-    public final Object compile() throws Exception {
+    public final Object compile() throws FilterException {
         DataString tConverter = (DataString) getConverter();
 
         return tConverter.process((String) mData);
@@ -75,7 +75,7 @@ public class DataString extends Data {
     // Interface
     //
 
-    public Object process(String a) throws Exception {
+    public Object process(String a) throws FilterException {
         throw new RuntimeException();
     }
 
