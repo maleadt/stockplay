@@ -22,6 +22,7 @@
 package com.kapti.backend.api.finance;
 
 import com.kapti.backend.api.MethodClass;
+import com.kapti.exceptions.StockPlayException;
 import java.util.Hashtable;
 import java.util.Vector;
 import org.apache.xmlrpc.XmlRpcException;
@@ -37,6 +38,6 @@ public abstract class Index extends MethodClass {
     // Methodes
     //
 
-    public abstract Vector<Hashtable<String, Object>> List(String iFilter) throws XmlRpcException;
-    public abstract int Modify(String iFilter, Hashtable<String, Object> iDetails) throws XmlRpcException;
+    public abstract Vector<Hashtable<String, Object>> List(String iFilter) throws XmlRpcException, StockPlayException;
+    public abstract int Modify(String iFilter, Hashtable<String, Object> iDetails) throws XmlRpcException, StockPlayException;
 }

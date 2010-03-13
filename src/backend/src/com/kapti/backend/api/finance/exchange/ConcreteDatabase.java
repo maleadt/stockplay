@@ -1,6 +1,6 @@
 /*
  * ConcreteDummy.java
- * StockPlay - Dummy implementatie van de Finance.Index subklasse.
+ * StockPlay - Dummy implementatie van de Finance.Exchange subklasse.
  *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
@@ -19,29 +19,46 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.kapti.backend.api.finance.index;
+package com.kapti.backend.api.finance.exchange;
 
-import com.kapti.backend.api.finance.Index;
+import com.kapti.backend.api.finance.Exchange;
+import com.kapti.data.persistence.GenericDAO;
+import com.kapti.exceptions.StockPlayException;
+import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Vector;
 import org.apache.xmlrpc.XmlRpcException;
 
 /**
- * \brief   Dummy implementatie van de Finance.Index interface.
+ * \brief   Dummy implementatie van de Finance.Exchange interface.
  *
- * Deze klasse is een dummy implementatie van de Finance.Index interface. Een
+ * Deze klasse is een dummy implementatie van de Finance.Exchange interface. Een
  * dergelijke implementatie geeft valide data terug, zonder daarvoor de database
  * te raadplegen. Deze implementatie kan zo gebruikt worden om een client-systeem
  * te testen.
  */
-public class ConcreteDummy extends Index {
+public class ConcreteDatabase extends com.kapti.backend.api.finance.Exchange {
     //
     // Methodes
     //
 
     @Override
-    public Vector<Hashtable<String, Object>> List(String iFilter) throws XmlRpcException {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public Vector<Hashtable<String, Object>> List(String iFilter) throws XmlRpcException,StockPlayException {
+
+       GenericDAO<com.kapti.data.Exchange, String> exDAO = getDAO().getExchangeDAO();
+       Vector<Hashtable<String,Object>> result = new Vector<Hashtable<String,Object>>();
+       Collection<com.kapti.data.Exchange> exchanges = exDAO.findAll();
+
+       for(com.kapti.data.Exchange exch : exchanges){
+            Hashtable<String, Object> ex = new Hashtable<String, Object>();
+            ex.put("id", exch.getSymbol());
+            ex.put("description", exch.getName());
+            ex.put("location", exch.getLocation());
+
+            result.add(ex);
+       }
+
+       return result;
     }
 
     @Override
