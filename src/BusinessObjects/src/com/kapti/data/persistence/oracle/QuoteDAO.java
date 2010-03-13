@@ -51,7 +51,7 @@ public class QuoteDAO implements com.kapti.data.persistence.QuoteDAO {
 
                     return new Quote(pk.getSecurity(), pk.getTime(), rs.getDouble(1), rs.getInt(2), rs.getDouble(3), rs.getDouble(4), rs.getDouble(5), rs.getDouble(6), rs.getDouble(7));
                 } else {
-                    throw new NonexistentEntityException("There is no quote with symbol '" + pk.getSecurity() + "' and timestamp '" + pk.getTime() + "'");
+                    return null;//throw new NonexistentEntityException("There is no quote with symbol '" + pk.getSecurity() + "' and timestamp '" + pk.getTime() + "'");
                 }
             } finally {
                 if (rs != null) {

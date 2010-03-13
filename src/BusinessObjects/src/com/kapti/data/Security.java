@@ -4,7 +4,7 @@ public class Security  {
     private String symbol = "";
     private String name = "";
 
-    private Exchange exchange;
+    private String exchange = "";
 
     public Security(){
     }
@@ -13,7 +13,7 @@ public class Security  {
         this.symbol = symbol;
     }
 
-    public Security(String symbol, String name, Exchange exchange){
+    public Security(String symbol, String name, String exchange){
         this.symbol = symbol;
         this.name = name;
         this.exchange = exchange;
@@ -31,20 +31,16 @@ public class Security  {
         return symbol;
     }
 
-    public Quote getSharePrice(){
-        return null;
-    }
-
     /**
      * Haalt beurskoers op van effect die het dichtst bij de opgegeven datum zit
      * @param time
      * @return
      */
-    public Exchange getExchange() {
+    public String getExchange() {
         return exchange;
     }
 
-    public void setExchange(Exchange exchange) {
+    public void setExchange(String exchange) {
         this.exchange = exchange;
     }
 }

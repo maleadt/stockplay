@@ -5,6 +5,10 @@ public class Index {
     private String name;
     private String exchange;
 
+    public Index(int id){
+        this.id = id;
+    }
+
     public Index(int id, String name, String exchange) {
         this.id = id;
         this.name = name;

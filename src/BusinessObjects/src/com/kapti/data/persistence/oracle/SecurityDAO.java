@@ -46,9 +46,9 @@ public class SecurityDAO implements com.kapti.data.persistence.SecurityDAO {
                 rs = stmt.executeQuery();
                 if (rs.next()) {
 
-                    return new Security(symbol, rs.getString(1), ExchangeDAO.getInstance().findById(rs.getString(2)));
+                    return new Security(symbol, rs.getString(1), rs.getString(2));
                 } else {
-                    throw new NonexistentEntityException("There is no security with symbol '" + symbol + "'");
+                    return null; //throw new NonexistentEntityException("There is no security with symbol '" + symbol + "'");
                 }
             } finally {
                 if (rs != null) {
@@ -79,7 +79,7 @@ public class SecurityDAO implements com.kapti.data.persistence.SecurityDAO {
                 stmt.setString(1, '%' + example.getSymbol() + '%');
                 stmt.setString(2, '%' + example.getName() + '%');
                 if (example.getExchange() != null) {
-                    stmt.setString(3, '%' + example.getExchange().getSymbol() + '%');
+                    stmt.setString(3, '%' + example.getExchange() + '%');
                 } else {
                     stmt.setString(3, "%%");
                 }
@@ -88,7 +88,7 @@ public class SecurityDAO implements com.kapti.data.persistence.SecurityDAO {
                 ArrayList<Security> list = new ArrayList<Security>();
                 while (rs.next()) {
 
-                    list.add(new Security(rs.getString(1), rs.getString(2), ExchangeDAO.getInstance().findById(rs.getString(3))));
+                    list.add(new Security(rs.getString(1), rs.getString(2), rs.getString(3)));
 
                 }
                 return list;
@@ -121,7 +121,7 @@ public class SecurityDAO implements com.kapti.data.persistence.SecurityDAO {
                 ArrayList<Security> list = new ArrayList<Security>();
                 while (rs.next()) {
 
-                    list.add(new Security(rs.getString(1), rs.getString(2), ExchangeDAO.getInstance().findById(rs.getString(3))));
+                    list.add(new Security(rs.getString(1), rs.getString(2), rs.getString(3)));
                 }
                 return list;
             } finally {
@@ -158,7 +158,7 @@ public class SecurityDAO implements com.kapti.data.persistence.SecurityDAO {
                 stmt.setString(1, security.getSymbol());
                 stmt.setString(2, security.getName());
                 if(security.getExchange() != null)
-                    stmt.setString(3, security.getExchange().getSymbol());
+                    stmt.setString(3, security.getExchange());
 
                 return stmt.executeUpdate() == 1;
 
@@ -198,7 +198,7 @@ public class SecurityDAO implements com.kapti.data.persistence.SecurityDAO {
                 stmt.setString(3, security.getSymbol());
                 stmt.setString(1, security.getName());
                 if(security.getExchange() != null)
-                    stmt.setString(2, security.getExchange().getSymbol());
+                    stmt.setString(2, security.getExchange());
 
                 return stmt.executeUpdate() == 1;
 

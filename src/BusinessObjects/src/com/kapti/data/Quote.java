@@ -33,6 +33,12 @@ public class Quote {
     private double low = 0, high = 0;
     private double open = 0;
 
+    public Quote(){}
+
+    public Quote(String security, Date time){
+        this.pk=new QuotePK(security, time);
+    }
+
     public Quote(String security, Date time, double price, int volume, double bid, double ask, double low, double high, double open) {
         this.pk = new QuotePK(security, time);
         this.price = price;
@@ -76,7 +82,7 @@ public class Quote {
         return volume;
     }
 
-    public void setBuy(double buy) {
+    public void setBid(double buy) {
         this.bid = buy;
     }
 
@@ -92,7 +98,7 @@ public class Quote {
         this.price = price;
     }
 
-    public void setSell(double sell) {
+    public void setAsk(double sell) {
         this.ask = sell;
     }
 

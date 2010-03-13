@@ -54,7 +54,7 @@ public class SecurityDAOTest {
     @Test
     public void testCreate() throws Exception {
         System.out.println("create");
-        Security security = new Security("TEST","Test", testExch);
+        Security security = new Security("TEST","Test", "TESTSYMBL");
         SecurityDAO instance = SecurityDAO.getInstance();
         boolean expResult = true;
         boolean result = instance.create(security);
@@ -73,7 +73,7 @@ public class SecurityDAOTest {
         Security result = instance.findById(symbol);
         assertNotNull(result);
         assertEquals("Test", result.getName());
-        assertEquals(testExch, result.getExchange());
+        assertEquals("TESTSYMBL", result.getExchange());
 
     }
 
@@ -97,7 +97,7 @@ public class SecurityDAOTest {
     @Test
     public void testUpdate() throws Exception {
         System.out.println("update");
-        Security security = new Security("TEST","Test om te updaten", testExch);
+        Security security = new Security("TEST","Test om te updaten", "TESTSYMBL");
         SecurityDAO instance = SecurityDAO.getInstance();
         boolean expResult = true;
         boolean result = instance.update(security);
