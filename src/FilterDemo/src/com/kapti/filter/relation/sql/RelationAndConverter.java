@@ -19,11 +19,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package filterdemo.relation.sql;
+package com.kapti.filter.relation.sql;
 
-import filterdemo.condition.Condition;
-import filterdemo.exception.FilterException;
-import filterdemo.relation.RelationAnd;
+import com.kapti.filter.condition.Condition;
+import com.kapti.filter.exception.FilterException;
+import com.kapti.filter.relation.RelationAnd;
 
 /**
  *

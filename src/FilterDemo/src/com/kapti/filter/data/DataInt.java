@@ -19,11 +19,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package filterdemo.data;
+package com.kapti.filter.data;
 
-import filterdemo.exception.FilterException;
-import filterdemo.graph.Graph;
-import filterdemo.graph.Node;
+import com.kapti.filter.exception.FilterException;
+import com.kapti.filter.graph.Graph;
+import com.kapti.filter.graph.Node;
 
 /**
  *

@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package filterdemo.parsing;
+package com.kapti.filter.parsing;
 
 import java.util.regex.Pattern;
 

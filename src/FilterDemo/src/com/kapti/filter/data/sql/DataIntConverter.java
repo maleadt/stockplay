@@ -19,10 +19,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package filterdemo.data.sql;
+package com.kapti.filter.data.sql;
 
-import filterdemo.data.DataInt;
-import filterdemo.exception.FilterException;
+import com.kapti.filter.data.DataInt;
+import com.kapti.filter.exception.FilterException;
 
 /**
  *

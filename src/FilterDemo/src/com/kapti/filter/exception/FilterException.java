@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package filterdemo.exception;
+package com.kapti.filter.exception;
 
 /*
  * To change this template, choose Tools | Templates

@@ -19,18 +19,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+package com.kapti.filter;
 
-import filterdemo.Filter;
-import filterdemo.exception.FilterException;
-import filterdemo.exception.ParserException;
-import filterdemo.parsing.Parser;
+import com.kapti.filter.exception.FilterException;
+import com.kapti.filter.exception.ParserException;
+import com.kapti.filter.parsing.Parser;
 
 
 /**
  *
  * @author tim
  */
-public class Main {
+public class Demo {
 
     /**
      * @param args the command line arguments

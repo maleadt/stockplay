@@ -19,12 +19,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package filterdemo.relation;
+package com.kapti.filter.relation;
 
-import filterdemo.condition.Condition;
-import filterdemo.exception.FilterException;
-import filterdemo.graph.Graph;
-import filterdemo.graph.Node;
+import com.kapti.filter.condition.Condition;
+import com.kapti.filter.exception.FilterException;
+import com.kapti.filter.graph.Graph;
+import com.kapti.filter.graph.Node;
 
 /**
  * Een relatie, wordt gebruikt om het resultaat van verschillende condities

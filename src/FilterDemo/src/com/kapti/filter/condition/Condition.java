@@ -19,13 +19,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package filterdemo.condition;
+package com.kapti.filter.condition;
 
-import filterdemo.Convertable;
-import filterdemo.data.Data;
-import filterdemo.exception.FilterException;
-import filterdemo.graph.Graph;
-import filterdemo.graph.Node;
+import com.kapti.filter.Convertable;
+import com.kapti.filter.data.Data;
+import com.kapti.filter.exception.FilterException;
+import com.kapti.filter.graph.Graph;
+import com.kapti.filter.graph.Node;
 
 /**
  *

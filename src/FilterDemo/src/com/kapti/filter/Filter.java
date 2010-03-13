@@ -19,12 +19,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package filterdemo;
+package com.kapti.filter;
 
-import filterdemo.graph.Graph;
-import filterdemo.condition.Condition;
-import filterdemo.exception.FilterException;
-import filterdemo.relation.Relation;
+import com.kapti.filter.graph.Graph;
+import com.kapti.filter.condition.Condition;
+import com.kapti.filter.exception.FilterException;
+import com.kapti.filter.relation.Relation;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;

@@ -19,11 +19,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package filterdemo.condition.sql;
+package com.kapti.filter.condition.sql;
 
-import filterdemo.condition.ConditionEquals;
-import filterdemo.data.Data;
-import filterdemo.exception.FilterException;
+import com.kapti.filter.condition.ConditionEquals;
+import com.kapti.filter.data.Data;
+import com.kapti.filter.exception.FilterException;
 
 /**
  *

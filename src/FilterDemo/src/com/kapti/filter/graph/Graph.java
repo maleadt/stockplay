@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package filterdemo.graph;
+package com.kapti.filter.graph;
 
 import java.io.PrintStream;
 import java.util.ArrayList;

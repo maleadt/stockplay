@@ -19,11 +19,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package filterdemo;
+package com.kapti.filter;
 
-import filterdemo.exception.FilterException;
-import filterdemo.graph.Graph;
-import filterdemo.graph.Node;
+import com.kapti.filter.exception.FilterException;
+import com.kapti.filter.graph.Graph;
+import com.kapti.filter.graph.Node;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -56,7 +56,7 @@ public abstract class Convertable {
      */
     public final Convertable getConverter() throws FilterException {
         // Open the property file
-        ResourceBundle rb = ResourceBundle.getBundle("filterdemo.Converters");
+        ResourceBundle rb = ResourceBundle.getBundle("com.kapti.filter.Converters");
 
         // Get the constructor of a converter
         String tObjectName = this.getClass().getPackage().getName() + "." + rb.getString("converter") + "." + this.getClass().getSimpleName() + "Converter";

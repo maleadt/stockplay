@@ -19,22 +19,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package filterdemo.parsing;
+package com.kapti.filter.parsing;
 
-import filterdemo.Convertable;
-import filterdemo.Filter;
-import filterdemo.condition.Condition;
-import filterdemo.condition.ConditionEquals;
-import filterdemo.data.Data;
-import filterdemo.data.DataFloat;
-import filterdemo.data.DataInt;
-import filterdemo.data.DataKey;
-import filterdemo.data.DataString;
-import filterdemo.exception.FilterException;
-import filterdemo.exception.ParserException;
-import filterdemo.relation.Relation;
-import filterdemo.relation.RelationAnd;
-import filterdemo.relation.RelationOr;
+import com.kapti.filter.Convertable;
+import com.kapti.filter.Filter;
+import com.kapti.filter.condition.Condition;
+import com.kapti.filter.condition.ConditionEquals;
+import com.kapti.filter.data.Data;
+import com.kapti.filter.data.DataFloat;
+import com.kapti.filter.data.DataInt;
+import com.kapti.filter.data.DataKey;
+import com.kapti.filter.data.DataString;
+import com.kapti.filter.exception.FilterException;
+import com.kapti.filter.exception.ParserException;
+import com.kapti.filter.relation.Relation;
+import com.kapti.filter.relation.RelationAnd;
+import com.kapti.filter.relation.RelationOr;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
