@@ -5,20 +5,22 @@ import java.util.Date;
 import java.util.Hashtable;
 
 public class Order extends Instruction {
+
     //
     // Member data
     //
 
     public static enum Fields {
         ID, USER, SECURITY, AMOUNT, PRICE, TYPE,    // Instruction.Fields
-        STATUS, CREATIONTIME, EXPIRATIONTIME, EXECUTIONTIME
+        STATUS, CREATIONTIME, EXPIRATIONTIME, EXECUTIONTIME, PAR1, PAR2
     }
     
     private OrderStatus status;
     private Date creationTime;
     private Date expirationTime;
     private Date executionTime;
-
+    private int par1;
+    private int par2;
 
     //
     // Construction
@@ -37,6 +39,11 @@ public class Order extends Instruction {
         this.executionTime = executionTime;
     }
 
+    public Order(InstructionType type, int user, String security, int amount, int par1, int par2) {
+        super(user, security, amount, type);
+        this.par1 = par1;
+        this.par2 = par2;
+    }
 
     //
     // Methods

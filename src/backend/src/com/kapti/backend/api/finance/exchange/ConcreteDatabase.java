@@ -1,6 +1,6 @@
 /*
  * ConcreteDummy.java
- * StockPlay - Dummy implementatie van de Finance.Exchange subklasse.
+ * StockPlay - Concrete implementatie van de Finance.Exchange subklasse.
  *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
@@ -23,6 +23,8 @@ package com.kapti.backend.api.finance.exchange;
 
 import com.kapti.data.persistence.GenericDAO;
 import com.kapti.exceptions.StockPlayException;
+import com.kapti.filter.Filter;
+import com.kapti.filter.exception.FilterException;
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Vector;
@@ -31,10 +33,8 @@ import org.apache.xmlrpc.XmlRpcException;
 /**
  * \brief   Dummy implementatie van de Finance.Exchange interface.
  *
- * Deze klasse is een dummy implementatie van de Finance.Exchange interface. Een
- * dergelijke implementatie geeft valide data terug, zonder daarvoor de database
- * te raadplegen. Deze implementatie kan zo gebruikt worden om een client-systeem
- * te testen.
+ * Deze klasse is een concrete implementatie van de Finance.Exchange interface. Een
+ * dergelijke implementatie geeft valide data terug, die uit de database gehaald werd
  */
 public class ConcreteDatabase extends com.kapti.backend.api.finance.Exchange {
     //
@@ -42,12 +42,12 @@ public class ConcreteDatabase extends com.kapti.backend.api.finance.Exchange {
     //
 
     @Override
-    public Vector<Hashtable<String, Object>> List(String iFilter) throws XmlRpcException, StockPlayException {
+    public Vector<Hashtable<String, Object>> List(Filter iFilter) throws XmlRpcException, StockPlayException, FilterException {
         // Get DAO reference
         GenericDAO<com.kapti.data.Exchange, String> exDAO = getDAO().getExchangeDAO();
 
         // Fetch and convert all exchanges
-        Collection<com.kapti.data.Exchange> tExchanges = exDAO.findAll();
+        Collection<com.kapti.data.Exchange> tExchanges = exDAO.findByFilter(iFilter);
         Vector<Hashtable<String, Object>> oVector = new Vector<Hashtable<String, Object>>();
         for (com.kapti.data.Exchange tExchange : tExchanges) {
             oVector.add(tExchange.toStruct(
@@ -60,12 +60,12 @@ public class ConcreteDatabase extends com.kapti.backend.api.finance.Exchange {
     }
 
     @Override
-    public int Modify(String iFilter, Hashtable<String, Object> iDetails) throws XmlRpcException, StockPlayException {
+    public int Modify(Filter iFilter, Hashtable<String, Object> iDetails) throws XmlRpcException, StockPlayException, FilterException {
         // Get DAO reference
         GenericDAO<com.kapti.data.Exchange, String> exDAO = getDAO().getExchangeDAO();
 
         // Get the exchanges we need to modify
-        Collection<com.kapti.data.Exchange> tExchanges = exDAO.findAll();
+        Collection<com.kapti.data.Exchange> tExchanges = exDAO.findByFilter(iFilter);
 
         // Now apply the new properties
         // TODO: controleren of de struct geen ID field bevat, deze kan _enkel_
@@ -94,6 +94,4 @@ public class ConcreteDatabase extends com.kapti.backend.api.finance.Exchange {
 
         return 1;
     }
-
 }
-

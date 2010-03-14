@@ -5,7 +5,6 @@
 
 package com.kapti.data.persistence;
 
-import com.kapti.data.Quote;
 import com.kapti.data.Security;
 
 /**

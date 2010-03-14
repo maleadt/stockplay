@@ -1,6 +1,6 @@
 /*
  * ConcreteDummy.java
- * StockPlay - Dummy implementatie van de Finance.Security subklasse.
+ * StockPlay - Concrete implementatie van de Finance.Security subklasse.
  *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
@@ -24,18 +24,18 @@ package com.kapti.backend.api.finance.security;
 import com.kapti.backend.api.finance.Security;
 import com.kapti.data.persistence.GenericDAO;
 import com.kapti.exceptions.StockPlayException;
+import com.kapti.filter.Filter;
+import com.kapti.filter.exception.FilterException;
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Vector;
 import org.apache.xmlrpc.XmlRpcException;
 
 /**
- * \brief   Dummy implementatie van de Finance.Security interface.
+ * \brief   Concrete implementatie van de Finance.Security interface.
  *
- * Deze klasse is een dummy implementatie van de Finance.Security interface. Een
- * dergelijke implementatie geeft valide data terug, zonder daarvoor de database
- * te raadplegen. Deze implementatie kan zo gebruikt worden om een client-systeem
- * te testen.
+ * Deze klasse is een concrete implementatie van de Finance.Security interface. Een
+ * dergelijke implementatie geeft valide data terug, gehaald uit de database
  */
 public class ConcreteDatabase extends Security {
     //
@@ -43,7 +43,7 @@ public class ConcreteDatabase extends Security {
     //
 
     @Override
-    public Vector<Hashtable<String, Object>> List(String iFilter) throws XmlRpcException, StockPlayException {
+    public Vector<Hashtable<String, Object>> List(Filter iFilter) throws XmlRpcException, StockPlayException, FilterException {
         // Get DAO reference
         GenericDAO<com.kapti.data.Security, String> tSecurityDAO = getDAO().getSecurityDAO();
 
@@ -61,7 +61,7 @@ public class ConcreteDatabase extends Security {
     }
 
     @Override
-    public int Modify(String iFilter, Hashtable<String, Object> iDetails) throws XmlRpcException, StockPlayException {
+    public int Modify(Filter iFilter, Hashtable<String, Object> iDetails) throws XmlRpcException, StockPlayException, FilterException {
         // Get DAO reference
         GenericDAO<com.kapti.data.Security, String> tSecurityDAO = getDAO().getSecurityDAO();
 
@@ -95,19 +95,4 @@ public class ConcreteDatabase extends Security {
 
         return 1;
     }
-
-    @Override
-    public Vector<Hashtable<String, Object>> Details(String iFilter) throws XmlRpcException, StockPlayException {
-        // TODO: welke dingen worden hier _meer_ getoond? Als enkel Quotes, moeten we hier
-        //       geen aparte klasse voor maken? Quotes.List(met key SECURITY)?
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public int Update(Hashtable<String, Object> iDetails) throws XmlRpcException, StockPlayException {
-        // TODO: zie ook hierboven, extra klasse aanmaken of niet?
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
 }
-

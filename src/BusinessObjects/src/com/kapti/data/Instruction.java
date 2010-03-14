@@ -24,6 +24,9 @@ public class Instruction {
     // Construction
     //
 
+    public Instruction() {
+    }
+
     public Instruction(int id) {
         this.id = id;
     }
@@ -37,6 +40,12 @@ public class Instruction {
         this.type = type;
     }
 
+    public Instruction (int user, String security, int amount, InstructionType type) {
+        this.user = user;
+        this.security = security;
+        this.amount = amount;
+        this.type = type;
+    }
 
     //
     // Methods

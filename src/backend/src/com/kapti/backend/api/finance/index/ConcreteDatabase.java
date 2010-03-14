@@ -1,6 +1,6 @@
 /*
  * ConcreteDummy.java
- * StockPlay - Dummy implementatie van de Finance.Index subklasse.
+ * StockPlay - Concrete implementatie van de Finance.Index subklasse.
  *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
@@ -24,18 +24,18 @@ package com.kapti.backend.api.finance.index;
 import com.kapti.backend.api.finance.Index;
 import com.kapti.data.persistence.GenericDAO;
 import com.kapti.exceptions.StockPlayException;
+import com.kapti.filter.Filter;
+import com.kapti.filter.exception.FilterException;
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Vector;
 import org.apache.xmlrpc.XmlRpcException;
 
 /**
- * \brief   Dummy implementatie van de Finance.Index interface.
+ * \brief   Concrete implementatie van de Finance.Index interface.
  *
- * Deze klasse is een dummy implementatie van de Finance.Index interface. Een
- * dergelijke implementatie geeft valide data terug, zonder daarvoor de database
- * te raadplegen. Deze implementatie kan zo gebruikt worden om een client-systeem
- * te testen.
+ * Deze klasse is een concrete implementatie van de Finance.Index interface. Een
+ * dergelijke implementatie geeft valide data terug, gehaald uit de database.
  */
 public class ConcreteDatabase extends Index {
     //
@@ -43,7 +43,7 @@ public class ConcreteDatabase extends Index {
     //
 
     @Override
-    public Vector<Hashtable<String, Object>> List(String iFilter) throws XmlRpcException, StockPlayException {
+    public Vector<Hashtable<String, Object>> List(Filter iFilter) throws XmlRpcException, StockPlayException, FilterException {
         // Get DAO reference
         GenericDAO<com.kapti.data.Index, Integer> tIndexDAO = getDAO().getIndexDAO();
 
@@ -61,7 +61,7 @@ public class ConcreteDatabase extends Index {
     }
 
     @Override
-    public int Modify(String iFilter, Hashtable<String, Object> iDetails) throws XmlRpcException, StockPlayException {
+    public int Modify(Filter iFilter, Hashtable<String, Object> iDetails) throws XmlRpcException, StockPlayException, FilterException {
         // Get DAO reference
         GenericDAO<com.kapti.data.Index, Integer> tIndexDAO = getDAO().getIndexDAO();
 
