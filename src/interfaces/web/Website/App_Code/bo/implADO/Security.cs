@@ -10,6 +10,7 @@ using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using System.Xml.Linq;
 using System.Collections.ObjectModel;
+using System.Collections.Generic;
 
 /// <summary>
 /// Summary description for Security
@@ -37,7 +38,7 @@ public class Security : ISecurity
         return null;
     }
 
-    public Collection<Quote> getQuotes(DateTime begin, DateTime eind, TimeSpan interval)
+    public List<Quote> getQuotes(DateTime begin, DateTime eind, TimeSpan interval)
     {
         return null;
     }

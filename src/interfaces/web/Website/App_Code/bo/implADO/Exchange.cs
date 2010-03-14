@@ -13,12 +13,34 @@ using System.Xml.Linq;
 /// <summary>
 /// Summary description for Exchange
 /// </summary>
-public class Exchange
+public class Exchange : IExchange
 {
-	public Exchange()
+
+    private string symbol, name, location;
+
+	public Exchange(string symbol, string name, string location)
 	{
-		//
-		// TODO: Add constructor logic here
-		//
+		this.symbol = symbol;
+        this.name = name;
+        this.location = location;
 	}
+
+    #region IExchange Members
+
+    public string Symbol
+    {
+        get { return symbol; }
+    }
+
+    public string Name
+    {
+        get { return name; }
+    }
+
+    public string Location
+    {
+        get { return location; }
+    }
+
+    #endregion
 }
