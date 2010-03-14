@@ -1,6 +1,9 @@
 package com.kapti.data;
 
+import com.kapti.exceptions.StockPlayException;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Map;
 
 public class IndexSecurity {
     //
@@ -37,18 +40,43 @@ public class IndexSecurity {
         return symbol;
     }
 
-    public Hashtable toStruct(Fields... iFields) {
+    public void setIndex(int iIndex) {
+        index = iIndex;
+    }
+
+    public Hashtable<String, Object> toStruct(Fields... iFields) {
         Hashtable<String, Object> oStruct = new Hashtable<String, Object>();
         for (Fields tField : iFields) {
             switch (tField) {
                 case ID:
-                    oStruct.put("id", getSymbol());
+                    oStruct.put(tField.name(), getSymbol());
                     break;
                 case INDEX:
-                    oStruct.put("index", getIndex());
+                    oStruct.put(tField.name(), getIndex());
                     break;
             }
         }
         return oStruct;
+    }
+
+    public void fromStruct(Hashtable<String, Object> iStruct) throws StockPlayException {
+        for (String tKey : iStruct.keySet()) {
+            Object tValue = iStruct.get(tKey);
+            Fields tField = null;
+            try {
+                tField = Fields.valueOf(tKey);
+            }
+            catch (IllegalArgumentException e) {
+                throw new StockPlayException("requested key '" + tKey + "' does not exist");
+            }
+
+            switch (tField) {
+                case INDEX:
+                    setIndex((Integer)tValue);
+                    break;
+                default:
+                    throw new StockPlayException("requested key '" + tKey + "' cannot be modified");
+            }
+        }
     }
 }

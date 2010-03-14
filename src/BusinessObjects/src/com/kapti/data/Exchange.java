@@ -1,5 +1,6 @@
 package com.kapti.data;
 
+import com.kapti.exceptions.StockPlayException;
 import java.util.Hashtable;
 
 public class Exchange  {
@@ -84,22 +85,46 @@ public class Exchange  {
         return hash;
     }
 
-    public Hashtable toStruct(Fields... iFields) {
+    public Hashtable<String, Object> toStruct(Fields... iFields) {
         Hashtable<String, Object> oStruct = new Hashtable<String, Object>();
         for (Fields tField : iFields) {
             switch (tField) {
                 case ID:
-                    oStruct.put("id", getSymbol());
+                    oStruct.put(tField.name(), getSymbol());
                     break;
                 case NAME:
-                    oStruct.put("name", getName());
+                    oStruct.put(tField.name(), getName());
                     break;
                 case LOCATION:
-                    oStruct.put("location", getLocation());
+                    oStruct.put(tField.name(), getLocation());
                     break;
             }
         }
         return oStruct;
+    }
+
+    public void fromStruct(Hashtable<String, Object> iStruct) throws StockPlayException {
+        for (String tKey : iStruct.keySet()) {
+            Object tValue = iStruct.get(tKey);
+            Fields tField = null;
+            try {
+                tField = Fields.valueOf(tKey);
+            }
+            catch (IllegalArgumentException e) {
+                throw new StockPlayException("requested key '" + tKey + "' does not exist");
+            }
+
+            switch (tField) {
+                case NAME:
+                    setName((String)tValue);
+                    break;
+                case LOCATION:
+                    setLocation((String)tValue);
+                    break;
+                default:
+                    throw new StockPlayException("requested key '" + tKey + "' cannot be modified");
+            }
+        }
     }
    
 }

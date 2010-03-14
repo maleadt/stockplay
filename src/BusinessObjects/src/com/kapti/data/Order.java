@@ -1,9 +1,8 @@
 package com.kapti.data;
 
-import java.util.ArrayList;
+import com.kapti.exceptions.StockPlayException;
 import java.util.Date;
 import java.util.Hashtable;
-import java.util.List;
 
 public class Order extends Instruction {
     //
@@ -75,45 +74,92 @@ public class Order extends Instruction {
         this.creationTime = creationTime;
     }
 
-    public Hashtable toStruct(Fields... iFields) {
+    public Hashtable<String, Object> toStruct(Fields... iFields) {
         Hashtable<String, Object> oStruct = new Hashtable<String, Object>();
         for (Fields tField : iFields) {
             switch (tField) {
                 // Instruction.Fields
                 case ID:
-                    oStruct.put("id", getId());
+                    oStruct.put(tField.name(), getId());
                     break;
                 case USER:
-                    oStruct.put("user", getUser());
+                    oStruct.put(tField.name(), getUser());
                     break;
                 case SECURITY:
-                    oStruct.put("security", getSecurity());
+                    oStruct.put(tField.name(), getSecurity());
                     break;
                 case AMOUNT:
-                    oStruct.put("amount", getAmount());
+                    oStruct.put(tField.name(), getAmount());
                     break;
                 case PRICE:
-                    oStruct.put("price", getPrice());
+                    oStruct.put(tField.name(), getPrice());
                     break;
                 case TYPE:
-                    oStruct.put("type", getType());
+                    oStruct.put(tField.name(), getType());
                     break;
 
                 case STATUS:
-                    oStruct.put("status", getStatus());
+                    oStruct.put(tField.name(), getStatus());
                     break;
                 case CREATIONTIME:
-                    oStruct.put("creationtime", getCreationTime());
+                    oStruct.put(tField.name(), getCreationTime());
                     break;
                 case EXPIRATIONTIME:
-                    oStruct.put("expirationtime", getExpirationTime());
+                    oStruct.put(tField.name(), getExpirationTime());
                     break;
                 case EXECUTIONTIME:
-                    oStruct.put("executiontime", getExecutionTime());
+                    oStruct.put(tField.name(), getExecutionTime());
                     break;
             }
         }
         return oStruct;
+    }
+
+    @Override
+    public void fromStruct(Hashtable<String, Object> iStruct) throws StockPlayException {
+        for (String tKey : iStruct.keySet()) {
+            Object tValue = iStruct.get(tKey);
+            Fields tField = null;
+            try {
+                tField = Fields.valueOf(tKey);
+            }
+            catch (IllegalArgumentException e) {
+                throw new StockPlayException("requested key '" + tKey + "' does not exist");
+            }
+
+            switch (tField) {
+                case USER:
+                    setUser((Integer)tValue);
+                    break;
+                case SECURITY:
+                    setSecurity((String)tValue);
+                    break;
+                case AMOUNT:
+                    setAmount((Integer)tValue);
+                    break;
+                case PRICE:
+                    setPrice((Double)tValue);
+                    break;
+                case TYPE:
+                    setType(InstructionType.valueOf((String)tValue));
+                    break;
+
+                case STATUS:
+                    setStatus(OrderStatus.valueOf((String)tValue));
+                    break;
+                case CREATIONTIME:
+                    setCreationTime((Date)tValue);
+                    break;
+                case EXPIRATIONTIME:
+                    setExpirationTime((Date)tValue);
+                    break;
+                case EXECUTIONTIME:
+                    setExecutionTime((Date)tValue);
+                    break;
+                default:
+                    throw new StockPlayException("requested key '" + tKey + "' cannot be modified");
+            }
+        }
     }
 
 }

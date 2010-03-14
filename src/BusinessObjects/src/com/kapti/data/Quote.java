@@ -1,5 +1,6 @@
 package com.kapti.data;
 
+import com.kapti.exceptions.StockPlayException;
 import java.util.Date;
 import java.util.Hashtable;
 
@@ -114,40 +115,79 @@ public class Quote {
         this.open = open;
     }
 
-    public Hashtable toStruct(Fields... iFields) {
+    public Hashtable<String, Object> toStruct(Fields... iFields) {
         Hashtable<String, Object> oStruct = new Hashtable<String, Object>();
         for (Fields tField : iFields) {
             switch (tField) {
                 case SECURITY:
-                    oStruct.put("security", getSecurity());
+                    oStruct.put(tField.name(), getSecurity());
                     break;
                 case TIME:
-                    oStruct.put("time", getTime());
+                    oStruct.put(tField.name(), getTime());
                     break;
                 case PRICE:
-                    oStruct.put("price", getPrice());
+                    oStruct.put(tField.name(), getPrice());
                     break;
                 case VOLUME:
-                    oStruct.put("volume", getVolume());
+                    oStruct.put(tField.name(), getVolume());
                     break;
                 case BID:
-                    oStruct.put("bid", getBid());
+                    oStruct.put(tField.name(), getBid());
                     break;
                 case ASK:
-                    oStruct.put("ask", getAsk());
+                    oStruct.put(tField.name(), getAsk());
                     break;
                 case LOW:
-                    oStruct.put("low", getLow());
+                    oStruct.put(tField.name(), getLow());
                     break;
                 case HIGH:
-                    oStruct.put("high", getHigh());
+                    oStruct.put(tField.name(), getHigh());
                     break;
                 case OPEN:
-                    oStruct.put("open", getOpen());
+                    oStruct.put(tField.name(), getOpen());
                     break;
             }
         }
         return oStruct;
+    }
+
+    public void fromStruct(Hashtable<String, Object> iStruct) throws StockPlayException {
+        for (String tKey : iStruct.keySet()) {
+            Object tValue = iStruct.get(tKey);
+            Fields tField = null;
+            try {
+                tField = Fields.valueOf(tKey);
+            }
+            catch (IllegalArgumentException e) {
+                throw new StockPlayException("requested key '" + tKey + "' does not exist");
+            }
+
+            switch (tField) {
+                case PRICE:
+                    setPrice((Double)tValue);
+                    break;
+                case VOLUME:
+                    setVolume((Integer)tValue);
+                    break;
+                case BID:
+                    setBid((Double)tValue);
+                    break;
+                case ASK:
+                    setAsk((Double)tValue);
+                    break;
+                case LOW:
+                    setLow((Double)tValue);
+                    break;
+                case HIGH:
+                    setHigh((Double)tValue);
+                    break;
+                case OPEN:
+                    setOpen((Double)tValue);
+                    break;
+                default:
+                    throw new StockPlayException("requested key '" + tKey + "' cannot be modified");
+            }
+        }
     }
 
 

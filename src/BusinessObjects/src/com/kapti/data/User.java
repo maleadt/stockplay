@@ -1,5 +1,6 @@
 package com.kapti.data;
 
+import com.kapti.exceptions.StockPlayException;
 import java.util.Date;
 import java.util.Hashtable;
 
@@ -139,45 +140,94 @@ public class User {
         this.rrn = rrn;
     }
 
-    public Hashtable toStruct(Fields... iFields) {
+    public Hashtable<String, Object> toStruct(Fields... iFields) {
         Hashtable<String, Object> oStruct = new Hashtable<String, Object>();
         for (Fields tField : iFields) {
             switch (tField) {
                 case ID:
-                    oStruct.put("id", getId());
+                    oStruct.put(tField.name(), getId());
                     break;
                 case NICKNAME:
-                    oStruct.put("name", getNickname());
+                    oStruct.put(tField.name(), getNickname());
                     break;
                 case PASSWORD:
-                    oStruct.put("location", getPassword());
+                    oStruct.put(tField.name(), getPassword());
                     break;
                 case LASTNAME:
-                    oStruct.put("location", getLastname());
+                    oStruct.put(tField.name(), getLastname());
                     break;
                 case FIRSTNAME:
-                    oStruct.put("location", getFirstname());
+                    oStruct.put(tField.name(), getFirstname());
                     break;
                 case REGDATE:
-                    oStruct.put("location", getRegdate());
+                    oStruct.put(tField.name(), getRegdate());
                     break;
                 case ADMIN:
-                    oStruct.put("location", isAdmin());
+                    oStruct.put(tField.name(), isAdmin());
                     break;
                 case POINTS:
-                    oStruct.put("location", getPoints());
+                    oStruct.put(tField.name(), getPoints());
                     break;
                 case STARTAMOUNT:
-                    oStruct.put("location", getStartamount());
+                    oStruct.put(tField.name(), getStartamount());
                     break;
                 case CASH:
-                    oStruct.put("location", getCash());
+                    oStruct.put(tField.name(), getCash());
                     break;
                 case RRN:
-                    oStruct.put("location", getRijksregisternummer());
+                    oStruct.put(tField.name(), getRijksregisternummer());
                     break;
             }
         }
         return oStruct;
+    }
+
+    public void fromStruct(Hashtable<String, Object> iStruct) throws StockPlayException {
+        for (String tKey : iStruct.keySet()) {
+            Object tValue = iStruct.get(tKey);
+            Fields tField = null;
+            try {
+                tField = Fields.valueOf(tKey);
+            }
+            catch (IllegalArgumentException e) {
+                throw new StockPlayException("requested key '" + tKey + "' does not exist");
+            }
+
+            switch (tField) {
+                case NICKNAME:
+                    setNickname((String)tValue);
+                    break;
+                case PASSWORD:
+                    setPassword((String)tValue);
+                    break;
+                case LASTNAME:
+                    setLastname((String)tValue);
+                    break;
+                case FIRSTNAME:
+                    setFirstname((String)tValue);
+                    break;
+                case REGDATE:
+                    setRegdate((Date)tValue);
+                    break;
+                case ADMIN:
+                    setAdmin((Boolean)tValue);
+                    break;
+                case POINTS:
+                    setPoints((Integer)tValue);
+                    break;
+                case STARTAMOUNT:
+                    setStartamount((Double)tValue);
+                    break;
+                case CASH:
+                    setCash((Double)tValue);
+                    break;
+                case RRN:
+                    setRijksregisternummer((Integer)tValue);
+                    break;
+
+                default:
+                    throw new StockPlayException("requested key '" + tKey + "' cannot be modified");
+            }
+        }
     }
 }
