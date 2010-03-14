@@ -40,4 +40,5 @@ public abstract class Exchange extends MethodClass {
 
     public abstract Vector<Hashtable<String, Object>> List(String iFilter) throws XmlRpcException, StockPlayException;
     public abstract int Modify(String iFilter, Hashtable<String, Object> iDetails) throws XmlRpcException, StockPlayException;
+    public abstract int Create(Hashtable<String, Object> iDetails) throws XmlRpcException, StockPlayException;
 }

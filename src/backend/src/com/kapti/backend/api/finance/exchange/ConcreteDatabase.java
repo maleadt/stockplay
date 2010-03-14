@@ -68,9 +68,28 @@ public class ConcreteDatabase extends com.kapti.backend.api.finance.Exchange {
         Collection<com.kapti.data.Exchange> tExchanges = exDAO.findAll();
 
         // Now apply the new properties
+        // TODO: controleren of de struct geen ID field bevat, deze kan _enkel_
+        //       gebruikt worden om een initiële Exchange aa nte maken (Create)
         for (com.kapti.data.Exchange tExchange : tExchanges) {
             tExchange.fromStruct(iDetails);
             exDAO.update(tExchange);
+        }
+
+        return 1;
+    }
+
+    @Override
+    public int Create(Hashtable<String, Object> iDetails) throws XmlRpcException, StockPlayException {
+        // Get DAO reference
+        GenericDAO<com.kapti.data.Exchange, String> exDAO = getDAO().getExchangeDAO();
+
+        // Get the exchanges we need to modify
+        Collection<com.kapti.data.Exchange> tExchanges = exDAO.findAll();
+
+        // Now apply the new properties
+        for (com.kapti.data.Exchange tExchange : tExchanges) {
+            tExchange.fromStruct(iDetails);
+            exDAO.create(tExchange);
         }
 
         return 1;

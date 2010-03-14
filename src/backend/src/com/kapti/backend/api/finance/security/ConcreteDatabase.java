@@ -22,13 +22,9 @@
 package com.kapti.backend.api.finance.security;
 
 import com.kapti.backend.api.finance.Security;
-import com.kapti.data.Quote;
 import com.kapti.data.persistence.GenericDAO;
-import com.kapti.data.persistence.QuoteDAO;
-import com.kapti.data.persistence.SecurityDAO;
 import com.kapti.exceptions.StockPlayException;
 import java.util.Collection;
-import java.util.Date;
 import java.util.Hashtable;
 import java.util.Vector;
 import org.apache.xmlrpc.XmlRpcException;
@@ -47,87 +43,70 @@ public class ConcreteDatabase extends Security {
     //
 
     @Override
-    public Vector<Hashtable<String, Object>> Details(String iFilter) throws XmlRpcException, StockPlayException {
-       GenericDAO<com.kapti.data.Security, String> secDAO = getDAO().getSecurityDAO();
-       QuoteDAO quoDAO = getDAO().getQuoteDAO();
-       Vector<Hashtable<String,Object>> result = new Vector<Hashtable<String,Object>>();
-       Collection<com.kapti.data.Security> securities = secDAO.findByExample(new com.kapti.data.Security(iFilter));
-
-       for(com.kapti.data.Security sec : securities){
-            Hashtable<String, Object> ex = new Hashtable<String, Object>();
-            ex.put("id", sec.getSymbol());
-            ex.put("exchange", sec.getExchange());
-            ex.put("quote", quoDAO.findLatest(sec.getSymbol()).getPrice());
-            ex.put("flags", null);
-
-            result.add(ex);
-       }
-
-       return result;
-    }
-
-    @Override
     public Vector<Hashtable<String, Object>> List(String iFilter) throws XmlRpcException, StockPlayException {
-       GenericDAO<com.kapti.data.Security, String> secDAO = getDAO().getSecurityDAO();
-       QuoteDAO quoDAO = getDAO().getQuoteDAO();
-       Vector<Hashtable<String,Object>> result = new Vector<Hashtable<String,Object>>();
-       Collection<com.kapti.data.Security> securities = secDAO.findAll();
+        // Get DAO reference
+        GenericDAO<com.kapti.data.Security, String> tSecurityDAO = getDAO().getSecurityDAO();
 
-       for(com.kapti.data.Security sec : securities){
-            Hashtable<String, Object> ex = new Hashtable<String, Object>();
-            ex.put("id", sec.getSymbol());
-            ex.put("exchange", sec.getExchange());
-            ex.put("quote", quoDAO.findLatest(sec.getSymbol()).getPrice());
-            ex.put("flags", null);
+        // Fetch and convert all Indexs
+        Collection<com.kapti.data.Security> tIndexs = tSecurityDAO.findAll();
+        Vector<Hashtable<String, Object>> oVector = new Vector<Hashtable<String, Object>>();
+        for (com.kapti.data.Security tIndex : tIndexs) {
+            oVector.add(tIndex.toStruct(
+                    com.kapti.data.Security.Fields.ID,
+                    com.kapti.data.Security.Fields.NAME,
+                    com.kapti.data.Security.Fields.EXCHANGE));
+        }
 
-            result.add(ex);
-       }
-
-       return result;
+        return oVector;
     }
 
     @Override
     public int Modify(String iFilter, Hashtable<String, Object> iDetails) throws XmlRpcException, StockPlayException {
-        com.kapti.data.Security sec = new com.kapti.data.Security((String)iDetails.get("id"));
+        // Get DAO reference
+        GenericDAO<com.kapti.data.Security, String> tSecurityDAO = getDAO().getSecurityDAO();
 
-        sec.setExchange((String)iDetails.get("exchange"));
-        sec.setName((String)iDetails.get("name"));
+        // Get the Indexs we need to modify
+        Collection<com.kapti.data.Security> tIndexs = tSecurityDAO.findAll();
 
+        // Now apply the new properties
+        // TODO: controleren of de struct geen ID field bevat, deze kan _enkel_
+        //       gebruikt worden om een initiële Exchange aa nte maken (Create)
+        for (com.kapti.data.Security tIndex : tIndexs) {
+            tIndex.fromStruct(iDetails);
+            tSecurityDAO.update(tIndex);
+        }
 
-        SecurityDAO secDAO = getDAO().getSecurityDAO();
+        return 1;
+    }
 
+    @Override
+    public int Create(Hashtable<String, Object> iDetails) throws XmlRpcException, StockPlayException {
+        // Get DAO reference
+        GenericDAO<com.kapti.data.Security, String> tSecurityDAO = getDAO().getSecurityDAO();
 
-        if(secDAO.findById(sec.getSymbol()) != null)
-            return secDAO.update(sec) ? 1: 0;
-        else
-            return secDAO.create(sec) ? 1: 0;
+        // Get the Indexs we need to modify
+        Collection<com.kapti.data.Security> tIndexs = tSecurityDAO.findAll();
 
+        // Now apply the new properties
+        for (com.kapti.data.Security tIndex : tIndexs) {
+            tIndex.fromStruct(iDetails);
+            tSecurityDAO.create(tIndex);
+        }
 
+        return 1;
+    }
+
+    @Override
+    public Vector<Hashtable<String, Object>> Details(String iFilter) throws XmlRpcException, StockPlayException {
+        // TODO: welke dingen worden hier _meer_ getoond? Als enkel Quotes, moeten we hier
+        //       geen aparte klasse voor maken? Quotes.List(met key SECURITY)?
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public int Update(Hashtable<String, Object> iDetails) throws XmlRpcException, StockPlayException {
-
-
-
-        Quote q = new Quote((String) iDetails.get("security"), (Date) iDetails.get("time"));
-
-        q.setPrice((Double) iDetails.get("price"));
-        q.setVolume((Integer) iDetails.get("volume"));
-        q.setAsk((Double) iDetails.get("ask"));
-        q.setBid((Double) iDetails.get("bid"));
-        q.setLow((Double) iDetails.get("low"));
-        q.setHigh((Double) iDetails.get("high"));
-        q.setOpen((Double) iDetails.get("open"));
-
-
-        QuoteDAO quoteDAO = getDAO().getQuoteDAO();
-
-        if(quoteDAO.create(q))
-            return 1;
-        else
-            return 0;
-
+        // TODO: zie ook hierboven, extra klasse aanmaken of niet?
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
 }

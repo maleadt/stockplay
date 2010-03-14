@@ -338,7 +338,7 @@ Hier vindt men de nodige methodes terug om gebruikers te beheren. Dit is echter 
 		\begin{itemize}
 		\item{id: gebruikers-id}
 		\item{order: order-id}
-		\end{itemize} }}
+		\end{itemize} }
 	{ geen }
 	{ administrator-rechten of identificatie als de gebruiker beschreven is in het 'id' veld van de filter }
 
@@ -379,13 +379,23 @@ Tenslotte zijn er nog de methodes gerelateerd met het effectieve beurswezen, die
 
 \function{Exchange.Modify}
 	{ informatie van een beurs wijzigen }
-	{ een filter }
-	{ struct met beursinformatie:
+	{ een filter, en een struct met beursinformatie:
 		\begin{itemize}
 		\item{description}
 		\item{location}
 		\end{itemize} }
-	{ administrator-rechten }
+	{ niks }
+	{ administrator-rechten of scraper-rechten }
+
+\function{Exchange.Create}
+	{ een beurs toevoegen }
+	{ een struct met beursinformatie:
+		\begin{itemize}
+		\item{description}
+		\item{location}
+		\end{itemize} }
+	{ niks }
+	{ administrator-rechten of scraper-rechten }
 
 \function{Index.List}
 	{ lijst van indexen opvragen }
@@ -403,12 +413,21 @@ Tenslotte zijn er nog de methodes gerelateerd met het effectieve beurswezen, die
 
 \function{Index.Modify}
 	{ informatie van een index wijzigen }
-	{ een filter }
-	{ struct met indexinformatie:
+	{ een filter, en een struct met indexinformatie:
 		\begin{itemize}
 		\item{description}
 		\end{itemize} }
-	{ administrator-rechten }
+	{ niks }
+	{ administrator-rechten of scraper-rechten }
+
+\function{Index.Create}
+	{ een index toevoegen }
+	{ en een struct met indexinformatie:
+		\begin{itemize}
+		\item{description}
+		\end{itemize} }
+	{ niks }
+	{ administrator-rechten of scraper-rechten }
 
 \function{Security.List}
 	{ lijst met oppervlakkige informatie van effecten opvragen }
@@ -428,12 +447,21 @@ Tenslotte zijn er nog de methodes gerelateerd met het effectieve beurswezen, die
 
 \function{Security.Modify}
 	{ informatie van een effect wijzigen }
-	{ een filter }
-	{ struct met informatie over het effect:
+	{ een filter, en een struct met informatie over het effect:
 		\begin{itemize}
 		\item{...}
 		\end{itemize} }
-	{ administrator-rechten }
+	{ niks }
+	{ administrator-rechten of scraper-rechten }
+
+\function{Security.Create}
+	{ een effect toevoegen }
+	{ een struct met informatie over het effect:
+		\begin{itemize}
+		\item{...}
+		\end{itemize} }
+	{ niks }
+	{ administrator-rechten of scraper-rechten }
 
 \function{Security.Details}
 	{ defail-informatie van een effect opvragen }

@@ -1,9 +1,7 @@
 package com.kapti.data;
 
 import com.kapti.exceptions.StockPlayException;
-import java.util.HashMap;
 import java.util.Hashtable;
-import java.util.Map;
 
 public class IndexSecurity {
     //

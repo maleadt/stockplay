@@ -55,6 +55,10 @@ public class Exchange  {
         return symbol;
     }
 
+    public void setSymbol(String iSymbol) {
+        symbol = iSymbol;
+    }
+
     public void setLocation(String location) {
         this.location = location;
     }
@@ -115,6 +119,9 @@ public class Exchange  {
             }
 
             switch (tField) {
+                case ID:
+                    setSymbol((String)tValue);
+                    break;
                 case NAME:
                     setName((String)tValue);
                     break;

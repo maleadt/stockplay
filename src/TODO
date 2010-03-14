@@ -1,11 +1,37 @@
 Hier enkele minor TODO's voor als het project goed en wel werkt.
 
+Backend
+-------
+
+*) Toevoegen van authenticatie & autorisatie
+
+Deze functionaliteit hoeft niet in de Concrete* implementaties te staan, maar
+kan geabstraheerd worden in de bovenliggende abstracte klassen.
+
+
+
 BusinessObjects
 ---------------
 
+*) Introductie ISIN
+
+Zowel indexen als securities worden internationaal geidentificeerd via hun
+ISIN (International Security Identification Number). Het is misschien handig
+om deze te gebruiken, aangezien er anders ambiguïteiten optreden (vb. Ford).
+
+
+*) Corrigeren van autorisatie
+
+isAdmin -> hasRight oid.
+
+
 *) Optimalisatie van update() calls
 
-Bij de huidige opzet stuurt een update() call van een GenericDAO _alle_ data naar de database. Dit zou kunnen geoptimaliseerd worden door intern bij te houden welke dataleden veranderd zijn sinds een laatste fetch (een boolean voor elke Class.Fields bijvoorbeeld) zodat een update() call selectief data kan doorsturen.
+Bij de huidige opzet stuurt een update() call van een GenericDAO _alle_ data
+naar de database. Dit zou kunnen geoptimaliseerd worden door intern bij te
+houden welke dataleden veranderd zijn sinds een laatste fetch (een boolean
+voor elke Class.Fields bijvoorbeeld) zodat een update() call selectief data kan
+doorsturen.
 
 
 

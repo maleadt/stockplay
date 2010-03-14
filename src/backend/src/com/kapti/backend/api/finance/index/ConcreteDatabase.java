@@ -45,39 +45,55 @@ public class ConcreteDatabase extends Index {
     @Override
     public Vector<Hashtable<String, Object>> List(String iFilter) throws XmlRpcException, StockPlayException {
         // Get DAO reference
-        GenericDAO<com.kapti.data.Index, Integer> indexDAO = getDAO().getIndexDAO();
+        GenericDAO<com.kapti.data.Index, Integer> tIndexDAO = getDAO().getIndexDAO();
 
-        // Fetchd an convert all indexes
-        Collection<com.kapti.data.Index> indexes = indexDAO.findAll();
-        Vector<Hashtable<String, Object>> result = new Vector<Hashtable<String, Object>>();
-        for (com.kapti.data.Index index : indexes) {
-            Hashtable<String, Object> ex = new Hashtable<String, Object>();
-            ex.put("id", index.getId());
-            ex.put("description", index.getName());
-            ex.put("exchange", index.getExchange());
-
-            result.add(ex);
+        // Fetch and convert all Indexs
+        Collection<com.kapti.data.Index> tIndexs = tIndexDAO.findAll();
+        Vector<Hashtable<String, Object>> oVector = new Vector<Hashtable<String, Object>>();
+        for (com.kapti.data.Index tIndex : tIndexs) {
+            oVector.add(tIndex.toStruct(
+                    com.kapti.data.Index.Fields.ID,
+                    com.kapti.data.Index.Fields.NAME,
+                    com.kapti.data.Index.Fields.EXCHANGE));
         }
 
-        return result;
+        return oVector;
     }
 
     @Override
     public int Modify(String iFilter, Hashtable<String, Object> iDetails) throws XmlRpcException, StockPlayException {
-        com.kapti.data.Index index = new com.kapti.data.Index((Integer)iDetails.get("id"));
+        // Get DAO reference
+        GenericDAO<com.kapti.data.Index, Integer> tIndexDAO = getDAO().getIndexDAO();
 
-        index.setExchange((String)iDetails.get("exchange"));
-        index.setName((String)iDetails.get("name"));
+        // Get the Indexs we need to modify
+        Collection<com.kapti.data.Index> tIndexs = tIndexDAO.findAll();
 
+        // Now apply the new properties
+        // TODO: controleren of de struct geen ID field bevat, deze kan _enkel_
+        //       gebruikt worden om een initiële Exchange aa nte maken (Create)
+        for (com.kapti.data.Index tIndex : tIndexs) {
+            tIndex.fromStruct(iDetails);
+            tIndexDAO.update(tIndex);
+        }
 
-        GenericDAO<com.kapti.data.Index, Integer> indexDAO = getDAO().getIndexDAO();
+        return 1;
+    }
 
+    @Override
+    public int Create(Hashtable<String, Object> iDetails) throws XmlRpcException, StockPlayException {
+        // Get DAO reference
+        GenericDAO<com.kapti.data.Index, Integer> tIndexDAO = getDAO().getIndexDAO();
 
-        if(indexDAO.findById(index.getId()) != null)
-            return indexDAO.update(index) ? 1: 0;
-        else
-            return indexDAO.create(index) ? 1: 0;
+        // Get the Indexs we need to modify
+        Collection<com.kapti.data.Index> tIndexs = tIndexDAO.findAll();
 
+        // Now apply the new properties
+        for (com.kapti.data.Index tIndex : tIndexs) {
+            tIndex.fromStruct(iDetails);
+            tIndexDAO.create(tIndex);
+        }
+
+        return 1;
     }
 }
 
