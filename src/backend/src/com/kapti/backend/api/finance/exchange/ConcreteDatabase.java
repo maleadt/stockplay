@@ -71,7 +71,6 @@ public class ConcreteDatabase extends com.kapti.backend.api.finance.Exchange {
         for (com.kapti.data.Exchange tExchange : tExchanges) {
             tExchange.fromStruct(iDetails);
             exDAO.update(tExchange);
-            // TODO: optimalisatiemogelijkheden, in Data objects bijhouden wanneer iets veranderd zoda een push niet alles update
         }
 
         return 1;
