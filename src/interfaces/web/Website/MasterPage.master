@@ -47,7 +47,8 @@
                 <ul class="actions">
                     <li class="action buy">Buy Security</li>
                     <li class="action sell">Sell Security</li>
-                </ul>                
+                </ul>
+                <p>Referentietabel:</p>
                 <table class="table">
                     <tr class="header">
                         <td><input type="checkbox" name="all"/></td>

@@ -27,8 +27,7 @@ public class DataAccess : IDataAccess
 
 	private DataAccess()
 	{
-
-        factory = DbProviderFactories.GetFactory(ConfigurationManager.ConnectionStrings["OracleDatabase"].ProviderName);
+        factory = DbProviderFactories.GetFactory(ConfigurationManager.ConnectionStrings["OracleDatabaseKapti"].ProviderName);
 	}
 
     public static DataAccess GetInstance()
@@ -41,7 +40,7 @@ public class DataAccess : IDataAccess
     private DbConnection GetConnection()
     {
         DbConnection conn = factory.CreateConnection();
-        conn.ConnectionString = ConfigurationManager.ConnectionStrings["OracleDatabase"].ConnectionString;
+        conn.ConnectionString = ConfigurationManager.ConnectionStrings["OracleDatabaseKapti"].ConnectionString;
         return conn;
     }
 
@@ -56,45 +55,41 @@ public class DataAccess : IDataAccess
 
     public List<Security> GetSecuritiesList()
     {
-        //DbConnection conn = GetConnection();
-        //conn.Open();
-
-        //List<Security> securitiesList = new List<Security>();
-
-        //try
-        //{
-        //    DbCommand command = CreateCommand(ConfigurationManager.AppSettings["SELECT_SECURITIES"], conn);
-        //    DbDataReader securities = command.ExecuteReader();
-
-        //    string symbol, name, type, exchangeSymbol;
-        //    Exchange exchange;
-
-        //    while (securities.Read())
-        //    {
-        //        symbol = securities.GetString(0);
-        //        name = securities.GetString(1);
-        //        //type = securities.GetString(2);
-
-        //        //Exchange object aanmaken
-        //        exchangeSymbol = securities.GetString(2);
-        //        exchange = getExchangeBySymbol(exchangeSymbol);
-
-        //        securitiesList.Add(new Security(symbol, name, "", exchange));
-        //    }
-        //}
-        //catch (Exception e)
-        //{
-        //    //TODO loggen
-        //    Console.WriteLine(e.Message);
-        //}
-        //finally
-        //{
-        //    conn.Close();
-        //}
+        DbConnection conn = GetConnection();
+        conn.Open();
 
         List<Security> securitiesList = new List<Security>();
-        securitiesList.Add(new Security("ABC","dsf","dlfsjds",null));
 
+        try
+        {
+            DbCommand command = CreateCommand(ConfigurationManager.AppSettings["SELECT_SECURITIES"], conn);
+            DbDataReader securities = command.ExecuteReader();
+
+            string symbol, name, type, exchangeSymbol;
+            Exchange exchange;
+
+            while (securities.Read())
+            {
+                symbol = securities.GetString(0);
+                name = securities.GetString(1);
+                //type = securities.GetString(2);   //Type zit momenteel nog niet in de databank
+
+                //Exchange object aanmaken
+                exchangeSymbol = securities.GetString(2);
+                exchange = getExchangeBySymbol(exchangeSymbol);
+
+                securitiesList.Add(new Security(symbol, name, "", exchange));
+            }
+        }
+        catch (Exception e)
+        {
+            //TODO loggen
+            Console.WriteLine(e.Message);
+        }
+        finally
+        {
+            conn.Close();
+        }
 
         return securitiesList;
     }

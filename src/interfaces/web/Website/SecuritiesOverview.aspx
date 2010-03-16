@@ -2,8 +2,13 @@
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder" Runat="Server">
     
-    <asp:GridView ID="SecuritiesGridview" runat="server" AutoGenerateColumns="False" AllowSorting="True" 
-        onsorting="SecuritiesGridview_Sorting">
+    <p>Gridview:</p>
+    <!-- Gridlines op none en cellspacing op -1 zijn nodig om de html attributen uit de html tags te kunnen wegwerken! -->
+    <asp:GridView ID="SecuritiesGridview" runat="server" 
+        AutoGenerateColumns="False" AllowSorting="True" AllowPaging="True"
+        OnSorting="SecuritiesGridview_Sorting" 
+        OnPageIndexChanging="SecuritiesGridview_PageIndexChanging" GridLines="None" 
+        CellSpacing="-1" PageSize="1">
         <Columns>
             <asp:BoundField DataField="Symbol" HeaderText="Symbool" SortExpression="Symbol" >
                 <ItemStyle CssClass="name" />

@@ -162,7 +162,14 @@ a:hover {
 	color: #8fb8e2;
 }
 
+/* Opmaak titel referentietabel */
 #right table.table tr.header td {
+	text-align: center;
+	background: white;
+	border: none;
+}
+/* Opmaak titel gridview */
+#right table.table tr.header th {
 	text-align: center;
 	background: white;
 	border: none;

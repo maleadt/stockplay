@@ -23,10 +23,8 @@ public partial class SecuritiesOverview : System.Web.UI.Page
 
         SecuritiesGridview.DataSource = securitiesTable;
         SecuritiesGridview.DataBind();
-    }
-    protected void SecuritiesGridview_Sorting(object sender, GridViewSortEventArgs e)
-    {
-        
+
+        ViewState["securities"] = securitiesTable;
     }
 
     private DataTable GenerateDataTable(List<Security> securities)
@@ -43,12 +41,54 @@ public partial class SecuritiesOverview : System.Web.UI.Page
             DataRow row = securitiesTable.NewRow();
             row[0] = security.Symbol;
             row[1] = security.Name;
-            row[2] = "test";//security.Exchange.Name;
-            row[3] = 0;//security.GetLatestQuote().Buy;
+            row[2] = security.Exchange.Name;
+            row[3] = security.GetLatestQuote().Buy;
 
             securitiesTable.Rows.Add(row);
         }
 
         return securitiesTable;
     }
+
+    /* Sortering en paginering mogelijk maken zonder datasourcecontrol:
+     * BRON: http://forums.asp.net/p/956540/1177923.aspx
+     */
+    private string ConvertSortDirectionToSql(SortDirection sortDirection)
+    {
+        string newSortDirection = String.Empty;
+
+        switch (sortDirection)
+        {
+            case SortDirection.Ascending:
+                newSortDirection = "ASC";
+                break;
+
+            case SortDirection.Descending:
+                newSortDirection = "DESC";
+                break;
+        }
+
+        return newSortDirection;
+    }
+
+    protected void SecuritiesGridview_PageIndexChanging(object sender, GridViewPageEventArgs e)
+    {
+        SecuritiesGridview.PageIndex = e.NewPageIndex;
+        SecuritiesGridview.DataBind();
+    }
+
+    protected void SecuritiesGridview_Sorting(object sender, GridViewSortEventArgs e)
+    {
+        DataTable dataTable = SecuritiesGridview.DataSource as DataTable;
+
+        if (dataTable != null)
+        {
+            DataView dataView = new DataView(dataTable);
+            dataView.Sort = e.SortExpression + " " + ConvertSortDirectionToSql(e.SortDirection);
+
+            SecuritiesGridview.DataSource = dataView;
+            SecuritiesGridview.DataBind();
+        }
+    }
+
 }
