@@ -4,7 +4,6 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
-    <link rel="stylesheet" href="App_Themes/StockPlay/grafiek/grafiek.css" type="text/css" media="screen"/>
     <!--[if IE]><link rel="Stylesheet" href="App_Themes/StockPlay/vormgeving/ie.css" type="text/css" media="screen"/><![endif]-->
     
     <title>StockPlay</title>
@@ -48,7 +47,7 @@
                 <ul class="actions">
                     <li class="action buy">Buy Security</li>
                     <li class="action sell">Sell Security</li>
-                </ul>
+                </ul>                
                 <table class="table">
                     <tr class="header">
                         <td><input type="checkbox" name="all"/></td>
@@ -67,8 +66,8 @@
                         <td>58.12</td>
                         <td>5982.24</td>
                         <td class="neg">-0.45</td>
-                        <td class="action"><img runat="server" src="~/App_Themes/StockPlay/afbeeldingen/money_add.png" alt="Buy"/></td>
-                        <td class="action"><img runat="server" src="~/App_Themes/StockPlay/afbeeldingen/money_delete.png" alt="Sell"/></td>
+                        <td class="action"><img id="Img1" runat="server" src="~/App_Themes/StockPlay/afbeeldingen/money_add.png" alt="Buy"/></td>
+                        <td class="action"><img id="Img2" runat="server" src="~/App_Themes/StockPlay/afbeeldingen/money_delete.png" alt="Sell"/></td>
                     </tr>
                     <tr>
                         <td class="action"><input type="checkbox" name="twee"/></td>
@@ -77,8 +76,8 @@
                         <td>26.85</td>
                         <td>1256.45</td>
                         <td class="pos">+0.45</td>
-                        <td class="action"><img runat="server" src="~/App_Themes/StockPlay/afbeeldingen/money_add.png" alt="Buy"/></td>
-                        <td class="action"><img runat="server" src="~/App_Themes/StockPlay/afbeeldingen/money_delete.png" alt="Sell"/></td>
+                        <td class="action"><img id="Img3" runat="server" src="~/App_Themes/StockPlay/afbeeldingen/money_add.png" alt="Buy"/></td>
+                        <td class="action"><img id="Img4" runat="server" src="~/App_Themes/StockPlay/afbeeldingen/money_delete.png" alt="Sell"/></td>
                     </tr>
                     <tr>
                         <td class="action"><input type="checkbox" name="drie"/></td>
@@ -87,10 +86,13 @@
                         <td>21.98</td>
                         <td>2658.54</td>
                         <td class="pos">+1.94</td>
-                        <td class="action"><img id="Img1" runat="server" src="~/App_Themes/StockPlay/afbeeldingen/money_add.png" alt="Buy"/></td>
-                        <td class="action"><img id="Img2" runat="server" src="~/App_Themes/StockPlay/afbeeldingen/money_delete.png" alt="Sell"/></td>
+                        <td class="action"><img id="Img5" runat="server" src="~/App_Themes/StockPlay/afbeeldingen/money_add.png" alt="Buy"/></td>
+                        <td class="action"><img id="Img6" runat="server" src="~/App_Themes/StockPlay/afbeeldingen/money_delete.png" alt="Sell"/></td>
                     </tr>
                 </table>
+                
+                <asp:ContentPlaceHolder id="ContentPlaceHolder" runat="server" />
+                
                 <div id="plotTest" class="plot">
                     <div class="draw">
                         <ul>
@@ -103,7 +105,6 @@
         </div>
     
         <asp:ScriptManager id="ScriptManager" runat="server" />
-        <asp:ContentPlaceHolder id="ContentPlaceHolder" runat="server"></asp:ContentPlaceHolder>
     </div>
     
     <!-- JAVASCRIPT -->

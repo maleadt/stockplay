@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Collections.Generic;
-interface IDataAccess
+public interface IDataAccess
 {
     //Securities
     List<Security> GetSecuritiesList();
@@ -9,11 +9,12 @@ interface IDataAccess
     List<Security> GetSecuritiesFromExchange(string id);
 
     //Quotes
+    Quote GetLatestQuoteFromSecurity(string symbol);
     Quote GetQuoteFromSecurity(string symbol, DateTime time);
     List<Quote> GetQuotesFromSecurity(string symbol);
     List<Quote> GetQuotesIntervalFromSecurity(string symbol, DateTime start, DateTime end);
 
     //Exhanges
-    Exchange getExchangeById(string id);
+    Exchange getExchangeBySymbol(string symbol);
     List<Exchange> getExchanges();
 }

@@ -5,7 +5,6 @@
     void Application_Start(object sender, EventArgs e) 
     {
         // Code that runs on application startup
-        Application["DataAccess"] = new DataAccess();
     }
     
     void Application_End(object sender, EventArgs e) 

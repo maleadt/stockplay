@@ -33,12 +33,13 @@ public class Security : ISecurity
         this.exchange = exchange;
 	}
 
-    public Quote getLatestQuote()
+    public Quote GetLatestQuote()
     {
-        return null;
+        DataAccess data = DataAccess.GetInstance();
+        return data.GetLatestQuoteFromSecurity(symbol);
     }
 
-    public List<Quote> getQuotes(DateTime begin, DateTime eind, TimeSpan interval)
+    public List<Quote> GetQuotes(DateTime begin, DateTime eind, TimeSpan interval)
     {
         return null;
     }

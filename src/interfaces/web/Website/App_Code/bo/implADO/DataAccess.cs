@@ -21,13 +21,20 @@ using System.Collections;
 public class DataAccess : IDataAccess
 {
 
+    private static DataAccess instance = new DataAccess();
+
     private DbProviderFactory factory;
 
-	public DataAccess()
+	private DataAccess()
 	{
 
         factory = DbProviderFactories.GetFactory(ConfigurationManager.ConnectionStrings["OracleDatabase"].ProviderName);
 	}
+
+    public static DataAccess GetInstance()
+    {
+        return instance;
+    }
 
     #region IDataAccess Members
 
@@ -49,7 +56,47 @@ public class DataAccess : IDataAccess
 
     public List<Security> GetSecuritiesList()
     {
-        return null;
+        //DbConnection conn = GetConnection();
+        //conn.Open();
+
+        //List<Security> securitiesList = new List<Security>();
+
+        //try
+        //{
+        //    DbCommand command = CreateCommand(ConfigurationManager.AppSettings["SELECT_SECURITIES"], conn);
+        //    DbDataReader securities = command.ExecuteReader();
+
+        //    string symbol, name, type, exchangeSymbol;
+        //    Exchange exchange;
+
+        //    while (securities.Read())
+        //    {
+        //        symbol = securities.GetString(0);
+        //        name = securities.GetString(1);
+        //        //type = securities.GetString(2);
+
+        //        //Exchange object aanmaken
+        //        exchangeSymbol = securities.GetString(2);
+        //        exchange = getExchangeBySymbol(exchangeSymbol);
+
+        //        securitiesList.Add(new Security(symbol, name, "", exchange));
+        //    }
+        //}
+        //catch (Exception e)
+        //{
+        //    //TODO loggen
+        //    Console.WriteLine(e.Message);
+        //}
+        //finally
+        //{
+        //    conn.Close();
+        //}
+
+        List<Security> securitiesList = new List<Security>();
+        securitiesList.Add(new Security("ABC","dsf","dlfsjds",null));
+
+
+        return securitiesList;
     }
 
     public Security GetSecurityBySymbol(string symbol)
@@ -60,6 +107,57 @@ public class DataAccess : IDataAccess
     public List<Security> GetSecuritiesFromExchange(string id)
     {
         throw new NotImplementedException();
+    }
+
+    public Quote GetLatestQuoteFromSecurity(string symbol)
+    {
+        DbConnection conn = GetConnection();
+        conn.Open();
+
+        Quote quote= null;
+
+        try
+        {
+            DbCommand command = CreateCommand(ConfigurationManager.AppSettings["SELECT_LATEST_QUOTE_FROM_SECURITY"], conn);
+
+            DbParameter paramSymbol = factory.CreateParameter();
+            paramSymbol.ParameterName = ":symbol";
+            paramSymbol.DbType = DbType.String;
+            paramSymbol.Value = symbol;
+
+            command.Parameters.Add(paramSymbol);
+
+
+            DbDataReader quoteReader = command.ExecuteReader();
+
+            DateTime time;
+            double price, open, buy, sell, low, high;
+            int volume;
+
+            quoteReader.Read();
+
+            time = quoteReader.GetDateTime(1);
+            price = quoteReader.GetDouble(2);
+            open = quoteReader.GetDouble(3);
+            volume = quoteReader.GetInt32(4);
+            buy = quoteReader.GetDouble(5);
+            sell = quoteReader.GetDouble(6);
+            low = quoteReader.GetDouble(7);
+            high = quoteReader.GetDouble(8);
+
+            quote = new Quote(time, price, open, volume, buy, sell, low, high);
+        }
+        catch (Exception e)
+        {
+            //TODO: Loggen
+            Console.WriteLine(e.Message);
+        }
+        finally
+        {
+            conn.Close();
+        }
+
+        return quote;
     }
 
     public Quote GetQuoteFromSecurity(string symbol, DateTime time)
@@ -77,9 +175,46 @@ public class DataAccess : IDataAccess
         throw new NotImplementedException();
     }
 
-    public Exchange getExchangeById(string id)
+    public Exchange getExchangeBySymbol(string symbol)
     {
-        throw new NotImplementedException();
+        DbConnection conn = GetConnection();
+        conn.Open();
+
+        Exchange exchange = null;
+
+        try
+        {
+            DbCommand command = CreateCommand(ConfigurationManager.AppSettings["SELECT_EXCHANGE"], conn);
+            
+            DbParameter paramSymbol = factory.CreateParameter();
+            paramSymbol.ParameterName = ":symbol";
+            paramSymbol.DbType = DbType.String;
+            paramSymbol.Value = symbol;
+
+            command.Parameters.Add(paramSymbol);
+
+            DbDataReader exchangeReader = command.ExecuteReader();
+
+            string name, location;
+
+            exchangeReader.Read();
+
+            name = exchangeReader.GetString(1);
+            location = exchangeReader.GetString(2);
+
+            exchange = new Exchange(symbol, name, location);
+        }
+        catch (Exception e)
+        {
+            //TODO: Loggen
+            Console.WriteLine(e.Message);
+        }
+        finally
+        {
+            conn.Close();
+        }
+
+        return exchange;
     }
 
     public List<Exchange> getExchanges()

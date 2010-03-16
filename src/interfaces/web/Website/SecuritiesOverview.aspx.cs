@@ -17,14 +17,38 @@ public partial class SecuritiesOverview : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        DataAccess data = (DataAccess) Application["DataAccess"];
-        List<Exchange> lijst = data.getExchanges();
+        IDataAccess data = DataAccess.GetInstance();
 
-        SecuritiesGridview.DataSource = lijst;
+        DataTable securitiesTable = GenerateDataTable(data.GetSecuritiesList());
+
+        SecuritiesGridview.DataSource = securitiesTable;
         SecuritiesGridview.DataBind();
     }
     protected void SecuritiesGridview_Sorting(object sender, GridViewSortEventArgs e)
     {
-        Console.WriteLine(e.SortDirection);
+        
+    }
+
+    private DataTable GenerateDataTable(List<Security> securities)
+    {
+        DataTable securitiesTable = new DataTable("Securities");
+
+        securitiesTable.Columns.Add("Symbol");
+        securitiesTable.Columns.Add("Name");
+        securitiesTable.Columns.Add("Exchange");
+        securitiesTable.Columns.Add("Quote");
+
+        foreach (Security security in securities)
+        {
+            DataRow row = securitiesTable.NewRow();
+            row[0] = security.Symbol;
+            row[1] = security.Name;
+            row[2] = "test";//security.Exchange.Name;
+            row[3] = 0;//security.GetLatestQuote().Buy;
+
+            securitiesTable.Rows.Add(row);
+        }
+
+        return securitiesTable;
     }
 }
