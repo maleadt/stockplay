@@ -21,6 +21,9 @@
  */
 package com.kapti.backend.api;
 
+import com.kapti.exceptions.StockPlayException;
+import com.kapti.filter.Filter;
+import com.kapti.filter.exception.FilterException;
 import java.util.Hashtable;
 import java.util.Vector;
 import org.apache.xmlrpc.XmlRpcException;
@@ -36,10 +39,10 @@ public abstract class User extends MethodClass {
     // Methodes
     //
     
-    public abstract int Hello(String iClient, int iProtocolVersion) throws XmlRpcException;
-    public abstract Vector<Hashtable<String, Object>> List(String iFilter) throws XmlRpcException;
-    public abstract Vector<Hashtable<String, Object>> Details(String iFilter) throws XmlRpcException;
-    public abstract int Create(Hashtable<String, Object> iDetails) throws XmlRpcException;
-    public abstract int Modify(String iFilter, Hashtable<String, Object> iDetails) throws XmlRpcException;
-    public abstract int Remove(String iFilter) throws XmlRpcException;
+    public abstract int Hello(Filter iClient, int iProtocolVersion) throws XmlRpcException;
+    public abstract Vector<Hashtable<String, Object>> List(Filter iFilter) throws XmlRpcException, StockPlayException;
+    public abstract Vector<Hashtable<String, Object>> Details(Filter iFilter) throws XmlRpcException, StockPlayException;
+    public abstract int Create(Hashtable<String, Object> iDetails) throws XmlRpcException, StockPlayException;
+    public abstract int Modify(Filter iFilter, Hashtable<String, Object> iDetails) throws XmlRpcException, StockPlayException, FilterException;
+    public abstract int Remove(Filter iFilter) throws XmlRpcException, StockPlayException, FilterException;
 }

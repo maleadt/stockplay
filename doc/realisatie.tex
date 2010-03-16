@@ -290,20 +290,6 @@ Hier vindt men de nodige methodes terug om gebruikers te beheren. Dit is echter 
 		\end{itemize} }
 	{ administrator-rechten of identificatie als de gebruiker beschreven is in het 'id' veld van de filter }
 
-\function{Portfolio.History}
-	{ snapshot van de gebruikersportefolio weergeven }
-	{ een filter, met de volgende mogelijke sleutels:
-		\begin{itemize}
-		\item{id: een gebruikers-id}
-		\item{range: een array met 2 datums die de range bepalen}
-		\end{itemize} }
-	{ array van structs die de portefolio beschrijven:
-		\begin{itemize}
-		\item{timestamp}
-		\item{points}
-		\end{itemize} }
-	{ administrator-rechten of identificatie als de gebruiker beschreven is in het 'id' veld van de filter }
-
 \todo{behoudt Orders.List ook uitgevoerde orders van een bepaald timeframe? - we hadden normaal gezegd dat we hier alle order tonen, ook de uitgevoerde. Het timeframe/resente orders zetten is dan kwestie van het zetten van de juiste filter en kan de client dan zelf bepalen. Kan je je hier in vinden? - Laur}
 \function{Order.List}
 	{ wachtende orders bekijken }

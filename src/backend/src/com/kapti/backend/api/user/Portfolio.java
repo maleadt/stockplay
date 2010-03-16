@@ -19,6 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
 package com.kapti.backend.api.user;
 
 import com.kapti.backend.api.MethodClass;
@@ -41,5 +42,5 @@ public abstract class Portfolio extends MethodClass {
     //
 
     public abstract Vector<Hashtable<String, Object>> List(Filter iFilter) throws XmlRpcException, FilterException, StockPlayException;
-    public abstract Vector<Hashtable<String, Object>> History(Filter iFilter) throws XmlRpcException, FilterException, StockPlayException;
+//  public abstract Vector<Hashtable<String, Object>> History(Filter iFilter) throws XmlRpcException, FilterException, StockPlayException;
 }

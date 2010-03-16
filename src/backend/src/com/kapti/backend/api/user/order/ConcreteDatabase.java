@@ -1,5 +1,5 @@
 /*
- * ConcreteDummy.java
+ * ConcreteDatabase.java
  * StockPlay - Concrete implementatie van de User.Order subklasse.
  *
  * Copyright (c) 2010 StockPlay development team
@@ -22,8 +22,6 @@
 
 package com.kapti.backend.api.user.order;
 
-import com.kapti.data.InstructionType;
-import com.kapti.data.Order;
 import com.kapti.data.OrderStatus;
 import com.kapti.data.persistence.GenericDAO;
 import com.kapti.exceptions.StockPlayException;
@@ -55,31 +53,13 @@ public class ConcreteDatabase extends com.kapti.backend.api.user.Order {
     }
 
     @Override
-    public int Create(Hashtable<String, Object> iDetails) throws XmlRpcException {
+    public int Create(Hashtable<String, Object> iDetails) throws XmlRpcException, StockPlayException {
         // Get DAO reference
         GenericDAO<com.kapti.data.Order, Integer> orDAO = getDAO().getOrderDAO();
 
-        InstructionType type = null;
-
-        if (((String) iDetails.get("type")).equals("buy"))
-            type = InstructionType.BUY;
-        if (((String) iDetails.get("type")).equals("buy_immidiate"))
-            type = InstructionType.BUY_IMMIDIATE;
-        if (((String) iDetails.get("type")).equals("sell"))
-            type = InstructionType.SELL;
-        if (((String) iDetails.get("type")).equals("sell_immidiate"))
-            type = InstructionType.SELL_IMMIDIATE;
-        if (((String) iDetails.get("type")).equals("cancel"))
-            type = InstructionType.CANCEL;
-
-        // Todo user meegeven
-
-        Order tOrder = new Order(type, 0, (String)iDetails.get("security"), Integer.parseInt((String)iDetails.get("amount")), Integer.parseInt((String)iDetails.get("par1")), Integer.parseInt((String)iDetails.get("par2")));
-
-        // Get the exchanges we need to modify
-        //Collection<com.kapti.data.Order> tOrders = orDAO.create(Collection);
-
-        // Now apply the new properties
+        com.kapti.data.Order tOrder = new com.kapti.data.Order();
+        tOrder.fromStruct(iDetails);
+        orDAO.create(tOrder);
 
         return 1;
     }

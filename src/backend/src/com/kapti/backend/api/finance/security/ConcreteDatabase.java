@@ -84,14 +84,9 @@ public class ConcreteDatabase extends Security {
         // Get DAO reference
         GenericDAO<com.kapti.data.Security, String> tSecurityDAO = getDAO().getSecurityDAO();
 
-        // Get the Indexs we need to modify
-        Collection<com.kapti.data.Security> tIndexs = tSecurityDAO.findAll();
-
-        // Now apply the new properties
-        for (com.kapti.data.Security tIndex : tIndexs) {
-            tIndex.fromStruct(iDetails);
-            tSecurityDAO.create(tIndex);
-        }
+        com.kapti.data.Security tSecurity = new com.kapti.data.Security();
+        tSecurity.fromStruct(iDetails);
+        tSecurityDAO.create(tSecurity);
 
         return 1;
     }

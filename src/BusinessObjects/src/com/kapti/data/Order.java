@@ -12,15 +12,14 @@ public class Order extends Instruction {
 
     public static enum Fields {
         ID, USER, SECURITY, AMOUNT, PRICE, TYPE,    // Instruction.Fields
-        STATUS, CREATIONTIME, EXPIRATIONTIME, EXECUTIONTIME, PAR1, PAR2
+        STATUS, CREATIONTIME, EXPIRATIONTIME, EXECUTIONTIME, PARAMETERS
     }
     
     private OrderStatus status;
     private Date creationTime;
     private Date expirationTime;
     private Date executionTime;
-    private int par1;
-    private int par2;
+    private String parameters;
 
     //
     // Construction
@@ -31,18 +30,16 @@ public class Order extends Instruction {
         super(id);
     }
 
-    public Order(int id, int user, String security, int amount, double price, InstructionType type, OrderStatus status, Date creationTime, Date expirationTime, Date executionTime) {
+    public Order() {
+    }
+
+    public Order(int id, int user, String security, int amount, double price, InstructionType type, OrderStatus status, Date creationTime, Date expirationTime, Date executionTime, String parameters) {
         super(id, user, security, amount, price, type);
         this.status =status;
         this.creationTime = creationTime;
         this.expirationTime = expirationTime;
         this.executionTime = executionTime;
-    }
-
-    public Order(InstructionType type, int user, String security, int amount, int par1, int par2) {
-        super(user, security, amount, type);
-        this.par1 = par1;
-        this.par2 = par2;
+        this.parameters = parameters;
     }
 
     //
@@ -73,12 +70,20 @@ public class Order extends Instruction {
         return expirationTime;
     }
 
+    public String getParameters() {
+        return parameters;
+    }
+
     public void setExpirationTime(Date expirationTime) {
         this.expirationTime = expirationTime;
     }
 
     public void setCreationTime(Date creationTime) {
         this.creationTime = creationTime;
+    }
+
+    public void setParameters(String parameters) {
+        this.parameters = parameters;
     }
 
     public Hashtable<String, Object> toStruct(Fields... iFields) {
@@ -106,7 +111,7 @@ public class Order extends Instruction {
                     break;
 
                 case STATUS:
-                    oStruct.put(tField.name(), getStatus());
+                    oStruct.put(tField.name(), getStatus().name());
                     break;
                 case CREATIONTIME:
                     oStruct.put(tField.name(), getCreationTime());
@@ -116,6 +121,9 @@ public class Order extends Instruction {
                     break;
                 case EXECUTIONTIME:
                     oStruct.put(tField.name(), getExecutionTime());
+                    break;
+                case PARAMETERS:
+                    oStruct.put(tField.name(), getParameters());
                     break;
             }
         }
@@ -163,10 +171,12 @@ public class Order extends Instruction {
                 case EXECUTIONTIME:
                     setExecutionTime((Date)tValue);
                     break;
+                case PARAMETERS:
+                    setParameters((String)tValue);
+                    break;
                 default:
                     throw new StockPlayException("requested key '" + tKey + "' cannot be modified");
             }
         }
     }
-
 }
