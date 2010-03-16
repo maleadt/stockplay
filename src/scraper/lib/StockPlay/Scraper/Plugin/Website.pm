@@ -68,6 +68,12 @@ sub _build_browser {
 # Methods
 #
 
+after 'clean' => sub {
+	my ($self) = @_;
+	
+	delete $self->{browser};
+};
+
 
 ################################################################################
 # Auxiliary

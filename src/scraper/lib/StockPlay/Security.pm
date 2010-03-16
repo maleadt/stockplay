@@ -59,6 +59,12 @@ has 'index' => (
 	default		=> sub { [] }
 );
 
+has 'quote' => (
+	is		=> 'rw',
+	isa		=> 'StockPlay::Quote',
+	predicate	=> 'has_quote'
+);
+
 =pod
 
 =head2 C<exchange>

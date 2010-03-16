@@ -8,19 +8,15 @@
 use lib '../lib';
 
 # Packages
-use DBI;
+use Storable;
 use StockPlay::Scraper::PluginManager;
 
 # Write nicely
 use warnings;
 use strict;
 
-# Setup database handle
-my $dbargs = {
-	AutoCommit	=> 0,
-	PrintError	=> 1
-};
-my $dbh = DBI->connect("dbi:SQLite:dbname=scraper.db","","",$dbargs);
+# Constants
+my $PLUGIN_MAX_AGE = 3600*24*7;
 
 
 ################################################################################
@@ -32,28 +28,42 @@ print "* Loading scraper\n";
 # Plugin manager
 print "- Loading plugin manager\n";
 my $pluginmanager = new StockPlay::Scraper::PluginManager;
-
 my @infohashes = $pluginmanager->get_group('StockPlay::Scraper::Plugin');
+
+# Load plugins
+print "- Instantiating all plugins\n";
+my @plugins;
 foreach my $infohash (@infohashes) {
-	print "Testing ", $infohash->{name}, "\n";
-	my $plugin = $pluginmanager->instantiate($infohash);
+	print "  -> ", $infohash->{name}, "\n";
 	
-	use Data::Dumper;
-	my @exchanges = $plugin->getExchanges();
-	print "Exchanges: ", Dumper(\@exchanges), "\n";
+	# Manage a dump
+	my $plugin;
+	if (-f $infohash->{name} . '.dump') {
+		print "     loading from dump\n";
+		$plugin = retrieve($infohash->{name} . '.dump');
+		
+		if (time - $plugin->infohash->{time} > $PLUGIN_MAX_AGE) {
+			print "     loaded state out of date\n";			
+			$plugin = undef;
+		}
+	}
 	
-	my @indexes = $plugin->getIndexes($exchanges[0]);
-	print "Indexes: ", Dumper(\@indexes), "\n";
+	# Instantiate a plugin, if neccesary
+	if (not defined $plugin) {
+		print "     instantiating\n";
+		$plugin = $pluginmanager->instantiate($infohash);
+		print "     dumping\n";
+		$plugin->clean();
+		store $plugin, $infohash->{name} . '.dump';
+	}
 	
-	my @securities = $plugin->getSecurities($exchanges[0]);
-	print "Securities ", Dumper(\@securities), "\n";
-	exit();
-	
-	my @quotes = $plugin->getQuotes(@securities[0..10]);
-	print "Quotes: ", Dumper(\@quotes), "\n";
+	push(@plugins, $plugin);
 }
 
-#$blabla->run();
+# Load the daemon
+print "- Loading daemon\n";
+my $daemon = new StockPlay::Scraper::Daemon(plugins => \@plugins);
+$daemon->run();
 
 exit(0);
 

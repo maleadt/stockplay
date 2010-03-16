@@ -166,6 +166,7 @@ This method instantiates a plugin based on its info hash.
 sub instantiate {
 	my ($self, $infohash, @params) = @_;
 	my $package = $infohash->{package};
+	$infohash->{time} = time;
 	new $package (infohash => $infohash, @params);
 }
 

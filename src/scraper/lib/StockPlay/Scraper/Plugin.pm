@@ -54,44 +54,74 @@ has 'infohash' => (
 	required	=> 1
 );
 
-################################################################################
-# Methods
-#
-
 =pod
 
-=head1 METHODS
-
-=head2 C<$plugin->getExchanges()>
+=head2 C<exchanges>
 
 This method returns an array containing all the exchanges the plugin can
 fetch.
 
 =cut
 
-requires 'getExchanges';
+has 'exchanges' => (
+	is		=> 'ro',
+	isa		=> 'ArrayRef[StockPlay::Exchange]',
+	builder		=> '_build_exchanges',
+	lazy		=> 1
+);
+
 
 =pod
 
-=head2 C<$plugin->getIndexes($exchange)>
+=head2 C<indexes>
 
 This method returns an array of available indexes, each of them packed in
 an L<StockPlay::Index> object.
 
 =cut
 
-requires 'getIndexes';
+has 'indexes' => (
+	is		=> 'ro',
+	isa		=> 'HashRef[ArrayRef[StockPlay::Index]]',	# Exchange name -> Indexes
+	builder		=> '_build_indexes',
+	lazy		=> 1
+);
+
 
 =pod
 
-=head2 C<$plugin->getSecurities($exchange)>
+=head2 C<securities>
 
 This method returns all quotes available at the given exchange. These quotes,
 packed in an array, are all instantiations of the L<StockPlay::Quote> object.
 
 =cut
 
-requires 'getSecurities';
+has 'securities' => (
+	is		=> 'ro',
+	isa		=> 'ArrayRef[StockPlay::Security]',
+	builder		=> '_build_securities',
+	lazy		=> 1
+);
+
+
+################################################################################
+# Methods
+
+=pod
+
+=head1 METHODS
+
+=cut
+
+sub BUILD {
+	my ($self) = @_;
+	
+	# Build lazy-attributes
+	$self->exchanges;
+	$self->indexes;
+	$self->securities;
+}
 
 =pod
 
@@ -100,6 +130,21 @@ requires 'getSecurities';
 =cut
 
 requires 'getQuotes';
+
+=pod
+
+=head2 C<$plugin->clean()>
+
+This method prepares the object to be dumped. Subclasses can augment this
+method to remove certain attributes before performing a dump.
+
+=cut
+
+sub clean {
+	my ($self) = @_;
+	
+	return 1;
+}
 
 ################################################################################
 # Auxiliary
