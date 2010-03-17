@@ -55,9 +55,12 @@ a:hover {
 #left ul {
 	padding-left: 1em;
 	margin-bottom: 0;
+	list-style: none;
+}
+
+#left ul.menu {
 	padding-top: 1em;
 	padding-bottom: 3em;
-	list-style: none;
 }
 
 #left li {

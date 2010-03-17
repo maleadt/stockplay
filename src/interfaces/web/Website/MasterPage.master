@@ -4,6 +4,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
+    <link rel="Stylesheet" href="App_Themes/StockPlay/vormgeving/style.css" type="text/css" media="screen" />
     <!--[if IE]><link rel="Stylesheet" href="App_Themes/StockPlay/vormgeving/ie.css" type="text/css" media="screen"/><![endif]-->
     
     <title>StockPlay</title>
@@ -19,9 +20,13 @@
         </div>
         
         <div id="content">
-            <div id="menu">
+            <div id="menu">            
                 <div id="left">
+                                
                     <input id="search" name="search" type="text" value="Effect zoeken.." />
+                    
+                    <p>Referentiemenu</p>
+                    
                     <ul>
                         <li><a href="#">Default</a></li>
                         <li><a href="#">Overview</a></li>
@@ -35,6 +40,12 @@
                         <li class="niv2"><a href="#">Portfolio</a></li>
                         <li class="niv2"><a href="#">Transactions History</a></li>
                     </ul>
+                    
+                    <p>Css-vriendelijke treeview:</p>
+                    
+                    <asp:SiteMapDataSource ID="SiteMapSource" runat="server" ShowStartingNode="false" />
+                    <asp:TreeView ID="TreeView1" runat="server" ShowExpandCollapse="False" DataSourceID="SiteMapSource">
+                    </asp:TreeView>
                 </div>
                 <div id="leftBottom">
                     <p><a href="">User</a> > <a href="">Transactions History</a></p>
