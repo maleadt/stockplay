@@ -33,6 +33,8 @@ import com.kapti.filter.exception.FilterException;
 import com.kapti.filter.exception.ParserException;
 import com.kapti.filter.relation.RelationAnd;
 import com.kapti.filter.relation.RelationOr;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -59,17 +61,9 @@ public class Parser {
         WHITESPACE
     }
 
-    public static enum OperatorType {
-        C_EQUALS,
-        E_AND, E_OR
-    }
-
-    public static enum FunctionType {
-    }
-
     private List<Rule<TokenType>> mTokenRules;
-    private List<Rule<OperatorType>> mOperatorRules;
-    private List<Rule<FunctionType>> mFunctionRules;
+    private List<Rule<Class>> mOperatorRules;
+    private List<Rule<Class>> mFunctionRules;
 
 
     //
@@ -89,13 +83,13 @@ public class Parser {
         mTokenRules.add(new Rule(TokenType.WHITESPACE, "\\s+"));
 
         // Create operator rules
-        mOperatorRules = new ArrayList<Rule<OperatorType>>();
-        mOperatorRules.add(new Rule(OperatorType.C_EQUALS, "^EQUALS$"));
-        mOperatorRules.add(new Rule(OperatorType.E_AND, "^AND$"));
-        mOperatorRules.add(new Rule(OperatorType.E_OR, "^OR$"));
+        mOperatorRules = new ArrayList<Rule<Class>>();
+        mOperatorRules.add(new Rule(ConditionEquals.class, "^EQUALS$"));
+        mOperatorRules.add(new Rule(RelationAnd.class, "^AND$"));
+        mOperatorRules.add(new Rule(RelationOr.class, "^OR$"));
 
         // Create function rules
-        mFunctionRules = new ArrayList<Rule<FunctionType>>();
+        mFunctionRules = new ArrayList<Rule<Class>>();
     }
 
 
@@ -292,32 +286,39 @@ public class Parser {
                     break;
 
                 case WORD:
-                    OperatorType tOperator = getOperator(tToken);
-                    FunctionType tFunction = getFunction(tToken);
+                    Class tOperator = getOperator(tToken);
+                    Class tFunction = getFunction(tToken);
                     if (tOperator != null || tFunction != null) {
-                        // Instantiate object
-                        // TODO: put the instantiations in the ruleset as well (maybe Class()?)
-                        Condition tCondition = null;
-                        if (tOperator != null) {
-                            switch (tOperator) {
-                                case C_EQUALS:
-                                    tCondition = new ConditionEquals();
-                                    break;
-                                case E_AND:
-                                    tCondition = new RelationAnd();
-                                    break;
-                                case E_OR:
-                                    tCondition = new RelationOr();
-                                    break;
-                            }
-                        }
-                        else if (tFunction != null) {
-                            switch (tFunction) {
+                        // Pick the class
+                        Class tClass = tOperator;
+                        if (tClass == null)
+                            tClass = tFunction;
 
-                            }
+                        // Instantiate the object
+                        Condition tCondition = null;
+                        Object tObject = null;
+                        try {
+                            Constructor tConstructor = tClass.getConstructor(new Class[]{});
+                            tObject = tConstructor.newInstance();
                         }
+                        catch (NoSuchMethodException e) {
+                            throw new ParserException("error instantiating operator (could not find the constructor)");
+                        }
+                        catch (InstantiationException e) {
+                            throw new ParserException("error instantiating operator (requested instantiation failed as it is not a concrete class)", e.getCause());
+                        }
+                        catch (IllegalAccessException e) {
+                            throw new ParserException("error instantiating operator (illegal access to class)", e.getCause());
+                        }
+                        catch (InvocationTargetException e) {
+                            throw new ParserException("error instantiating operator (an exception occured when instantiating the constructor)", e.getCause());
+                        }
+                        if (!(tObject instanceof Condition))
+                            throw new ParserException("attempt to instantiate non condition-typed operator (check the ruleset)");
+                        tCondition = (Condition) tObject;
                         
                         // Handle parameters
+                        // TODO: via constructor?
                         Class[] tParameterSignature = tCondition.getParameterSignature();
                         int tParameterCount = tParameterSignature.length;
                         if (tStack.size() < tParameterCount)
@@ -367,13 +368,13 @@ public class Parser {
     // Auxiliary
     //
 
-    private OperatorType getOperator(Token iToken) {
+    private Class getOperator(Token iToken) {
         // Create a new matcher container
         Matcher tMatcher = Pattern.compile("dummy").matcher(iToken.getContent());
         tMatcher.useTransparentBounds(true).useAnchoringBounds(false);
 
         // Check all rules
-        for (Rule<OperatorType> tRule : mOperatorRules) {
+        for (Rule<Class> tRule : mOperatorRules) {
             if (tMatcher.usePattern(tRule.getPattern()).lookingAt()) {
                 return tRule.getType();
             }
@@ -381,13 +382,13 @@ public class Parser {
         return null;
     }
 
-    private FunctionType getFunction(Token iToken) {
+    private Class getFunction(Token iToken) {
         // Create a new matcher container
         Matcher tMatcher = Pattern.compile("dummy").matcher(iToken.getContent());
         tMatcher.useTransparentBounds(true).useAnchoringBounds(false);
 
         // Check all rules
-        for (Rule<FunctionType> tRule : mFunctionRules) {
+        for (Rule<Class> tRule : mFunctionRules) {
             if (tMatcher.usePattern(tRule.getPattern()).lookingAt()) {
                 return tRule.getType();
             }
