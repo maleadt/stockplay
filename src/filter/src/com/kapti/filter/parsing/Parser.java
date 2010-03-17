@@ -295,15 +295,6 @@ public class Parser {
                     OperatorType tOperator = getOperator(tToken);
                     FunctionType tFunction = getFunction(tToken);
                     if (tOperator != null || tFunction != null) {
-                        // Handle parameters
-                        int tParameterCount = 2; // TODO: getParameters();
-                        if (tStack.size() < tParameterCount)
-                            throw new ParserException("not enough parameters provided");
-                        Vector<Convertable> tParameters = new Vector<Convertable>();
-                        tParameters.setSize(tParameterCount);
-                        for (int i = 0; i < tParameterCount; i++)
-                            tParameters.set(tParameterCount-i-1, tStack.pop()); // mind the reversion of the argument order
-
                         // Instantiate object
                         // TODO: put the instantiations in the ruleset as well (maybe Class()?)
                         Condition tCondition = null;
@@ -324,6 +315,21 @@ public class Parser {
                             switch (tFunction) {
 
                             }
+                        }
+                        
+                        // Handle parameters
+                        Class[] tParameterSignature = tCondition.getParameterSignature();
+                        int tParameterCount = tParameterSignature.length;
+                        if (tStack.size() < tParameterCount)
+                            throw new ParserException("parameter mismatch, I expected " + tParameterCount + " of them but only got " + tStack.size());
+                        Vector<Convertable> tParameters = new Vector<Convertable>();
+                        tParameters.setSize(tParameterCount);
+                        for (int i = tParameterCount-1; i >= 0; i--) { // mind the reversion of the argument order
+                            Convertable tParameter = tStack.pop();
+                            Class tExpected = tParameterSignature[i];
+                            if (!(tExpected.isInstance(tParameter)))
+                                throw new ParserException("parameter mismatch, I expected a " + tExpected + " but got a " + tParameter.getClass());
+                            tParameters.set(i, tParameter);
                         }
 
                         // Pass parameters and push the result

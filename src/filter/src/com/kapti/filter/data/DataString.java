@@ -48,13 +48,6 @@ public class DataString extends Data {
     //
 
     @Override
-    public void check() throws FilterException {
-        super.check();
-        if (!(mData instanceof String))
-            throw new FilterException("String data object can only contain a string");
-    }
-
-    @Override
     public final Object compile() throws FilterException {
         DataString tConverter = (DataString) getConverter();
 

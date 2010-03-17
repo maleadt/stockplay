@@ -90,7 +90,6 @@ public abstract class Convertable {
         // Call the object
         Convertable tConverter = (Convertable) tObject;
         tConverter.copyData(this);
-        tConverter.check();
         return tConverter;
     }
 
@@ -106,11 +105,12 @@ public abstract class Convertable {
     }
 
 
+
     //
     // Interface
     //
-    
-    abstract public void check() throws FilterException;
+
+    public abstract Class[] getParameterSignature();
 
     public abstract Node addNode(Graph iGraph);
 

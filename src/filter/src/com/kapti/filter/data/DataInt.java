@@ -47,13 +47,6 @@ public class DataInt extends Data {
     //
 
     @Override
-    public void check() throws FilterException {
-        super.check();
-        if (!(mData instanceof Integer))
-            throw new RuntimeException("Integer data object can only contain an integer");
-    }
-
-    @Override
     public final Object compile() throws FilterException {
         DataInt tConverter = (DataInt) getConverter();
 

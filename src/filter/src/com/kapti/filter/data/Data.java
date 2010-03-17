@@ -22,7 +22,6 @@
 package com.kapti.filter.data;
 
 import com.kapti.filter.Convertable;
-import com.kapti.filter.exception.FilterException;
 import com.kapti.filter.graph.Graph;
 import com.kapti.filter.graph.Node;
 
@@ -63,9 +62,8 @@ public abstract class Data extends Convertable {
         mData = ((Data)iObject).mData;
     }
 
-    public void check() throws FilterException {
-        if (mParameters.size() != 0)
-            throw new FilterException("Data cannot have children");
+    public Class[] getParameterSignature() {
+        return new Class[] {};
     }
 
     public Node addNode(Graph iGraph) {

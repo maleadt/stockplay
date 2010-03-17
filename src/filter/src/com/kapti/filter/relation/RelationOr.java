@@ -37,14 +37,6 @@ public class RelationOr extends Relation {
     //
 
     @Override
-    public void check() throws FilterException {
-        super.check();
-        if (mParameters.size() != 2) {
-            throw new RuntimeException("OR relation only acceps exactly two parameters, I got " + mParameters.size());
-        }
-    }
-
-    @Override
     public final Object compile() throws FilterException {
         RelationOr tConverter = (RelationOr) getConverter();
 

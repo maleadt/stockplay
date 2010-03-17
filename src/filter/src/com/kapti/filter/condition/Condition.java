@@ -23,7 +23,6 @@ package com.kapti.filter.condition;
 
 import com.kapti.filter.Convertable;
 import com.kapti.filter.data.Data;
-import com.kapti.filter.exception.FilterException;
 import com.kapti.filter.graph.Graph;
 import com.kapti.filter.graph.Node;
 
@@ -35,14 +34,6 @@ public abstract class Condition extends Convertable {
     //
     // Methods
     //
-
-    public void check() throws FilterException {
-        for (Object tObject : mParameters) {
-            if (!(tObject instanceof Data)) {
-                throw new FilterException("Conditions only accept data as parameters");
-            }
-        }
-    }
     
     public Data getData(int index) {
         return (Data) mParameters.get(index);

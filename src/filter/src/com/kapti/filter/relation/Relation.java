@@ -22,7 +22,6 @@
 package com.kapti.filter.relation;
 
 import com.kapti.filter.condition.Condition;
-import com.kapti.filter.exception.FilterException;
 import com.kapti.filter.graph.Graph;
 import com.kapti.filter.graph.Node;
 
@@ -46,13 +45,8 @@ public abstract class Relation extends Condition {
     // Methods
     //
 
-    @Override
-    public void check() throws FilterException {
-        for (Object tObject : mParameters) {
-            if (!(tObject instanceof Condition)) {
-                throw new FilterException("Relation only accepts other conditions as parameters");
-            }
-        }
+    public Class[] getParameterSignature() {
+        return new Class[] {Condition.class, Condition.class};
     }
 
     @Override

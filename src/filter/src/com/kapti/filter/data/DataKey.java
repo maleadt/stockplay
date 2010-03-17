@@ -47,13 +47,6 @@ public class DataKey extends Data {
     //
 
     @Override
-    public void check() throws FilterException {
-        super.check();
-        if (!(mData instanceof String))
-            throw new FilterException("Key data object can only contain a string");
-    }
-
-    @Override
     public final Object compile() throws FilterException {
         DataKey tConverter = (DataKey) getConverter();
 

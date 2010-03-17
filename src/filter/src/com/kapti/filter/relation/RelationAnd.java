@@ -37,14 +37,6 @@ public class RelationAnd extends Relation {
     //
 
     @Override
-    public void check() throws FilterException {
-        super.check();
-        if (mParameters.size() != 2) {
-            throw new FilterException("AND relation only acceps exactly two parameters, I got " + mParameters.size());
-        }
-    }
-
-    @Override
     public final Object compile() throws FilterException {
         RelationAnd tConverter = (RelationAnd) getConverter();
 

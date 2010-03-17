@@ -47,13 +47,6 @@ public class DataFloat extends Data {
     //
 
     @Override
-    public void check() throws FilterException {
-        super.check();
-        if (!(mData instanceof Double))
-            throw new RuntimeException("Double data object can only contain a double");
-    }
-
-    @Override
     public final Object compile() throws FilterException {
         DataFloat tConverter = (DataFloat) getConverter();
 
