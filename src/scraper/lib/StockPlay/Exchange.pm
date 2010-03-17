@@ -53,6 +53,18 @@ has 'location' => (
 	predicate	=> 'has_location'
 );
 
+has 'securities' => (
+	is		=> 'ro',
+	isa		=> 'ArrayRef[StockPlay::Security]',
+	default		=> sub { [] }
+);
+
+has 'indexes' => (
+	is		=> 'ro',
+	isa		=> 'ArrayRef[StockPlay::Index]',
+	default		=> sub { [] }
+);
+
 ################################################################################
 # Methods
 #

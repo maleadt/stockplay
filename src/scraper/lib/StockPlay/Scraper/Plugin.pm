@@ -71,40 +71,6 @@ has 'exchanges' => (
 );
 
 
-=pod
-
-=head2 C<indexes>
-
-This method returns an array of available indexes, each of them packed in
-an L<StockPlay::Index> object.
-
-=cut
-
-has 'indexes' => (
-	is		=> 'ro',
-	isa		=> 'HashRef[ArrayRef[StockPlay::Index]]',	# Exchange name -> Indexes
-	builder		=> '_build_indexes',
-	lazy		=> 1
-);
-
-
-=pod
-
-=head2 C<securities>
-
-This method returns all quotes available at the given exchange. These quotes,
-packed in an array, are all instantiations of the L<StockPlay::Quote> object.
-
-=cut
-
-has 'securities' => (
-	is		=> 'ro',
-	isa		=> 'ArrayRef[StockPlay::Security]',
-	builder		=> '_build_securities',
-	lazy		=> 1
-);
-
-
 ################################################################################
 # Methods
 
@@ -119,8 +85,6 @@ sub BUILD {
 	
 	# Build lazy-attributes
 	$self->exchanges;
-	$self->indexes;
-	$self->securities;
 }
 
 =pod

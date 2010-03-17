@@ -53,12 +53,6 @@ has 'name' => (
 	isa		=> 'Str'
 );
 
-has 'index' => (
-	is		=> 'ro',
-	isa		=> 'ArrayRef[Str]',
-	default		=> sub { [] }
-);
-
 has 'quote' => (
 	is		=> 'rw',
 	isa		=> 'StockPlay::Quote',

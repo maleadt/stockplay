@@ -66,8 +66,40 @@ my $datetime_parser = DateTime::Format::Strptime->new(
 sub _build_exchanges {
 	my ($self) = @_;
 	
-	print "DEBUG: building list of exchanges\n";
+	# Exchanges
+	print "DEBUG: building exchanges\n";
 	my @exchanges = $self->getExchanges();
+	
+	# Indexes
+	print "DEBUG: building indexes\n";	
+	for my $exchange (@exchanges) {
+		print "DEBUG: fetching indexes of exchange ", $exchange->name, "\n";
+		eval {
+			my @indexes = $self->getIndexes($exchange);
+			push(@{$exchange->indexes}, @indexes);
+		};
+		if ($@) {
+			print "ERROR: could not fetch indexes of exchange ", $exchange->name, "\n";
+		}
+	}
+	
+	# Securities
+	print "DEBUG: building securities\n";	
+	for my $exchange (@exchanges) {
+		for my $index (@{$exchange->indexes}) {
+			eval {
+				die("temorary eliminated") unless ($index->id eq "continumarkt");
+				print "DEBUG: fetching securities of index ", $index->name, " at exchange ", $exchange->name, "\n";
+				my @securities = $self->getSecurities($exchange, $index);
+				push(@{$exchange->securities}, @securities);
+				push(@{$index->securities}, @securities);
+			};
+			if ($@) {
+				print "ERROR: could not fetch securities from index ", $index->name, " at exchange ", $exchange->name, "\n";
+				print "       ", $@, "\n";
+			}
+		}
+	}
 	
 	return \@exchanges;
 }
@@ -142,25 +174,6 @@ sub getExchanges {
 	return @exchanges;
 }
 
-sub _build_indexes {
-	my ($self) = @_;
-	my @indexes;
-	
-	print "DEBUG: building hash of indexes\n";	
-	for my $exchange (@{$self->exchanges}) {
-		print "DEBUG: fetching indexes of exchange ", $exchange->name, "\n";
-		eval {
-			my @indexes_local = $self->getIndexes($exchange);
-			push(@indexes, @indexes_local);
-		};
-		if ($@) {
-			print "ERROR: could not fetch indexes of exchange ", $exchange->name, "\n";
-		}
-	}
-	
-	return \@indexes;
-}
-
 sub getIndexes {
 	my ($self, $exchange) = @_;
 
@@ -222,113 +235,95 @@ sub getIndexes {
 	return @indexes;
 }
 
-sub _build_securities {
-	my ($self) = @_;
-	my %securities;
-	
-	print "DEBUG: building hash of securities\n";	
-	MAIN: for my $exchange (@{$self->exchanges}) {
-		for my $index (@{$self->indexes->{$exchange->name}}) {
-			eval {
-				print "DEBUG: fetching securities of index ", $index->name, " at exchange ", $exchange->name, "\n";
-				my @securities_local = $self->getSecurities($exchange, $index);
-				if (not defined $securities{$exchange->name}) {
-					$securities{$exchange->name} = \@securities_local;
-				} else {
-					# TODO: voegt dit correct toe?
-					push(@{$securities{$exchange->name}}, @securities_local);
-				}
-			};
-			if ($@) {
-				print "ERROR: could not fetch securities from index ", $index->name, " at exchange ", $exchange->name, "\n";
-			}
-		}
-	}
-	
-	return \%securities;
-}
-
 sub getSecurities {
 	my ($self, $exchange, $index) = @_;
+	my @securities;	
 	
-	# Fetch HTML
-	my $res = $self->browser->get('http://www.tijd.be/beurzen/' . $exchange->name . '/' . $index->id) || die();
+	# Process all pages
+	my $page = 1;
+	while (1) {	
+		# Fetch HTML
+		my $res = $self->browser->get('http://www.tijd.be/beurzen/' . $exchange->name . '/' . $index->id . "?p=$page") || die();
 
-	# Build a HTML tree
-	my $tree = HTML::TreeBuilder->new();
-	$tree->parse($res->decoded_content);
+		# Build a HTML tree
+		my $tree = HTML::TreeBuilder->new();
+		$tree->parse($res->decoded_content);
 
-	# Find main table
-	my $table = $tree->look_down(
-		'_tag' => 'table',
-		sub {
-			defined $_[0]->attr('class') && $_[0]->attr('class') =~ m{maintable};
-		}
-	);
-	die("Could not find main table") unless $table;
-	
-	# Extract securities
-	my @securities;
-	$table->look_down(
-		'_tag'	=> 'td',
-		sub {
-			my $cell = shift;
-			return unless defined $cell->attr('class') && $cell->attr('class') =~ m{st_name};
-			my ($name, $site_id);
-			foreach my $child ($cell->content_list) {
-				if ($child->tag eq "a") {
-					$name = $child->as_text;
-				} elsif ($child->tag eq "form") {
-					$child->look_down(
-						'_tag', 'input',
-						sub {
-							if ($_[0]->attr('name') eq "id") {
-								$site_id = $_[0]->attr('value');
+		# Find main table
+		my $table = $tree->look_down(
+			'_tag' => 'table',
+			sub {
+				defined $_[0]->attr('class') && $_[0]->attr('class') =~ m{maintable};
+			}
+		);
+		die("Could not find main table") unless $table;
+		
+		# Extract securities
+		$table->look_down(
+			'_tag'	=> 'td',
+			sub {
+				my $cell = shift;
+				return unless defined $cell->attr('class') && $cell->attr('class') =~ m{st_name};
+				my ($name, $site_id);
+				foreach my $child ($cell->content_list) {
+					if ($child->tag eq "a") {
+						$name = $child->as_text;
+					} elsif ($child->tag eq "form") {
+						$child->look_down(
+							'_tag', 'input',
+							sub {
+								if ($_[0]->attr('name') eq "id") {
+									$site_id = $_[0]->attr('value');
+								}
+								return 0;
 							}
-							return 0;
+						);
+					}
+				}
+				
+				if (defined $site_id) {			
+					my ($symbol, $isin);
+					my $res2 = $self->browser->get('http://www.tijd.be/beurzen/' . $site_id) || die();
+					my $tree2 = HTML::TreeBuilder->new();
+					$tree2->parse($res2->decoded_content);
+					$tree2->look_down(
+						'_tag'	=> 'dl',
+						sub {
+							my $list = shift;
+							return unless(defined $list->attr('class') && $list->attr('class') eq 'stockdeflist');
+							
+							my @items;
+							foreach my $child ($list->content_list) {
+								if (ref($child) eq 'HTML::Element' && $child->tag eq 'dd') {
+									push(@items, $child->as_text);
+								}								
+							}
+							($isin, $symbol) = @items[1..2];
 						}
 					);
-				}
-			}
-			
-			if (defined $site_id) {			
-				my ($symbol, $isin);
-				my $res2 = $self->browser->get('http://www.tijd.be/beurzen/' . $site_id) || die();
-				my $tree2 = HTML::TreeBuilder->new();
-				$tree2->parse($res2->decoded_content);
-				$tree2->look_down(
-					'_tag'	=> 'dl',
-					sub {
-						my $list = shift;
-						return unless(defined $list->attr('class') && $list->attr('class') eq 'stockdeflist');
-						
-						my @items;
-						foreach my $child ($list->content_list) {
-							if (ref($child) eq 'HTML::Element' && $child->tag eq 'dd') {
-								push(@items, $child->as_text);
-							}								
+					$tree2->delete();
+					return unless (defined $isin and defined $symbol);
+					
+					push(@securities, new StockPlay::Security({
+						id		=> $symbol,
+						isin		=> $isin,
+						name		=> $name,
+						exchange	=> $exchange->id,
+						index		=> [ $index->id ],
+						private		=> {
+							site_id	=> $site_id
 						}
-						($isin, $symbol) = @items[1..2];
-					}
-				);
-				$tree2->delete();
-				return unless (defined $isin and defined $symbol);
-				
-				push(@securities, new StockPlay::Security({
-					id		=> $symbol,
-					isin		=> $isin,
-					name		=> $name,
-					exchange	=> $exchange->id,
-					index		=> [ $index->id ],
-					private		=> {
-						site_id	=> $site_id
-					}
-				}));
+					}));
+				}
+				return 0;
 			}
-			return 0;
-		}
-	);
-	$tree->delete;
+		);
+		$tree->delete;
+		
+		# Check for more pages
+		last unless ($res->decoded_content =~ 'Volgende');		
+		
+	}
 	return @securities;
 }
 

@@ -46,6 +46,12 @@ has 'name' => (
 	isa		=> 'Str'
 );
 
+has 'securities' => (
+	is		=> 'ro',
+	isa		=> 'ArrayRef[StockPlay::Security]',
+	default		=> sub { [] }
+);
+
 ################################################################################
 # Methods
 #

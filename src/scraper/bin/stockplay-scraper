@@ -10,6 +10,7 @@ use lib '../lib';
 # Packages
 use Storable;
 use StockPlay::Scraper::PluginManager;
+use StockPlay::Scraper::Daemon;
 
 # Write nicely
 use warnings;
@@ -55,6 +56,8 @@ foreach my $infohash (@infohashes) {
 		print "     dumping\n";
 		$plugin->clean();
 		store $plugin, $infohash->{name} . '.dump';
+		use Data::Dumper;
+		print Dumper($plugin);
 	}
 	
 	push(@plugins, $plugin);

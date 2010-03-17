@@ -23,7 +23,7 @@ XML-RPC backend.
 =cut
 
 # Packages
-use Moose::Role;
+use Moose;
 use StockPlay::Exchange;
 use StockPlay::Index;
 use StockPlay::Security;
