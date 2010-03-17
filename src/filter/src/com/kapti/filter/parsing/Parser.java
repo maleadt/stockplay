@@ -31,6 +31,7 @@ import com.kapti.filter.data.DataKey;
 import com.kapti.filter.data.DataString;
 import com.kapti.filter.exception.FilterException;
 import com.kapti.filter.exception.ParserException;
+import com.kapti.filter.relation.Relation;
 import com.kapti.filter.relation.RelationAnd;
 import com.kapti.filter.relation.RelationOr;
 import java.lang.reflect.Constructor;
@@ -71,7 +72,7 @@ public class Parser {
     //
 
     public Parser() {
-        // Create token rules
+        // Create token ruleset
         mTokenRules = new ArrayList<Rule<TokenType>>();
         mTokenRules.add(new Rule(TokenType.INT, "[0-9]+"));
         mTokenRules.add(new Rule(TokenType.FLOAT, "[0-9.]+"));
@@ -82,13 +83,13 @@ public class Parser {
         mTokenRules.add(new Rule(TokenType.COMMA, ","));
         mTokenRules.add(new Rule(TokenType.WHITESPACE, "\\s+"));
 
-        // Create operator rules
+        // Create operator ruleset
         mOperatorRules = new ArrayList<Rule<Class>>();
         mOperatorRules.add(new Rule(ConditionEquals.class, "^EQUALS$"));
         mOperatorRules.add(new Rule(RelationAnd.class, "^AND$"));
         mOperatorRules.add(new Rule(RelationOr.class, "^OR$"));
 
-        // Create function rules
+        // Create function ruleset
         mFunctionRules = new ArrayList<Rule<Class>>();
     }
 
@@ -102,10 +103,6 @@ public class Parser {
         // Lexical analysis
         List<Token> tInfix = tokenize(iSource);
         Queue<Token> tPostfix = infix_to_postfix(tInfix);
-
-        System.out.println("Infix notation of parsed tokens: ");
-        for (Token tToken : tPostfix)
-            System.out.println(tToken);
         
         // Syntactic analysis
         Filter oFilter = interprete(tPostfix);
@@ -197,13 +194,19 @@ public class Parser {
 
                     // Token is an operator (condition or relation)
                     else if (getOperator(tToken) != null) {
+                        Class tOperator1 = getOperator(tToken);
                         while (!tStack.isEmpty() && tStack.peek().getType() == TokenType.WORD && getOperator(tStack.peek()) != null) {
-                            if (false /* TODO: check if token is right-associative OR token is left associative but its precedence is greater than tStack.peek() */) {
+                            Class tOperator2 = getOperator(tStack.peek());
+
+                            // Precedence of Relation < precedence of Condition
+                            if (tOperator1.getSuperclass() == Relation.class && tOperator2.getSuperclass() == Condition.class) {
                                 tQueue.add(tStack.pop());
-                            } else {
-                                // TODO: do we need to do something here?
                             }
-                            throw new ParserException("precedence rules not implemented yet, please use parenthesis");
+                            else if (tOperator1.getSuperclass() == Condition.class && tOperator2.getSuperclass() == Relation.class) {
+                                break;
+                            }
+                            else
+                                throw new ParserException("precedence between equally-typed operators has not been defined (e.g. use brackets!)");
                         }
                         tStack.push(tToken);
                     }
