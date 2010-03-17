@@ -27,12 +27,12 @@ import java.util.regex.Pattern;
  *
  * @author tim
  */
-public class Rule {
+public class Rule<T> {
     //
     // Member data
     //
 
-    private final Parser.Type mType;
+    private final T mType;
     private final Pattern mPattern;
 
 
@@ -40,7 +40,7 @@ public class Rule {
     // Construction
     //
 
-    Rule(Parser.Type iType, String iRegex) {
+    Rule(T iType, String iRegex) {
         mType = iType;
         mPattern = Pattern.compile(iRegex);
     }
@@ -54,7 +54,7 @@ public class Rule {
         return mPattern;
     }
 
-    public Parser.Type getType() {
+    public T getType() {
         return mType;
     }
 }

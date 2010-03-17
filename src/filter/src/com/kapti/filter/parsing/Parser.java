@@ -25,19 +25,21 @@ import com.kapti.filter.Convertable;
 import com.kapti.filter.Filter;
 import com.kapti.filter.condition.Condition;
 import com.kapti.filter.condition.ConditionEquals;
-import com.kapti.filter.data.Data;
 import com.kapti.filter.data.DataFloat;
 import com.kapti.filter.data.DataInt;
 import com.kapti.filter.data.DataKey;
 import com.kapti.filter.data.DataString;
 import com.kapti.filter.exception.FilterException;
 import com.kapti.filter.exception.ParserException;
-import com.kapti.filter.relation.Relation;
 import com.kapti.filter.relation.RelationAnd;
 import com.kapti.filter.relation.RelationOr;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
+import java.util.Stack;
+import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -50,14 +52,24 @@ public class Parser {
     // Member data
     //
 
-    public static enum Type {
+    public static enum TokenType {
         INT, FLOAT,
         WORD, QUOTE,
-        PARAM_OPEN, PARAM_CLOSE,
+        LEFT_PARENTHESIS, RIGHT_PARENTHESIS, COMMA,
         WHITESPACE
     }
 
-    private List<Rule> mRules;
+    public static enum OperatorType {
+        C_EQUALS,
+        E_AND, E_OR
+    }
+
+    public static enum FunctionType {
+    }
+
+    private List<Rule<TokenType>> mTokenRules;
+    private List<Rule<OperatorType>> mOperatorRules;
+    private List<Rule<FunctionType>> mFunctionRules;
 
 
     //
@@ -65,14 +77,25 @@ public class Parser {
     //
 
     public Parser() {
-        mRules = new ArrayList<Rule>();
-        mRules.add(new Rule(Type.INT, "[0-9]+"));
-        mRules.add(new Rule(Type.FLOAT, "[0-9.]+"));
-        mRules.add(new Rule(Type.WORD, "[A-Za-z_]+"));
-        mRules.add(new Rule(Type.QUOTE, "'([^\']*+)'"));
-        mRules.add(new Rule(Type.PARAM_OPEN, "\\("));
-        mRules.add(new Rule(Type.PARAM_CLOSE, "\\)"));
-        mRules.add(new Rule(Type.WHITESPACE, "\\s+"));
+        // Create token rules
+        mTokenRules = new ArrayList<Rule<TokenType>>();
+        mTokenRules.add(new Rule(TokenType.INT, "[0-9]+"));
+        mTokenRules.add(new Rule(TokenType.FLOAT, "[0-9.]+"));
+        mTokenRules.add(new Rule(TokenType.WORD, "[A-Za-z_]+"));
+        mTokenRules.add(new Rule(TokenType.QUOTE, "'([^\']*+)'"));
+        mTokenRules.add(new Rule(TokenType.LEFT_PARENTHESIS, "\\("));
+        mTokenRules.add(new Rule(TokenType.RIGHT_PARENTHESIS, "\\)"));
+        mTokenRules.add(new Rule(TokenType.COMMA, ","));
+        mTokenRules.add(new Rule(TokenType.WHITESPACE, "\\s+"));
+
+        // Create operator rules
+        mOperatorRules = new ArrayList<Rule<OperatorType>>();
+        mOperatorRules.add(new Rule(OperatorType.C_EQUALS, "^EQUALS$"));
+        mOperatorRules.add(new Rule(OperatorType.E_AND, "^AND$"));
+        mOperatorRules.add(new Rule(OperatorType.E_OR, "^OR$"));
+
+        // Create function rules
+        mFunctionRules = new ArrayList<Rule<FunctionType>>();
     }
 
 
@@ -83,10 +106,15 @@ public class Parser {
     // Main method
     public Filter parse(String iSource) throws ParserException {
         // Lexical analysis
-        List<Token> result = tokenize(iSource);
+        List<Token> tInfix = tokenize(iSource);
+        Queue<Token> tPostfix = infix_to_postfix(tInfix);
+
+        System.out.println("Infix notation of parsed tokens: ");
+        for (Token tToken : tPostfix)
+            System.out.println(tToken);
         
         // Syntactic analysis
-        Filter oFilter = interprete(result.iterator());
+        Filter oFilter = interprete(tPostfix);
 
         return oFilter;
     }
@@ -108,7 +136,7 @@ public class Parser {
 
             // Check all rules
             List<Token> tMatches = new ArrayList<Token>();
-            for (Rule tRule : mRules) {
+            for (Rule<TokenType> tRule : mTokenRules) {
                 if (tMatcher.usePattern(tRule.getPattern()).lookingAt()) {
                     // Fetch the relevant content
                     String tContent = null;
@@ -138,111 +166,226 @@ public class Parser {
         return oTokens;
     }
 
-    // Syntactic analysis: the interpreter
-    public Filter interprete(Iterator<Token> iIterator) throws ParserException {
-        Filter oFilter = new Filter();
+    // Lexical analysis: the infix to postfix convertor (the shunting-yard algorithm)
+    // TODO: support functions with variable amount of parameters
+    //       http://www.kallisti.net.nz/blog/2008/02/extension-to-the-shunting-yard-algorithm-to-allow-variable-numbers-of-arguments-to-functions/
+    public Queue<Token> infix_to_postfix(List<Token> iInfix) throws ParserException {
+        Queue<Token> tQueue = new LinkedList<Token>();
+        Stack<Token> tStack = new Stack<Token>();
 
-        // State
-        Token tToken;
-        Condition tCondition = null;
-        Relation tRelation = null;
-        List<Data> tParameters = null;
-
-        // Process the tokens
-        while (iIterator.hasNext()) {
-            tToken = iIterator.next();
+        Iterator<Token> tIterator = iInfix.iterator();
+        while (tIterator.hasNext()) {
+            Token tToken = tIterator.next();
 
             switch (tToken.getType()) {
-                // Data
-                case INT: {
-                    if (tParameters == null)
-                        throw new ParserException("found raw integer out of parameter scope");
-                    tParameters.add(new DataInt(Integer.parseInt(tToken.getContent())));
-
+                case INT:
+                case FLOAT:
+                case QUOTE:
+                    tQueue.add(tToken);
                     break;
-                }
-                case FLOAT: {
-                    if (tParameters == null)
-                        throw new ParserException("found raw float out of parameter scope");
-                    tParameters.add(new DataFloat(Double.parseDouble(tToken.getContent())));
 
+                case COMMA:
+                    if (tStack.isEmpty())
+                        throw new ParserException("misplaced comma or mismatched parenthesis");
+                    
+                    while (tStack.peek().getType() != TokenType.LEFT_PARENTHESIS) {
+                        tQueue.add(tStack.pop());
+                        if (tStack.isEmpty())
+                            throw new ParserException("misplaced comma or mismatched parenthesis");
+                    }
                     break;
-                }
-                case QUOTE: {
-                    if (tParameters == null)
-                        throw new ParserException("found unknown quoted string out of parameter scope");
-                    if (tParameters.size() == 0)    // TODO: keys are LVALUE
-                        tParameters.add(new DataKey(tToken.getContent()));
-                    else
-                        tParameters.add(new DataString(tToken.getContent()));
 
+                case WORD:
+                    // Token is a function
+                    if (getFunction(tToken) != null) {
+                        tStack.push(tToken);
+                    }
+
+                    // Token is an operator (condition or relation)
+                    else if (getOperator(tToken) != null) {
+                        while (!tStack.isEmpty() && tStack.peek().getType() == TokenType.WORD && getOperator(tStack.peek()) != null) {
+                            if (false /* TODO: check if token is right-associative OR token is left associative but its precedence is greater than tStack.peek() */) {
+                                tQueue.add(tStack.pop());
+                            } else {
+                                // TODO: do we need to do something here?
+                            }
+                            throw new ParserException("precedence rules not implemented yet, please use parenthesis");
+                        }
+                        tStack.push(tToken);
+                    }
+
+                    // Token is a key
+                    else {
+                        tQueue.add(tToken);
+                    }
                     break;
-                }
 
-                // Word
-                case WORD: {
-                    // TODO: Clean this up, maybe also in ruleset?
-                    if (tToken.getContent().equalsIgnoreCase("EQUALS")) {
-                        tCondition = new ConditionEquals();
+                case LEFT_PARENTHESIS:
+                    tStack.push(tToken);
+                    break;
+
+                case RIGHT_PARENTHESIS:
+                    if (tStack.isEmpty())
+                        throw new ParserException("mismatched parenthesis");
+
+                    while (!tStack.isEmpty() && tStack.peek().getType() != TokenType.LEFT_PARENTHESIS) {
+                        tQueue.add(tStack.pop());
+                        if (tStack.isEmpty())
+                            throw new ParserException("mismatched parenthesis");
                     }
                     
-                    else if (tToken.getContent().equalsIgnoreCase("AND")) {
-                        tRelation = new RelationAnd();
+                    tStack.pop();
+
+                    if (!tStack.isEmpty() && tStack.peek().getType() == TokenType.WORD && getFunction(tStack.peek()) != null) {
+                        tQueue.add(tStack.pop());
                     }
-                    else if (tToken.getContent().equalsIgnoreCase("OR")) {
-                        tRelation = new RelationOr();
-                    }
-
-
-
-                    else {
-                        throw new ParserException("unknown symbol '" + tToken.getContent() + "'");
-                    }
-
-
+                    
+                case WHITESPACE:
                     break;
-                }
-
-                // Parameter list
-                case PARAM_OPEN: {
-                    tParameters = new ArrayList();
-
-                    break;
-                }
-                case PARAM_CLOSE: {
-                    if (tCondition != null) {
-                        for (Data tParameter : tParameters)
-                            tCondition.addParameter((Convertable)tParameter);
-                        try {
-                            if (tRelation == null)
-                                oFilter.addCondition(tCondition);
-                            else
-                                oFilter.addCondition(tRelation, tCondition);
-                        } catch (FilterException e) {
-                            throw new ParserException("invalid input string, could not build the filter tree", e.getCause());
-                        }
-
-                        tCondition = null;
-                        tRelation = null;
-                        tParameters = null;
-                    }
-                    else {
-                        throw new ParserException("parameter list ended out of context");
-                    }
-
-                    break;
-                }
-
-                // Other
-                case WHITESPACE: {
-                    break;
-                }
+                    
                 default: {
-                    throw new ParserException("unknown token");
+                    throw new ParserException("unknown token " + tToken);
                 }
             }
         }
+        
+        while (!tStack.isEmpty()) {
+            Token tToken = tStack.pop();
+            
+            switch (tToken.getType()) {
+                case LEFT_PARENTHESIS:
+                case RIGHT_PARENTHESIS:
+                    throw new ParserException("mismatched parenthesis");
+
+                case WORD:
+                    tQueue.add(tToken);
+                    break;
+                    
+                default:
+                    throw new ParserException("mismatched token " + tToken);
+            }
+        }
+        
+        return tQueue;
+    }
+
+    // Syntactic analysis: the interpreter
+    public Filter interprete(Queue<Token> iTokens) throws ParserException {
+        Filter oFilter = new Filter();
+        Stack<Convertable> tStack = new Stack<Convertable>();
+
+        Iterator<Token> tIterator = iTokens.iterator();
+        while (tIterator.hasNext()) {
+            Token tToken = tIterator.next();
+
+            switch (tToken.getType()) {
+                case INT:
+                    tStack.push(new DataInt(Integer.parseInt(tToken.getContent())));
+                    break;
+                    
+                case FLOAT:
+                    tStack.push(new DataFloat(Double.parseDouble(tToken.getContent())));
+                    break;
+
+                case QUOTE:
+                    tStack.push(new DataString(tToken.getContent()));
+                    break;
+
+                case WORD:
+                    OperatorType tOperator = getOperator(tToken);
+                    FunctionType tFunction = getFunction(tToken);
+                    if (tOperator != null || tFunction != null) {
+                        // Handle parameters
+                        int tParameterCount = 2; // TODO: getParameters();
+                        if (tStack.size() < tParameterCount)
+                            throw new ParserException("not enough parameters provided");
+                        Vector<Convertable> tParameters = new Vector<Convertable>();
+                        tParameters.setSize(tParameterCount);
+                        for (int i = 0; i < tParameterCount; i++)
+                            tParameters.set(tParameterCount-i-1, tStack.pop()); // mind the reversion of the argument order
+
+                        // Instantiate object
+                        // TODO: put the instantiations in the ruleset as well (maybe Class()?)
+                        Condition tCondition = null;
+                        if (tOperator != null) {
+                            switch (tOperator) {
+                                case C_EQUALS:
+                                    tCondition = new ConditionEquals();
+                                    break;
+                                case E_AND:
+                                    tCondition = new RelationAnd();
+                                    break;
+                                case E_OR:
+                                    tCondition = new RelationOr();
+                                    break;
+                            }
+                        }
+                        else if (tFunction != null) {
+                            switch (tFunction) {
+
+                            }
+                        }
+
+                        // Pass parameters and push the result
+                        tCondition.setParameters(tParameters);
+                        tStack.add(tCondition);
+                    }
+                    else {
+                        tStack.push(new DataKey(tToken.getContent()));
+                    }
+                    break;
+                
+                default:
+                    throw new ParserException("unknown token " + tToken);
+            }
+        }
+
+        if (tStack.size() != 1) {
+            throw new ParserException("filter evaluation failed: result count mismatch");
+        }
+        Convertable tRoot = tStack.pop();
+        if (!(tRoot instanceof Condition))
+            throw new ParserException("root node should be a condition");
+
+        try {
+            oFilter.addCondition((Condition)tRoot);
+        } catch (FilterException e) {
+            throw new ParserException("could not add root node to filter", e.getCause());
+        }
 
         return oFilter;
+    }
+
+
+    //
+    // Auxiliary
+    //
+
+    private OperatorType getOperator(Token iToken) {
+        // Create a new matcher container
+        Matcher tMatcher = Pattern.compile("dummy").matcher(iToken.getContent());
+        tMatcher.useTransparentBounds(true).useAnchoringBounds(false);
+
+        // Check all rules
+        for (Rule<OperatorType> tRule : mOperatorRules) {
+            if (tMatcher.usePattern(tRule.getPattern()).lookingAt()) {
+                return tRule.getType();
+            }
+        }
+        return null;
+    }
+
+    private FunctionType getFunction(Token iToken) {
+        // Create a new matcher container
+        Matcher tMatcher = Pattern.compile("dummy").matcher(iToken.getContent());
+        tMatcher.useTransparentBounds(true).useAnchoringBounds(false);
+
+        // Check all rules
+        for (Rule<FunctionType> tRule : mFunctionRules) {
+            if (tMatcher.usePattern(tRule.getPattern()).lookingAt()) {
+                return tRule.getType();
+            }
+        }
+        return null;
     }
 }

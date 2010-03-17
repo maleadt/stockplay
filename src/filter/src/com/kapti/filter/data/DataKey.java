@@ -35,7 +35,7 @@ public class DataKey extends Data {
     //
 
     public DataKey() {
-        
+
     }
     public DataKey(String iData) {
         super(iData);
@@ -45,7 +45,7 @@ public class DataKey extends Data {
     //
     // Methods
     //
-    
+
     @Override
     public void check() throws FilterException {
         super.check();

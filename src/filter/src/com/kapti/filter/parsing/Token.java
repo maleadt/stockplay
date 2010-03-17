@@ -30,7 +30,7 @@ public class Token {
     // Member data
     //
 
-    private final Parser.Type mType;
+    private final Parser.TokenType mType;
     private final int mStart, mEnd;
     private final String mContent;
 
@@ -39,7 +39,7 @@ public class Token {
     // Construction
     //
 
-    Token(Parser.Type iType, int iStart, int iEnd, String iContent) {
+    Token(Parser.TokenType iType, int iStart, int iEnd, String iContent) {
         mType = iType;
         mStart = iStart;
         mEnd = iEnd;
@@ -53,10 +53,10 @@ public class Token {
 
     @Override
     public String toString() {
-        return String.format("Token [%2d, %2d, %s]", mStart, mEnd, mType);
+        return String.format("Token [%2d, %2d, %s]: %s", mStart, mEnd, mType, getContent());
     }
 
-    public Parser.Type getType() {
+    public Parser.TokenType getType() {
         return mType;
     }
 

@@ -45,7 +45,7 @@ public class ConditionEquals extends Condition {
         if (mParameters.size() != 2)
             throw new RuntimeException("Equality check only accepts exact two parameters");
         if (!(mParameters.get(0) instanceof DataKey))
-            throw new RuntimeException("Equality check requires first argument to be a key identifier");
+            throw new RuntimeException("Equality check requires first argument to be a DataKey, not a " + mParameters.get(0).getClass().getSimpleName());
     }
 
     @Override
