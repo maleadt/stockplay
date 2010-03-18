@@ -13,7 +13,19 @@ $(function (){
             { label: "Beursverloop Tomtom", data: d, color: "lightblue" }
         ];
     }
-
+    
+    function getMax() {
+    	var max =  startData[0][1] ;
+    	
+    	alert(startData.length);
+    	
+ 		for(i=0;i<startData.length;i++) {
+        	if ( startData[i][1] > max ) max =  startData[i][1] ;
+  		}
+    	
+    	return max;
+    }
+    
     var options = {
         legend: {
         	show: true,
@@ -35,11 +47,15 @@ $(function (){
         	ticks: 9,
         	mode: "time"
         },
-        yaxis: { ticks: 6 },
-        //selection: { mode: "x" },
-        pan: {
-            interactive: true
+        yaxis: {
+        	ticks: 6,
+        	min: 0,
+        	max: 80
         },
+        //selection: { mode: "x" },
+        //pan: {
+        //    interactive: true
+        //},
         zoom: {
             interactive: true
         },
@@ -61,13 +77,45 @@ $(function (){
 
     var startData = getData(2, 11);
     $.plot($("#plotTest div"), startData, options);
+
+    alert(getMax());
     
     var geschiedenis = new Array();
     var vorige;
+    
+    function selectie() {
+	    $.plot($("#plotTest div"), startData, addSelection(options) );
+	};    
+
+    function addSelection(options) {
+	    return $.extend(true, {}, options, {
+			selection: { mode: "x" }
+        });
+	};    
+
+    function addPanning(options) {
+	    return $.extend(true, {}, options, {
+			pan: { interactive: true }
+        });
+	};    
+
+    function setXRange(options, min, max) {
+	    return $.extend(true, {}, options, {
+			xaxis: { min: min, max: max }
+        });
+	};    
+
+    function setYRange(options, min, max) {
+	    return $.extend(true, {}, options, {
+			yaxis: { min: min, max: max }
+        });
+	};    
 
 	$("#plotTest div").bind('plotpan', function (event, plot) {
         
         var axes = plot.getAxes();
+
+        return;
 
         $.plot($("#plotTest div"), getData(axes.xaxis.min/10000000, axes.xaxis.max*2/10000000),
                       $.extend(true, {}, options, {
@@ -89,17 +137,23 @@ $(function (){
     });
     
     $("#plotTest div").bind("plotselected", function (event, ranges) {
+    
         // limiet instellen
         if (ranges.xaxis.to - ranges.xaxis.from < 10000)
             ranges.xaxis.to = ranges.xaxis.from + 10000;
         if (ranges.yaxis.to - ranges.yaxis.from < 10000)
             ranges.yaxis.to = ranges.yaxis.from + 10000;
+  
+  
+          // zoom data ophalen
+        $.plot($("#plotTest div"), startData, addPanning(  setXRange( options, ranges.xaxis.from,  ranges.xaxis.to   )      ) );
+
         
         // zoom data ophalen
-        $.plot($("#plotTest div"), getData(ranges.xaxis.from/10000000, ranges.xaxis.to*2/10000000),
-                      $.extend(true, {}, options, {
-                          xaxis: { min: ranges.xaxis.from, max: ranges.xaxis.to }
-                      }));
+//        $.plot($("#plotTest div"), getData(ranges.xaxis.from/10000000, ranges.xaxis.to*2/10000000),
+//                      $.extend(true, {}, options, {
+//                          xaxis: { min: ranges.xaxis.from, max: ranges.xaxis.to }
+//                      }));
                       
         // geschiedenis
        	geschiedenis.push(vorige);
@@ -108,9 +162,15 @@ $(function (){
     });
     
     $("#plotTest div").bind('plotzoom', function (event, plot) {
-        
-        return;
+    
+
         var ranges = plot.getAxes();
+
+        // zoom data ophalen
+        $.plot($("#plotTest div"), startData, setXRange(  setYRange( options, 25,  80  )   , ranges.xaxis.min  , ranges.xaxis.max  )  );
+
+        return;
+
         
         // limiet instellen
         if (ranges.xaxis.to - ranges.xaxis.min < 10000)
@@ -150,6 +210,11 @@ $(function (){
     $("#plotTest li.hand.reset").bind('click', function(e){
 		$.plot($("#plotTest div"), startData, options);
 		geschiedenis.length = 0;
+		return false;
+    });
+
+    $("#plotTest li.hand.selection").bind('click', function(e){
+		selectie();
 		return false;
     });
         
