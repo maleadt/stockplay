@@ -44,7 +44,7 @@
                     <p>Css-vriendelijke treeview:</p>
                     
                     <asp:SiteMapDataSource ID="SiteMapSource" runat="server" ShowStartingNode="false" />
-                    <asp:TreeView ID="TreeView1" runat="server" ShowExpandCollapse="False" DataSourceID="SiteMapSource">
+                    <asp:TreeView CssClass="menu" ID="TreeView1" runat="server" ShowExpandCollapse="False" DataSourceID="SiteMapSource">
                     </asp:TreeView>
                 </div>
                 <div id="leftBottom">
