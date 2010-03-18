@@ -21,11 +21,9 @@
  */
 package com.kapti.filter.relation.sql;
 
-import com.kapti.filter.Convertable;
 import com.kapti.filter.condition.Condition;
 import com.kapti.filter.exception.FilterException;
 import com.kapti.filter.relation.RelationOr;
-import java.util.List;
 
 /**
  *
@@ -38,10 +36,6 @@ public class RelationOrConverter extends RelationOr {
 
     public RelationOrConverter(RelationOr iObject) {
         super(iObject);
-    }
-
-    public RelationOrConverter(List<Convertable> iParameters) {
-        super(iParameters);
     }
 
 

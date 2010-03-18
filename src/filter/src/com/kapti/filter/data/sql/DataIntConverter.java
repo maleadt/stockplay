@@ -37,10 +37,6 @@ public class DataIntConverter extends DataInt {
         super(iObject);
     }
 
-    public DataIntConverter(Integer iData) {
-        super(iData);
-    }
-
 
     //
     // Methods

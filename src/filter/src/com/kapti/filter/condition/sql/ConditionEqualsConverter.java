@@ -21,11 +21,9 @@
  */
 package com.kapti.filter.condition.sql;
 
-import com.kapti.filter.Convertable;
 import com.kapti.filter.condition.ConditionEquals;
 import com.kapti.filter.data.Data;
 import com.kapti.filter.exception.FilterException;
-import java.util.List;
 
 /**
  *
@@ -38,10 +36,6 @@ public class ConditionEqualsConverter extends ConditionEquals {
 
     public ConditionEqualsConverter(ConditionEquals iObject) {
         super(iObject);
-    }
-
-    public ConditionEqualsConverter(List<Convertable> iParameters) {
-        super(iParameters);
     }
 
 

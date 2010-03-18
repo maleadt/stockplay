@@ -37,10 +37,6 @@ public class DataStringConverter extends DataString {
         super(iObject);
     }
 
-    public DataStringConverter(String iData) {
-        super(iData);
-    }
-
 
     //
     // Methods

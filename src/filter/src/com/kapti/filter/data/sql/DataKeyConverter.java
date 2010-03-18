@@ -37,10 +37,6 @@ public class DataKeyConverter extends DataKey {
         super(iObject);
     }
 
-    public DataKeyConverter(String iData) {
-        super(iData);
-    }
-
 
     //
     // Methods
