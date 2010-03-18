@@ -8,7 +8,7 @@
         AutoGenerateColumns="False" AllowSorting="True" AllowPaging="True"
         OnSorting="SecuritiesGridview_Sorting" 
         OnPageIndexChanging="SecuritiesGridview_PageIndexChanging" GridLines="None" 
-        CellSpacing="-1" PageSize="1">
+        CellSpacing="-1" PageSize="2">
         <Columns>
             <asp:BoundField DataField="Symbol" HeaderText="Symbool" SortExpression="Symbol" >
                 <ItemStyle CssClass="name" />

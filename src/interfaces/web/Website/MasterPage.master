@@ -21,39 +21,24 @@
         
         <div id="content">
             <div id="menu">            
-                <div id="left">
-                                
+                <div id="left">       
                     <input id="search" name="search" type="text" value="Effect zoeken.." />
-                    
-                    <p>Referentiemenu</p>
-                    
-                    <ul>
-                        <li><a href="#">Default</a></li>
-                        <li><a href="#">Overview</a></li>
-                        <li class="niv2"><a href="#">Portfolio</a></li>
-                        <li class="niv2"><a href="#">Security</a></li>
-                        <li><a href="#">Securitys Overview</a></li>
-                        <li><a href="#">Transactions History</a></li>
-                        <li><a href="#">Klassement</a></li>
-                        <li><a href="#">User</a></li>
-                        <li class="niv2"><a href="#">Overview</a></li>
-                        <li class="niv2"><a href="#">Portfolio</a></li>
-                        <li class="niv2"><a href="#">Transactions History</a></li>
-                    </ul>
-                    
-                    <p>Css-vriendelijke treeview:</p>
-                    
+
                     <asp:SiteMapDataSource ID="SiteMapSource" runat="server" ShowStartingNode="false" />
                     <asp:TreeView CssClass="menu" ID="TreeView1" runat="server" ShowExpandCollapse="False" DataSourceID="SiteMapSource">
                     </asp:TreeView>
                 </div>
+                
                 <div id="leftBottom">
-                    <p><a href="">User</a> > <a href="">Transactions History</a></p>
+                    <asp:SiteMapPath ID="SiteMapPath1" runat="server"></asp:SiteMapPath>
                     <p>Logged in as: <a href="">Laurens</a></p>
                     <p>Your capital: &#8364;100,045.04</p>
                 </div>
+                
             </div>
             <div id="right">
+                <asp:ContentPlaceHolder id="ContentPlaceHolder" runat="server" />
+            
                 <h2>Portfolio overview</h2>
                 <ul class="actions">
                     <li class="action buy">Buy Security</li>
@@ -102,8 +87,6 @@
                         <td class="action"><img id="Img6" runat="server" src="~/App_Themes/StockPlay/afbeeldingen/money_delete.png" alt="Sell"/></td>
                     </tr>
                 </table>
-                
-                <asp:ContentPlaceHolder id="ContentPlaceHolder" runat="server" />
                 
                 <div id="plotTest" class="plot">
                     <div class="draw">

@@ -17,14 +17,20 @@ public partial class SecuritiesOverview : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        IDataAccess data = DataAccess.GetInstance();
+        DataView securitiesView;
 
-        DataTable securitiesTable = GenerateDataTable(data.GetSecuritiesList());
+        if (!IsPostBack)
+        {
+            IDataAccess data = DataAccess.GetInstance();
 
-        SecuritiesGridview.DataSource = securitiesTable;
+            DataTable securitiesTable = GenerateDataTable(data.GetSecuritiesList());
+            Session["securitiesView"] = securitiesTable.DefaultView;
+        }
+
+        securitiesView = (DataView) Session["securitiesView"];
+
+        SecuritiesGridview.DataSource = securitiesView;
         SecuritiesGridview.DataBind();
-
-        ViewState["securities"] = securitiesTable;
     }
 
     private DataTable GenerateDataTable(List<Security> securities)
@@ -79,11 +85,10 @@ public partial class SecuritiesOverview : System.Web.UI.Page
 
     protected void SecuritiesGridview_Sorting(object sender, GridViewSortEventArgs e)
     {
-        DataTable dataTable = SecuritiesGridview.DataSource as DataTable;
+        DataView dataView = (DataView) Session["securitiesView"];
 
-        if (dataTable != null)
+        if (dataView != null)
         {
-            DataView dataView = new DataView(dataTable);
             dataView.Sort = e.SortExpression + " " + ConvertSortDirectionToSql(e.SortDirection);
 
             SecuritiesGridview.DataSource = dataView;

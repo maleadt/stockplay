@@ -11,7 +11,7 @@ using System.Web.UI.WebControls.WebParts;
 using System.Xml.Linq;
 
 /// <summary>
-/// Summary description for TreeViewCustomAdapter
+/// Rendert de treeview als een UL met LI tags.
 /// </summary>
 public class TreeViewCustomAdapter : System.Web.UI.WebControls.Adapters.WebControlAdapter
 {
@@ -32,42 +32,40 @@ public class TreeViewCustomAdapter : System.Web.UI.WebControls.Adapters.WebContr
     protected override void RenderContents(HtmlTextWriter writer)
     {
         TreeView tree = Control as TreeView;
+        RenderNodes(writer, tree.Nodes);
+    }
 
-        foreach (TreeNode node in tree.Nodes)
+    private void RenderNodes(HtmlTextWriter writer, TreeNodeCollection children)
+    {
+        writer.Indent++;
+        foreach (TreeNode subnode in children)
         {
+            writer.WriteLine();
             writer.WriteBeginTag("li");
             writer.Write(HtmlTextWriter.TagRightChar);
-            if (node.NavigateUrl != null)
+
+            if (subnode.NavigateUrl != null)
             {
                 writer.WriteBeginTag("a");
-                writer.WriteAttribute("href", node.NavigateUrl);
-                writer.Write(HtmlTextWriter.TagRightChar);
-                writer.Write(node.Text);
+                writer.WriteAttribute("href", subnode.NavigateUrl);
+                writer.Write(">");
+                writer.Write(subnode.Text);
                 writer.WriteEndTag("a");
             }
+
             writer.WriteEndTag("li");
 
-            if (node.ChildNodes.Count != 0)
+            if (subnode.ChildNodes.Count != 0)
             {
+                writer.WriteLine();
                 writer.WriteBeginTag("ul");
+                writer.WriteAttribute("class", "TreeViewSubmenu");
                 writer.Write(HtmlTextWriter.TagRightChar);
-
-                foreach (TreeNode subnode in node.ChildNodes)
-                {
-                    writer.WriteBeginTag("li");
-                    writer.Write(HtmlTextWriter.TagRightChar);
-                    if (node.NavigateUrl != null)
-                    {
-                        writer.WriteBeginTag("a");
-                        writer.WriteAttribute("href", subnode.NavigateUrl);
-                        writer.Write(">");
-                        writer.Write(subnode.Text);
-                        writer.WriteEndTag("a");
-                    }
-                    writer.WriteEndTag("li");
-                }
+                RenderNodes(writer, subnode.ChildNodes);
                 writer.WriteEndTag("ul");
             }
         }
+        writer.Indent--;
+        writer.WriteLine();
     }
 }

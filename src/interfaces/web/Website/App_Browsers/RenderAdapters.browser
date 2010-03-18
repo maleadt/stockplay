@@ -2,6 +2,7 @@
   <browser refID="Default">
     <controlAdapters>
       <adapter controlType="System.Web.UI.WebControls.TreeView" adapterType="TreeViewCustomAdapter"/>
+      <adapter controlType="System.Web.UI.WebControls.SiteMapPath" adapterType="SiteMapPathCustomAdapter"/>
     </controlAdapters>
   </browser>
 </browsers>
