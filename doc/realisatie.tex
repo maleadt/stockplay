@@ -565,3 +565,137 @@ Als de koers buiten een van de twee limietwaarden valt dan geeft de module een p
 
 \section{Stop loss}
 De module vraagt bij een aankooporder aan de backend wat de laagste prijs was tussen het plaatsen van het order en het huidige tijdstip. Is dit minimum lager dan de eerste parameter, dan geeft de module een positief antwoord terug. Bij een verkooporder gebeurd het omgekeerde.
+
+
+%
+% Filters
+%
+
+\chapter{Filters}
+
+Een bijkomend probleem kwam naar boven bij de effectieve implementatie van het backend protocol. Daarbij hadden we immers voorzien in een flexibele filter-methodiek, vergelijkbaar met de WHERE clausule in een SQL statement.
+Naar verloop van tijd hebben we echter een bijkomende genericiteit geintroduceerd in de backend, namelijk de Data Access Objects, waardoor het niet meer vastligt welke database effectief gebruikt zou worden. Hierdoor voldeed een filter opgemaakt in SQL-syntax niet meer, aangezien niet alle mogelijke data-backends SQL-filters ondersteunen (denk maar aan een puur Java data-backend, gebruik makende van datastructuren eigen aan Java zelf).
+
+Daarom zijn we op zoek gegaan naar een methodiek om gemakkelijk filters door te geven aan de backend, mits mogelijkheden om eenzelfde filter te gebruiken in combinatie met verschillende data-backends. De JDBC backend die we nu gebruikten voor data toegang bleek daarvoor onvoldoende, aangezien die enerzijds enkel database-specifieke SQL queries aanvaardt, en anderzijds niet noodzakelijk gebruikt wordt in elke DAO implementatie. Ook bleken er geen bestaande paketten beschikbaar te zijn om deze taak te realiseren, het werd dus snel duidelijk dat we onze eigen implementatie zouden moeten voorzien.
+
+\section{Input formaat}
+
+Vooraleer een implementatie te schrijven, was het imperatief om de semantiek vast te leggen: hoe geeft een gebruiker een filter door aan de backend. Dit moest voldoen aan een aantal eisen:
+\begin{enumerate}
+\item Compact: de data wordt over het netwerk verstuurd en mag dus niet te groot zijn.
+\item Gebruiksvriendelijk: de filter wordt steeds opgesteld door een developer, en moet dus eenvoudig in gebruik zijn.
+\item Flexibel: zowel eenvoudige als complexe filters moeten mogelijk zijn, zonder daarbij in een extreem moeilijke syntax terecht te komen.
+\end{enumerate}
+
+Een eerste methode zou zijn om de filter op te stellen aan de hand van een aantal Java objecten, waarbij aan elk object kinderen toegevoegd kunnen worden, en de root node dan instaat voor de evaluatie van de filter-boom. Hoewel deze methode makkelijk te implementeren is, is ze verre van gebruiksvriendelijk, en niet eenvoudig te versturen over het netwerk zonder gebruik te maken van serializatieprotocollen (die onmiddelijk een vrij grote overhead introduceren). Daarom is deze optie vrij snel ge\"elimineerd.
+
+Een volgende manier, gebaseerd op het \makeurl{Hibernate}{https://www.hibernate.org/} framework, stelt een filter op via een hi\"erarchie aan XML tags. Deze filters kunnen dan opgeslaan worden in aparte bestanden, at-runtime ingeladen worden, en aangevuld worden met de nodige parameters (vergelijkbaar per \emph{prepared statements}). Hoewel deze methode heel flexibel is, neigt de syntax snel tot complexe en onoverzichtelijke structuren. Bovendien is ze verre van compact: wat in een SQL filter een eenvoudig gelijkheidsteken is (voor het testen van gelijkheid), wordt hierbij al snel een lange reeks aan karakters met een vaste, vrij grote overhead (zoals de sluittags). Hoewel aantrekkelijker dan een filter opgebouwd met Java objecten, voldeed deze methode evenmin aan onze eisen.
+
+Uiteindelijk zijn we meer gaan kijken naar bestaande en beproefde paketten om onze filtersyntax te definiëren. Het uiteindelijke resultaat bestaat uit een SQL-achtige syntax, zoals we kunnen terug vinden in \makeurl{ASP.NET}{http://www.asp.net/}. Hierbij kan de gebruiker een filter opstellen en doorsturen als een reguliere tekenreeks, wat de eenvoud van het opstellen drastisch verbeterd. Ook blijkt de voorstellingswijze heel compact te zijn: overhead is nauwelijks aanwezig. Tenslotte kunnen we in deze syntax eenvoudig bijkomende hi\"erarchie\"en introduceren op een heel gebruikelijke manier: door het invoeren van extra haakjes. Dit maakt onze filter heel flexibel, zonder daarbij overdreven complex te worden.
+
+\begin{code}
+\begin{verbatim}
+id EQUALS 42 AND name EQUALS 'StockPlay'
+\end{verbatim}
+\caption{De uiteindelijke filter-syntax.}
+\end{code}
+
+\section{Transmissie en conversie}
+
+Nu de semantiek van onze filter vaststond, konden we starten met een deel van de implementatie: de transmissie en conversie.
+Zoals vermeld in bovenstaande sectie, stelt de gebruiker een filter-string op en zendt die door naar de backend over het XML-RPC protocol. Voor de backend is het echter moeilijk om een dergelijke string direct te verwerken, aangezien de filter veel "menselijke opmaak" bevat (zoals whitespace, of infix notatie, meer hierover later). Vooraleer aan de verwerking van de filter te beginnen, is het dus belangrijk ze om te zetten naar een bruikbaar formaat.
+Deze conversiemethoden zijn reeds bekend en goed gedocumenteerd in de vele naslagwerken over compilertechnieken, en we zullen ze dan ook maar kort aanraken.
+
+\subsection{Tokenizer}
+
+De eerste stap bestaat eruit om de ontvangen tekenreeks om te zetten naar een formaat waarbij de string opgedeelt is in syntactische blokken, die snel te identificeren en vergelijken vallen. Hiervoor wordt een lijst aan Token objecten opgebouwd, waarbij elk Token de start en eindpositie van de syntactische blok aanduidt, net als zijn type (een object van het TokenType enumeratietype, wat vergelijken eenvoudiger en sneller maakt) als eventueel een kleinere aanduiding van het syntactisch blok voor de effectieve inhoud.
+
+Het omzetten van karakters naar dergelijke tokens gebeurt aan de hand van een set aan regels, reguliere expressies die telkens overeenkomen met een specifiek TokenType. Om mogelijke ambigu\"iteiten te voorkomen, wordt steeds de langste match effectief opgeslaan. Het detecteren van alternatieve blokken voor de effectieve inhoud wordten de \emph{grouping} mogelijkheden van reguliere expressies gebruikt.
+
+\begin{code}
+\begin{verbatim}
+Token [ 0,  2, WORD]: id
+Token [ 2,  3, WHITESPACE]:  
+Token [ 3,  9, WORD]: EQUALS
+Token [ 9, 10, WHITESPACE]:  
+Token [10, 12, INT]: 42
+Token [12, 13, WHITESPACE]:  
+Token [13, 16, WORD]: AND
+Token [16, 17, WHITESPACE]:  
+Token [17, 21, WORD]: name
+Token [21, 22, WHITESPACE]:  
+Token [22, 28, WORD]: EQUALS
+Token [28, 29, WHITESPACE]:  
+Token [29, 40, QUOTE]: StockPlay
+\end{verbatim}
+\caption{Infix-notatie van de filter-tekenreeks na verwerking door de Tokenizer.}
+\end{code}
+
+\subsection{Infix naar postfix omzetting}
+
+Nu we een lijst hebben van tokens, moet een tweede typische karakteristiek van "menselijke opmaak" verwijderd worden: operator infix notatie. Bij deze notatie wordt een operator omring door zijn parameters, in tegenstelling tot de meer computer-gerichte notatie waarbij alle parameters voorafgegaan worden door hun operator. Het is mogelijk om deze stap over te slaan (iets wat we effectief gedaan hebben bij de eerste versies van deze filter), maar dat resulteert in veel complexere algoritmen voor het omzetten van de lijst aan tokens naar een AST.
+
+We hebben deze stap gerealiseerd via het shunting-yard algoritme van Edsger Dijkstra. Dit stack-based algoritme wordt vaak gebruikt bij het verwerken van infix-genoteerde mathematische uitdrukkingen, maar kan mits kleine wijzigingen perfect gebruikt worden voor het verwerken van onze filter. Voor de effectieve implementatie van dit algoritme verwijzen we naar het ruime aanbod van voorbeelden online.
+
+Een beperking van dit algoritme is echter dat elke functie of operator steeds moet vastleggen hoeveel parameters die accepteert. Zonder dit kan het algoritme niet beslissen hoeveel paramters er van de stack moeten gehaald worden. In de huidige opzet van ons filterontwerp hebben we echter dergelijke functies niet nodig, en daarom is er ook geen voorziening geimplementeerd om er mee te kunnen opgaan. Moest dit echter wel het geval zijn, is het mogelijk het Shunting-yard aloritme \makeurl{uit te breiden}{http://www.kallisti.net.nz/blog/2008/02/extension-to-the-shunting-yard-algorithm-to-allow-variable-numbers-of-arguments-to-functions/} voor gebruik met een willekeurig aantal parameters.
+
+\begin{code}
+\begin{verbatim}
+Token [ 0,  2, WORD]: id
+Token [10, 12, INT]: 42
+Token [ 3,  9, WORD]: EQUALS
+Token [17, 21, WORD]: name
+Token [29, 40, QUOTE]: StockPlay
+Token [22, 28, WORD]: EQUALS
+Token [13, 16, WORD]: AND
+\end{verbatim}
+\caption{Postfix-notatie van de filter-tekenreeks na omzetting door het shunting-yard algoritme.}
+\end{code}
+
+\subsection{Bouwen van een AST}
+
+Nu een lijst van tokens, opgebouwd in postfix notatie, beschikbaar is, kunnen we eenvoudig deze Reverse Polish Notation (RPN) evalueren naar een Abstract Syntax Tree (AST). Deze boomstructuur bevat tevens geen tokens meer, maar instantiaties van de relevante objecten.
+
+Dit stadium bestaat dus essentieel uit twee onderdelen:
+\begin{itemize}
+\item Omzetting van tokens naar relevante objecten.
+\item Conversie van RPN naar een boomstructuur.
+\end{itemize}
+
+Het eerste aspect hiervan is triviaal: gebruik makende van een secundaire set aan regels (opbouw identiek met de regels uit de tokenizer, echter komt een regel nu niet meer overeen met een TokenType maar met een Class) kunnen we op eenvoudige doch flexibele wijze tokens omzetten naar een lokaal object.
+
+Voor het tweede gedeelte gebruiken we een relatief eenvoudige algoritme dat normaal gebruikt wordt voor het \makeurl{evalueren}{http://en.wikipedia.org/wiki/Reverse\_Polish\_notation\#The\_postfix\_algorithm} van postfix-expressies. We breiden het echter uit, zodat we een boom van niet-ge\"evalueerde structuren kunnen opstellen. Om daarbij geavanceerde syntactictische expressies toe te laten, waarbij het (nog onbekende) uitvoeringsresultaat van een operator dient als input voor een andere operator, hebben we gekozen voor de volgens opzet: elk object dat in de boom kan optreden implementeert de Convertable interface, die voorziet in een \emph{compile()} instructie. Die instructie zal voor data-objecten louter zijn inhoud teruggeven, maar zal ovor complexere sub-bomen alle nodes evalueren en het eindresultaat van die evaluatie teruggeven. Zo kan waar een operator een data-object verwacht, eveneens een schakering aan operatoren doorgegeven worden aangezien die eveneens in dezelfde \emph{compile()} instructie voorzien.
+
+\begin{figure}[h!]
+	\centering
+		\includegraphics[width=\textwidth]{images/realisatie/AST}
+	\caption{Abstract Syntax Tree van een voorbeeldfilter.}
+\end{figure}
+
+\section{Verwerking}
+
+Nu de semantiek en conversie van onze filter vastligt, konden we starten met de effectieve implementatie ervan: het omzetten naar of toepassen van de filter op een variabele data-backend. Hierbij zijn de twee grote pistes direct duidelijk: toepassing, of omzetting.
+
+\subsection{Lokale toepassing}
+
+Bij deze opzet wordt de filter lokaal toegepast op een binnengehaalde dataset. Het idee hierbij was om alle records op te halen, en de filter dan lokaal een selectie te laten maken. Die selectie, die voldoet aan de eisen door de gebruiker opgelegd, kan dan teruggestuurd worden.
+
+Hoewel dit idee perfect toepasbaar is bij systemen waar alle data lokaal aanwezig is (zoals een lokale Java data-backend), treden er problemen op als de data enkel remote aanwezig is en lokaal nie gecachet wordt. In dit geval wordt de overhead van het ophalen van alle records veel te groot, zeker toegepast op StockPlay waarbij de Securities-tabel gemakkelijk meer dan duizend records kan bevatten. Hoewel deze evaluatietechniek dus eenvoudiger te implementeren is (het data-backend-specifieke gedeelte is niet meer aanwezig), hebben we door de grote overhead besloten een alternatief te zoeken.
+
+\subsection{Omzetting}
+
+Het alternatief voor een lokale toepassing, is een omzetting van de filter-boom naar een formaat dat geschikt is om op afstand verwerkt te worden. Hierbij is er geen overhead meer aanwezig, maar wordt het geheel een pak complexer daar het moet kunnen omgezet worden naar een specifieke syntax, afhankelijk van de data-backend.
+
+Om hieraan te kunnen voldoen, hebben we de implementatie van filter sub-objecten (zoals Condities, Relaties, en Data objecten) dusdanig gerealiseerd dat een gemeenschappelijk pseudo-abstract Convertable object (wel instantieerbaar, maar faalt bij aanroepen van de abstracte functies) voorziet in een interface en een set aan functies, terwijl een implementerend object dit gemeenschappelijk object dan moet uitbreiden door de abstracte functies in kwestie in te vullen.
+
+De gemeenschappelijke functionaliteit in dergelijke abstracte objecten voorziet in de verwerking van parameters, het aanbieden van een vaste functie-signatuur, de generatie van een Graph-subtree, en tenslotte in een implementatie van de \emph{compile()} functie. Deze functie, een pijler van de filter-infrastructuur, doet enkele elementaire dingen: het haalt een specifieke Converter op, en het roept diens \emph{process()} functie aan met de gepaste parameters. Een dergelijke Converter -- de implementerende counterpart van het abstract object -- voorziet enkel in een \emph{process()} functie, die opgeroepen wordt wanneer het object gecompileerd wordt.
+
+Deze opzet (pseudo-abstracte Convertable objecten die Converters instanti\"eren) mag misschien complex lijken, maar het is elementair in het generiek maken van de filters. Aangezien de pseudo-abstracte Convertable objecten rechtstreeks instanti\"eerbaar zijn, kan de Parser een boomstructuur aan dergelijke objecten opstellen zonder weet te hebben van hoe die boom uiteindelijk zal gecompileerd worden. Het is slechts wanneer die aanroep effectief gebeurt, dat elk Convertable object zal opvragen hoe hij gecompileerd moet worden, om zo de juiste Converter op te roepen. Die Converters voorzien ook niet in een \emph{compile()} instructie, omdat die instructie geen parameters vastlegt en dus manueel de private dataleden zou moeten raadplegen om parameters op te halen. Om dit te vermijden hebben we gekozen voor een extra instructie, de \emph{process()} instructie, die wél voorziet in een specifieke signatuur om zo verkeerde implementaties van de Convertables te vermijden.
+
+\begin{code}
+\begin{verbatim}
+id = 42 AND name = "StockPlay"
+\end{verbatim}
+\caption{Finaal resultaat na omzetting door de SQL-converters.}
+\end{code}
+
