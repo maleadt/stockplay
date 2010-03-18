@@ -29,6 +29,23 @@ import com.kapti.filter.exception.FilterException;
  * @author tim
  */
 public class DataStringConverter extends DataString {
+    //
+    // Construction
+    //
+
+    public DataStringConverter(DataString iObject) {
+        super(iObject);
+    }
+
+    public DataStringConverter(String iData) {
+        super(iData);
+    }
+
+
+    //
+    // Methods
+    //
+
     @Override
     public Object process(String a) throws FilterException {
         return "\"" + a + "\"";

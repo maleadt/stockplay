@@ -21,17 +21,32 @@
  */
 package com.kapti.filter.relation;
 
+import com.kapti.filter.Convertable;
 import com.kapti.filter.condition.Condition;
 import com.kapti.filter.exception.FilterException;
 import com.kapti.filter.graph.Edge;
 import com.kapti.filter.graph.Graph;
 import com.kapti.filter.graph.Node;
+import java.util.List;
 
 /**
  *
  * @author tim
  */
 public class RelationOr extends Relation {
+    //
+    // Construction
+    //
+
+    public RelationOr(RelationOr iObject) {
+        super(iObject);
+    }
+
+    public RelationOr(List<Convertable> iParameters) {
+        super(iParameters);
+    }
+
+
     //
     // Methods
     //

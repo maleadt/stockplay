@@ -21,12 +21,14 @@
  */
 package com.kapti.filter.condition;
 
+import com.kapti.filter.Convertable;
 import com.kapti.filter.data.Data;
 import com.kapti.filter.data.DataKey;
 import com.kapti.filter.exception.FilterException;
 import com.kapti.filter.graph.Edge;
 import com.kapti.filter.graph.Graph;
 import com.kapti.filter.graph.Node;
+import java.util.List;
 
 /**
  * Een gelijkheidscontrole. Deze conditie heeft twee parameters nodig, waarbij
@@ -37,10 +39,23 @@ import com.kapti.filter.graph.Node;
  */
 public class ConditionEquals extends Condition {
     //
+    // Constructie
+    //
+
+    public ConditionEquals(List<Convertable> iParameters) {
+        super(iParameters);
+    }
+
+    public ConditionEquals(ConditionEquals iObject) {
+        super(iObject);
+    }
+    
+
+    //
     // Methods
     //
 
-    public Class[] getParameterSignature() {
+    public static Class[] getSignature() {
         return new Class[] {DataKey.class, Data.class};
     }
 

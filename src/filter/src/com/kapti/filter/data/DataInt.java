@@ -34,9 +34,10 @@ public class DataInt extends Data {
     // Construction
     //
 
-    public DataInt() {
-        
+    public DataInt(DataInt iObject) {
+        super(iObject);
     }
+
     public DataInt(Integer iData) {
         super(iData);
     }

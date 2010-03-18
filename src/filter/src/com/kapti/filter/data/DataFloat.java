@@ -34,9 +34,10 @@ public class DataFloat extends Data {
     // Construction
     //
 
-    public DataFloat() {
-
+    public DataFloat(DataFloat iObject) {
+        super(iObject);
     }
+
     public DataFloat(Double iData) {
         super(iData);
     }

@@ -21,15 +21,34 @@
  */
 package com.kapti.filter.relation.sql;
 
+import com.kapti.filter.Convertable;
 import com.kapti.filter.condition.Condition;
 import com.kapti.filter.exception.FilterException;
 import com.kapti.filter.relation.RelationOr;
+import java.util.List;
 
 /**
  *
  * @author tim
  */
 public class RelationOrConverter extends RelationOr {
+    //
+    // Construction
+    //
+
+    public RelationOrConverter(RelationOr iObject) {
+        super(iObject);
+    }
+
+    public RelationOrConverter(List<Convertable> iParameters) {
+        super(iParameters);
+    }
+
+
+    //
+    // Methods
+    //
+
     @Override
     public Object process(Condition a, Condition b) throws FilterException {
         return (String)a.compile() + " OR " + (String)b.compile();

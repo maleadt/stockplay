@@ -21,9 +21,11 @@
  */
 package com.kapti.filter.data;
 
+import com.kapti.filter.Convertable;
 import com.kapti.filter.exception.FilterException;
 import com.kapti.filter.graph.Graph;
 import com.kapti.filter.graph.Node;
+import java.util.List;
 
 /**
  *
@@ -34,9 +36,10 @@ public class DataKey extends Data {
     // Construction
     //
 
-    public DataKey() {
-
+    public DataKey(DataKey iObject) {
+        super(iObject);
     }
+
     public DataKey(String iData) {
         super(iData);
     }

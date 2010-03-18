@@ -31,6 +31,10 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 /**
+ * Abstracte klasse voor een converteerbaar object. Dit is een heel belangrijk
+ * object, die voorziet in een interface van methodes die elk conveertbaar
+ * object moet implementeren, maar ook een resem gedeelde functionaliteit
+ * (zoals parameters, laden van converters, ...) implementeert.
  *
  * @author tim
  */
@@ -43,16 +47,27 @@ public abstract class Convertable {
 
 
     //
-    // Methods
+    // Constructie
     //
 
-    public void copyData(Convertable iObject) {
+    public Convertable(List<Convertable> iParameters) {
+        mParameters = iParameters;
+    }
+
+    public Convertable(Convertable iObject) {
         mParameters = iObject.mParameters;
     }
 
+
+    //
+    // Methods
+    //
+
     /**
-     * Algemene conversiemethode. Wordt gebruik om de conditie om te zetten naar
-     * een alternatief formaat, zoals een SQL WHERE filter.
+     * Deze methode geeft een Convertable terug die de nodige functionaliteit
+     * implementeert om het huidige object te compileren. Daarbij wordt
+     * gekeken naar een properties file om te zien welke converter ingeladen moet
+     * worden.
      */
     public final Convertable getConverter() throws FilterException {
         // Open the property file
@@ -63,7 +78,7 @@ public abstract class Convertable {
         Constructor tConstructor = null;
         try {
             Class tObjectClass = Class.forName(tObjectName);
-            tConstructor = tObjectClass.getConstructor();
+            tConstructor = tObjectClass.getConstructor(this.getClass());
         }
         catch (ClassNotFoundException e) {
             throw new FilterException("could not find an appropriate converter for object '" + this.getClass().getSimpleName() + "'", e.getCause());
@@ -75,7 +90,7 @@ public abstract class Convertable {
         // Create a new object
         Object tObject = null;
         try {
-            tObject = tConstructor.newInstance();
+            tObject = tConstructor.newInstance(this);
         }
         catch (InstantiationException e) {
             throw new FilterException("requested instantiation of converter '" + tObjectName + "' failed as it is not a concrete class", e.getCause());
@@ -89,29 +104,41 @@ public abstract class Convertable {
 
         // Call the object
         Convertable tConverter = (Convertable) tObject;
-        tConverter.copyData(this);
         return tConverter;
     }
 
+    /**
+     * Compileert het huidige object door een Converter te instantiëren, en dan
+     * daarop opnieuw de Compile functie aan te roepen. Het is dus duidelijk
+     * dat Converters de compile() functie moeten overschrijven door een
+     * effectieve implementatie, of een oneindige loop wordt gecreëerd.
+     * 
+     * @return
+     * @throws FilterException
+     */
     public Object compile() throws FilterException {
         return getConverter().compile();
     }
-    
-    public void addParameter(Convertable iParameter) {
-        mParameters.add(iParameter);
-    }
-    public void setParameters(List<Convertable> iParameters) {
-        mParameters = iParameters;
-    }
-
 
 
     //
     // Interface
     //
 
-    public abstract Class[] getParameterSignature();
+    /**
+     * Elke convertable methode moet ook voorzien in een statische getSignature
+     * methode, die de signatuur van de methode vastlegt. Java biedt echter
+     * geen faciliteiten om een statische methode af te dwingen, vandaar
+     * dit stukje commentaar.
+     */
 
+    /**
+     * Verplicht te-implementeren methode, die instaat voor het toevoegen van
+     * zichzelf aan de globale Graph boom.
+     * 
+     * @param iGraph
+     * @return
+     */
     public abstract Node addNode(Graph iGraph);
 
 }

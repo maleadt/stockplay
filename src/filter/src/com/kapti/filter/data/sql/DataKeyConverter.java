@@ -29,6 +29,23 @@ import com.kapti.filter.exception.FilterException;
  * @author tim
  */
 public class DataKeyConverter extends DataKey {
+    //
+    // Construction
+    //
+
+    public DataKeyConverter(DataKey iObject) {
+        super(iObject);
+    }
+
+    public DataKeyConverter(String iData) {
+        super(iData);
+    }
+
+
+    //
+    // Methods
+    //
+
     @Override
     public Object process(String a) throws FilterException {
         return a.toString();

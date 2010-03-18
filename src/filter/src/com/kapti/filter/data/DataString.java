@@ -34,12 +34,12 @@ public class DataString extends Data {
     // Construction
     //
 
-    public DataString() {
-        
+    public DataString(DataString iObject) {
+        super(iObject);
     }
-    
-    public DataString(String iString) {
-        super(iString);
+
+    public DataString(String iData) {
+        super(iData);
     }
 
 

@@ -29,13 +29,14 @@ import com.kapti.filter.data.DataFloat;
 import com.kapti.filter.data.DataInt;
 import com.kapti.filter.data.DataKey;
 import com.kapti.filter.data.DataString;
-import com.kapti.filter.exception.FilterException;
 import com.kapti.filter.exception.ParserException;
 import com.kapti.filter.relation.Relation;
 import com.kapti.filter.relation.RelationAnd;
 import com.kapti.filter.relation.RelationOr;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -297,32 +298,25 @@ public class Parser {
                         if (tClass == null)
                             tClass = tFunction;
 
-                        // Instantiate the object
-                        Condition tCondition = null;
-                        Object tObject = null;
+                        // Fetch parameter signature
+                        Method[] tMethods = tClass.getMethods();
+                        Method tSignatureMethod = null;
+                        for (Method tMethod : tMethods) {
+                            if (Modifier.isStatic(tMethod.getModifiers()) && tMethod.getName().compareTo("getSignature") == 0)
+                                tSignatureMethod = tMethod;
+                        }
+                        if (tSignatureMethod == null)
+                            throw new ParserException("could not get parameter signature of class due to missing definition");
+                        Class[] tParameterSignature;
                         try {
-                            Constructor tConstructor = tClass.getConstructor(new Class[]{});
-                            tObject = tConstructor.newInstance();
+                            Object tReturn = tSignatureMethod.invoke(null);
+                            tParameterSignature = (Class[]) tReturn;
                         }
-                        catch (NoSuchMethodException e) {
-                            throw new ParserException("error instantiating operator (could not find the constructor)");
+                        catch (Exception e) {
+                            throw new ParserException("could not get parameter signature of class", e.getCause());
                         }
-                        catch (InstantiationException e) {
-                            throw new ParserException("error instantiating operator (requested instantiation failed as it is not a concrete class)", e.getCause());
-                        }
-                        catch (IllegalAccessException e) {
-                            throw new ParserException("error instantiating operator (illegal access to class)", e.getCause());
-                        }
-                        catch (InvocationTargetException e) {
-                            throw new ParserException("error instantiating operator (an exception occured when instantiating the constructor)", e.getCause());
-                        }
-                        if (!(tObject instanceof Condition))
-                            throw new ParserException("attempt to instantiate non condition-typed operator (check the ruleset)");
-                        tCondition = (Condition) tObject;
-                        
+
                         // Handle parameters
-                        // TODO: via constructor?
-                        Class[] tParameterSignature = tCondition.getParameterSignature();
                         int tParameterCount = tParameterSignature.length;
                         if (tStack.size() < tParameterCount)
                             throw new ParserException("parameter mismatch, I expected " + tParameterCount + " of them but only got " + tStack.size());
@@ -336,9 +330,22 @@ public class Parser {
                             tParameters.set(i, tParameter);
                         }
 
-                        // Pass parameters and push the result
-                        tCondition.setParameters(tParameters);
-                        tStack.add(tCondition);
+                        // Instantiate the object
+                        Condition tCondition = null;
+                        Object tObject = null;
+                        try {
+                            Constructor tConstructor = tClass.getConstructor(List.class);
+                            tObject = tConstructor.newInstance(tParameters);
+                        }
+                        catch (Exception e) {
+                            throw new ParserException("error instantiating operator", e.getCause());
+                        }
+                        if (!(tObject instanceof Condition))
+                            throw new ParserException("attempt to instantiate non condition-typed operator (check the ruleset)");
+                        tCondition = (Condition) tObject;
+
+                        // Push the result
+                        tStack.push(tCondition);
                     }
                     else {
                         tStack.push(new DataKey(tToken.getContent()));
@@ -357,11 +364,7 @@ public class Parser {
         if (!(tRoot instanceof Condition))
             throw new ParserException("root node should be a condition");
 
-        try {
-            oFilter.addCondition((Condition)tRoot);
-        } catch (FilterException e) {
-            throw new ParserException("could not add root node to filter", e.getCause());
-        }
+        oFilter.setRoot((Condition)tRoot);
 
         return oFilter;
     }

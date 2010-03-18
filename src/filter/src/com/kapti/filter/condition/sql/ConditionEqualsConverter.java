@@ -21,15 +21,34 @@
  */
 package com.kapti.filter.condition.sql;
 
+import com.kapti.filter.Convertable;
 import com.kapti.filter.condition.ConditionEquals;
 import com.kapti.filter.data.Data;
 import com.kapti.filter.exception.FilterException;
+import java.util.List;
 
 /**
  *
  * @author tim
  */
 public class ConditionEqualsConverter extends ConditionEquals {
+    //
+    // Construction
+    //
+
+    public ConditionEqualsConverter(ConditionEquals iObject) {
+        super(iObject);
+    }
+
+    public ConditionEqualsConverter(List<Convertable> iParameters) {
+        super(iParameters);
+    }
+
+
+    //
+    // Methods
+    //
+
     @Override
     public Object process(Data a, Data b) throws FilterException {
         return (String)a.compile() + " = " + (String)b.compile();

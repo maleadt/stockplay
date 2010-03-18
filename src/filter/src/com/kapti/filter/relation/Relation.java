@@ -21,9 +21,11 @@
  */
 package com.kapti.filter.relation;
 
+import com.kapti.filter.Convertable;
 import com.kapti.filter.condition.Condition;
 import com.kapti.filter.graph.Graph;
 import com.kapti.filter.graph.Node;
+import java.util.List;
 
 /**
  * Een relatie, wordt gebruikt om het resultaat van verschillende condities
@@ -36,16 +38,24 @@ public abstract class Relation extends Condition {
     // Construction
     //
 
-    public Condition getCondition(int index) {
-        return (Condition) mParameters.get(index);
+    public Relation(Relation iObject) {
+        super(iObject);
     }
 
+    public Relation(List<Convertable> iParameters) {
+        super(iParameters);
+    }
 
     //
     // Methods
     //
 
-    public Class[] getParameterSignature() {
+    public Condition getCondition(int index) {
+        return (Condition) mParameters.get(index);
+    }
+
+
+    public static Class[] getSignature() {
         return new Class[] {Condition.class, Condition.class};
     }
 

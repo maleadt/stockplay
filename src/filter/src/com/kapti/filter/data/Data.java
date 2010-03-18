@@ -24,6 +24,7 @@ package com.kapti.filter.data;
 import com.kapti.filter.Convertable;
 import com.kapti.filter.graph.Graph;
 import com.kapti.filter.graph.Node;
+import java.util.ArrayList;
 
 /**
  *
@@ -39,30 +40,24 @@ public abstract class Data extends Convertable {
     
     //
     // Construction
-    //  
+    //
 
-    public Data() {
-    }  
-
-    public Data(Object iData) {
-        setData(iData);
+    public Data(Data iObject) {
+        super(iObject);
+        mData = ((Data)iObject).mData;
     }
 
+    public Data(Object iData) {
+        super(new ArrayList<Convertable>());
+        mData = iData;
+    }
+    
 
     //
     // Methods
     //
 
-    public void setData(Object iData) {
-        mData = iData;
-    }
-    @Override
-    public void copyData(Convertable iObject) {
-        super.copyData(iObject);
-        mData = ((Data)iObject).mData;
-    }
-
-    public Class[] getParameterSignature() {
+    public static Class[] getSignature() {
         return new Class[] {};
     }
 

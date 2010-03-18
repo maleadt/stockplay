@@ -27,12 +27,15 @@ import com.kapti.filter.parsing.Parser;
 
 
 /**
+ * Demonstratieklasse voor filters. Deze klasse toont de mogelijkheden van
+ * filters, en hoe ze gebruikt zouden moeten worden.
  *
  * @author tim
  */
 public class Demo {
-
-    /**
+    /** Main entry point. Hierbij wordt een voorbeeld-filter opgesteld,
+     * geparset, gecompileerd, en een debug-view uitgeschreven.
+     *
      * @param args the command line arguments
      */
     public static void main(String[] args) {
@@ -42,7 +45,7 @@ public class Demo {
         // Parse input
         Filter tFilter = null;
         try {
-            tFilter = tParser.parse("id EQUALS 42 AND name EQUALS 'Tim Besard'");
+            tFilter = tParser.parse("id EQUALS 42 AND name EQUALS 'StockPlay'");
         }
         catch (ParserException e) {
             System.err.println("Parsing failed");

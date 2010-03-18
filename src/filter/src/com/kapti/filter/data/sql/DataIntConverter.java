@@ -29,6 +29,23 @@ import com.kapti.filter.exception.FilterException;
  * @author tim
  */
 public class DataIntConverter extends DataInt {
+    //
+    // Construction
+    //
+
+    public DataIntConverter(DataInt iObject) {
+        super(iObject);
+    }
+
+    public DataIntConverter(Integer iData) {
+        super(iData);
+    }
+
+
+    //
+    // Methods
+    //
+
     @Override
     public Object process(Integer a) throws FilterException {
         return a.toString();

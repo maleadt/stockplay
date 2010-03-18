@@ -21,15 +21,34 @@
  */
 package com.kapti.filter.relation.sql;
 
+import com.kapti.filter.Convertable;
 import com.kapti.filter.condition.Condition;
 import com.kapti.filter.exception.FilterException;
 import com.kapti.filter.relation.RelationAnd;
+import java.util.List;
 
 /**
  *
  * @author tim
  */
 public class RelationAndConverter extends RelationAnd {
+    //
+    // Construction
+    //
+
+    public RelationAndConverter(RelationAnd iObject) {
+        super(iObject);
+    }
+
+    public RelationAndConverter(List<Convertable> iParameters) {
+        super(iParameters);
+    }
+
+
+    //
+    // Methods
+    //
+
     @Override
     public Object process(Condition a, Condition b) throws FilterException {
         return (String)a.compile() + " AND " + (String)b.compile();

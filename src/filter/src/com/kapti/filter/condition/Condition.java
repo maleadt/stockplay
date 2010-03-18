@@ -25,16 +25,41 @@ import com.kapti.filter.Convertable;
 import com.kapti.filter.data.Data;
 import com.kapti.filter.graph.Graph;
 import com.kapti.filter.graph.Node;
+import java.util.List;
 
 /**
+ * Basis-interface voor een Conditie: dit is een Convertable waarbij de
+ * parameters data-elementen moeten zijn. Dit wordt echter niet expliciet
+ * gecontroleerd.
  *
  * @author tim
  */
 public abstract class Condition extends Convertable {
     //
+    // Construction
+    //
+
+    public Condition(Condition iObject) {
+        super(iObject);
+    }
+
+    public Condition(List<Convertable> iParameters) {
+        super(iParameters);
+    }
+
+
+    //
     // Methods
     //
-    
+
+    /**
+     * Haalt een parameter op, maar converteert die direct naar een Data object
+     * aangezien Condities enkel Data-objecten als parameters kunnen hebben.
+     * Dit vereenvoudigt de code van implementerende klassen ietwat.
+     * 
+     * @param index
+     * @return
+     */
     public Data getData(int index) {
         return (Data) mParameters.get(index);
     }

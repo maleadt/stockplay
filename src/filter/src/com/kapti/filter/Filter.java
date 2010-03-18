@@ -24,12 +24,15 @@ package com.kapti.filter;
 import com.kapti.filter.graph.Graph;
 import com.kapti.filter.condition.Condition;
 import com.kapti.filter.exception.FilterException;
-import com.kapti.filter.relation.Relation;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 
 /**
+ * Dit is de container voor een filterobject. Dit object bevat eigenlijk
+ * gewoon een root-conditie (de top van de filterboom), en voegt daar
+ * wat functionaliteit aan toe, zoals het initiëren van een compilatie,
+ * of het uitschrijven van een debug-dump.
  *
  * @author tim
  */
@@ -38,10 +41,7 @@ public class Filter {
     // Member data
     //
 
-    private Condition mCondition = null;
-    public Filter() {
-
-    }
+    private Condition mRoot = null;
 
 
     //
@@ -49,47 +49,35 @@ public class Filter {
     //
 
     /**
-     * Voegt een enkele conditie toe, zonder een relatie te specifiëren. Dit is
-     * handig wanneer de relatie reeds geconfigureerd is, of wanneer er geen
-     * nodig is (in geval van een enkele conditie dus). Is hier niet aan voldaan,
-     * zal de methode een FilterException opwerpen.
+     * Stel de root conditie in. Dit is de top van de filter tree, en zal dus
+     * het startpunt zijn voor verschillende acties (compilatie, debug).
      *
-     * @param iCondition
+     * @param iRoot
      */
-    public void addCondition(Condition iCondition) throws FilterException {
-        if (mCondition != null)
-            throw new FilterException("Overwriting existing condition");
-        mCondition = iCondition;
+    public final void setRoot(Condition iRoot) {
+        mRoot = iRoot;
     }
 
     /**
-     * Voegt een conditie toe, waarbij de gespecifieerde relatie toegepast wordt.
-     * Is deze relatie nieuw, of dezelfde van diegene die op dit moment
-     * gespecifieerd is, zal de condititie gewoon aan de filter toegevoegd worden.
-     * Als de relatie verschilt van de huidige, dan zal de huidige set aan
-     * condities verwijderd worden en toegevoegd worden aan een subfilter. Die
-     * zal dan op zijn beurt toegevoegd worden als conditie, toegepast
-     * op de nieuwe doorgegeven conditie en diens relatie.
+     * Compileer de filter naar een bruikbaar formaat.
      *
-     * @param iRelation
-     * @param iCondition
+     * @return
+     * @throws FilterException
      */
-    public void addCondition(Relation iRelation, Condition iCondition) throws FilterException {
-        if (mCondition == null)
-            throw new FilterException("When passing a relation, a condition should be defined already");
-        iRelation.addParameter(mCondition);
-        iRelation.addParameter(iCondition);
-        mCondition = iRelation;
-    }
-
     public Object compile() throws FilterException {
-        return mCondition.compile();
+        return mRoot.compile();
     }
 
+    /**
+     * Schrijf een debug-graph van de filterboom naar een (png) bestand.
+     * 
+     * @param iFilename
+     * @throws FilterException
+     */
     public void debug(String iFilename) throws FilterException {
         // Create graph
         Graph graph = new Graph("digraph");
-        mCondition.addNode(graph);
+        mRoot.addNode(graph);
 
         // Render panel to file
         File tFile = null;
@@ -120,7 +108,12 @@ public class Filter {
         }
     }
 
+    /**
+     * Controleer of de boom gedefiniëerd is.
+     * 
+     * @return
+     */
     public boolean empty() {
-        return mCondition == null;
+        return mRoot == null;
     }
 }
