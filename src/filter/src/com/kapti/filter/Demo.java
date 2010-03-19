@@ -40,7 +40,7 @@ public class Demo {
      */
     public static void main(String[] args) {
         // Test parser
-        Parser tParser = new Parser();
+        Parser tParser = Parser.getInstance();
 
         // Parse input
         Filter tFilter = null;

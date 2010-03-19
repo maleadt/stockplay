@@ -21,11 +21,9 @@
  */
 package com.kapti.filter.data;
 
-import com.kapti.filter.Convertable;
 import com.kapti.filter.exception.FilterException;
 import com.kapti.filter.graph.Graph;
 import com.kapti.filter.graph.Node;
-import java.util.List;
 
 /**
  *

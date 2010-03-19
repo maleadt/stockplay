@@ -34,7 +34,6 @@ import com.kapti.filter.relation.Relation;
 import com.kapti.filter.relation.RelationAnd;
 import com.kapti.filter.relation.RelationOr;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -66,13 +65,14 @@ public class Parser {
     private List<Rule<TokenType>> mTokenRules;
     private List<Rule<Class>> mOperatorRules;
     private List<Rule<Class>> mFunctionRules;
+    private static Parser instance = new Parser();
 
 
     //
     // Construction
     //
 
-    public Parser() {
+    private Parser() {
         // Create token ruleset
         mTokenRules = new ArrayList<Rule<TokenType>>();
         mTokenRules.add(new Rule(TokenType.INT, "[0-9]+"));
@@ -92,6 +92,10 @@ public class Parser {
 
         // Create function ruleset
         mFunctionRules = new ArrayList<Rule<Class>>();
+    }
+
+    public static Parser getInstance() {
+        return instance;
     }
 
 
