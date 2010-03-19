@@ -28,6 +28,8 @@ import com.kapti.data.persistence.GenericDAO;
 import com.kapti.exceptions.StockPlayException;
 import com.kapti.filter.Filter;
 import com.kapti.filter.exception.FilterException;
+import com.kapti.filter.exception.ParserException;
+import com.kapti.filter.parsing.Parser;
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Vector;
@@ -36,12 +38,15 @@ import org.apache.xmlrpc.XmlRpcException;
 public class ConcreteDatabase extends com.kapti.backend.api.user.Portfolio {
 
     @Override
-    public Vector<Hashtable<String, Object>> List(Filter iFilter) throws XmlRpcException, FilterException, StockPlayException {
+    public Vector<Hashtable<String, Object>> List(String iFilter) throws XmlRpcException, FilterException, StockPlayException, ParserException {
         // Get DAO reference
         GenericDAO<com.kapti.data.UserSecurity, UserSecurityPK> tPortfolioDAO = getDAO().getUserSecurityDAO();
 
+        Parser parser = Parser.getInstance();
+        Filter filter = parser.parse(iFilter);
+        
         // Fetch and convert all Indexs
-        Collection<UserSecurity> tSecurities = tPortfolioDAO.findByFilter(iFilter);
+        Collection<UserSecurity> tSecurities = tPortfolioDAO.findByFilter(filter);
         Vector<Hashtable<String, Object>> oVector = new Vector<Hashtable<String, Object>>();
         for (com.kapti.data.UserSecurity tSecurity : tSecurities) {
             oVector.add(tSecurity.toStruct(
@@ -52,6 +57,7 @@ public class ConcreteDatabase extends com.kapti.backend.api.user.Portfolio {
 
         return oVector;
     }
+
 
     // TODO 
 //    @Override

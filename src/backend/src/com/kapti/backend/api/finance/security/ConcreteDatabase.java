@@ -24,7 +24,6 @@ package com.kapti.backend.api.finance.security;
 import com.kapti.backend.api.finance.Security;
 import com.kapti.data.persistence.GenericDAO;
 import com.kapti.exceptions.StockPlayException;
-import com.kapti.filter.Filter;
 import com.kapti.filter.exception.FilterException;
 import java.util.Collection;
 import java.util.Hashtable;
@@ -43,7 +42,7 @@ public class ConcreteDatabase extends Security {
     //
 
     @Override
-    public Vector<Hashtable<String, Object>> List(Filter iFilter) throws XmlRpcException, StockPlayException, FilterException {
+    public Vector<Hashtable<String, Object>> List(String iFilter) throws XmlRpcException, StockPlayException, FilterException {
         // Get DAO reference
         GenericDAO<com.kapti.data.Security, String> tSecurityDAO = getDAO().getSecurityDAO();
 
@@ -61,7 +60,7 @@ public class ConcreteDatabase extends Security {
     }
 
     @Override
-    public int Modify(Filter iFilter, Hashtable<String, Object> iDetails) throws XmlRpcException, StockPlayException, FilterException {
+    public int Modify(String iFilter, Hashtable<String, Object> iDetails) throws XmlRpcException, StockPlayException, FilterException {
         // Get DAO reference
         GenericDAO<com.kapti.data.Security, String> tSecurityDAO = getDAO().getSecurityDAO();
 

@@ -27,6 +27,8 @@ import com.kapti.data.persistence.GenericDAO;
 import com.kapti.exceptions.StockPlayException;
 import com.kapti.filter.Filter;
 import com.kapti.filter.exception.FilterException;
+import com.kapti.filter.exception.ParserException;
+import com.kapti.filter.parsing.Parser;
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Vector;
@@ -44,7 +46,7 @@ public class ConcreteDatabase extends User {
     //
 
     @Override
-    public int Hello(Filter iClient, int iProtocolVersion) throws XmlRpcException {
+    public int Hello(String iClient, int iProtocolVersion) throws XmlRpcException {
         getLogger().info("Client connected: " + iClient);
         if (iProtocolVersion != PROTOCOL_VERSION)
             throw Error.VERSION_NOT_SUPPORTED.getException();
@@ -63,7 +65,7 @@ public class ConcreteDatabase extends User {
     }
 
     @Override
-    public Vector<Hashtable<String, Object>> Details(Filter iFilter) throws XmlRpcException, StockPlayException {
+    public Vector<Hashtable<String, Object>> Details(String iFilter) throws XmlRpcException, StockPlayException {
         // Get DAO reference
         GenericDAO<com.kapti.data.User, Integer> userDAO = getDAO().getUserDAO();
 
@@ -84,7 +86,7 @@ public class ConcreteDatabase extends User {
     }
 
     @Override
-    public Vector<Hashtable<String, Object>> List(Filter iFilter) throws XmlRpcException, StockPlayException {
+    public Vector<Hashtable<String, Object>> List(String iFilter) throws XmlRpcException, StockPlayException {
         // Get DAO reference
         GenericDAO<com.kapti.data.User, Integer> userDAO = getDAO().getUserDAO();
 
@@ -103,14 +105,17 @@ public class ConcreteDatabase extends User {
     }
 
     @Override
-    public int Modify(Filter iFilter, Hashtable<String, Object> iDetails) throws XmlRpcException, StockPlayException, FilterException {
+    public int Modify(String iFilter, Hashtable<String, Object> iDetails) throws XmlRpcException, StockPlayException, FilterException, ParserException {
         // Get DAO reference
         GenericDAO<com.kapti.data.User, Integer> tUserDAO = getDAO().getUserDAO();
+
+        Parser parser = Parser.getInstance();
+        Filter filter = parser.parse(iFilter);
 
         // Now apply the new properties
         // TODO: controleren of de struct geen ID field bevat, deze kan _enkel_
         //       gebruikt worden om een initiële Exchange aa nte maken (Create)
-        for (com.kapti.data.User tUser : tUserDAO.findByFilter(iFilter)) {
+        for (com.kapti.data.User tUser : tUserDAO.findByFilter(filter)) {
             tUser.fromStruct(iDetails);
             tUserDAO.update(tUser);
         }
@@ -119,11 +124,14 @@ public class ConcreteDatabase extends User {
     }
 
     @Override
-    public int Remove(Filter iFilter) throws XmlRpcException, StockPlayException, FilterException {
+    public int Remove(String iFilter) throws XmlRpcException, StockPlayException, FilterException, ParserException {
         // Get DAO reference
         GenericDAO<com.kapti.data.User, Integer> tUserDAO = getDAO().getUserDAO();
 
-        for (com.kapti.data.User tUser : tUserDAO.findByFilter(iFilter))
+        Parser parser = Parser.getInstance();
+        Filter filter = parser.parse(iFilter);
+
+        for (com.kapti.data.User tUser : tUserDAO.findByFilter(filter))
             tUserDAO.delete(tUser);
         
         return 1;

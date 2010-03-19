@@ -25,6 +25,8 @@ import com.kapti.data.persistence.GenericDAO;
 import com.kapti.exceptions.StockPlayException;
 import com.kapti.filter.Filter;
 import com.kapti.filter.exception.FilterException;
+import com.kapti.filter.exception.ParserException;
+import com.kapti.filter.parsing.Parser;
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Vector;
@@ -42,12 +44,15 @@ public class ConcreteDatabase extends com.kapti.backend.api.finance.Exchange {
     //
 
     @Override
-    public Vector<Hashtable<String, Object>> List(Filter iFilter) throws XmlRpcException, StockPlayException, FilterException {
+    public Vector<Hashtable<String, Object>> List(String iFilter) throws XmlRpcException, StockPlayException, FilterException, ParserException {
         // Get DAO reference
         GenericDAO<com.kapti.data.Exchange, String> exDAO = getDAO().getExchangeDAO();
 
+        Parser parser = Parser.getInstance();
+        Filter filter = parser.parse(iFilter);
+
         // Fetch and convert all exchanges
-        Collection<com.kapti.data.Exchange> tExchanges = exDAO.findByFilter(iFilter);
+        Collection<com.kapti.data.Exchange> tExchanges = exDAO.findByFilter(filter);
         Vector<Hashtable<String, Object>> oVector = new Vector<Hashtable<String, Object>>();
         for (com.kapti.data.Exchange tExchange : tExchanges) {
             oVector.add(tExchange.toStruct(
@@ -60,12 +65,15 @@ public class ConcreteDatabase extends com.kapti.backend.api.finance.Exchange {
     }
 
     @Override
-    public int Modify(Filter iFilter, Hashtable<String, Object> iDetails) throws XmlRpcException, StockPlayException, FilterException {
+    public int Modify(String iFilter, Hashtable<String, Object> iDetails) throws XmlRpcException, StockPlayException, FilterException, ParserException {
         // Get DAO reference
         GenericDAO<com.kapti.data.Exchange, String> exDAO = getDAO().getExchangeDAO();
 
+        Parser parser = Parser.getInstance();
+        Filter filter = parser.parse(iFilter);
+
         // Get the exchanges we need to modify
-        Collection<com.kapti.data.Exchange> tExchanges = exDAO.findByFilter(iFilter);
+        Collection<com.kapti.data.Exchange> tExchanges = exDAO.findByFilter(filter);
 
         // Now apply the new properties
         // TODO: controleren of de struct geen ID field bevat, deze kan _enkel_

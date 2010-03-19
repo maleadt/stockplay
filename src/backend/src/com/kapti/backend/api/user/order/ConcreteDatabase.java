@@ -27,6 +27,8 @@ import com.kapti.data.persistence.GenericDAO;
 import com.kapti.exceptions.StockPlayException;
 import com.kapti.filter.Filter;
 import com.kapti.filter.exception.FilterException;
+import com.kapti.filter.exception.ParserException;
+import com.kapti.filter.parsing.Parser;
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Vector;
@@ -35,12 +37,15 @@ import org.apache.xmlrpc.XmlRpcException;
 public class ConcreteDatabase extends com.kapti.backend.api.user.Order {
 
     @Override
-    public Vector<Hashtable<String, Object>> List(Filter iFilter) throws XmlRpcException, StockPlayException, FilterException {
+    public Vector<Hashtable<String, Object>> List(String iFilter) throws XmlRpcException, StockPlayException, FilterException, ParserException {
         // Get DAO reference
         GenericDAO<com.kapti.data.Order, Integer> orDAO = getDAO().getOrderDAO();
 
+        Parser parser = Parser.getInstance();
+        Filter filter = parser.parse(iFilter);
+        
         // Fetch and convert all orders
-        Collection<com.kapti.data.Order> tOrders = orDAO.findByFilter(iFilter);
+        Collection<com.kapti.data.Order> tOrders = orDAO.findByFilter(filter);
         Vector<Hashtable<String, Object>> oVector = new Vector<Hashtable<String, Object>>();
         for (com.kapti.data.Order tOrder : tOrders)
             oVector.add(tOrder.toStruct(
@@ -65,12 +70,15 @@ public class ConcreteDatabase extends com.kapti.backend.api.user.Order {
     }
 
     @Override
-    public int Cancel(Filter iFilter) throws XmlRpcException, FilterException, StockPlayException {
+    public int Cancel(String iFilter) throws XmlRpcException, FilterException, StockPlayException, ParserException {
         // Get DAO reference
         GenericDAO<com.kapti.data.Order, Integer> orDAO = getDAO().getOrderDAO();
 
+        Parser parser = Parser.getInstance();
+        Filter filter = parser.parse(iFilter);
+
         // Get the exchanges we need to modify
-        Collection<com.kapti.data.Order> tOrders = orDAO.findByFilter(iFilter);
+        Collection<com.kapti.data.Order> tOrders = orDAO.findByFilter(filter);
 
         // Now apply the cancelation
         for (com.kapti.data.Order tOrder : tOrders) {

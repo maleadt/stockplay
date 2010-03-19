@@ -40,7 +40,7 @@ public abstract class Security extends MethodClass {
     // Methodes
     //
 
-    public abstract Vector<Hashtable<String, Object>> List(Filter iFilter) throws XmlRpcException, StockPlayException, FilterException;
-    public abstract int Modify(Filter iFilter, Hashtable<String, Object> iDetails) throws XmlRpcException, StockPlayException, FilterException;
+    public abstract Vector<Hashtable<String, Object>> List(String iFilter) throws XmlRpcException, StockPlayException, FilterException;
+    public abstract int Modify(String iFilter, Hashtable<String, Object> iDetails) throws XmlRpcException, StockPlayException, FilterException;
     public abstract int Create(Hashtable<String, Object> iDetails) throws XmlRpcException, StockPlayException;
 }

@@ -23,8 +23,8 @@ package com.kapti.backend.api.user;
 
 import com.kapti.backend.api.MethodClass;
 import com.kapti.exceptions.StockPlayException;
-import com.kapti.filter.Filter;
 import com.kapti.filter.exception.FilterException;
+import com.kapti.filter.exception.ParserException;
 import java.util.Hashtable;
 import java.util.Vector;
 import org.apache.xmlrpc.XmlRpcException;
@@ -40,5 +40,5 @@ public abstract class Transaction extends MethodClass {
     // Methodes
     //
 
-    public abstract Vector<Hashtable<String, Object>> List(Filter iFilter) throws XmlRpcException, FilterException, StockPlayException;
+    public abstract Vector<Hashtable<String, Object>> List(String iFilter) throws XmlRpcException, FilterException, StockPlayException, ParserException;
 }
