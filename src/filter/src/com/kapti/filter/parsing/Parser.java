@@ -25,6 +25,10 @@ import com.kapti.filter.Convertable;
 import com.kapti.filter.Filter;
 import com.kapti.filter.condition.Condition;
 import com.kapti.filter.condition.ConditionEquals;
+import com.kapti.filter.condition.ConditionGreaterThan;
+import com.kapti.filter.condition.ConditionGreaterThanOrEqual;
+import com.kapti.filter.condition.ConditionLessThan;
+import com.kapti.filter.condition.ConditionLessThanOrEqual;
 import com.kapti.filter.data.DataFloat;
 import com.kapti.filter.data.DataInt;
 import com.kapti.filter.data.DataKey;
@@ -87,6 +91,10 @@ public class Parser {
         // Create operator ruleset
         mOperatorRules = new ArrayList<Rule<Class>>();
         mOperatorRules.add(new Rule(ConditionEquals.class, "^EQUALS$"));
+        mOperatorRules.add(new Rule(ConditionGreaterThan.class, "^GREATER THAN$"));
+        mOperatorRules.add(new Rule(ConditionGreaterThanOrEqual.class, "^GREATER THAN OR EQUAL$"));
+        mOperatorRules.add(new Rule(ConditionLessThan.class, "^LESS THAN$"));
+        mOperatorRules.add(new Rule(ConditionLessThanOrEqual.class, "^LESS THAN OR EQUAL$"));
         mOperatorRules.add(new Rule(RelationAnd.class, "^AND$"));
         mOperatorRules.add(new Rule(RelationOr.class, "^OR$"));
 
@@ -97,7 +105,6 @@ public class Parser {
     public static Parser getInstance() {
         return instance;
     }
-
 
     //
     // Methods

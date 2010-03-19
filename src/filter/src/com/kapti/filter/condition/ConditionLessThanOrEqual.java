@@ -1,6 +1,6 @@
 /*
- * ConditionEquals.java
- * StockPlay - Gelijkheids-conditie.
+ * ConditionLessThanOrEqual.java
+ * StockPlay - Kleiner dan of gelijk aan conditie.
  *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
@@ -32,21 +32,22 @@ import com.kapti.filter.graph.Node;
 import java.util.List;
 
 /**
- * Een gelijkheidscontrole. Deze conditie heeft twee parameters nodig, waarbij
+ * Een kleiner dan of gelijk aan conditie. Deze conditie heeft twee parameters nodig, waarbij
  * de eerste een string moet zijn (die de key die moet gecontroleerd worden
  * vastlegt.
  */
 
-public class ConditionEquals extends Condition {
+public class ConditionLessThanOrEqual extends Condition {
+    
     //
     // Constructie
     //
 
-    public ConditionEquals(List<Convertable> iParameters) {
+    public ConditionLessThanOrEqual(List<Convertable> iParameters) {
         super(iParameters);
     }
 
-    public ConditionEquals(ConditionEquals iObject) {
+    public ConditionLessThanOrEqual(ConditionLessThanOrEqual iObject) {
         super(iObject);
     }
     
@@ -61,7 +62,7 @@ public class ConditionEquals extends Condition {
 
     @Override
     public final Object compile() throws FilterException {
-        ConditionEquals tConverter = (ConditionEquals) getConverter();
+        ConditionLessThanOrEqual tConverter = (ConditionLessThanOrEqual) getConverter();
 
         return tConverter.process(getData(0), getData(1));
     }
@@ -70,7 +71,7 @@ public class ConditionEquals extends Condition {
     public Node addNode(Graph iGraph) {
         // Self
         Node tNodeSelf = super.addNode(iGraph);
-        tNodeSelf.setAttribute("label", "EQUALS");
+        tNodeSelf.setAttribute("label", "LESS THAN OR EQUAL");
 
         // Children
         Node tNodeLeft = getData(0).addNode(iGraph);
