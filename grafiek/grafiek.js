@@ -78,8 +78,6 @@ $(function (){
     var startData = getData(2, 11);
     $.plot($("#plotTest div"), startData, options);
 
-    alert(getMax());
-    
     var geschiedenis = new Array();
     var vorige;
     
@@ -168,6 +166,8 @@ $(function (){
 
         // zoom data ophalen
         $.plot($("#plotTest div"), startData, setXRange(  setYRange( options, 25,  80  )   , ranges.xaxis.min  , ranges.xaxis.max  )  );
+
+    alert(getMax());
 
         return;
 
