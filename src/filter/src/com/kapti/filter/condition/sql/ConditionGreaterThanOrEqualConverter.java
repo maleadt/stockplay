@@ -21,17 +21,17 @@
  */
 package com.kapti.filter.condition.sql;
 
-import com.kapti.filter.condition.ConditionEquals;
+import com.kapti.filter.condition.ConditionGreaterThanOrEqual;
 import com.kapti.filter.data.Data;
 import com.kapti.filter.exception.FilterException;
 
-public class ConditionGreaterThanOrEqualConverter extends ConditionEquals {
+public class ConditionGreaterThanOrEqualConverter extends ConditionGreaterThanOrEqual {
 
     //
     // Construction
     //
 
-    public ConditionGreaterThanOrEqualConverter(ConditionEquals iObject) {
+    public ConditionGreaterThanOrEqualConverter(ConditionGreaterThanOrEqual iObject) {
         super(iObject);
     }
 
