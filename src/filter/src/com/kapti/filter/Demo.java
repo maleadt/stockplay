@@ -45,7 +45,8 @@ public class Demo {
         // Parse input
         Filter tFilter = null;
         try {
-            tFilter = tParser.parse("id EQUALS 42 AND name EQUALS 'StockPlay'");
+//            tFilter = tParser.parse("id EQUALS 42 AND name EQUALS 'StockPlay'");
+            tFilter = tParser.parse("id EQUALS 42 AND name LIKE 'StockPlay'");
         }
         catch (ParserException e) {
             System.err.println("Parsing failed");
