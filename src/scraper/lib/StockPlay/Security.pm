@@ -59,25 +59,6 @@ has 'quote' => (
 	predicate	=> 'has_quote'
 );
 
-=pod
-
-=head2 C<exchange>
-
-This attribute contains the identifier of the exchange the security belongs to.
-Ideally this shouldn't be neccesary, as the caller is supposed to know (and thus
-save) the exchange as the security getter requires the exchange to be passed.
-The problem arises then getting a quote: most of the time this data will
-be present at a page specific to the exchange, which is why the plugin
-needs to know the exchange where the security belongs to.
-
-=cut
-
-has 'exchange' => (
-	is		=> 'ro',
-	isa		=> 'Str',
-	required	=> 1
-);
-
 ################################################################################
 # Methods
 #

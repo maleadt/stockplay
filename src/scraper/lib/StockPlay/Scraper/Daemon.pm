@@ -48,14 +48,8 @@ use warnings;
 
 has 'plugins' => (
 	is		=> 'ro',
-	isa		=> 'ArrayRef[StockPlay::Scraper::Plugin]',
+	isa		=> 'ArrayRef',
 	required	=> 1
-);
-
-has 'quotes' => (
-	is		=> 'ro',
-	isa		=> 'HashRef[HashRef[StockPlay::Quote]]',	# Plugin -> ISIN -> Quote
-	default		=> sub { {} }
 );
 
 
@@ -68,35 +62,58 @@ has 'quotes' => (
 
 =cut
 
-sub run {
-	my ($self) = @_;
+sub BUILD {
+	my ($self) = @_;;
 	
-	my @securities_updated;
+	# Verify roles
+	for my $plugin (@{$self->plugins}) {
+		if (not $plugin->does('StockPlay::Scraper::Plugin')) {
+			die("passed plugin doesn't implement correct coles");
+		}
+	}
+}
+
+sub run {
+	my ($self) = @_;	
+	
 	while (1) {
+		print "- Initializing a run\n";
+		
 		# Process all plugins
+		my @quotes;
 		foreach my $plugin (@{$self->plugins}) {
 			my $pluginname = $plugin->infohash->{name};
-			my $min_delay = 60;
+			print "  -> $pluginname\n";
 			my @securities;
 			
-			# Check which plugins need to be updates
-			foreach my $security (@{$plugin->securities}) {
-				if (not $security->has_quote or time-$security->quote->time > $security->quote->delay) {
-					push(@securities, $security);
+			# Check which plugins need to be updated
+			foreach my $exchange (@{$plugin->exchanges}) {
+				foreach my $security (@{$exchange->securities}) {
+					if (not $security->has_quote or (time-$security->quote->time) > $security->quote->delay) {
+						push(@securities, $security);
+					}
 				}
 			}
 			
 			# Update them
-			# TODO
+			print "     Fetching quotes for ", join(", ", map { $_->id } @securities ), "\n";
+			my @quotes_local = $plugin->getQuotes(@securities);
 			
 			# Save them
-			push(@securities_updated, @securities);
+			push(@quotes, @quotes_local);
+		}
+			
+		# Check delays
+		my $delay = 60;
+		foreach my $quote (@quotes) {
+			if ($quote->delay < $delay) {
+				$delay = $quote->delay;
+			}
 		}
 		
 		# Push the changes to the server
-		
-		
-		$#securities_updated = -1;	
+		print "     Waiting $delay seconds\n";	
+		sleep($delay);
 	}
 }
 

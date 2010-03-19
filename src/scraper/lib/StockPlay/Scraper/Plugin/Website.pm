@@ -51,6 +51,7 @@ use warnings;
 has 'browser' => (
 	is		=> 'ro',
 	isa		=> 'WWW::Mechanize',
+	lazy		=> 1,	# Triggers a rebuild when undef'ing (retrieve after clean+dump)
 	builder		=> '_build_browser'
 );
 

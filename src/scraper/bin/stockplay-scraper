@@ -56,8 +56,6 @@ foreach my $infohash (@infohashes) {
 		print "     dumping\n";
 		$plugin->clean();
 		store $plugin, $infohash->{name} . '.dump';
-		use Data::Dumper;
-		print Dumper($plugin);
 	}
 	
 	push(@plugins, $plugin);

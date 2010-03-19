@@ -66,184 +66,35 @@ my $datetime_parser = DateTime::Format::Strptime->new(
 sub _build_exchanges {
 	my ($self) = @_;
 	
-	# Exchanges
-	print "DEBUG: building exchanges\n";
-	my @exchanges = $self->getExchanges();
-	
-	# Indexes
-	print "DEBUG: building indexes\n";	
-	for my $exchange (@exchanges) {
-		print "DEBUG: fetching indexes of exchange ", $exchange->name, "\n";
-		eval {
-			my @indexes = $self->getIndexes($exchange);
-			push(@{$exchange->indexes}, @indexes);
-		};
-		if ($@) {
-			print "ERROR: could not fetch indexes of exchange ", $exchange->name, "\n";
-		}
-	}
-	
-	# Securities
-	print "DEBUG: building securities\n";	
-	for my $exchange (@exchanges) {
-		for my $index (@{$exchange->indexes}) {
-			eval {
-				die("temorary eliminated") unless ($index->id eq "continumarkt");
-				print "DEBUG: fetching securities of index ", $index->name, " at exchange ", $exchange->name, "\n";
-				my @securities = $self->getSecurities($exchange, $index);
-				push(@{$exchange->securities}, @securities);
-				push(@{$index->securities}, @securities);
-			};
-			if ($@) {
-				print "ERROR: could not fetch securities from index ", $index->name, " at exchange ", $exchange->name, "\n";
-				print "       ", $@, "\n";
-			}
-		}
-	}
-	
-	return \@exchanges;
-}
-
-sub getExchanges {
-	my ($self) = @_;
-	
-	# Fetch HTML
-	my $res = $self->browser->get('http://www.tijd.be/beurzen/euronext-brussel') || die();
-
-	# Build a HTML-tree
-	my $tree = HTML::TreeBuilder->new();
-	$tree->parse($res->decoded_content);
-	
-	# Extract translation list for exchange symbols
-	my %symbols;
-	$tree->look_down(
-		'_tag'	=> 'select',
-		sub {
-			my $select = shift;
-			return unless defined $select->attr('id') && $select->attr('id') =~ m{sha_market_sel};
-			
-			foreach my $child ($select->content_list) {
-				if (ref($child) eq 'HTML::Element' && $child->tag eq 'option') {
-					my $name = $child->as_text;
-					my $symbol = $child->attr('value');
-					
-					$symbols{$name} = $symbol;
-				}
-			}
-		}
-	);
-	$symbols{"London"} = $symbols{"Londen"};	# HACK HACK HACK
-
-	# Find menu with exchange enumeration
-	my $enumeration = $tree->look_down(
-		'_tag' => 'ul',
-		sub {
-			defined $_[0]->attr('class') && $_[0]->attr('class') =~ m{tabnav};
-		}
-	);
-	die("Could not find enumeration") unless $enumeration;
-	
-	# Extract exchanges
-	my @exchanges;
-	$enumeration->look_down(
-		'_tag'	=> 'li',
-		sub {
-			my $item = shift;
-			my $location = $item->as_text;
-			return if grep { $_ =~ $location } qw{Andere Amex};	# HACK HACK HACK
-			my $site_id;
-			foreach my $child ($item->content_list) {
-				if (ref($child) eq 'HTML::Element' && $child->tag eq 'a') {
-					my $url = $child->attr('href');
-					my @paths = split(/\//, $url);
-					$site_id = $paths[-2];
-				}
-			}
-			if (defined $site_id) {
-				push(@exchanges, new StockPlay::Exchange({
-					id		=> $symbols{$location},
-					location	=> $location,
-					name		=> $site_id
-				}));
-			}
-			return 0;
-		}
+	# Euronext Brussel
+	my $brussel = new StockPlay::Exchange(
+		id		=> "euronext-brussel",
+		name		=> "Euronext Brussel",
+		location	=> "Brussel",
+		securities	=> [$self->getSecurities('http://www.tijd.be/beurzen/euronext-brussel/continumarkt')]
 	);
 	
-	$tree->delete;
-	return @exchanges;
-}
-
-sub getIndexes {
-	my ($self, $exchange) = @_;
-
-	# Fetch HTML
-	my $res = $self->browser->get('http://www.tijd.be/beurzen/' . $exchange->name) || die();
-
-	# Build a HTML tree
-	my $tree = HTML::TreeBuilder->new();
-	$tree->parse($res->decoded_content);
-	
-	# Check if realtime support
-	my $realtime = $tree->look_down(
-		'_tag'	=> 'div',
-		sub {
-			defined $_[0]->attr('id') && $_[0]->attr('id') =~ m{realtime_switch};
-		}
-	);
-	die("no support for realtime courses") unless (defined $realtime);
-
-	# Find submenu
-	my $div = $tree->look_down(
-		'_tag' => 'div',
-		sub {
-			defined $_[0]->attr('id') && $_[0]->attr('id') =~ m{subtabnav};
-		}
-	);
-	die("Could not find submenu") unless $div;
-	
-	# Find index enumeration
-	my $enumeration = $div->look_down('_tag' => 'ul');
-	die("Could not find index enumeration") unless $enumeration;
-	
-	# Extract indexes
-	my @indexes;
-	$enumeration->look_down(
-		'_tag'	=> 'li',
-		sub {
-			my $item = shift;
-			my $name = $item->as_text;
-			my $id;
-			foreach my $child ($item->content_list) {
-				if (ref($child) eq 'HTML::Element' && $child->tag eq "a") {
-					my $url = $child->attr('href');
-					my @paths = split(/\//, $url);
-					$id = $paths[-1];
-				}
-			}
-			if (defined $id && $id !~ m{\?}) {
-				push(@indexes, new StockPlay::Index({
-					id	=> $id,
-					name	=> $name
-				}));
-			}
-			return 0;
-		}
+	# Euronext Parijs
+	my $parijs = new StockPlay::Exchange(
+		id		=> "euronext-parijs",
+		name		=> "Euronext Parijs",
+		location	=> "Parijs",
+		securities	=> [$self->getSecurities('http://www.tijd.be/beurzen/euronext-parijs/frencha'), $self->getSecurities('http://www.tijd.be/beurzen/euronext-parijs/frenchb'), $self->getSecurities('http://www.tijd.be/beurzen/euronext-parijs/frenchc')]
 	);
 	
-	$tree->delete;
-	return @indexes;
+	return [$brussel, $parijs];
 }
 
 sub getSecurities {
-	my ($self, $exchange, $index) = @_;
+	my ($self, $url) = @_;
 	my @securities;	
 	
 	# Process all pages
 	my $page = 1;
-	while (1) {	
+	while (1) {
 		# Fetch HTML
-		my $res = $self->browser->get('http://www.tijd.be/beurzen/' . $exchange->name . '/' . $index->id . "?p=$page") || die();
+		print "DEBUG: processing page $page\n";
+		my $res = $self->browser->get($url . "?p=$page") || die();
 
 		# Build a HTML tree
 		my $tree = HTML::TreeBuilder->new();
@@ -263,6 +114,7 @@ sub getSecurities {
 			'_tag'	=> 'td',
 			sub {
 				my $cell = shift;
+				return unless $cell->parent()->parent()->tag eq "tbody";
 				return unless defined $cell->attr('class') && $cell->attr('class') =~ m{st_name};
 				my ($name, $site_id);
 				foreach my $child ($cell->content_list) {
@@ -283,6 +135,7 @@ sub getSecurities {
 				
 				if (defined $site_id) {			
 					my ($symbol, $isin);
+					print "DEBUG: processing $name\n";
 					my $res2 = $self->browser->get('http://www.tijd.be/beurzen/' . $site_id) || die();
 					my $tree2 = HTML::TreeBuilder->new();
 					$tree2->parse($res2->decoded_content);
@@ -308,8 +161,6 @@ sub getSecurities {
 						id		=> $symbol,
 						isin		=> $isin,
 						name		=> $name,
-						exchange	=> $exchange->id,
-						index		=> [ $index->id ],
 						private		=> {
 							site_id	=> $site_id
 						}
@@ -321,7 +172,8 @@ sub getSecurities {
 		$tree->delete;
 		
 		# Check for more pages
-		last unless ($res->decoded_content =~ 'Volgende');		
+		last unless ($res->decoded_content =~ 'Volgende');
+		$page++;	
 		
 	}
 	return @securities;
@@ -358,18 +210,23 @@ sub getQuotes {
 		
 		my $security = (grep { $_->get('site_id') == $site_id } @securities)[0]
 			or die("Could not connect data to security");
-		push(@quotes, new StockPlay::Quote({
-			time		=> $datetime_parser->parse_datetime($data{time}),
-			security	=> $security->id,
-			price		=> $data{last},
-			bid		=> $data{bid},
-			ask		=> $data{ask},
-			low		=> $data{low},
-			high		=> $data{high},
-			open		=> $data{open},
-			volume		=> $data{volume},
-			delay		=> $koersen->{delay}
-		}));
+		eval {
+			push(@quotes, new StockPlay::Quote({
+				time		=> $datetime_parser->parse_datetime($data{time}),
+				security	=> $security->id,
+				price		=> $data{last},
+				bid		=> $data{bid},
+				ask		=> $data{ask},
+				low		=> $data{low},
+				high		=> $data{high},
+				open		=> $data{open},
+				volume		=> $data{volume},
+				delay		=> $koersen->{delay}
+			}));
+		};
+		if ($@) {
+			print "ERROR: could not create a quote for $site_id\n";
+		}
 		
 	}
 	
