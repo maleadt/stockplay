@@ -522,6 +522,48 @@ Zoals reeds vermeld maken we gebruik van de JQuery en FLOT bibliotheken om inter
 
 \chapter{Scraper}
 
+De scraper is een elementair gedeelte van StockPlay, daar het hele project nood heeft aan een up-to-date dataset.
+
+\section{Databronnen}
+
+Vooraleer een scraper te ontwerpen, was het belangrijk de mogelijke bronnen te identificeren. Logischerwijs beperken we ons tot de gratis-beschikbare bronnen, maar zelfs dan zijn er verschillende sites die aan onze eisen voldoen. Om uiteindelijk een zo uitgebreid-mogelijke dataset te hebben, besloten we om het mogelijk te maken verschillende databronnen tegelijk te gebruiken.
+
+\subsection{De Tijd}
+
+Een eerste kandidaat om onze scraper op te laten werken, was de website van De Tijd. Deze site voorziet in een uitgebreid zicht op de aandelen en indexen van verschillende beurzen, en heeft zelf ondersteuning voor realtime-updates van die data. Verder onderzoek van hoe die realtime updates gebeurden - en het reverse-engineering van de bijhorende HTTP-based API - leverde ons nogal snel een compact Perl-script op dat in staat was de aandelen en indexen van een bepaalde beurs eenmalig op te halen, om in een later stadium dan de effectieve koersen op te halen via de aangeboden API in kwestie.
+
+Aangezien deze bron een hele waaier aan aandelen zichtbaar maakt, er veel data over publiceert, en bovendien die data beschikbaar maakt via een compacte en handige interface, hebben we deze als belangrijkste bron gebruikt bij het opvullen en bijhouden van onze database.
+
+\subsection{Euronext}
+
+Deze offici\"ele bron biedt via een webinterface heel gedetailleerde informatie over alle aandelen die beschikbaar zijn op de beurs. Hoewel deze data veel beter en hi\"erarchischer georganiseerd is, hebben we besloten deze bron niet te gebruiken en de site van De Tijd eerder te gebruiken. De reden hiervoor is dat de site van De Tijd, die eveneens alle aandelen op de Euronext beurs kan weergeven, realtime data weergeeft en hierbij ook een handigere en compactere interface voor gebruikt.
+
+\subsection{Perl Finance modules}
+
+Het Perl CPAN archief kent een uitgebreide selectie voorgemaakte modules die in staat zijn om koersen van aandelen op te halen van verschillende bronnen. Hoewel deze bron uitmunt in gemak van gebruik (eenvoudige maar doordachte API, hergebruik van code) hebben we toch besloten deze niet te gebruiken. De motivatie daarvoor bestaat uit een aantal punten: eerst en vooral is het de bedoeling dat we zelf een Perl scraper schrijven, eenvoudigweg een bestaande module gebruiken voldoet niet aan deze eis. Daarnaast kennen de modules voor Europese beurzen niet dezelfde hoge resolutie als een zelfgemaakt script die de site van De Tijd of die van Euronext raadpleegt, en een hoge resolutie is belangrijk om een kwalitatief en correct verloop van het spel te garanderen. Tenslotte bleken de modules soms problemen te hebben met verschillende Belgische aandelen.
+
+\section{Ontwerp}
+
+Om op een flexibele wijze verschillende databronnen parallel te kunnen gebruiken, hebben we geopteerd voor een plugin-based design. Hierbij wordt elke databron geassocieerd met een enkele plugin, die een vaste interface implementeert om de gestandaardiseerde data naar buitenaf toegankelijk te maken. De plugins kunnen echter ook hi\"erarchisch uitgebreid worden, zo zal een plugin die data scrapet niet rechtstreeks de Plugin interface implementeren, maar gebruik maken van de Website interface, die op zijn beurt de Plugin interface uitbreidt met functionaliteit toegespitst tot websites.
+
+De hoofdinterface Plugin beschrijft essentieel twee kenmerken: het beschikbaar zijn van een "exchanges" attribuut, en een "getQuotes" methode. Het "exchanges" attribuut is een lijst van beurzen die de plugin kan scrapen, waarbij de elementen van die lijst instanties zijn van de StockPlay::Exchange klasse. Dit object bevat geen functionaliteit, maar wel een hi\"erarchie aan andere objecten: twee lijsten, respectievelijk opgevuld met StockPlay::Security en StockPlay::Index objecten. De verantwoordelijkheid voor het opvullen van deze lijsten ligt bij de plugin die het Exchange object aangemaakt heeft.
+De Plugin interface dwingt ook een getQuotes functie af, die gebruikt wordt om eenmaal de initi\"ele opbouw aan Exchanges, Securities en Indexen voltooid is, de koersen van een lijst Securities op te halen. Deze functie geeft dan ook een lijst aan StockPlay::Quote objecten terug. Dergelijke objecten, 1 op 1 verbonden met een Security, bevatten de effectieve koersdata. Zo zijn verschillende velden beschikbaar zoals "time", "volume", of "price". Een ander belangrijk veld is het "delay" veld, dat omschrijft hoe lang er moet gewacht worden om een nieuwe koers op te halen.
+
+Nu vastligt hoe de data in een uniforme en gestructureerde wijze opgeslaan wordt, is het duidelijk dat de data opgedeelt kan worden in twee categorie\"en: presistente en variabele data.
+Onder de persistente data behoord de hi\"erarchie aan Exchange, Security en Index objecten die omschrijft welke beurzen en aandelen de plugin toegang tot heeft, en hoe die zich onderling relateren. Aangezien de objecten in kwestie steeds voorzien in een "private data container" (die plugins kunnen gebruiken om bronspecifieke maar verder niet relevante data op te slaan), volstaat het om die eenmaal op te bouwen. Ze kunnen daarna steeds opnieuw herbruikt worden om de variabele data op te halen. Die variabele data bestaat natuurlijk uit de uiteindelijke Quotes.
+Door deze essenti\"ele splitsing is het mogelijk om de persistente data eenmaal op te halen en dan binnen een bepaald interval te herbruiken om variabele data op te halen. Dit maakt de scraper niet alleen sneller, het verlaagt ook de hoeveel data die steeds benodigd is om de aangevraagde data op halen. Hierbij reduceren we de kans dat de scraper teveel opvalt en eventueel zou verbannen worden van de databron in kwestie.
+
+\section{Communicatie}
+
+Nu de scraper in staat is om gevraagde koersen op een effici\"ente manier op te halen, moet de methode van communicatie naar de backend nog ontworpen worden. Hierbij zijn er twee mogelijkheden: een PUSH of PULL model.
+
+In geval van een PULL model is de Backend de initiator, en zal die de scraper vragen om een bepaalde set data. In een PUSH model daarentegen zal de scraper zelf initiatief nemen. Hierbij is het vrij snel duidelijk dat het PUSH model de beste keuze is. Moesten we immers voor een PULL model gaan, dan zou de scraper nog een apart protocol moeten defini\"eren, of in geval van hergebruik van het XML-RPC protocol voorzien in een webserver en XML-RPC decoder. Als we echter voor een PUSH model kiezen, moet de scraper enkel voorzien in een XML-RPC client (wat veel minder werk is), en kan de reeds bestaande XML-RPC server code in de backend integraal herbruikt worden om die communicatie te gebruiken.
+Om dit te realiseren zal de backend wel moeten voorzien in speciale functies toegespitst op de doelen van de scraper, zoals het toevoegen van aandelen, of updaten van de bijhorende koersen. Ook is deze uitbreiding van het backend-protocol de druppel geweest die on overtuigde om ten behoeve van autorisatie om te schakelen van een eenvoudig boolean-flag (isAdmin) naar een flexibeler model gebaseerd op rechten.
+
+Om het PUSH model te realiseren moet de scraper voorzien in een algoritme dat continu alle aandelen overloopt, en selectief voor diegene die verlopen zijn nieuwe koersen ophaalt en die naar de backend stuurt. Deze functionaliteit wordt ge\"implementeerd door het StockPlay::Scraper::Daemon object, dewelke bezit over een lijst van de geactiveerde plugins, en zo in de \emph{run()} functie van alle plugins de aandelen ophaalt en ze eventueel vernieuwt. Tijdens de refresh-run wordt tevens bepaald hoelang minimaal moet gewacht worden vooraleer er een nieuwe cyclus kan gestart worden.
+
+De uiteindelijke PUSH communicatie zal verlopen over het bestaande XML-RPC protocol. Daarom voorzien we in specifieke functies, zoals "Finance.Security.Add" en "Finance.Security.Update". In geval van een uitgebreide set aan geactiveerde databronnen kan het aantal XML-RPC requests gegenereerd door de scraper echter substantieel worden, waardoor de load van de backend server te hoog kan worden. Daarom kunnen we eventueel in een later stadium voorzien in BATCH-update functies om de overhead veroorzaakt door de XML-RPC requests geminimaliseerd wordt.
+
 
 %
 % Artificiële intelligentie
