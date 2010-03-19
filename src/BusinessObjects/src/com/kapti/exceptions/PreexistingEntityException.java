@@ -37,6 +37,5 @@ public class PreexistingEntityException extends ErrorException {
 
     public PreexistingEntityException(Throwable cause) {
         super(cause);
-    }
-    
+    } 
 }

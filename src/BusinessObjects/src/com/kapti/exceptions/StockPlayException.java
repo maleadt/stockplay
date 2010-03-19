@@ -37,7 +37,5 @@ public class StockPlayException extends Exception {
     }
 
     public StockPlayException() {
-    }
-
-    
+    }   
 }
