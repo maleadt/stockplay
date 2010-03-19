@@ -43,7 +43,7 @@ Het spel eindigt op 31 mei 2010, waarna een eindklassement wordt opgemaakt. De k
 \paragraph{Prioriteit}Gemiddeld
 \paragraph{Complexiteit}Laag
 \paragraph{Successcenario}
-\begin{itemize}
+\begin{enumerate}
  \item Speler bezoekt de website
  \item Speler maakt de keuze dat hij mee wil spelen
  \item Speler geeft aan te willen registreren
@@ -51,7 +51,7 @@ Het spel eindigt op 31 mei 2010, waarna een eindklassement wordt opgemaakt. De k
  \item Speler vult eventueel enkele optionele velden in
  \item Speler bevestig zijn registratie
  \item \label{def:lidmaatschap:bevestiging} Speler krijgt een bevestiging van zijn registratie
-\end{itemize}
+\end{enumerate}
 \paragraph{Alternatieve scenario’s}
 Alternatief voor \ref{def:lidmaatschap:bevestiging}:
 \begin{itemize}
@@ -71,11 +71,11 @@ Alternatief voor \ref{def:lidmaatschap:bevestiging}:
 \paragraph{Prioriteit}Laag
 \paragraph{Complexiteit}Laag
 \paragraph{Successcenario}
-\begin{itemize}
+\begin{enumerate}
  \item Speler bezoekt de website
  \item Speler navigeert naar de juiste pagina
  \item Speler is voldoende geïnformeerd
-\end{itemize}
+\end{enumerate}
 
 \subsubsection{Inloggen}
 \paragraph{Beschrijving} De website zal uit drie delen bestaan. Een deel bestaat uit een of meerdere pagina's. Een deel zal enkel zichtbaar zijn voor niet geauthenticeerde gebruikers of bezoekers zonder lidmaatschap. Een ander deel zal zichtbaar zijn voor zowel niet geauthenticeerde bezoekers als geauthenticeerde bezoekers. Geauthenticeerde bezoekers hebben dan ook nog toegang tot een enkel voor hen zichtbare derde deel. Het is in dat deel dat de interactieve site zich bevindt. Dat deel is enkel toegankelijk voor geauthenticeerde bezoekers.
@@ -88,16 +88,16 @@ Alternatief voor \ref{def:lidmaatschap:bevestiging}:
 \paragraph{Prioriteit}Hoog
 \paragraph{Complexiteit}Hoog
 \paragraph{Successcenario}
-\begin{itemize}
+\begin{enumerate}
  \item Speler bezoekt de website
  \item Speler geeft voldoende gegevens waarmee hij zich kan authenticeren
  \item \label{def:inloggen:bevestiging} Speler krijgt een bevestiging en wordt doorgestuurd naar het interactieve deel van de website
-\end{itemize}
+\end{enumerate}
 \paragraph{Alternatieve scenario’s}
 Alternatief voor \ref{def:inloggen:bevestiging}:
-\begin{itemize}
+\begin{enumerate}
  \item Speler heeft een ongeschikte of foutieve invoer gedaan voor een veld en krijgt de mogelijkheid om dit aan te passen
-\end{itemize}
+\end{enumerate}
 
 \subsubsection{De gebruiker bekijkt zijn eigen Portfolio}
 \paragraph{Beschrijving} De gebruiker ziet een webpagina met daarop de effecten die deze momenteel in bezit heeft, de historische aankoopprijs per stuk, de historische aankoopprijs in totaal, de huidige koers, het rendement en het verschil op de waarde sinds de aankoop van het effect.
@@ -107,7 +107,12 @@ Alternatief voor \ref{def:inloggen:bevestiging}:
 \paragraph{Triggers} De gebruiker kiest in het linkermenu de optie "Portfolio" aan.
 \paragraph{Prioriteit}Hoog
 \paragraph{Complexiteit}Laag
-
+\paragraph{Successcenario}
+\begin{enumerate}
+ \item De gebruiker geeft aan zijn portfolio te willen bekijken
+ \item De gebruiker definieert een filtering of een combinatie van filters
+ \item Een overzicht van de speler zijn huidige portfolio wordt getoond
+\end{enumerate}
 
 \subsubsection{Effecten aankopen}
 
@@ -128,17 +133,17 @@ Mogelijke geavanceerde orders die we in een verdere fase zouden kunnen invoeren 
 \paragraph{Prioriteit}Laag
 \paragraph{Complexiteit}Laag
 \paragraph{Successcenario}
-\begin{itemize}
+\begin{enumerate}
  \item Speler geeft vanuit een overzichtspagina of detailpagina aan dat hij een order wil plaatsen op een effect
  \item Speler geeft de order specificaties op (aantal effecten, type, limieten, )
  \item Speler bevestigd zijn order
  \item \label{def:aankopen:bevestiging} Speler krijgt een bevestiging van zijn order
-\end{itemize}
+\end{enumerate}
 \paragraph{Alternatieve scenario’s}
 Alternatief voor \ref{def:aankopen:bevestiging}:
-\begin{itemize}
+\begin{enumerate}
  \item Speler heeft een ongeschikte of foutieve invoer gedaan voor een veld en krijgt de mogelijkheid om dit aan te passen
-\end{itemize}
+\end{enumerate}
 
 \subsubsection{Effecten verkopen}
 Een effect verkopen verloopt op dezelfde manier als een effect aankopen. Er wordt ook een order aangemaakt voor een aantal effecten. Resulteert de voorwaarde van het order positief, dan worden zoveel effecten verkocht. Als een gebruiker geen effecten meer overhoudt van een bepaald symbool, dan wordt dit uit het portfolio gehaald.
@@ -149,7 +154,18 @@ Een effect verkopen verloopt op dezelfde manier als een effect aankopen. Er word
 \paragraph{Triggers} De aankooppagina wordt getoond door het activeren van een optie op een effectenpagina.
 \paragraph{Prioriteit}Laag
 \paragraph{Complexiteit}Laag
-
+\paragraph{Successcenario}
+\begin{enumerate}
+ \item Speler geeft vanuit een overzichtspagina of detailpagina aan dat hij een order wil plaatsen op een effect
+ \item Speler geeft de order specificaties op (aantal effecten, limieten, )
+ \item Speler bevestigd zijn order
+ \item \label{def:verkopen:bevestiging} Speler krijgt een bevestiging van zijn order
+\end{enumerate}
+\paragraph{Alternatieve scenario’s}
+Alternatief voor \ref{def:verkopen:bevestiging}:
+\begin{enumerate}
+ \item Speler heeft een ongeschikte of foutieve invoer gedaan voor een veld en krijgt de mogelijkheid om dit aan te passen
+\end{enumerate}
 
 \subsubsection{Overzicht opvragen van de effecten die je in het spel actief kan verhandelen}
 \paragraph{Beschrijving} Een effect op de beurs kan ofwel opgenomen worden door onze scrappers of buiten bereik liggen van onze scrappers.
@@ -174,6 +190,12 @@ Als deze binnen het bereik van een of meerdere scrappers valt, dan worden er geg
 \paragraph{Business rules}Een aantal combinaties van filters moeten reeds voor ingesteld worden door de beheerders en gemakkelijk te selecteren zijn vanuit het menu.
 \paragraph{Prioriteit}Laag
 \paragraph{Complexiteit}Laag
+\paragraph{Successcenario}
+\begin{enumerate}
+ \item De gebruiker geeft aan een overzicht te willen bekijken
+ \item De gebruiker definieert een filtering of een combinatie van filters
+ \item De gebruiker bevestigd zijn filter en krijgt een overzicht van de resultaten die daaraan voldoen
+\end{enumerate}
 
 \subsubsection{Een klassement opvragen}
 
@@ -196,6 +218,12 @@ Het tijdsinterval kan de speler bepalen door een dubbele slider te verslepen. De
 \paragraph{Notities} Op deze pagina wordt het mogelijk gemaakt een favorietenvlag te zetten of weg te halen, naar de aankooppagina te gaan van dit effect of naar de verkooppagina te gaan van dit effect.
 \paragraph{Prioriteit}Laag
 \paragraph{Complexiteit}Laag
+\paragraph{Successcenario}
+\begin{enumerate}
+ \item Gebruiker begin bij scenario "Overzicht opvragen van de effecten die je in het spel actief kan verhandelen" of bij "De gebruiker bekijkt zijn eigen Portfolio"
+ \item In het overzicht geeft de gebruiker aan de details van een effect te willen bekijken
+ \item Alle beschikbare informatie van een effect wordt getoond samen met een interactieve grafiek
+\end{enumerate}
 
 \subsubsection{Gebruiker bekijkt zijn transactiegeschiedenis}
 \paragraph{Beschrijving} Een gebruiker bekijkt zijn transactiegeschiedenis op een daarvoor ingerichte pagina. De gebeurtenissen op die pagina zijn te filteren op:
@@ -209,6 +237,11 @@ Het tijdsinterval kan de speler bepalen door een dubbele slider te verslepen. De
 \end{itemize}
 \paragraph{Prioriteit}Laag
 \paragraph{Complexiteit}Laag
+\paragraph{Successcenario}
+\begin{enumerate}
+ \item Gebruiker geeft aan zijn transactiegeschiedenis te willen bekijken
+ \item Gebruiker krijgt een overzicht van zijn transactiegeschiedenis te zien
+\end{enumerate}
 
 \subsubsection{Gebruiker bekijkt zijn algemeen overzicht}
 \paragraph{Beschrijving} Een gebruiker bekijkt zijn algemeen overzichtspagina en vindt hierop zeker volgende waardes opgesomd:
@@ -227,6 +260,12 @@ Het tijdsinterval kan de speler bepalen door een dubbele slider te verslepen. De
 \end{itemize}
 \paragraph{Prioriteit}Laag
 \paragraph{Complexiteit}Laag
+\paragraph{Successcenario}
+\paragraph{Successcenario}
+\begin{enumerate}
+ \item Gebruiker krijgt zijn algemeen overzicht te zien na inloggen of geeft aan zijn transactiegeschiedenis te willen bekijken
+ \item Gebruiker krijgt een algemeen overzicht te zien
+\end{enumerate}
 
 \section{Desktopapplicatie}
 
