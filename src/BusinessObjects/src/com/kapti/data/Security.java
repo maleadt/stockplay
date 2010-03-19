@@ -3,43 +3,50 @@ package com.kapti.data;
 import com.kapti.exceptions.StockPlayException;
 import java.util.Hashtable;
 
-public class Security  {
+public class Security {
     //
     // Member data
     //
 
     public static enum Fields {
-        ID, NAME, EXCHANGE
+
+        ID, NAME, EXCHANGE, VISIBLE, SUSPENDED
     }
-    
     private String symbol = "";
     private String name = "";
-
     private String exchange = "";
-
+    private boolean visible = true;
+    private boolean suspended = false;
 
     //
     // Construction
     //
-
-    public Security(){
+    public Security() {
     }
 
-    public Security(String symbol){
+    public Security(String symbol) {
         this.symbol = symbol;
     }
 
-    public Security(String symbol, String name, String exchange){
+    public Security(String symbol, String name, String exchange) {
         this.symbol = symbol;
         this.name = name;
         this.exchange = exchange;
     }
 
+    public Security(String symbol, String name, String exchange, boolean visible, boolean suspended) {
+        this.symbol = symbol;
+        this.name = name;
+        this.exchange = exchange;
+        this.visible = visible;
+        this.suspended = suspended;
+    }
+
+
 
     //
     // Methods
     //
-
     public String getName() {
         return name;
     }
@@ -65,6 +72,22 @@ public class Security  {
         this.exchange = exchange;
     }
 
+    public boolean isSuspended() {
+        return suspended;
+    }
+
+    public void setSuspended(boolean suspended) {
+        this.suspended = suspended;
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
+
     public Hashtable<String, Object> toStruct(Fields... iFields) {
         Hashtable<String, Object> oStruct = new Hashtable<String, Object>();
         for (Fields tField : iFields) {
@@ -78,6 +101,12 @@ public class Security  {
                 case EXCHANGE:
                     oStruct.put(tField.name(), getExchange());
                     break;
+                case VISIBLE:
+                    oStruct.put(tField.name(), isVisible());
+                    break;
+                case SUSPENDED:
+                    oStruct.put(tField.name(), isSuspended());
+                    break;
             }
         }
         return oStruct;
@@ -89,17 +118,22 @@ public class Security  {
             Fields tField = null;
             try {
                 tField = Fields.valueOf(tKey);
-            }
-            catch (IllegalArgumentException e) {
+            } catch (IllegalArgumentException e) {
                 throw new StockPlayException("requested key '" + tKey + "' does not exist");
             }
 
             switch (tField) {
                 case NAME:
-                    setName((String)tValue);
+                    setName((String) tValue);
                     break;
                 case EXCHANGE:
-                    setExchange((String)tValue);
+                    setExchange((String) tValue);
+                    break;
+                case VISIBLE:
+                    setVisible((Boolean) tValue);
+                    break;
+                case SUSPENDED:
+                    setSuspended((Boolean) tValue);
                     break;
                 default:
                     throw new StockPlayException("requested key '" + tKey + "' cannot be modified");
