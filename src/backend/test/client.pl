@@ -20,7 +20,12 @@ my $xmlrpc = new XML::RPC('http://localhost:8080') || die("could not connect to 
 # Main
 #
 
-# Backend stats
-my $stats = $xmlrpc->call('System.Backend.Stats');
-print "* Backend stats:\n", Dumper(\$stats);
+my $return;
 
+# Server hello
+$return = $xmlrpc->call('User.Hello', "perl_testclient/0.1", 1);
+print "* Server hello:\n", Dumper(\$return);
+
+# List of exchanges
+$return = $xmlrpc->call('Finance.Exchange.List', "");
+print "* Available exchanges:\n", Dumper(\$return);

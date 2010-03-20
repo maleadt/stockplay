@@ -98,4 +98,11 @@ public enum Error {
     public XmlRpcException getException() {
         return new XmlRpcException(getCode(), getMessage());
     }
+
+    /**
+     * Idem, maar met ondersteuning voor de error cause.
+     */
+    public XmlRpcException getException(Throwable iCause) {
+        return new XmlRpcException(getCode(), getMessage(), iCause);
+    }
 }

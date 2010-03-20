@@ -66,14 +66,14 @@ public class ServletServer extends XmlRpcServletServer {
                 
                 // Detect exception subtype
                 if (tMessage.contains("No method matching arguments")) {
-                    throw Error.BAD_REQUEST.getException();
+                    throw Error.BAD_REQUEST.getException(iException.getCause());
                 }
                 else if (tMessage.contains("No such handler")) {
-                    throw Error.NOT_FOUND.getException();
+                    throw Error.NOT_FOUND.getException(iException.getCause());
                 }
 
                 // No exception subtype matched, throw an internal failure
-                throw Error.INTERNAL_FAILURE.getException();
+                throw Error.INTERNAL_FAILURE.getException(iException.getCause());
             } else {
                 throw iException;
             }
