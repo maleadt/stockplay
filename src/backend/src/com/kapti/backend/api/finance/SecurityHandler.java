@@ -24,9 +24,14 @@ package com.kapti.backend.api.finance;
 import com.kapti.backend.api.MethodClass;
 import com.kapti.data.persistence.GenericDAO;
 import com.kapti.exceptions.StockPlayException;
+import com.kapti.filter.Filter;
 import com.kapti.filter.exception.FilterException;
+import com.kapti.filter.exception.ParserException;
+import com.kapti.filter.parsing.Parser;
 import java.util.Collection;
 import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 import org.apache.xmlrpc.XmlRpcException;
 
@@ -43,18 +48,42 @@ public class SecurityHandler extends MethodClass {
     // Methodes
     //
 
-    public Vector<Hashtable<String, Object>> List(String iFilter) throws XmlRpcException, StockPlayException, FilterException {
+    public List<Map<String, Object>> List() throws XmlRpcException, StockPlayException, FilterException {
         // Get DAO reference
         GenericDAO<com.kapti.data.Security, String> tSecurityDAO = getDAO().getSecurityDAO();
 
         // Fetch and convert all Indexs
         Collection<com.kapti.data.Security> tIndexs = tSecurityDAO.findAll();
-        Vector<Hashtable<String, Object>> oVector = new Vector<Hashtable<String, Object>>();
+        Vector<Map<String, Object>> oVector = new Vector<Map<String, Object>>();
         for (com.kapti.data.Security tIndex : tIndexs) {
             oVector.add(tIndex.toStruct(
                     com.kapti.data.Security.Fields.ID,
                     com.kapti.data.Security.Fields.NAME,
-                    com.kapti.data.Security.Fields.EXCHANGE));
+                    com.kapti.data.Security.Fields.EXCHANGE,
+                    com.kapti.data.Security.Fields.VISIBLE,
+                    com.kapti.data.Security.Fields.SUSPENDED));
+        }
+
+        return oVector;
+    }
+
+    public List<Map<String, Object>> List(String iFilter) throws XmlRpcException, StockPlayException, FilterException, ParserException {
+        // Get DAO reference
+        GenericDAO<com.kapti.data.Security, String> tSecurityDAO = getDAO().getSecurityDAO();
+
+        Parser parser = Parser.getInstance();
+        Filter filter = parser.parse(iFilter);
+
+        // Fetch and convert all Indexs
+        Collection<com.kapti.data.Security> tIndexs = tSecurityDAO.findByFilter(filter);
+        Vector<Map<String, Object>> oVector = new Vector<Map<String, Object>>();
+        for (com.kapti.data.Security tIndex : tIndexs) {
+            oVector.add(tIndex.toStruct(
+                    com.kapti.data.Security.Fields.ID,
+                    com.kapti.data.Security.Fields.NAME,
+                    com.kapti.data.Security.Fields.EXCHANGE,
+                    com.kapti.data.Security.Fields.VISIBLE,
+                    com.kapti.data.Security.Fields.SUSPENDED));
         }
 
         return oVector;
@@ -77,7 +106,7 @@ public class SecurityHandler extends MethodClass {
 
         return 1;
     }
-    
+
     public int Create(Hashtable<String, Object> iDetails) throws XmlRpcException, StockPlayException {
         // Get DAO reference
         GenericDAO<com.kapti.data.Security, String> tSecurityDAO = getDAO().getSecurityDAO();

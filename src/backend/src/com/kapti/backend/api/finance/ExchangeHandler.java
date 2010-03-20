@@ -46,6 +46,26 @@ public class ExchangeHandler extends MethodClass {
     // Methodes
     //
 
+        public Vector<Hashtable<String, Object>> List() throws XmlRpcException, StockPlayException, FilterException, ParserException {
+        // Get DAO reference
+        GenericDAO<com.kapti.data.Exchange, String> exDAO = getDAO().getExchangeDAO();
+
+
+        // Fetch and convert all exchanges
+        Collection<com.kapti.data.Exchange> tExchanges = exDAO.findAll();
+        Vector<Hashtable<String, Object>> oVector = new Vector<Hashtable<String, Object>>();
+        for (com.kapti.data.Exchange tExchange : tExchanges) {
+            oVector.add(tExchange.toStruct(
+                    com.kapti.data.Exchange.Fields.ID,
+                    com.kapti.data.Exchange.Fields.NAME,
+                    com.kapti.data.Exchange.Fields.LOCATION));
+        }
+
+        return oVector;
+    }
+
+
+
     public Vector<Hashtable<String, Object>> List(String iFilter) throws XmlRpcException, StockPlayException, FilterException, ParserException {
         // Get DAO reference
         GenericDAO<com.kapti.data.Exchange, String> exDAO = getDAO().getExchangeDAO();
