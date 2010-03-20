@@ -52,6 +52,7 @@ import java.util.Stack;
 import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -61,6 +62,8 @@ public class Parser {
     //
     // Member data
     //
+
+    static Logger mLogger = Logger.getLogger(Parser.class);
 
     public static enum TokenType {
         INT, FLOAT,
@@ -80,6 +83,8 @@ public class Parser {
     //
 
     private Parser() {
+        mLogger.info("instantiating Parser");
+
         // Create token ruleset
         mTokenRules = new ArrayList<Rule<TokenType>>();
         mTokenRules.add(new Rule(TokenType.INT, "[0-9]+"));
@@ -118,6 +123,8 @@ public class Parser {
 
     // Main method
     public Filter parse(String iSource) throws ParserException {
+        mLogger.debug("parsing string '" + iSource + "'");
+
         // Lexical analysis
         List<Token> tInfix = tokenize(iSource);
         Queue<Token> tPostfix = infix_to_postfix(tInfix);
@@ -170,7 +177,7 @@ public class Parser {
                 oTokens.add(tTokenLongest);
                 tPosition = tTokenLongest.getEnd();
             } else
-                tPosition++;    // TODO: warn, as we couldn't match anything?
+                throw new ParserException("unknown character '" + iSource.substring(tPosition, tPosition+1) + "'");
         }
         return oTokens;
     }

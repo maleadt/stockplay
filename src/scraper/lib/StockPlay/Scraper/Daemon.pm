@@ -106,8 +106,8 @@ sub run {
 		# Check delays
 		my $delay = 60;
 		foreach my $quote (@quotes) {
-			if ($quote->delay < $delay) {
-				$delay = $quote->delay;
+			if ($quote->delay - (time - $quote->time) < $delay) {
+				$delay = $quote->delay - (time - $quote->time);
 			}
 		}
 		

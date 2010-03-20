@@ -39,14 +39,17 @@ public class Demo {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        //
+        // Test
+        //
+
         // Test parser
         Parser tParser = Parser.getInstance();
 
         // Parse input
         Filter tFilter = null;
         try {
-//            tFilter = tParser.parse("id EQUALS 42 AND name EQUALS 'StockPlay'");
-            tFilter = tParser.parse("id EQUALS 42 AND name LIKE 'StockPlay'");
+            tFilter = tParser.parse("id GREATERTHAN 42 AND name LIKE 'StockPlay'");
         }
         catch (ParserException e) {
             System.err.println("Parsing failed");
@@ -70,6 +73,46 @@ public class Demo {
             System.err.println("Compilation failed");
             e.printStackTrace();
         }
+
+
+        //
+        // Benchmark
+        //
+
+        System.out.println("-- BENCHMARKING --");
+        long tStart, tEnd, tDiff;
+
+        System.out.print("* Parser instantiations: ");
+        tStart = System.currentTimeMillis();
+        for (int i = 0; i < 1000; i++) {
+            Parser tTest = Parser.getInstance();
+        }
+        tEnd = System.currentTimeMillis();
+        System.out.println((tEnd - tStart) + " ms");
+
+        System.out.print("* Easy equation parsing: ");
+        tStart = System.currentTimeMillis();
+        for (int i = 0; i < 1000; i++) {
+            try {
+                tParser.parse("id EQUALS 42");
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+        tEnd = System.currentTimeMillis();
+        System.out.println((tEnd - tStart) + " ms");
+
+        System.out.print("* Complex equation parsing: ");
+        tStart = System.currentTimeMillis();
+        for (int i = 0; i < 1000; i++) {
+            try {
+                tParser.parse("(id EQUALS 42 AND name EQUALS 'StockPlay') OR (gender EQUALS 'M' OR name EQUALS 'Test')");
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+        tEnd = System.currentTimeMillis();
+        System.out.println((tEnd - tStart) + " ms");
     }
 
 }

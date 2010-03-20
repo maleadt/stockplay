@@ -27,6 +27,7 @@ import com.kapti.filter.exception.FilterException;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import org.apache.log4j.Logger;
 
 /**
  * Dit is de container voor een filterobject. Dit object bevat eigenlijk
@@ -40,6 +41,8 @@ public class Filter {
     //
     // Member data
     //
+
+    static Logger mLogger = Logger.getLogger(Filter.class);
 
     private Condition mRoot = null;
 
@@ -65,7 +68,9 @@ public class Filter {
      * @throws FilterException
      */
     public Object compile() throws FilterException {
-        return mRoot.compile();
+        Object oResult = mRoot.compile();
+        mLogger.debug("compiled filter to '" + oResult + "'");
+        return oResult;
     }
 
     /**

@@ -84,7 +84,7 @@ public class Servlet extends XmlRpcServlet {
     protected XmlRpcHandlerMapping newXmlRpcHandlerMapping() throws XmlRpcException {
         // Property-handler registreren
         PropertyHandlerMapping oMapping = null;
-        URL tUrl = Servlet.class.getResource("XmlRpcServlet.properties");
+        URL tUrl = Thread.currentThread().getContextClassLoader().getResource("XmlRpcServlet.properties");
         if (tUrl == null) {
             throw new XmlRpcException("Failed to locate resource XmlRpcServlet.properties");
         }
