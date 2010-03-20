@@ -27,7 +27,7 @@ public class DataAccess : IDataAccess
 
 	private DataAccess()
 	{
-        factory = DbProviderFactories.GetFactory(ConfigurationManager.ConnectionStrings["OracleDatabaseKapti"].ProviderName);
+        factory = DbProviderFactories.GetFactory(ConfigurationManager.ConnectionStrings["OracleDatabase"].ProviderName);
 	}
 
     public static DataAccess GetInstance()
@@ -40,7 +40,7 @@ public class DataAccess : IDataAccess
     private DbConnection GetConnection()
     {
         DbConnection conn = factory.CreateConnection();
-        conn.ConnectionString = ConfigurationManager.ConnectionStrings["OracleDatabaseKapti"].ConnectionString;
+        conn.ConnectionString = ConfigurationManager.ConnectionStrings["OracleDatabase"].ConnectionString;
         return conn;
     }
 
@@ -96,7 +96,49 @@ public class DataAccess : IDataAccess
 
     public Security GetSecurityBySymbol(string symbol)
     {
-        throw new NotImplementedException();
+        DbConnection conn = GetConnection();
+        conn.Open();
+
+        Security security = null;
+
+        try
+        {
+            DbCommand command = CreateCommand(ConfigurationManager.AppSettings["SELECT_SECURITY"], conn);
+
+            DbParameter paramSymbol = factory.CreateParameter();
+            paramSymbol.ParameterName = ":symbol";
+            paramSymbol.DbType = DbType.String;
+            paramSymbol.Value = symbol;
+
+            command.Parameters.Add(paramSymbol);
+
+            DbDataReader securityReader = command.ExecuteReader();
+
+            string name, type, exchangeSymbol;
+            Exchange exchange;
+
+            securityReader.Read();
+
+            name = securityReader.GetString(1);
+            //type = securityReader.GetString(2);   //Type zit momenteel nog niet in de databank
+
+            //Exchange object aanmaken
+            exchangeSymbol = securityReader.GetString(2);
+            exchange = getExchangeBySymbol(exchangeSymbol);
+
+            security = new Security(symbol, name, "", exchange);
+        }
+        catch (Exception e)
+        {
+            //TODO loggen
+            Console.WriteLine(e.Message);
+        }
+        finally
+        {
+            conn.Close();
+        }
+
+        return security;
     }
 
     public List<Security> GetSecuritiesFromExchange(string id)
@@ -155,9 +197,60 @@ public class DataAccess : IDataAccess
         return quote;
     }
 
-    public Quote GetQuoteFromSecurity(string symbol, DateTime time)
+    public Quote GetQuoteFromSecurity(string symbol, DateTime date)
     {
-        throw new NotImplementedException();
+        DbConnection conn = GetConnection();
+        conn.Open();
+
+        Quote quote = null;
+
+        try
+        {
+            DbCommand command = CreateCommand(ConfigurationManager.AppSettings["SELECT_QUOTE FROM SECURITY"], conn);
+
+            DbParameter paramSymbol = factory.CreateParameter();
+            paramSymbol.ParameterName = ":symbol";
+            paramSymbol.DbType = DbType.String;
+            paramSymbol.Value = symbol;
+            DbParameter paramDate = factory.CreateParameter();
+            paramDate.ParameterName = ":date";
+            paramDate.DbType = DbType.DateTime;
+            paramSymbol.Value = date;
+
+
+            command.Parameters.Add(paramSymbol);
+            command.Parameters.Add(paramDate);
+
+            DbDataReader quoteReader = command.ExecuteReader();
+
+            DateTime time;
+            double price, open, buy, sell, low, high;
+            int volume;
+
+            quoteReader.Read();
+
+            time = quoteReader.GetDateTime(1);
+            price = quoteReader.GetDouble(2);
+            open = quoteReader.GetDouble(3);
+            volume = quoteReader.GetInt32(4);
+            buy = quoteReader.GetDouble(5);
+            sell = quoteReader.GetDouble(6);
+            low = quoteReader.GetDouble(7);
+            high = quoteReader.GetDouble(8);
+
+            quote = new Quote(time, price, open, volume, buy, sell, low, high);
+        }
+        catch (Exception e)
+        {
+            //TODO: Loggen
+            Console.WriteLine(e.Message);
+        }
+        finally
+        {
+            conn.Close();
+        }
+
+        return quote;
     }
 
     public List<Quote> GetQuotesFromSecurity(string symbol)

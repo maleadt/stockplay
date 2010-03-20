@@ -39,9 +39,10 @@ public class Security : ISecurity
         return data.GetLatestQuoteFromSecurity(symbol);
     }
 
-    public List<Quote> GetQuotes(DateTime begin, DateTime eind, TimeSpan interval)
+    public Quote GetQuote(DateTime date)
     {
-        return null;
+        DataAccess data = DataAccess.GetInstance();
+        return data.GetQuoteFromSecurity(symbol, date);
     }
 
     public string Symbol

@@ -4,7 +4,7 @@ interface ISecurity
 {
     Exchange Exchange { get; }
     Quote GetLatestQuote();
-    List<Quote> GetQuotes(DateTime begin, DateTime eind, TimeSpan interval);
+    Quote GetQuote(DateTime date);
     string Name { get; }
     string Symbol { get; }
     string Type { get; }

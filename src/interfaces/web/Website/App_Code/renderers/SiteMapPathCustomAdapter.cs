@@ -38,7 +38,7 @@ public class SiteMapPathCustomAdapter : System.Web.UI.WebControls.Adapters.WebCo
 
         SiteMapNodeCollection collection = new SiteMapNodeCollection();
         SiteMapNode node = Provider.CurrentNode;
-        while(node != Provider.RootNode)
+        while(node != null && node != Provider.RootNode)
         {
             collection.Add(node);
             node = node.ParentNode;
