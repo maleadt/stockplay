@@ -94,8 +94,7 @@ public class SecurityDAO implements com.kapti.data.persistence.SecurityDAO {
                 rs = stmt.executeQuery();
                 ArrayList<Security> list = new ArrayList<Security>();
                 while (rs.next()) {
-
-                    list.add(new Security(rs.getString(1), rs.getString(2), rs.getString(3)));
+                    list.add(new Security(rs.getString(1), rs.getString(2), rs.getString(3), rs.getBoolean(4), rs.getBoolean(5)));
                 }
                 return list;
             } finally {
@@ -274,7 +273,6 @@ public class SecurityDAO implements com.kapti.data.persistence.SecurityDAO {
     public boolean delete(Security security) throws StockPlayException {
         Connection conn = null;
         PreparedStatement stmt = null;
-        ResultSet rs = null;
         try {
             try {
                 conn = OracleConnection.getConnection();
@@ -287,9 +285,6 @@ public class SecurityDAO implements com.kapti.data.persistence.SecurityDAO {
 
 
             } finally {
-                if (rs != null) {
-                    rs.close();
-                }
                 if (stmt != null) {
                     stmt.close();
                 }
