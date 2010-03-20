@@ -1,6 +1,6 @@
 /*
- * ConcreteDatabase.java
- * StockPlay - Dummy implementatie van de User subklasse.
+ * UserHandler.java
+ * StockPlay - Handler van de User klasse.
  *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
@@ -19,10 +19,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.kapti.backend.api.user;
+package com.kapti.backend.api;
 
-import com.kapti.backend.api.User;
-import com.kapti.backend.api.Error;
 import com.kapti.data.persistence.GenericDAO;
 import com.kapti.exceptions.StockPlayException;
 import com.kapti.filter.Filter;
@@ -35,17 +33,18 @@ import java.util.Vector;
 import org.apache.xmlrpc.XmlRpcException;
 
 /**
- * \brief   Database implementatie van de User interface.
+ * \brief   Handler van de User klasse.
  *
- * Deze klasse is een concrete implementatie van de User interface. Een
- * dergelijke implementatie geeft valide data terug, gehaald uit de database
+ * Deze klasse is de handler van de User klasse. Ze staat in
+ * voor de verwerking van aanroepen van functies die zich in deze klasse
+ * bevinden, lokaal de correcte aanvragen uit te voeren, en het resultaat
+ * op conforme wijze terug te sturen.
  */
-public class ConcreteDatabase extends User {
+public class UserHandler extends MethodClass {
     //
     // Methodes
     //
 
-    @Override
     public int Hello(String iClient, int iProtocolVersion) throws XmlRpcException {
         getLogger().info("Client connected: " + iClient);
         if (iProtocolVersion != PROTOCOL_VERSION)
@@ -53,7 +52,6 @@ public class ConcreteDatabase extends User {
         return 1;
     }
 
-    @Override
     public int Create(Hashtable<String, Object> iDetails) throws XmlRpcException, StockPlayException {
         // Get DAO reference
         GenericDAO<com.kapti.data.User, Integer> tUserDAO = getDAO().getUserDAO();
@@ -64,7 +62,6 @@ public class ConcreteDatabase extends User {
         return 1;
     }
 
-    @Override
     public Vector<Hashtable<String, Object>> Details(String iFilter) throws XmlRpcException, StockPlayException {
         // Get DAO reference
         GenericDAO<com.kapti.data.User, Integer> userDAO = getDAO().getUserDAO();
@@ -85,7 +82,6 @@ public class ConcreteDatabase extends User {
         return oVector;
     }
 
-    @Override
     public Vector<Hashtable<String, Object>> List(String iFilter) throws XmlRpcException, StockPlayException {
         // Get DAO reference
         GenericDAO<com.kapti.data.User, Integer> userDAO = getDAO().getUserDAO();
@@ -104,7 +100,6 @@ public class ConcreteDatabase extends User {
         return oVector;
     }
 
-    @Override
     public int Modify(String iFilter, Hashtable<String, Object> iDetails) throws XmlRpcException, StockPlayException, FilterException, ParserException {
         // Get DAO reference
         GenericDAO<com.kapti.data.User, Integer> tUserDAO = getDAO().getUserDAO();
@@ -122,8 +117,7 @@ public class ConcreteDatabase extends User {
 
         return 1;
     }
-
-    @Override
+    
     public int Remove(String iFilter) throws XmlRpcException, StockPlayException, FilterException, ParserException {
         // Get DAO reference
         GenericDAO<com.kapti.data.User, Integer> tUserDAO = getDAO().getUserDAO();

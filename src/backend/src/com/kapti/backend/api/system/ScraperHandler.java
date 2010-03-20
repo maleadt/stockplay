@@ -1,6 +1,6 @@
 /*
- * IBackend.java
- * StockPlay - Abstracte klasse van de System.Backend interface.
+ * ScraperHandler.java
+ * StockPlay - Handler van de System.Scraper subklasse.
  *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
@@ -26,18 +26,32 @@ import java.util.Hashtable;
 import org.apache.xmlrpc.XmlRpcException;
 
 /**
- * \brief Abstracte klasse van de System.Backend interface.
+ * \brief   Handler van de System.Scraper subklasse.
  *
- * Deze klasse voorziet in functiesignaturen zoals voorgeschreven in de
- * protocoldefinitie van de System.Backend subklasse.
+ * Deze klasse is de handler van de System.Scraper subklasse. Ze staat in
+ * voor de verwerking van aanroepen van functies die zich in deze klasse
+ * bevinden, lokaal de correcte aanvragen uit te voeren, en het resultaat
+ * op conforme wijze terug te sturen.
  */
-public abstract class Backend extends MethodClass {
+public class ScraperHandler extends MethodClass {
     //
     // Methodes
     //
 
-    public abstract int Status() throws XmlRpcException;
-    public abstract boolean Restart() throws XmlRpcException;
-    public abstract boolean Stop() throws XmlRpcException;
-    public abstract Hashtable<String, Object> Stats() throws XmlRpcException;
+    public int Status() throws XmlRpcException {
+        return 1;
+    }
+
+    public boolean Stop() throws XmlRpcException {
+        return false;
+    }
+
+    public boolean Restart() throws XmlRpcException {
+        return true;
+    }
+    
+    public Hashtable<String, Object> Stats() throws XmlRpcException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }
+

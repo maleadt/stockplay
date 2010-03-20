@@ -1,6 +1,6 @@
 /*
- * ConcreteDummy.java
- * StockPlay - Dummy implementatie van de System.Database subklasse.
+ * DatabaseHandler.java
+ * StockPlay - Handler van de System.Database subklasse.
  *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
@@ -19,21 +19,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.kapti.backend.api.system.database;
+package com.kapti.backend.api.system;
 
-import com.kapti.backend.api.system.Database;
+import com.kapti.backend.api.MethodClass;
 import java.util.Hashtable;
 import org.apache.xmlrpc.XmlRpcException;
 
 /**
- * \brief   Dummy implementatie van de System.Database interface.
+ * \brief   Handler van de System.Database subklasse.
  *
- * Deze klasse is een dummy implementatie van de System.Database interface. Een
- * dergelijke implementatie geeft valide data terug, zonder daarvoor de database
- * te raadplegen. Deze implementatie kan zo gebruikt worden om een client-systeem
- * te testen.
+ * Deze klasse is de handler van de System.Database subklasse. Ze staat in
+ * voor de verwerking van aanroepen van functies die zich in deze klasse
+ * bevinden, lokaal de correcte aanvragen uit te voeren, en het resultaat
+ * op conforme wijze terug te sturen.
  */
-public class ConcreteDummy extends Database {
+public class DatabaseHandler extends MethodClass {
     //
     // Methodes
     //
@@ -42,7 +42,6 @@ public class ConcreteDummy extends Database {
         return 1;
     }
 
-    @Override
     public Hashtable<String, Object> Stats() throws XmlRpcException {
         throw new UnsupportedOperationException("Not supported yet.");
     }

@@ -1,6 +1,6 @@
 /*
- * ConcreteDummy.java
- * StockPlay - Concrete implementatie van de Finance.Exchange subklasse.
+ * ExchangeHandler.java
+ * StockPlay - Handler van de Finance.Exchange subklasse.
  *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
@@ -19,8 +19,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.kapti.backend.api.finance.exchange;
+package com.kapti.backend.api.finance;
 
+import com.kapti.backend.api.MethodClass;
 import com.kapti.data.persistence.GenericDAO;
 import com.kapti.exceptions.StockPlayException;
 import com.kapti.filter.Filter;
@@ -33,17 +34,18 @@ import java.util.Vector;
 import org.apache.xmlrpc.XmlRpcException;
 
 /**
- * \brief   Dummy implementatie van de Finance.Exchange interface.
+ * \brief   Handler van de Finance.Exchange subklasse.
  *
- * Deze klasse is een concrete implementatie van de Finance.Exchange interface. Een
- * dergelijke implementatie geeft valide data terug, die uit de database gehaald werd
+ * Deze klasse is de handler van de Finance.Exchange subklasse. Ze staat in
+ * voor de verwerking van aanroepen van functies die zich in deze klasse
+ * bevinden, lokaal de correcte aanvragen uit te voeren, en het resultaat
+ * op conforme wijze terug te sturen.
  */
-public class ConcreteDatabase extends com.kapti.backend.api.finance.Exchange {
+public class ExchangeHandler extends MethodClass {
     //
     // Methodes
     //
 
-    @Override
     public Vector<Hashtable<String, Object>> List(String iFilter) throws XmlRpcException, StockPlayException, FilterException, ParserException {
         // Get DAO reference
         GenericDAO<com.kapti.data.Exchange, String> exDAO = getDAO().getExchangeDAO();
@@ -64,7 +66,6 @@ public class ConcreteDatabase extends com.kapti.backend.api.finance.Exchange {
         return oVector;
     }
 
-    @Override
     public int Modify(String iFilter, Hashtable<String, Object> iDetails) throws XmlRpcException, StockPlayException, FilterException, ParserException {
         // Get DAO reference
         GenericDAO<com.kapti.data.Exchange, String> exDAO = getDAO().getExchangeDAO();
@@ -85,8 +86,7 @@ public class ConcreteDatabase extends com.kapti.backend.api.finance.Exchange {
 
         return 1;
     }
-
-    @Override
+    
     public int Create(Hashtable<String, Object> iDetails) throws XmlRpcException, StockPlayException {
         // Get DAO reference
         GenericDAO<com.kapti.data.Exchange, String> exDAO = getDAO().getExchangeDAO();

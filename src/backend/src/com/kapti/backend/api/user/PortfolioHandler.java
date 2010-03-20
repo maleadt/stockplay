@@ -1,6 +1,6 @@
 /*
- * ConcreteDatabase.java
- * StockPlay - Concrete implementatie van de Portfolio subklasse.
+ * PortfolioHandler.java
+ * StockPlay - Handler van de User.Portfolio subklasse.
  *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
@@ -20,8 +20,9 @@
  *
  */
 
-package com.kapti.backend.api.user.portfolio;
+package com.kapti.backend.api.user;
 
+import com.kapti.backend.api.MethodClass;
 import com.kapti.data.UserSecurity;
 import com.kapti.data.UserSecurity.UserSecurityPK;
 import com.kapti.data.persistence.GenericDAO;
@@ -34,10 +35,15 @@ import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Vector;
 import org.apache.xmlrpc.XmlRpcException;
-
-public class ConcreteDatabase extends com.kapti.backend.api.user.Portfolio {
-
-    @Override
+/**
+ * \brief   Handler van de User.Portfolio subklasse.
+ *
+ * Deze klasse is de handler van de User.Portfolio subklasse. Ze staat in
+ * voor de verwerking van aanroepen van functies die zich in deze klasse
+ * bevinden, lokaal de correcte aanvragen uit te voeren, en het resultaat
+ * op conforme wijze terug te sturen.
+ */
+public class PortfolioHandler extends MethodClass {
     public Vector<Hashtable<String, Object>> List(String iFilter) throws XmlRpcException, FilterException, StockPlayException, ParserException {
         // Get DAO reference
         GenericDAO<com.kapti.data.UserSecurity, UserSecurityPK> tPortfolioDAO = getDAO().getUserSecurityDAO();

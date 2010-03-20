@@ -1,6 +1,6 @@
 /*
- * ConcreteDatabase.java
- * StockPlay - Concrete implementatie van de User.Order subklasse.
+ * OrderHandler.java
+ * StockPlay - Handler van de User.Order subklasse.
  *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
@@ -20,8 +20,9 @@
  *
  */
 
-package com.kapti.backend.api.user.order;
+package com.kapti.backend.api.user;
 
+import com.kapti.backend.api.MethodClass;
 import com.kapti.data.OrderStatus;
 import com.kapti.data.persistence.GenericDAO;
 import com.kapti.exceptions.StockPlayException;
@@ -33,10 +34,15 @@ import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Vector;
 import org.apache.xmlrpc.XmlRpcException;
-
-public class ConcreteDatabase extends com.kapti.backend.api.user.Order {
-
-    @Override
+/**
+ * \brief   Handler van de User.Order subklasse.
+ *
+ * Deze klasse is de handler van de User.Order subklasse. Ze staat in
+ * voor de verwerking van aanroepen van functies die zich in deze klasse
+ * bevinden, lokaal de correcte aanvragen uit te voeren, en het resultaat
+ * op conforme wijze terug te sturen.
+ */
+public class OrderHandler extends MethodClass {
     public Vector<Hashtable<String, Object>> List(String iFilter) throws XmlRpcException, StockPlayException, FilterException, ParserException {
         // Get DAO reference
         GenericDAO<com.kapti.data.Order, Integer> orDAO = getDAO().getOrderDAO();
@@ -57,7 +63,6 @@ public class ConcreteDatabase extends com.kapti.backend.api.user.Order {
         return oVector;    
     }
 
-    @Override
     public int Create(Hashtable<String, Object> iDetails) throws XmlRpcException, StockPlayException {
         // Get DAO reference
         GenericDAO<com.kapti.data.Order, Integer> orDAO = getDAO().getOrderDAO();
@@ -68,8 +73,7 @@ public class ConcreteDatabase extends com.kapti.backend.api.user.Order {
 
         return 1;
     }
-
-    @Override
+    
     public int Cancel(String iFilter) throws XmlRpcException, FilterException, StockPlayException, ParserException {
         // Get DAO reference
         GenericDAO<com.kapti.data.Order, Integer> orDAO = getDAO().getOrderDAO();

@@ -1,6 +1,6 @@
 /*
- * ConcreteDatabase.java
- * StockPlay - Concrete implementatie van de User.Transaction subklasse.
+ * TransactionHandler.java
+ * StockPlay - Handler van de User.Transaction subklasse.
  *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
@@ -20,8 +20,9 @@
  *
  */
 
-package com.kapti.backend.api.user.transaction;
+package com.kapti.backend.api.user;
 
+import com.kapti.backend.api.MethodClass;
 import com.kapti.data.Transaction;
 import com.kapti.data.persistence.GenericDAO;
 import com.kapti.exceptions.StockPlayException;
@@ -33,13 +34,18 @@ import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Vector;
 import org.apache.xmlrpc.XmlRpcException;
-
-public class ConcreteDatabase extends com.kapti.backend.api.user.Transaction {
-
-    @Override
+/**
+ * \brief   Handler van de User.Transaction subklasse.
+ *
+ * Deze klasse is de handler van de User.Transaction subklasse. Ze staat in
+ * voor de verwerking van aanroepen van functies die zich in deze klasse
+ * bevinden, lokaal de correcte aanvragen uit te voeren, en het resultaat
+ * op conforme wijze terug te sturen.
+ */
+public class TransactionHandler extends MethodClass {
     public Vector<Hashtable<String, Object>> List(String iFilter) throws XmlRpcException, FilterException, StockPlayException, ParserException {
         // Get DAO reference
-        GenericDAO< Transaction, Integer> tTransactionDAO = getDAO().getTransactionDAO();
+        GenericDAO<Transaction, Integer> tTransactionDAO = getDAO().getTransactionDAO();
 
         Parser parser = Parser.getInstance();
         Filter filter = parser.parse(iFilter);
@@ -47,7 +53,7 @@ public class ConcreteDatabase extends com.kapti.backend.api.user.Transaction {
         // Fetch and convert all Indexs
         Collection<Transaction> tTransactions = tTransactionDAO.findByFilter(filter);
         Vector<Hashtable<String, Object>> oVector = new Vector<Hashtable<String, Object>>();
-        for (com.kapti.data.Transaction tTransaction : tTransactions) {
+        for (Transaction tTransaction : tTransactions) {
             oVector.add(tTransaction.toStruct(
                     com.kapti.data.Transaction.Fields.AMOUNT,
                     com.kapti.data.Transaction.Fields.ID,

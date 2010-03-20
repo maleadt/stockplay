@@ -1,6 +1,6 @@
 /*
- * System.java
- * StockPlay - Abstracte klasse vab de System interface.
+ * SystemHandler.java
+ * StockPlay - Handler van de System klasse.
  *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
@@ -22,10 +22,12 @@
 package com.kapti.backend.api;
 
 /**
- * \brief Abstracte klasse vab de System interface.
+ * \brief   Handler van de System klasse.
  *
- * Deze klasse voorziet in functiesignaturen zoals voorgeschreven in de
- * protocoldefinitie van de System klasse.
+ * Deze klasse is de handler van de System klasse. Ze staat in
+ * voor de verwerking van aanroepen van functies die zich in deze klasse
+ * bevinden, lokaal de correcte aanvragen uit te voeren, en het resultaat
+ * op conforme wijze terug te sturen.
  */
-public abstract class System extends MethodClass {
+public class SystemHandler extends MethodClass {
 }

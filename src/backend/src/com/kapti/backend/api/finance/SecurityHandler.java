@@ -1,6 +1,6 @@
 /*
- * ConcreteDummy.java
- * StockPlay - Concrete implementatie van de Finance.Security subklasse.
+ * SecurityHandler.java
+ * StockPlay - Handler van de Finance.Security subklasse.
  *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
@@ -19,9 +19,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.kapti.backend.api.finance.security;
+package com.kapti.backend.api.finance;
 
-import com.kapti.backend.api.finance.Security;
+import com.kapti.backend.api.MethodClass;
 import com.kapti.data.persistence.GenericDAO;
 import com.kapti.exceptions.StockPlayException;
 import com.kapti.filter.exception.FilterException;
@@ -31,17 +31,18 @@ import java.util.Vector;
 import org.apache.xmlrpc.XmlRpcException;
 
 /**
- * \brief   Concrete implementatie van de Finance.Security interface.
+ * \brief   Handler van de Finance.Security subklasse.
  *
- * Deze klasse is een concrete implementatie van de Finance.Security interface. Een
- * dergelijke implementatie geeft valide data terug, gehaald uit de database
+ * Deze klasse is de handler van de Finance.Security subklasse. Ze staat in
+ * voor de verwerking van aanroepen van functies die zich in deze klasse
+ * bevinden, lokaal de correcte aanvragen uit te voeren, en het resultaat
+ * op conforme wijze terug te sturen.
  */
-public class ConcreteDatabase extends Security {
+public class SecurityHandler extends MethodClass {
     //
     // Methodes
     //
 
-    @Override
     public Vector<Hashtable<String, Object>> List(String iFilter) throws XmlRpcException, StockPlayException, FilterException {
         // Get DAO reference
         GenericDAO<com.kapti.data.Security, String> tSecurityDAO = getDAO().getSecurityDAO();
@@ -59,7 +60,6 @@ public class ConcreteDatabase extends Security {
         return oVector;
     }
 
-    @Override
     public int Modify(String iFilter, Hashtable<String, Object> iDetails) throws XmlRpcException, StockPlayException, FilterException {
         // Get DAO reference
         GenericDAO<com.kapti.data.Security, String> tSecurityDAO = getDAO().getSecurityDAO();
@@ -77,8 +77,7 @@ public class ConcreteDatabase extends Security {
 
         return 1;
     }
-
-    @Override
+    
     public int Create(Hashtable<String, Object> iDetails) throws XmlRpcException, StockPlayException {
         // Get DAO reference
         GenericDAO<com.kapti.data.Security, String> tSecurityDAO = getDAO().getSecurityDAO();
