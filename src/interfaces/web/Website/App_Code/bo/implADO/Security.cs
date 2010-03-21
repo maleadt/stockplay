@@ -33,6 +33,18 @@ public class Security : ISecurity
         this.exchange = exchange;
 	}
 
+    public double GetChange()
+    {
+        DataAccess data = DataAccess.GetInstance();
+        Quote qLatest = data.GetLatestQuoteFromSecurity(symbol);
+        Quote qYesterday = data.GetQuoteFromSecurity(symbol, qLatest.Time.AddDays(-1));
+
+        Console.WriteLine(qLatest.Time);
+        Console.WriteLine(qYesterday.Time);
+
+        return Math.Round((qLatest.Price - qYesterday.Price) / qLatest.Price * 100, 2);
+    }
+
     public Quote GetLatestQuote()
     {
         DataAccess data = DataAccess.GetInstance();

@@ -27,7 +27,7 @@ public class DataAccess : IDataAccess
 
 	private DataAccess()
 	{
-        factory = DbProviderFactories.GetFactory(ConfigurationManager.ConnectionStrings["OracleDatabase"].ProviderName);
+        factory = DbProviderFactories.GetFactory(ConfigurationManager.ConnectionStrings["OracleDatabaseKapti"].ProviderName);
 	}
 
     public static DataAccess GetInstance()
@@ -40,7 +40,7 @@ public class DataAccess : IDataAccess
     private DbConnection GetConnection()
     {
         DbConnection conn = factory.CreateConnection();
-        conn.ConnectionString = ConfigurationManager.ConnectionStrings["OracleDatabase"].ConnectionString;
+        conn.ConnectionString = ConfigurationManager.ConnectionStrings["OracleDatabaseKapti"].ConnectionString;
         return conn;
     }
 
@@ -175,8 +175,8 @@ public class DataAccess : IDataAccess
 
             time = quoteReader.GetDateTime(1);
             price = quoteReader.GetDouble(2);
-            open = quoteReader.GetDouble(3);
-            volume = quoteReader.GetInt32(4);
+            volume = quoteReader.GetInt32(3);
+            open = quoteReader.GetDouble(4);
             buy = quoteReader.GetDouble(5);
             sell = quoteReader.GetDouble(6);
             low = quoteReader.GetDouble(7);
@@ -206,17 +206,16 @@ public class DataAccess : IDataAccess
 
         try
         {
-            DbCommand command = CreateCommand(ConfigurationManager.AppSettings["SELECT_QUOTE FROM SECURITY"], conn);
+            DbCommand command = CreateCommand(ConfigurationManager.AppSettings["SELECT_QUOTE_FROM_SECURITY"], conn);
 
             DbParameter paramSymbol = factory.CreateParameter();
             paramSymbol.ParameterName = ":symbol";
             paramSymbol.DbType = DbType.String;
             paramSymbol.Value = symbol;
             DbParameter paramDate = factory.CreateParameter();
-            paramDate.ParameterName = ":date";
+            paramDate.ParameterName = ":quotedate";
             paramDate.DbType = DbType.DateTime;
-            paramSymbol.Value = date;
-
+            paramDate.Value = date;
 
             command.Parameters.Add(paramSymbol);
             command.Parameters.Add(paramDate);
@@ -231,8 +230,8 @@ public class DataAccess : IDataAccess
 
             time = quoteReader.GetDateTime(1);
             price = quoteReader.GetDouble(2);
-            open = quoteReader.GetDouble(3);
-            volume = quoteReader.GetInt32(4);
+            volume = quoteReader.GetInt32(3);
+            open = quoteReader.GetDouble(4);
             buy = quoteReader.GetDouble(5);
             sell = quoteReader.GetDouble(6);
             low = quoteReader.GetDouble(7);
@@ -251,16 +250,6 @@ public class DataAccess : IDataAccess
         }
 
         return quote;
-    }
-
-    public List<Quote> GetQuotesFromSecurity(string symbol)
-    {
-        throw new NotImplementedException();
-    }
-
-    public List<Quote> GetQuotesIntervalFromSecurity(string symbol, DateTime start, DateTime end)
-    {
-        throw new NotImplementedException();
     }
 
     public Exchange getExchangeBySymbol(string symbol)

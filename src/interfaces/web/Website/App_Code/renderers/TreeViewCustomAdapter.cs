@@ -47,7 +47,10 @@ public class TreeViewCustomAdapter : System.Web.UI.WebControls.Adapters.WebContr
             if (subnode.NavigateUrl != null)
             {
                 writer.WriteBeginTag("a");
-                writer.WriteAttribute("href", subnode.NavigateUrl);
+                if(subnode.NavigateUrl != "")
+                    writer.WriteAttribute("href", subnode.NavigateUrl);
+                if(subnode.ToolTip != "")
+                    writer.WriteAttribute("title", subnode.ToolTip);
                 writer.Write(">");
                 writer.Write(subnode.Text);
                 writer.WriteEndTag("a");

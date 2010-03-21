@@ -1,27 +1,38 @@
 ﻿<%@ Page Language="C#" MasterPageFile="~/MasterPage.master" AutoEventWireup="true" CodeFile="SecuritiesOverview.aspx.cs" Inherits="SecuritiesOverview" Title="Securities Overview" %>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder" Runat="Server">
-    
-    <p>Gridview:</p>
+
+    <h1>Securities Overview</h1>
     <!-- Gridlines op none en cellspacing op -1 zijn nodig om de html attributen uit de html tags te kunnen wegwerken! -->
-    <asp:GridView ID="SecuritiesGridview" runat="server" 
-        AutoGenerateColumns="False" AllowSorting="True" AllowPaging="True"
-        OnSorting="SecuritiesGridview_Sorting" 
-        OnPageIndexChanging="SecuritiesGridview_PageIndexChanging" GridLines="None" 
-        CellSpacing="-1" PageSize="2">
+    <asp:GridView ID="SecuritiesGridview" runat="server" AutoGenerateColumns="False" AllowSorting="True" AllowPaging="True"
+        OnSorting="SecuritiesGridview_Sorting" OnPageIndexChanging="SecuritiesGridview_PageIndexChanging" GridLines="None" 
+        onrowdatabound="SecuritiesGridview_RowDataBound" CellSpacing="-1" PageSize="6" >
         <Columns>
-            <asp:BoundField DataField="Symbol" HeaderText="Symbool" SortExpression="Symbol" >
+            <asp:HyperLinkField DataTextField="Symbol" DataNavigateUrlFields="Symbol" SortExpression="Symbol"
+            DataNavigateUrlFormatString="SecurityDetail.aspx?param={0}" HeaderText="Symbol">
                 <ItemStyle CssClass="name" />
-            </asp:BoundField>
-            <asp:BoundField DataField="Name" HeaderText="Naam" SortExpression="Name">
+            </asp:HyperLinkField>
+            <asp:BoundField DataField="Name" HeaderText="Name" SortExpression="Name">
                 <ItemStyle CssClass="action" />
             </asp:BoundField>
-            <asp:BoundField DataField="Exchange" HeaderText="Index" SortExpression="Exchange">
+            <asp:BoundField DataField="Exchange" HeaderText="Exchange" SortExpression="Exchange">
                 <ItemStyle CssClass="action" />
             </asp:BoundField>
-            <asp:BoundField DataField="Quote" HeaderText="Koers" SortExpression="Quote">
-                <ItemStyle CssClass="pos" />
-            </asp:BoundField>
+            <asp:BoundField DataField="Change" HeaderText="Change" SortExpression="Change" HtmlEncode="false" DataFormatString="{0:0.00}" />
+            <asp:BoundField DataField="Quote" HeaderText="Quote" SortExpression="Quote" />
+            <asp:BoundField DataField="Date" HeaderText="Date" SortExpression="Date" HtmlEncode="false" DataFormatString="{0:dd/MM, HH:MM:ss}" />
+            <asp:TemplateField HeaderText="Buy">
+                <ItemStyle CssClass="action" />
+                <ItemTemplate>
+                    <asp:Image ID="BuyImage" runat="server" ImageUrl="~/App_Themes/StockPlay/afbeeldingen/money_add.png" />
+                </ItemTemplate>
+            </asp:TemplateField>
+            <asp:TemplateField HeaderText="Sell">
+                <ItemStyle CssClass="action" />
+                <ItemTemplate>
+                    <asp:Image ID="SellImage" runat="server" ImageUrl="~/App_Themes/StockPlay/afbeeldingen/money_delete.png" />
+                </ItemTemplate>
+            </asp:TemplateField>
         </Columns>
     </asp:GridView>
     

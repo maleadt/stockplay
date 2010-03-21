@@ -38,17 +38,30 @@ public partial class SecuritiesOverview : System.Web.UI.Page
         DataTable securitiesTable = new DataTable("Securities");
 
         securitiesTable.Columns.Add("Symbol");
+        securitiesTable.Columns["Symbol"].DataType = typeof(string);
         securitiesTable.Columns.Add("Name");
+        securitiesTable.Columns["Name"].DataType = typeof(string);
         securitiesTable.Columns.Add("Exchange");
+        securitiesTable.Columns["Exchange"].DataType = typeof(string);
         securitiesTable.Columns.Add("Quote");
+        securitiesTable.Columns["Quote"].DataType = typeof(double);
+        securitiesTable.Columns.Add("Change");
+        securitiesTable.Columns["Change"].DataType = typeof(double);
+        securitiesTable.Columns.Add("Date");
+        securitiesTable.Columns["Date"].DataType = typeof(DateTime);
+
 
         foreach (Security security in securities)
         {
+            Quote q = security.GetLatestQuote();
+
             DataRow row = securitiesTable.NewRow();
             row[0] = security.Symbol;
             row[1] = security.Name;
             row[2] = security.Exchange.Name;
-            row[3] = security.GetLatestQuote().Buy;
+            row[3] = q.Buy;
+            row[4] = security.GetChange();
+            row[5] = q.Time;
 
             securitiesTable.Rows.Add(row);
         }
@@ -96,4 +109,15 @@ public partial class SecuritiesOverview : System.Web.UI.Page
         }
     }
 
+    //Zorgt ervoor dat de kleur van de tekst correct ingesteld wordt in de "Change" kolom
+    protected void SecuritiesGridview_RowDataBound(object sender, GridViewRowEventArgs e)
+    {
+        if (e.Row.RowType == DataControlRowType.DataRow)
+        {
+            if (Convert.ToDouble(e.Row.Cells[3].Text) >= 0)
+                e.Row.Cells[3].CssClass = "pos";
+            else
+                e.Row.Cells[3].CssClass = "neg";
+        }
+    }
 }

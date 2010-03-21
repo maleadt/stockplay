@@ -7,34 +7,46 @@
     <h2 ID="Value" runat="server"></h2>
     <h2 ID="Change" runat="server"></h2>
     
-    <table id="general" style="float: right; border: solid 1px grey;">
+    <table class="table" id="general">
         <tr>
-            <td>Exchange:</td>
+            <td class="col">Exchange</td>
             <td><p ID="Exchange" runat="server"></p></td>
         </tr>
         <tr>
-            <td>ISIN:</td>
+            <td class="col">ISIN</td>
             <td><p ID="ISIN" runat="server"></p></td>
         </tr>
         <tr>
-            <td>Symbol:</td>
+            <td class="col">Symbol</td>
             <td><p ID="Symbol" runat="server"></p></td>
         </tr>
     </table>
-    <table id="data" style="border: solid 1px grey;">
+    
+    <table class="table" id="data">
         <tr>
-            <td>Open</td>
+            <td class="col">Open</td>
             <td><p ID="Open" runat="server"></p></td>
         </tr>
         <tr>
-            <td>High</td>
+            <td class="col">High</td>
             <td><p ID="High" runat="server"></p></td>
         </tr>
         <tr>
-            <td>Low</td>
+            <td class="col">Low</td>
             <td><p ID="Low" runat="server"></p></td>
         </tr>
     </table>
+    
+    <asp:GridView ID="HistoryGridView" runat="server" AutoGenerateColumns="False" 
+                            onrowdatabound="HistoryGridView_RowDataBound">
+        <Columns>
+            <asp:BoundField DataField="Date" HeaderText="Date" HtmlEncode="false" DataFormatString="{0:dd/MM/yyyy}" />
+            <asp:BoundField DataField="Change" HeaderText="Change" />
+            <asp:BoundField DataField="Open" HeaderText="Open" />
+            <asp:BoundField DataField="Low" HeaderText="Low" />
+            <asp:BoundField DataField="High" HeaderText="High" />
+        </Columns>
+    </asp:GridView>
 
     <div id="plotTest" class="plot">
         <div class="draw">

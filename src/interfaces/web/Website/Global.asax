@@ -17,15 +17,19 @@
         //Sitemap node toevoegen voor de securitydetail pagina
         if (context.Request.Path.ToLower().Contains("securitydetail.aspx"))
         {
-            SiteMapNode node = new SiteMapNode(SiteMap.Provider, "SecurityOverview.aspx", "SecurityOverview.aspx", "Security Overview");
+            SiteMapNode overview = SiteMap.Provider.FindSiteMapNode("~/SecuritiesOverview.aspx");
+            //Een bestaande node kan je niet aanpassen, dus nemen we een kopie
+            SiteMapNode node = new SiteMapNode(overview.Provider, overview.Key, overview.Url, overview.Title, overview.Description);
             
             string title = "Security Detail";
             string query = "SecurityDetail.aspx";
+            string description = "Detail of security";
             if (context.Request.Params["param"] != null) {
                 title += " (" + context.Request.Params["param"] + ")";
                 query += "?param=" + context.Request.Params["param"];
+                description += " '" + context.Request.Params["param"] + "' ";
             }
-            SiteMapNode nodeSecurity = new SiteMapNode(SiteMap.Provider, query, query, title);
+            SiteMapNode nodeSecurity = new SiteMapNode(SiteMap.Provider, query, query, title, description);
             
             node.ParentNode = SiteMap.Provider.RootNode;
             nodeSecurity.ParentNode = node;

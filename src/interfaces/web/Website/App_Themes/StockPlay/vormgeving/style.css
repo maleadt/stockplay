@@ -161,17 +161,10 @@ a:hover {
 	font-size: 0.9em;
 }
 
-#right table.table td.name {
+#right table.table td.name a {
 	color: #8fb8e2;
 }
 
-/* Opmaak titel referentietabel */
-#right table.table tr.header td {
-	text-align: center;
-	background: white;
-	border: none;
-}
-/* Opmaak titel gridview */
 #right table.table tr.header th {
 	text-align: center;
 	background: white;
@@ -197,4 +190,54 @@ a:hover {
 	padding-left: 1.7em;
 	background: url(../afbeeldingen/magnifier.png) 1px 1px no-repeat;
 	color: gray;
+}
+
+/* OPMAAK SECURITY DETAIL */
+#right h1 
+{
+	border-bottom: solid 1px #ace;
+	color: #ace;
+	margin-bottom: 1em;
+}
+
+#right h2.Value 
+{
+	font-size: 1.2em;
+}
+
+#right h2.Change
+{
+	font-size: 1.2em;
+}
+
+.col
+{
+	background: #e8e8e8;
+}
+
+#right table.table#general
+{
+	width: 48%;
+	float: left;
+}
+
+#right table.table#data
+{
+	width: 48%;
+	float: right;
+}
+
+#right table.table#ctl00_ContentPlaceHolder_HistoryGridView 
+{
+	clear: both;
+}
+
+#right h2.pos 
+{
+	color: #21c234;
+}
+
+#right h2.neg 
+{
+	color: #d40000;
 }

@@ -35,12 +35,72 @@ public partial class SecurityDetail : System.Web.UI.Page
     private void GeneratePage(Security security)
     {
         Quote latestQuote = security.GetLatestQuote();
+
+        //General
         Name.InnerText = security.Name;
         Value.InnerText = Convert.ToString(latestQuote.Price);
+
+        double quoteChange = security.GetChange();
+        Change.InnerText = (quoteChange>=0 ? "+" : "") + Convert.ToString(quoteChange) + "%";
+        if (quoteChange >= 0)
+            Change.Attributes.Add("class", "pos");
+        else
+            Change.Attributes.Add("class", "neg");
+        
+        
         Exchange.InnerText = security.Exchange.Name;
         //ISIN.InnerText = security.ISIN;
+        Symbol.InnerText = security.Symbol;
+
+        //Data
         Open.InnerText = Convert.ToString(latestQuote.Open);
         High.InnerText = Convert.ToString(latestQuote.High);
         Low.InnerText = Convert.ToString(latestQuote.Low);
+
+        //History
+        DataTable historyTable = new DataTable();
+
+        historyTable.Columns.Add("Date");
+        historyTable.Columns["Date"].DataType = typeof(DateTime);
+        historyTable.Columns.Add("Change");
+        historyTable.Columns["Change"].DataType = typeof(Double);
+        historyTable.Columns.Add("Open");
+        historyTable.Columns["Open"].DataType = typeof(Double);
+        historyTable.Columns.Add("High");
+        historyTable.Columns["High"].DataType = typeof(Double);
+        historyTable.Columns.Add("Low");
+        historyTable.Columns["Low"].DataType = typeof(Double);
+
+        for (int i = 0; i < 7; i++)
+        {
+            DateTime date = DateTime.Now.Subtract(new TimeSpan(i+1, 0, 0, 0));
+            Quote quote = security.GetQuote(date);
+
+            DataRow row = historyTable.NewRow();
+            if (quote.Time.Day == date.Day) //We controleren ofdat er die dag wel een quote beschikbaar was
+            {
+                row[0] = quote.Time;
+                row[1] = Math.Round((latestQuote.Price - quote.Open) / latestQuote.Price * 100, 2);
+                row[2] = quote.Open;
+                row[3] = quote.High;
+                row[4] = quote.Low;
+                historyTable.Rows.Add(row);
+            }
+        }
+
+        HistoryGridView.DataSource = historyTable;
+        HistoryGridView.DataBind();
+    }
+
+    //Zorgt ervoor dat de kleur van de tekst correct ingesteld wordt in de "Change" kolom
+    protected void HistoryGridView_RowDataBound(object sender, GridViewRowEventArgs e)
+    {
+        if (e.Row.RowType == DataControlRowType.DataRow)
+        {
+            if (Convert.ToDouble(e.Row.Cells[1].Text) >= 0)
+                e.Row.Cells[1].CssClass = "pos";
+            else
+                e.Row.Cells[1].CssClass = "neg";
+        }
     }
 }

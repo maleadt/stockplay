@@ -58,7 +58,10 @@ public class SiteMapPathCustomAdapter : System.Web.UI.WebControls.Adapters.WebCo
     private void RenderSiteMapNode(HtmlTextWriter writer, SiteMapPath path, SiteMapNode node)
     {
         writer.WriteBeginTag("a");
-        writer.WriteAttribute("href", node.Url);
+        if(node.Url != "")
+            writer.WriteAttribute("href", node.Url);
+        if (node.Description != "")
+            writer.WriteAttribute("title", node.Description);
         writer.Write(HtmlTextWriter.TagRightChar);
         writer.Write(node.Title);
         writer.WriteEndTag("a");
