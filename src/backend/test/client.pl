@@ -24,8 +24,16 @@ my $return;
 
 # Server hello
 $return = $xmlrpc->call('User.Hello', "perl_testclient/0.1", 1);
-print "* Server hello:\n", Dumper(\$return);
+print "* Server hello:\n", Dumper(\$return), "\n";
 
 # List of exchanges
-$return = $xmlrpc->call('Finance.Exchange.List', "");
-print "* Available exchanges:\n", Dumper(\$return);
+$return = $xmlrpc->call('Finance.Exchange.List', "symbol EQUALS 'BSE'");
+print "* Available exchanges:\n", Dumper(\$return), "\n";
+
+# List of indexes
+$return = $xmlrpc->call('Finance.Index.List', "exchange EQUALS 'BSE'");
+print "* Available indexes\n", Dumper(\$return), "\n";
+
+# List of securities
+$return = $xmlrpc->call('Finance.Security.List', "exchange EQUALS 'BSE'");
+print "* Available securities\n", Dumper(\$return), "\n";

@@ -9,6 +9,12 @@ Deze functionaliteit hoeft niet in de Concrete* implementaties te staan, maar
 kan geabstraheerd worden in de bovenliggende abstracte klassen.
 
 
+*) Controle van keys in filter
+
+Het zou mooi zijn om de doorgegeven filters te controleren zodat slecht een
+vaste (gedocumenteerde) selectie er kan in voorkomen.
+
+
 
 BusinessObjects
 ---------------
@@ -38,7 +44,5 @@ doorsturen.
 Filter
 ------
 
-*) Support voor LVALUES
-
-*) Opbouwen van hiërarchieën via brackets
+*) Alternatieve regels voor condities (=, <, >, <=, >=, =~)
 

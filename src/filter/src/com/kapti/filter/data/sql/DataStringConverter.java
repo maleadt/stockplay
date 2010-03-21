@@ -44,7 +44,7 @@ public class DataStringConverter extends DataString {
 
     @Override
     public Object process(String a) throws FilterException {
-        return "\"" + a + "\"";
+        return "'" + a + "'";
     }
 
 }

@@ -41,8 +41,6 @@ use warnings;
 
 # DateTime from String coercion
 class_type 'DateTime';
-class_type 'DateTime';
-class_type 'DateTime';
 my ($day, $month, $year) = (localtime())[3..5];
 my $datetime_parser = DateTime::Format::Strptime->new(
 	time_zone	=> strftime("%Z", localtime()),	# TODO: 28 maart, verandert dit naar CEST? Mss via module?

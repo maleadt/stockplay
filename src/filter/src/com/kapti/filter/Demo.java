@@ -49,7 +49,7 @@ public class Demo {
         // Parse input
         Filter tFilter = null;
         try {
-            tFilter = tParser.parse("id GREATERTHAN 42 AND name LIKE 'StockPlay'");
+            tFilter = tParser.parse("");
         }
         catch (ParserException e) {
             System.err.println("Parsing failed");

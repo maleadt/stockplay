@@ -296,6 +296,9 @@ public class Parser {
         Filter oFilter = new Filter();
         Stack<Convertable> tStack = new Stack<Convertable>();
 
+        if (iTokens.size() == 0)
+            return oFilter;
+
         Iterator<Token> tIterator = iTokens.iterator();
         while (tIterator.hasNext()) {
             Token tToken = tIterator.next();

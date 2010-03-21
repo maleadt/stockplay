@@ -68,6 +68,9 @@ public class Filter {
      * @throws FilterException
      */
     public Object compile() throws FilterException {
+        if (empty())
+            return null;
+        
         Object oResult = mRoot.compile();
         mLogger.debug("compiled filter to '" + oResult + "'");
         return oResult;
@@ -80,6 +83,9 @@ public class Filter {
      * @throws FilterException
      */
     public void debug(String iFilename) throws FilterException {
+        if (empty())
+            return;
+
         // Create graph
         Graph graph = new Graph("digraph");
         mRoot.addNode(graph);
