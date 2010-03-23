@@ -16,9 +16,7 @@ $(function (){
     
     function getMax() {
     	var max =  startData[0][1] ;
-    	
-    	alert(startData.length);
-    	
+    	    	
  		for(i=0;i<startData.length;i++) {
         	if ( startData[i][1] > max ) max =  startData[i][1] ;
   		}
@@ -167,7 +165,7 @@ $(function (){
         // zoom data ophalen
         $.plot($("#plotTest div"), startData, setXRange(  setYRange( options, 25,  80  )   , ranges.xaxis.min  , ranges.xaxis.max  )  );
 
-    alert(getMax());
+//    alert(getMax());
 
         return;
 
