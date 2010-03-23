@@ -53,9 +53,9 @@ $(function (){
         	max: 80
         },
         //selection: { mode: "x" },
-        //pan: {
-        //    interactive: true
-        //},
+        pan: {
+            interactive: true
+        },
         zoom: {
             interactive: true
         },
