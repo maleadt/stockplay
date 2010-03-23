@@ -1,4 +1,3 @@
-Hier enkele minor TODO's voor als het project goed en wel werkt.
 
 Backend
 -------
@@ -13,6 +12,11 @@ kan geabstraheerd worden in de bovenliggende abstracte klassen.
 
 Het zou mooi zijn om de doorgegeven filters te controleren zodat slecht een
 vaste (gedocumenteerde) selectie er kan in voorkomen.
+
+*) pushAll
+
+
+*) Excepties
 
 
 
@@ -31,18 +35,11 @@ om deze te gebruiken, aangezien er anders ambiguïteiten optreden (vb. Ford).
 isAdmin -> hasRight oid.
 
 
-*) Optimalisatie van update() calls
-
-Bij de huidige opzet stuurt een update() call van een GenericDAO _alle_ data
-naar de database. Dit zou kunnen geoptimaliseerd worden door intern bij te
-houden welke dataleden veranderd zijn sinds een laatste fetch (een boolean
-voor elke Class.Fields bijvoorbeeld) zodat een update() call selectief data kan
-doorsturen.
-
-
 
 Filter
 ------
 
 *) Alternatieve regels voor condities (=, <, >, <=, >=, =~)
+
+*) DateTime
 
