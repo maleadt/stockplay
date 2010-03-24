@@ -1,6 +1,6 @@
 /*
  * ErrorException.java
- * StockPlay - Error exception
+ * StockPlay - Error exception die de applicatie niet doet stoppen
  *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
@@ -37,8 +37,5 @@ public class ErrorException extends StockPlayException{
     }
 
     public ErrorException() {
-    }
-
-
-    
+    }  
 }

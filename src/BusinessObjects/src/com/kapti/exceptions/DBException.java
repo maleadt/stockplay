@@ -23,7 +23,6 @@
 package com.kapti.exceptions;
 
 public class DBException extends FatalException{
-
     public DBException() {
         super();
     }
@@ -39,6 +38,4 @@ public class DBException extends FatalException{
     public DBException(Throwable cause) {
         super(cause);
     }
-
-
 }
