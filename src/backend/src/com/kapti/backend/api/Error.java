@@ -28,7 +28,7 @@ import org.apache.xmlrpc.XmlRpcException;
  *
  * Deze enumeratieklasse bevat objecten die gebruikt worden om een uniforme
  * set aan protocolerrors naar de gebruiker te sturen. De verschillende
- * errors zijn ingedeeld in enkele types:
+ * errors zijn ingedeeld in enkele soorten:
  *  - Subsystem problemen
  *  - Service problemen
  *  - Gebruiksproblemen
@@ -51,8 +51,9 @@ public enum Error {
     // Invocation issues
     VERSION_NOT_SUPPORTED(20, "Version Not Supported"),
     NOT_FOUND(21, "Not Found"),
-    BAD_REQUEST(22, "Bad Request");
-
+    BAD_REQUEST(22, "Bad Request"),
+    PARSER_FAILURE(23, "Parser Failure"),
+    FILTER_FAILURE(24, "Filter Failure");
 
     //
     // Dataleden

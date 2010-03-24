@@ -22,14 +22,16 @@
 package com.kapti.backend.api;
 
 import com.kapti.data.persistence.GenericDAO;
+import com.kapti.exceptions.ErrorException;
+import com.kapti.exceptions.FilterException;
+import com.kapti.exceptions.ParserException;
 import com.kapti.exceptions.StockPlayException;
 import com.kapti.filter.Filter;
-import com.kapti.filter.exception.FilterException;
-import com.kapti.filter.exception.ParserException;
 import com.kapti.filter.parsing.Parser;
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Vector;
+import org.apache.log4j.Logger;
 import org.apache.xmlrpc.XmlRpcException;
 
 /**
@@ -52,13 +54,23 @@ public class UserHandler extends MethodClass {
         return 1;
     }
 
-    public int Create(Hashtable<String, Object> iDetails) throws XmlRpcException, StockPlayException {
+    public int Create(Hashtable<String, Object> iDetails) throws XmlRpcException {
         // Get DAO reference
         GenericDAO<com.kapti.data.User, Integer> tUserDAO = getDAO().getUserDAO();
 
         com.kapti.data.User tUser = new com.kapti.data.User();
-        tUser.fromStruct(iDetails);
-        tUserDAO.create(tUser);
+        try {
+            tUser.fromStruct(iDetails);
+        } catch (ErrorException ex) {
+            mLogger.error(ex.getMessage());
+            throw Error.INTERNAL_FAILURE.getException();
+        }
+        try {
+            tUserDAO.create(tUser);
+        } catch (StockPlayException ex) {
+            mLogger.error(ex.getMessage());
+            throw Error.DATABASE_FAILURE.getException();
+        }
         return 1;
     }
 

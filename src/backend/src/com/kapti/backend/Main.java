@@ -41,7 +41,6 @@ public class Main {
     private static final int mPort = 8080;
     static Logger mLogger = Logger.getLogger(Main.class);
 
-
     //
     // Methodes
     //

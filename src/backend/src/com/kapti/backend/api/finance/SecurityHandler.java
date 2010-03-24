@@ -23,10 +23,10 @@ package com.kapti.backend.api.finance;
 
 import com.kapti.backend.api.MethodClass;
 import com.kapti.data.persistence.GenericDAO;
+import com.kapti.exceptions.FilterException;
+import com.kapti.exceptions.ParserException;
 import com.kapti.exceptions.StockPlayException;
 import com.kapti.filter.Filter;
-import com.kapti.filter.exception.FilterException;
-import com.kapti.filter.exception.ParserException;
 import com.kapti.filter.parsing.Parser;
 import java.util.Collection;
 import java.util.Hashtable;
