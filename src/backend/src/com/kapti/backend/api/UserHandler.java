@@ -31,7 +31,6 @@ import com.kapti.filter.parsing.Parser;
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Vector;
-import org.apache.log4j.Logger;
 import org.apache.xmlrpc.XmlRpcException;
 import java.security.SecureRandom;
 
