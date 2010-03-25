@@ -23,6 +23,8 @@ package com.kapti.backend.api.finance;
 
 import com.kapti.backend.api.MethodClass;
 import com.kapti.data.persistence.GenericDAO;
+import com.kapti.data.persistence.QuoteDAO;
+
 import com.kapti.exceptions.FilterException;
 import com.kapti.exceptions.ParserException;
 import com.kapti.exceptions.StockPlayException;
@@ -34,6 +36,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 import org.apache.xmlrpc.XmlRpcException;
+import com.kapti.data.Quote;
 
 /**
  * \brief   Handler van de Finance.Security subklasse.
@@ -117,4 +120,66 @@ public class SecurityHandler extends MethodClass {
 
         return 1;
     }
+
+    public List<Map<String, Object>> Details(String iFilter) throws XmlRpcException, StockPlayException, FilterException, ParserException {
+        // Get DAO reference
+        QuoteDAO tQuoteDAO = getDAO().getQuoteDAO();
+
+        Parser parser = Parser.getInstance();
+        Filter filter = parser.parse(iFilter);
+
+        // Fetch and convert all Indexs
+        Collection<com.kapti.data.Quote> tQuotes = tQuoteDAO.findLatestByFilter(filter);
+        Vector<Map<String, Object>> oVector = new Vector<Map<String, Object>>();
+        for (com.kapti.data.Quote tQuote : tQuotes) {
+            oVector.add(tQuote.toStruct(
+                    Quote.Fields.TIME,
+                    Quote.Fields.PRICE,
+                    Quote.Fields.VOLUME,
+                    Quote.Fields.BID,
+                    Quote.Fields.ASK,
+                    Quote.Fields.LOW,
+                    Quote.Fields.HIGH,
+                    Quote.Fields.OPEN
+                    ));
+        }
+
+        return oVector;
+    }
+
+    /**
+     * Geeft alle koersen die aan aan de opgegeven filter voldoen
+     * @param iFilter
+     * @return
+     * @throws XmlRpcException
+     * @throws StockPlayException
+     * @throws FilterException
+     * @throws ParserException
+     */
+        public List<Map<String, Object>> Quotes(String iFilter) throws XmlRpcException, StockPlayException, FilterException, ParserException {
+        // Get DAO reference
+        QuoteDAO tQuoteDAO = getDAO().getQuoteDAO();
+
+        Parser parser = Parser.getInstance();
+        Filter filter = parser.parse(iFilter);
+
+        // Fetch and convert all Indexs
+        Collection<com.kapti.data.Quote> tQuotes = tQuoteDAO.findByFilter(filter);
+        Vector<Map<String, Object>> oVector = new Vector<Map<String, Object>>();
+        for (com.kapti.data.Quote tQuote : tQuotes) {
+            oVector.add(tQuote.toStruct(
+                    Quote.Fields.TIME,
+                    Quote.Fields.PRICE,
+                    Quote.Fields.VOLUME,
+                    Quote.Fields.BID,
+                    Quote.Fields.ASK,
+                    Quote.Fields.LOW,
+                    Quote.Fields.HIGH,
+                    Quote.Fields.OPEN
+                    ));
+        }
+
+        return oVector;
+    }
+
 }
