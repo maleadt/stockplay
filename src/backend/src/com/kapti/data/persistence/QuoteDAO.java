@@ -19,12 +19,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
 package com.kapti.data.persistence;
 
 import com.kapti.data.Quote;
+import com.kapti.exceptions.FilterException;
 import com.kapti.exceptions.StockPlayException;
+import com.kapti.filter.Filter;
+import java.util.Collection;
 
-public interface QuoteDAO extends GenericDAO<Quote,Quote.QuotePK> {
+public interface QuoteDAO extends GenericDAO<Quote, Quote.QuotePK> {
+
     Quote findLatest(String symbol) throws StockPlayException;
+
+    Collection<Quote> findLatestByFilter(Filter iFilter) throws StockPlayException, FilterException;
 }

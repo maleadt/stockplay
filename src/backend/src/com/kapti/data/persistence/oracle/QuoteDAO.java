@@ -19,7 +19,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
 package com.kapti.data.persistence.oracle;
 
 import com.kapti.exceptions.*;
@@ -38,10 +37,9 @@ public class QuoteDAO implements com.kapti.data.persistence.QuoteDAO {
     private static final String INSERT_QUOTE = "INSERT INTO quotes(symbol, timestamp, price, volume, bid, ask, low, high, open) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String UPDATE_QUOTE = "UPDATE quotes SET price = ?, volume ?, bid = ?, ask = ?, low = ?, high = ?, open ? WHERE symbol = ? AND timestamp = ?";
     private static final String DELETE_QUOTE = "DELETE FROM quotes WHERE symbol = ? AND timestamp = ?";
-
     private static final String SELECT_LATEST_QUOTE = "SELECT price, volume, bid, ask, low, high, open, timestamp FROM quotes WHERE symbol = ? AND timestamp = max(timestamp) over(partition by symbol)";
-
-
+    private static final String SELECT_LATEST_QUOTE_FILTER = "SELECT symbol, "
+            + "price, volume, bid, ask, low, high, open, timestamp FROM quotes where FILTER and timestamp=(select max(timestamp) from quotes where FILTER )";
     private static QuoteDAO instance = new QuoteDAO();
 
     public static QuoteDAO getInstance() {
@@ -84,21 +82,22 @@ public class QuoteDAO implements com.kapti.data.persistence.QuoteDAO {
     }
 
     public Collection<Quote> findByFilter(Filter iFilter) throws StockPlayException, FilterException {
-        if (iFilter.empty())
+        if (iFilter.empty()) {
             return findAll();
+        }
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
             try {
                 conn = OracleConnection.getConnection();
-                stmt = conn.prepareStatement(SELECT_QUOTES + " WHERE " + (String)iFilter.compile());
+                stmt = conn.prepareStatement(SELECT_QUOTES + " WHERE " + (String) iFilter.compile());
 
                 rs = stmt.executeQuery();
                 ArrayList<Quote> list = new ArrayList<Quote>();
                 while (rs.next()) {
 
-                    list.add(new Quote(rs.getString(1), rs.getDate(2), rs.getDouble(3), rs.getInt(4), rs.getDouble(5), rs.getDouble(6), rs.getDouble(7), rs.getDouble(8),rs.getDouble(9)));
+                    list.add(new Quote(rs.getString(1), rs.getDate(2), rs.getDouble(3), rs.getInt(4), rs.getDouble(5), rs.getDouble(6), rs.getDouble(7), rs.getDouble(8), rs.getDouble(9)));
                 }
                 return list;
             } finally {
@@ -165,7 +164,7 @@ public class QuoteDAO implements com.kapti.data.persistence.QuoteDAO {
                     stmt.setString(7, "%");
                 }
 
-                                if (example.getOpen() != 0.0) {
+                if (example.getOpen() != 0.0) {
                     stmt.setString(8, "%" + example.getHigh() + "%");
                 } else {
                     stmt.setString(8, "%");
@@ -175,7 +174,7 @@ public class QuoteDAO implements com.kapti.data.persistence.QuoteDAO {
                 ArrayList<Quote> list = new ArrayList<Quote>();
                 while (rs.next()) {
 
-                    list.add(new Quote(rs.getString(1), rs.getDate(2), rs.getDouble(3), rs.getInt(4), rs.getDouble(5), rs.getDouble(6), rs.getDouble(7), rs.getDouble(8),rs.getDouble(9)));
+                    list.add(new Quote(rs.getString(1), rs.getDate(2), rs.getDouble(3), rs.getInt(4), rs.getDouble(5), rs.getDouble(6), rs.getDouble(7), rs.getDouble(8), rs.getDouble(9)));
 
                 }
                 return list;
@@ -208,7 +207,7 @@ public class QuoteDAO implements com.kapti.data.persistence.QuoteDAO {
                 ArrayList<Quote> list = new ArrayList<Quote>();
                 while (rs.next()) {
 
-                    list.add(new Quote(rs.getString(1), rs.getDate(2), rs.getDouble(3), rs.getInt(4), rs.getDouble(5), rs.getDouble(6), rs.getDouble(7), rs.getDouble(8),rs.getDouble(9)));
+                    list.add(new Quote(rs.getString(1), rs.getDate(2), rs.getDouble(3), rs.getInt(4), rs.getDouble(5), rs.getDouble(6), rs.getDouble(7), rs.getDouble(8), rs.getDouble(9)));
                 }
                 return list;
             } finally {
@@ -345,9 +344,9 @@ public class QuoteDAO implements com.kapti.data.persistence.QuoteDAO {
         }
     }
 
-        public Quote findLatest(String symbol) throws StockPlayException {
+    public Quote findLatest(String symbol) throws StockPlayException {
 
-                Connection conn = null;
+        Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
@@ -365,6 +364,45 @@ public class QuoteDAO implements com.kapti.data.persistence.QuoteDAO {
                 } else {
                     throw new NonexistentEntityException("There is no quote with symbol '" + symbol + "'");
                 }
+            } finally {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            }
+        } catch (SQLException ex) {
+            throw new DBException(ex);
+        }
+
+
+
+    }
+
+    public Collection<Quote> findLatestByFilter(Filter iFilter) throws StockPlayException, FilterException {
+
+
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            try {
+                conn = OracleConnection.getConnection();
+                stmt = conn.prepareStatement(SELECT_LATEST_QUOTE_FILTER.replace("FILTER", (String) iFilter.compile()));
+
+
+                rs = stmt.executeQuery();
+
+                ArrayList<Quote> result = new ArrayList<Quote>();
+                while (rs.next()) {
+
+                    result.add(new Quote(rs.getString("symbol"), rs.getTimestamp("timestamp"), rs.getDouble("price"), rs.getInt("volume"), rs.getDouble("bid"), rs.getDouble("ask"), rs.getDouble("low"), rs.getDouble("high"), rs.getDouble("open")));
+                }
+                return result;
             } finally {
                 if (rs != null) {
                     rs.close();
