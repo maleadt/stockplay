@@ -277,40 +277,125 @@ Het tijdsinterval kan de speler bepalen door een dubbele slider te verslepen. De
 	\caption{Use-case diagram van de desktopapplicatie.}
 \end{figure}
 
-\subsubsection{Gebruiksgeval: sessie starten}
-Na het openen van de applicatie moet de gebruiker eerst een verbinding maken met de servers. Dit doet hij door in het menu 'Bestand' te kiezen voor 'Verbinding maken...'. Er verschijnt een modaal dialoogvenster waar de gebruiker zijn gegevens moet invullen om te kunnen verbinden. Deze authenticatie kan enerzijds door de eID van de gebruiker in een kaartlezer te plaatsen of via een traditioneel inlogscherm met gebruikersnaam en wachtwoord. Eenmaal de applicatie een verbinding heeft opgesteld wordt het keuzemenu van de applicatie actief en kunnen er beheerstaken worden uitgevoerd.
+\subsubsection{Inloggen van gebruiker}
+\paragraph{Beschrijving} Een gebruiker logt in op de desktopapplicatie via zijn e-ID.
+\paragraph{Doel} De administrator is ingelogd op de desktopapplicatie en kan het spel nu beheren.
+\paragraph{Triggers}De gebruiker opent de dekstopapplicatie.
+\paragraph{Prioriteit}Gemiddeld
+\paragraph{Complexiteit}Gemiddeld
+\paragraph{Primaire actoren}Gebruiker, e-ID kaartlezer
+\paragraph{Secundaire actoren}Back-end, databank
+\paragraph{Successcenario}
+\begin{enumerate}
+ \item De gebruiker krijgt een inlogscherm te zien.
+ \item De applicatie vraagt de gebruiker om zijn identiteitskaart in de e-ID lezer te plaatsen en wacht tot dit voltooid is.
+ \item De gebruiker plaatst zijn identiteitskaart in de e-ID lezer.
+ \item De gebruiker krijgt een voortgangsbalk te zien.
+ \item De applicatie leest de nodige gegevens van de identiteitskaart uit.
+ \item Er wordt een aanvraag via XML-RPC gestuurd naar de backend om de gegevens te valideren.
+ \item De backend raadpleegt de databank om de lijst van administrators op te halen.
+ \item Na controle van de gegevens stuurt de backend een antwoord via XML-RPC naar de desktopapplicatie.
+ \item De gebruiker is nu ingelogd en krijgt de statuspagina van de desktopappliactie te zien.
+\end{enumerate}
+\paragraph{Alternatieve Scenario's}
+\begin{enumerate}
+	\item[6.] Als een server niet beschikbaar is wordt een foutboodschap getoond.
+	\item[8.] Indien de gebruiker niet geregistreerd staat als een administrator wordt een foutmelding getoond en komt hij terug terecht bij stap 2.
+\end{enumerate}
 
-\subsubsection{Gebruiksgeval: status opvragen}
-De gebruiker klikt in het keuzemenu op de statusknop waardoor een overzichtspagina verschijnt. Hier kan de gebruiker zien welke servers online zijn en enkele algemene statistieken bekijken.
+\subsubsection{Status van servers bekijken}
+\paragraph{Beschrijving} De administrator kan de onlinestatus van de verschillende servers bekijken op de statuspagina. De administrator kan de servers hier ook beheren.
+\paragraph{Doel} De applicatie toont een paneel met daarin de status van de verschillende servers.
+\paragraph{Triggers}De administrator moet ingelogd zijn en het statusmenu openen.
+\paragraph{Prioriteit}Gemiddeld
+\paragraph{Complexiteit}Laag
+\paragraph{Primaire actoren}Administrator
+\paragraph{Secundaire actoren}Back-end, databank
+\paragraph{Successcenario}
+\begin{enumerate}
+ \item De administrator opent het statusmenu.
+ \item De desktopapplicatie vraagt de backend om de status van de verschillende servers te controleren.
+ \item De applicatie toont een paneel met de status van de servers samen met mogelijk acties die de administrator kan ondernemen.
+ \item In het menu worden snelkoppelingen naar uitgebreidere statuspagina's getoond.
+\end{enumerate}
+\paragraph{Alternatieve Scenario's}
+\begin{enumerate}
+	\item[2.] Als de backend niet antwoord wordt deze als offline beschouwd en krijgen de andere servers als status “onbekend”.
+	\item[4.] Indien de servers niet bereikbaar zijn, zijn deze koppelingen uitgegrijsd.
+\end{enumerate}
 
-Onder de statusknop verschijnt een submenu waar de individuele componenten vermeld staan. Als op een van deze componenten geklikt wordt, dan toont de applicatie een pagina met gedetailleerde informatie van die component.
+\subsubsection{Gebruikersgegevens wijzigen}
+\paragraph{Beschrijving} Een administrator kan gegevens van een gebruiker wijzigen via de desktopapplicatie.
+\paragraph{Doel} De gegevens van de gespecificeerde gebruiker aanpassen in de databank.
+\paragraph{Triggers}De administrator moet ingelogd zijn en het gebruikersbeheermenu openen.
+\paragraph{Prioriteit}Hoog
+\paragraph{Complexiteit}Gemiddeld
+\paragraph{Primaire actoren}Administrator
+\paragraph{Secundaire actoren}Back-end, databank
+\paragraph{Successcenario}
+\begin{enumerate}
+ \item De administrator opent het gebruikersbeheermenu.
+ \item De applicatie vraagt een lijst van recent geregistreerde gebruikers op bij de back-end en ontvangt deze via XML-RPC. Deze lijst wordt getoond aan de gebruiker in de vorm van een tabel.
+ \item De administrator past filters toe om de getoonde lijst te beperken tot de gewenste gebruikers.
+ \item Alle gebruikers die aan de filter voldoen worden opgehaald uit de databank en de backend stuurt deze terug via XML-RPC.
+ \item De administrator kiest een gebruiker uit de tabel en de voert actie “Gebruiker bewerken” uit.
+ \item Er wordt een modaal venster getoond met daarin alle beschikbare gegevens van de gebruiker. Niet aanpasbare gegevens worden uitgegrijsd.
+ \item De administrator brengt de gewenste wijzigen aan en kiest OK.
+ \item De nieuwe gegevens worden doorgestuurd naar de backend.
+ \item De backend voert de wijzigingen door in de databank.
+ \item De administrator komt terug terecht in de tabel gebruikers.
+\end{enumerate}
+\paragraph{Alternatieve Scenario's}
+\begin{enumerate}
+	\item[2/3.] Als de servers niet bereikbaar zijn wordt een gepaste foutboodschap getoond.
+	\item[9.] Indien er een fout optreedt bij het aanpassen van de gegevens in de databank wordt hier een melding van getoond en krijgt de administrator de kans om de ongeldige gegevens aan te passen.
+\end{enumerate}
 
-\subsubsection{Gebruiksgeval: status aanpassen}
-Op de overzichtspagina die getoond wordt na het klikken op de statusknop kunnen de componenten ook beheerd worden. Voor iedere component is een Start, Stop en Herstart knop beschikbaar.
+\subsubsection{Effect schorsen of verbergen}
+\paragraph{Beschrijving} Als er problemen zijn met een bepaald effect kan een administrator deze schorsen om het verhandelen ervan onmogelijk te maken. Eventueel kan het effect ook onzichtbaar gemaakt worden.
+\paragraph{Doel} Het effect is nu niet meer verhandelbaar in het spel, of is onzichtbaar gemaakt.
+\paragraph{Triggers}De administrator is ingelogd en bevindt zich in het effectenbeheermenu
+\paragraph{Prioriteit}Hoog
+\paragraph{Complexiteit}Laag
+\paragraph{Primaire actoren}Administrator
+\paragraph{Secundaire actoren}Back-end, databank
+\paragraph{Successcenario}
+\begin{enumerate}
+ \item De administrator opent het effectenbeheermenu.
+ \item De applicatie toont alle beschikbare effecten in een tabel samen met hun belangrijkste gegevens.
+ \item De administrator kan desgewenst een filter toepassen om de lijst te beperken.
+ \item De administrator selecteert één of meerdere effecten die hij wil aanpassen.
+ \item De actie “Effect(en) verbergen” of “Effect(en) schorsen” wordt gekozen.
+ \item De veranderingen worden doorgestuurd naar de backend en deze past ze aan in de databank.
+\end{enumerate}
+\paragraph{Alternatieve Scenario's}
+\begin{enumerate}
+	\item[2.] Als de servers niet bereikbaar zijn wordt een gepaste foutboodschap getoond.
+\end{enumerate}
 
-\subsubsection{Gebruiksgeval: gebruikersbeheer}
-Als de gebruiker op de knop Gebruikersbeheer klikt in het keuzemenu dan wordt een overzichtspagina van de geregistreerde gebruikers getoond.
-
-In de vorm van een tabel worden de belangrijkste gegevens van de gebruikers getoond. Onder de tabel staan ook enkele knoppen waarmee de administrator meer informatie van de gebruikers kan bekijken en eventueel aanpassingen kan aanbrengen:
-\begin{itemize}
-	\item Details: Toont een modaal venster waar alle beschikbare informatie van de geselecteerde gebruiker getoond wordt. Hier kan de administrator ook gegevens van de gebruiker wijzigen (bv. budget, paswoord, 
-), maar vaste gegevens worden uitgegrijsd (bv. registratiedatum). Onderaan het dialoogvenster staat een OK en Annuleren knop. Als er op OK geklikt wordt, dan worden de doorgevoerde veranderingen opgeslagen in de databank. Anderzijds worden de wijzigingen genegeerd.
-  \item Deactiveren: Hiermee kan een gebruiker op niet-actief worden gezet, bijvoorbeeld wanneer een speler tijdelijk geschorst moet worden. De gebruiker kan dan niet meer inloggen, maar zijn account blijft wel nog bestaan.
-   \item Verwijderen: Hierdoor wordt de account van de gebruiker permanent verwijderd. Alvorens dit wordt doorgevoerd wordt een dialoogvenster getoond om deze actie te bevestigen, aangezien deze actie niet omkeerbaar is. Alle gegevens die betrekking hebben met die gebruiker worden uit de database geschrapt.
-    \item Bericht sturen: Als hier op geklikt wordt opent er een nieuw dialoogvenster waar de administrator een bericht kan intypen gericht aan de geselecteerde gebruiker(s).
-\end{itemize}
-Om makkelijk gebruikers te kunnen opsporen zijn er verschillende filters beschikbaar. Deze kunnen geselecteerd worden uit het submenu dat tevoorschijn komt als het Gebruikersbeheermenu geopend wordt. De administrator kan filteren op registratiedatum of kan alfabetisch zoeken op gebruikers.
-
-\subsubsection{Gebruiksgeval: effectenbeheer}
-Als op de Effectenbeheer knop wordt gedrukt krijgt de gebruiker een overzicht van alle effecten te zien die in de databank zijn opgeslaan. Alle informatie uit de effectentabel van de databank wordt getoond in een tabel.
-
-Onder de tabel staan volgende knoppen:
-\begin{itemize}
-	\item Verbergen in spel: Hierdoor wordt het geselecteerde aandeel verborgen voor de spelers.
-  \item Schors effect: Als een effect geschorst wordt, dan blijft het zichtbaar voor de gebruikers maar kan het niet meer verhandeld worden.
-\end{itemize}
-
-In het submenu zijn ook filters beschikbaar. De effectenlijst kan gefilterd worden op beurs of op type. 
+\subsubsection{Gebruiker verbannen}
+\paragraph{Beschrijving} Een administrator kan een gebruiker voor een bepaalde tijdsduur uit het spel verbannen.
+\paragraph{Doel} De verbannen gebruiker kan niet meer inloggen gedurende de opgegeven tijdsduur.
+\paragraph{Triggers}De administrator is ingelogd en opent het gebruikersbeheermenu
+\paragraph{Prioriteit}Hoog
+\paragraph{Complexiteit}Laag
+\paragraph{Primaire actoren}Administrator
+\paragraph{Secundaire actoren}Back-end, databank
+\paragraph{Successcenario}
+\begin{enumerate}
+ \item De administrator opent het gebruikersbeheermenu.
+ \item De applicatie krijgt een beperkte lijst van gebruikers die het ontvangt vanuit de back-end.
+ \item De administrator past filters toe om de getoonde lijst te beperken tot de gewenste gebruikers.
+ \item Alle gebruikers die aan de filter voldoen worden opgehaald uit de databank en de backend stuurt deze terug via XML-RPC.
+ \item De administrator selecteert de gewenste gebruikers en kiest voor “Gebruiker deactiveren”.
+ \item Er wordt een venster getoond met daarin de mogelijkheid om een tijdsduur in te geven of een checkbox die aangeeft dat deze gebruiker permanent moet verbannen worden.
+ \item De wijzigingen worden gestuurd naar de backend en deze past de gebruikers aan in de databank.
+ \item De administrator krijgt opnieuw het gebruikersoverzicht te zien..
+\end{enumerate}
+\paragraph{Alternatieve Scenario's}
+\begin{enumerate}
+	\item[2/4.] Een foutmelding wordt getoond als de backend niet bereikbaar is.
+\end{enumerate}
 
 \subsubsection{Schorsen van een effect}
 
