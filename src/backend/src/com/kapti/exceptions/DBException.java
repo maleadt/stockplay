@@ -22,7 +22,7 @@
 
 package com.kapti.exceptions;
 
-public class DBException extends FatalException{
+public class DBException extends RuntimeException{
     public DBException() {
         super();
     }

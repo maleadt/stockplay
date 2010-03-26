@@ -22,7 +22,6 @@
 
 package com.kapti.data.persistence;
 
-import com.kapti.exceptions.FatalException;
 import com.kapti.exceptions.StockPlayException;
 import java.util.ResourceBundle;
 
@@ -35,11 +34,11 @@ public class StockPlayDAOFactory {
             spDAO = (StockPlayDAO) Class.forName(rb.getString("Class")).newInstance();
             return spDAO;
         } catch (InstantiationException ex) {
-            throw new FatalException("Could not load properties-file with DAO-class", ex);
+            throw new RuntimeException("Could not load properties-file with DAO-class", ex);
         } catch (IllegalAccessException ex) {
-            throw new FatalException("Could not load properties-file with DAO-class", ex);
+            throw new RuntimeException("Could not load properties-file with DAO-class", ex);
         } catch (ClassNotFoundException ex) {
-            throw new FatalException("Could not find DAO-class", ex);
+            throw new RuntimeException("Could not find DAO-class", ex);
         }
     }
 

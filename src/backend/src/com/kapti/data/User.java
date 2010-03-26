@@ -22,7 +22,6 @@
 
 package com.kapti.data;
 
-import com.kapti.exceptions.ErrorException;
 import com.kapti.exceptions.StockPlayException;
 import java.util.Date;
 import java.util.Hashtable;
@@ -205,7 +204,7 @@ public class User {
         return oStruct;
     }
 
-    public void fromStruct(Hashtable<String, Object> iStruct) throws ErrorException {
+    public void fromStruct(Hashtable<String, Object> iStruct) throws StockPlayException {
         for (String tKey : iStruct.keySet()) {
             Object tValue = iStruct.get(tKey);
             Fields tField = null;
@@ -213,7 +212,7 @@ public class User {
                 tField = Fields.valueOf(tKey);
             }
             catch (IllegalArgumentException e) {
-                throw new ErrorException("requested key '" + tKey + "' does not exist");
+                throw new StockPlayException("requested key '" + tKey + "' does not exist");
             }
 
             switch (tField) {
@@ -249,7 +248,7 @@ public class User {
                     break;
 
                 default:
-                    throw new ErrorException("requested key '" + tKey + "' cannot be modified");
+                    throw new StockPlayException("requested key '" + tKey + "' cannot be modified");
             }
         }
     }

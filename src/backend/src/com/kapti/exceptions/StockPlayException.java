@@ -22,12 +22,9 @@
 
 package com.kapti.exceptions;
 
-public class StockPlayException extends Exception {
+import org.apache.xmlrpc.XmlRpcException;
 
-    public StockPlayException(Throwable cause) {
-        super(cause);
-    }
-
+public class StockPlayException extends XmlRpcException {
     public StockPlayException(String message, Throwable cause) {
         super(message, cause);
     }
@@ -35,7 +32,4 @@ public class StockPlayException extends Exception {
     public StockPlayException(String message) {
         super(message);
     }
-
-    public StockPlayException() {
-    }   
 }

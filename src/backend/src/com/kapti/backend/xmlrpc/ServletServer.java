@@ -42,7 +42,6 @@ public class ServletServer extends XmlRpcServletServer {
 
     static Logger mLogger = Logger.getLogger(ServletServer.class);
 
-
     //
     // Methods
     //
@@ -71,7 +70,7 @@ public class ServletServer extends XmlRpcServletServer {
                 else if (tMessage.contains("No such handler")) {
                     throw Error.NOT_FOUND.getException(iException.getCause());
                 }
-
+                
                 // No exception subtype matched, throw an internal failure
                 throw Error.INTERNAL_FAILURE.getException(iException.getCause());
             } else {
@@ -79,5 +78,4 @@ public class ServletServer extends XmlRpcServletServer {
             }
         }
     }
-
 }

@@ -22,10 +22,7 @@
 
 package com.kapti.exceptions;
 
-public class PreexistingEntityException extends ErrorException {
-
-    public PreexistingEntityException() {
-    }
+public class PreexistingEntityException extends StockPlayException {
 
     public PreexistingEntityException(String message) {
         super(message);
@@ -35,7 +32,4 @@ public class PreexistingEntityException extends ErrorException {
         super(message, cause);
     }
 
-    public PreexistingEntityException(Throwable cause) {
-        super(cause);
-    } 
 }

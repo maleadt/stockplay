@@ -49,7 +49,7 @@ public class UserDAO implements GenericDAO<User, Integer> {
         return instance;
     }
 
-    public User findById(Integer id) throws ErrorException, DBException {
+    public User findById(Integer id) throws StockPlayException {
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;

@@ -22,10 +22,7 @@
 
 package com.kapti.exceptions;
 
-public class NonexistentEntityException extends ErrorException {
-
-    public NonexistentEntityException() {
-    }
+public class NonexistentEntityException extends StockPlayException {
 
     public NonexistentEntityException(String message) {
         super(message);
@@ -35,9 +32,4 @@ public class NonexistentEntityException extends ErrorException {
         super(message, cause);
     }
 
-    public NonexistentEntityException(Throwable cause) {
-        super(cause);
-    }
-
-    
 }

@@ -22,7 +22,7 @@
 
 package com.kapti.exceptions;
 
-public class FilterException extends ErrorException {
+public class FilterException extends StockPlayException {
 
     public FilterException() {
         super("unknown filter failure");
@@ -34,10 +34,6 @@ public class FilterException extends ErrorException {
 
     public FilterException(String message, Throwable cause) {
         super(message, cause);
-    }
-
-    public FilterException(Throwable cause) {
-        super(cause);
     }
    
 }
