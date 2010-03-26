@@ -51,6 +51,11 @@ public class Security {
         this.isin = isin;
     }
 
+    public Security(String isin, String symbol) {
+        this.isin = isin;
+        this.symbol = symbol;
+    }
+
     public Security(String isin, String symbol, String name, String exchange) {
         this.isin = isin;
         this.symbol = symbol;
@@ -154,8 +159,6 @@ public class Security {
             }
 
             switch (tField) {
-                case SYMBOL:
-                    setSymbol((String) tValue);
                 case NAME:
                     setName((String) tValue);
                     break;

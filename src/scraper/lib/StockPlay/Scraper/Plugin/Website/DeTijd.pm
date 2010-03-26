@@ -66,7 +66,7 @@ sub _build_exchanges {
 	
 	# Euronext Brussel
 	my $brussel = new StockPlay::Exchange(
-		id		=> "euronext-brussel",
+		id		=> "BSE",
 		name		=> "Euronext Brussel",
 		location	=> "Brussel",
 		securities	=> [$self->getSecurities('http://www.tijd.be/beurzen/euronext-brussel/continumarkt')]
@@ -74,7 +74,7 @@ sub _build_exchanges {
 	
 	# Euronext Parijs
 	my $parijs = new StockPlay::Exchange(
-		id		=> "euronext-parijs",
+		id		=> "PA",
 		name		=> "Euronext Parijs",
 		location	=> "Parijs",
 		securities	=> [$self->getSecurities('http://www.tijd.be/beurzen/euronext-parijs/frencha'), $self->getSecurities('http://www.tijd.be/beurzen/euronext-parijs/frenchb'), $self->getSecurities('http://www.tijd.be/beurzen/euronext-parijs/frenchc')]
@@ -209,8 +209,10 @@ sub getQuotes {
 		my $security = (grep { $_->get('site_id') == $site_id } @securities)[0]
 			or die("Could not connect data to security");
 		eval {
+			my $datetime = $datetime_parser->parse_datetime($data{time});
+			die("could not parse time") unless $datetime;
 			push(@quotes, new StockPlay::Quote({
-				time		=> $datetime_parser->parse_datetime($data{time}),
+				time		=> $datetime,
 				security	=> $security->id,
 				price		=> $data{last},
 				bid		=> $data{bid},
@@ -219,7 +221,8 @@ sub getQuotes {
 				high		=> $data{high},
 				open		=> $data{open},
 				volume		=> $data{volume},
-				delay		=> $koersen->{delay}
+				delay		=> $koersen->{delay},
+				fetchtime	=> time
 			}));
 		};
 		if ($@) {

@@ -23,12 +23,10 @@ package com.kapti.backend.api.finance;
 
 import com.kapti.backend.api.MethodClass;
 import com.kapti.data.persistence.GenericDAO;
-import com.kapti.exceptions.FilterException;
 import com.kapti.exceptions.StockPlayException;
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Vector;
-import org.apache.xmlrpc.XmlRpcException;
 
 /**
  * \brief   Handler van de Finance.Index subklasse.
@@ -82,14 +80,11 @@ public class IndexHandler extends MethodClass {
         // Get DAO reference
         GenericDAO<com.kapti.data.Index, Integer> tIndexDAO = getDAO().getIndexDAO();
 
-        // Get the Indexs we need to modify
-        Collection<com.kapti.data.Index> tIndexs = tIndexDAO.findAll();
+        // TODO: dit moet mooier, kan ook makkelijk crashen
+        com.kapti.data.Index tIndex = new com.kapti.data.Index();
 
-        // Now apply the new properties
-        for (com.kapti.data.Index tIndex : tIndexs) {
-            tIndex.fromStruct(iDetails);
-            tIndexDAO.create(tIndex);
-        }
+        tIndex.fromStruct(iDetails);
+        tIndexDAO.create(tIndex);
 
         return 1;
     }

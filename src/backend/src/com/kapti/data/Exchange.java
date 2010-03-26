@@ -31,7 +31,7 @@ public class Exchange  {
     //
 
     public static enum Fields {
-        ID, NAME, LOCATION
+        SYMBOL, NAME, LOCATION
     }
 
     private String symbol = "";
@@ -115,7 +115,7 @@ public class Exchange  {
         Hashtable<String, Object> oStruct = new Hashtable<String, Object>();
         for (Fields tField : iFields) {
             switch (tField) {
-                case ID:
+                case SYMBOL:
                     oStruct.put(tField.name(), getSymbol());
                     break;
                 case NAME:
@@ -141,9 +141,6 @@ public class Exchange  {
             }
 
             switch (tField) {
-                case ID:
-                    setSymbol((String)tValue);
-                    break;
                 case NAME:
                     setName((String)tValue);
                     break;

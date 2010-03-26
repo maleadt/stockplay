@@ -47,6 +47,9 @@ public class Index {
         this.id = id;
     }
 
+    public Index() {
+    }
+
     public Index(int id, String name, String exchange) {
         this.id = id;
         this.name = name;

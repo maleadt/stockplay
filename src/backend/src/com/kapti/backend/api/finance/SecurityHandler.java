@@ -114,7 +114,11 @@ public class SecurityHandler extends MethodClass {
         // Get DAO reference
         GenericDAO<com.kapti.data.Security, String> tSecurityDAO = getDAO().getSecurityDAO();
 
-        com.kapti.data.Security tSecurity = new com.kapti.data.Security();
+        // TODO: dit moet mooier, kan ook makkelijk crashen
+        com.kapti.data.Security tSecurity = new com.kapti.data.Security((String)iDetails.get("ISIN"), (String)iDetails.get("SYMBOL"));
+        iDetails.remove("ISIN");
+        iDetails.remove("SYMBOL");
+        
         tSecurity.fromStruct(iDetails);
         tSecurityDAO.create(tSecurity);
 

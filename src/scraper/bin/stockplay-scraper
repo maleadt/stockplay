@@ -63,7 +63,10 @@ foreach my $infohash (@infohashes) {
 
 # Load the daemon
 print "- Loading daemon\n";
-my $daemon = new StockPlay::Scraper::Daemon(plugins => \@plugins);
+my $daemon = new StockPlay::Scraper::Daemon(
+	server	=> 'http://localhost:8080',
+	plugins	=> \@plugins
+);
 $daemon->run();
 
 exit(0);

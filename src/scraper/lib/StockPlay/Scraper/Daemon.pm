@@ -24,6 +24,7 @@ XML-RPC backend.
 
 # Packages
 use Moose;
+use XML::RPC;
 use StockPlay::Exchange;
 use StockPlay::Index;
 use StockPlay::Security;
@@ -52,6 +53,19 @@ has 'plugins' => (
 	required	=> 1
 );
 
+has 'server' => (
+	is		=> 'ro',
+	isa		=> 'Str',
+	required	=> 1
+);
+
+has 'xmlrpc' => (
+	is		=> 'ro',
+	isa		=> 'XML::RPC',
+	lazy		=> 1,
+	builder		=> '_build_xmlrpc'
+);
+
 
 ################################################################################
 # Methods
@@ -71,15 +85,106 @@ sub BUILD {
 			die("passed plugin doesn't implement correct coles");
 		}
 	}
+	
+	# Build data members which require other data members
+	$self->xmlrpc;
+	
+	# Verify server connection
+	eval {
+		$self->xmlrpc->call('User.Hello', "scraper/0.1", 1);
+	};
+	if ($@) {
+		if ($@ =~ m{^no data}) {
+			die("! Connection failed, is the server running?\n");
+		} else {
+			die("! Connection failed: $@");
+		}
+	}
+	
+	# Process all plugins
+	foreach my $plugin (@{$self->plugins}) {
+		print "DEBUG: checking database structure for plugin ", $plugin->infohash->{name}, "\n";
+		
+		# Check exchanges
+		foreach my $exchange (@{$plugin->exchanges}) {
+			print "DEBUG: processing exchange ", $exchange->name, "\n";
+			
+			# Add the exchange
+			print "DEBUG: adding exchange ", $exchange->name, "\n";
+			my $result = $self->xmlrpc->call('Finance.Exchange.List', 'symbol EQUALS \'' . $exchange->id . '\'');
+			if (ref $result eq "HASH" && defined $result->{'faultCode'}) {
+				die("Internal error");
+			}
+			if (ref $result eq "ARRAY" && scalar @{$result} != 1) {
+				$result = $self->xmlrpc->call('Finance.Exchange.Create', {
+					SYMBOL		=> $exchange->id,
+					NAME		=> $exchange->name,
+					LOCATION	=> $exchange->location
+				});
+				if (ref $result eq "HASH" && defined $result->{'faultCode'}) {
+					die("Internal error");
+				}
+			}
+			
+			# Add the indexes (TODO fix this, ID etc)
+			print "DEBUG: processing indexes\n";
+			foreach my $index (@{$exchange->indexes}) {
+				print "DEBUG: adding index ", $index->id, "\n";
+				
+				$result = $self->xmlrpc->call('Finance.Index.List', 'name EQUALS \'' . $index->id . '\' AND exchange EQUALS \'' . $exchange->id . '\'');
+				if (ref $result eq "HASH" && defined $result->{'faultCode'}) {
+					die("Internal error");
+				}
+				if (ref $result eq "ARRAY" && scalar @{$result} != 1) {
+					$result = $self->xmlrpc->call('Finance.Security.Create', {
+						NAME		=> $index->id,
+						EXCHANGE	=> $index->exchange,
+					});
+					if (ref $result eq "HASH" && defined $result->{'faultCode'}) {
+						die("Internal error");
+					}
+				}				
+			}
+			
+			# Add the securities
+			print "DEBUG: processing securities\n";
+			foreach my $security (@{$exchange->securities}) {
+				print "DEBUG: adding security ", $security->isin, "\n";
+				
+				$result = $self->xmlrpc->call('Finance.Security.List', 'isin EQUALS \'' . $security->isin . '\'');
+				if (ref $result eq "HASH" && defined $result->{'faultCode'}) {
+					die("Internal error");
+				}
+				if (ref $result eq "ARRAY" && scalar @{$result} != 1) {
+					$result = $self->xmlrpc->call('Finance.Security.Create', {
+						SYMBOL		=> $security->id,
+						ISIN		=> $security->isin,
+						NAME		=> $security->name,
+						EXCHANGE	=> $exchange->id
+					});
+					if (ref $result eq "HASH" && defined $result->{'faultCode'}) {
+						die("Internal error");
+					}
+				}				
+			}
+		}
+	}
+}
+
+sub _build_xmlrpc {
+	my ($self) = @_;
+	
+	my $xmlrpc = new XML::RPC($self->server);
+	
+	return $xmlrpc;
 }
 
 sub run {
 	my ($self) = @_;	
 	
 	while (1) {
-		print "- Initializing a run\n";
-		
 		# Process all plugins
+		print "- Processing plugins\n";
 		my @quotes;
 		foreach my $plugin (@{$self->plugins}) {
 			my $pluginname = $plugin->infohash->{name};
@@ -104,16 +209,23 @@ sub run {
 		}
 			
 		# Check delays
+		print "- Checking delays\n";
 		my $delay = 60;
 		foreach my $quote (@quotes) {
-			if ($quote->delay - (time - $quote->time) < $delay) {
-				$delay = $quote->delay - (time - $quote->time);
+			if ($quote->delay - (time - $quote->fetchtime) < $delay) {
+				$delay = $quote->delay - (time - $quote->fetchtime);
 			}
 		}
 		
 		# Push the changes to the server
-		print "     Waiting $delay seconds\n";	
+		foreach my $quote (@quotes) {
+			
+		}
+		
+		# Wait
+		print "  Waiting $delay seconds\n";	
 		sleep($delay);
+		exit();
 	}
 }
 
