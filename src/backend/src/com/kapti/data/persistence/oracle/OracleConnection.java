@@ -38,12 +38,11 @@ public class OracleConnection {
                 ds = new BasicDataSource();
                 ds.setDriverClassName("oracle.jdbc.driver.OracleDriver");
 
-                //ds.setUrl("jdbc:oracle:thin:@//oraclepc:1521/xe");
-                ds.setUrl("jdbc:oracle:thin:@//phpsites.myriade.be:1521/xe");
+                ds.setUrl("jdbc:oracle:thin:@//oersted.iii.hogent.be:1521/xe");
+                //ds.setUrl("jdbc:oracle:thin:@//phpsites.myriade.be:1521/xe");
                 
                 ds.setUsername("stockplay");
                 ds.setPassword("chocolademousse");
-                //ds.setPassword("chocolademouse");
             }
 
             return ds.getConnection();

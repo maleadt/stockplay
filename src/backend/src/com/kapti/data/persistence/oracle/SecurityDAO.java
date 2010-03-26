@@ -124,13 +124,9 @@ public class SecurityDAO implements com.kapti.data.persistence.SecurityDAO {
                 stmt.setString(1, '%'+example.getIsin() +'%');
                 stmt.setString(2, '%' + example.getSymbol() + '%');
                 stmt.setString(3, '%' + example.getName() + '%');
-                if (example.getExchange() != null) {
-                    stmt.setString(4, '%' + example.getExchange() + '%');
-                } else {
-                    stmt.setString(5, "%%");
-                }
-                stmt.setBoolean(6, example.isVisible());
-                stmt.setBoolean(7, example.isSuspended());
+                stmt.setString(4, '%' + example.getExchange() + '%');
+                stmt.setBoolean(5, example.isVisible());
+                stmt.setBoolean(6, example.isSuspended());
 
                 rs = stmt.executeQuery();
                 ArrayList<Security> list = new ArrayList<Security>();
