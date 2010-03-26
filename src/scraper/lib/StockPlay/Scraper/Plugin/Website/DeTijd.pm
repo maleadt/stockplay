@@ -67,7 +67,7 @@ sub _build_exchanges {
 	# Euronext Brussel
 	my $brussel = new StockPlay::Exchange(
 		id		=> "BSE",
-		name		=> "Euronext Brussel",
+		name		=> "Euronext Brussels",
 		location	=> "Brussel",
 		securities	=> [$self->getSecurities('http://www.tijd.be/beurzen/euronext-brussel/continumarkt')]
 	);
@@ -75,7 +75,7 @@ sub _build_exchanges {
 	# Euronext Parijs
 	my $parijs = new StockPlay::Exchange(
 		id		=> "PA",
-		name		=> "Euronext Parijs",
+		name		=> "Euronext Paris",
 		location	=> "Parijs",
 		securities	=> [$self->getSecurities('http://www.tijd.be/beurzen/euronext-parijs/frencha'), $self->getSecurities('http://www.tijd.be/beurzen/euronext-parijs/frenchb'), $self->getSecurities('http://www.tijd.be/beurzen/euronext-parijs/frenchc')]
 	);
@@ -150,6 +150,10 @@ sub getSecurities {
 								}								
 							}
 							($isin, $symbol) = @items[1..2];
+							
+							# HACK HACK HACK
+							# TODO: misschien checken && goed fixen? Moet dan wel in de BEL20, maar niet in de BSE...
+							return 0 if ($items[0] eq "Euronext Brussels" && ($isin eq "FR0010208488" || $isin eq "FR0000121501"));
 						}
 					);
 					$tree2->delete();
@@ -213,7 +217,7 @@ sub getQuotes {
 			die("could not parse time") unless $datetime;
 			push(@quotes, new StockPlay::Quote({
 				time		=> $datetime,
-				security	=> $security->id,
+				security	=> $security->isin,
 				price		=> $data{last},
 				bid		=> $data{bid},
 				ask		=> $data{ask},

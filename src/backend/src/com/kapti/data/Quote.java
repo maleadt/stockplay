@@ -50,7 +50,7 @@ public class Quote {
     public Quote(){}
 
     public Quote(String isin, Date time){
-        this.pk=new QuotePK(isin, time);
+        this.pk = new QuotePK(isin, time);
     }
 
     public Quote(String isin, Date time, double price, int volume, double bid, double ask, double low, double high, double open) {

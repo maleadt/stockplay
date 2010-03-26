@@ -37,6 +37,9 @@ import java.util.Map;
 import java.util.Vector;
 import org.apache.xmlrpc.XmlRpcException;
 import com.kapti.data.Quote;
+import com.kapti.data.Security;
+import com.kapti.data.persistence.SecurityDAO;
+import java.util.Date;
 
 /**
  * \brief   Handler van de Finance.Security subklasse.
@@ -82,6 +85,7 @@ public class SecurityHandler extends MethodClass {
         Vector<Map<String, Object>> oVector = new Vector<Map<String, Object>>();
         for (com.kapti.data.Security tIndex : tIndexs) {
             oVector.add(tIndex.toStruct(
+                    com.kapti.data.Security.Fields.ISIN,
                     com.kapti.data.Security.Fields.SYMBOL,
                     com.kapti.data.Security.Fields.NAME,
                     com.kapti.data.Security.Fields.EXCHANGE,
@@ -160,7 +164,7 @@ public class SecurityHandler extends MethodClass {
      * @throws FilterException
      * @throws ParserException
      */
-        public List<Map<String, Object>> Quotes(String iFilter) throws StockPlayException {
+    public List<Map<String, Object>> Quotes(String iFilter) throws StockPlayException {
         // Get DAO reference
         QuoteDAO tQuoteDAO = getDAO().getQuoteDAO();
 
@@ -179,10 +183,19 @@ public class SecurityHandler extends MethodClass {
                     Quote.Fields.ASK,
                     Quote.Fields.LOW,
                     Quote.Fields.HIGH,
-                    Quote.Fields.OPEN
-                    ));
+                    Quote.Fields.OPEN));
         }
-
         return oVector;
+    }
+
+    public int Update(Hashtable<String, Object> iQuote) throws StockPlayException {
+        // Get DAO reference
+        QuoteDAO tQuoteDAO = getDAO().getQuoteDAO();
+
+        // Create a new quote
+        Quote tQuote = new Quote((String) iQuote.get("ISIN"), (Date) iQuote.get("TIME"));
+        tQuoteDAO.create(tQuote);
+
+        return 1;
     }
 }

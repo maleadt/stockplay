@@ -25,6 +25,7 @@ XML-RPC backend.
 # Packages
 use Moose;
 use XML::RPC;
+use Data::Dumper;
 use StockPlay::Exchange;
 use StockPlay::Index;
 use StockPlay::Security;
@@ -91,7 +92,7 @@ sub BUILD {
 	
 	# Verify server connection
 	eval {
-		$self->xmlrpc->call('User.Hello', "scraper/0.1", 1);
+		$self->call("SCALAR", 'User.Hello', "scraper/0.1", 1);
 	};
 	if ($@) {
 		if ($@ =~ m{^no data}) {
@@ -106,66 +107,64 @@ sub BUILD {
 		print "DEBUG: checking database structure for plugin ", $plugin->infohash->{name}, "\n";
 		
 		# Check exchanges
+		my @s_exchanges = $self->call("ARRAY", 'Finance.Exchange.List', '');
 		foreach my $exchange (@{$plugin->exchanges}) {
 			print "DEBUG: processing exchange ", $exchange->name, "\n";
 			
 			# Add the exchange
 			print "DEBUG: adding exchange ", $exchange->name, "\n";
-			my $result = $self->xmlrpc->call('Finance.Exchange.List', 'symbol EQUALS \'' . $exchange->id . '\'');
-			if (ref $result eq "HASH" && defined $result->{'faultCode'}) {
-				die("Internal error");
-			}
-			if (ref $result eq "ARRAY" && scalar @{$result} != 1) {
-				$result = $self->xmlrpc->call('Finance.Exchange.Create', {
+			unless (grep { $_->{SYMBOL} eq $exchange->id } @s_exchanges) {
+				my %s_exchange = (
 					SYMBOL		=> $exchange->id,
 					NAME		=> $exchange->name,
 					LOCATION	=> $exchange->location
-				});
-				if (ref $result eq "HASH" && defined $result->{'faultCode'}) {
-					die("Internal error");
+				);
+				eval {
+					$self->call("SCALAR", 'Finance.Exchange.Create', \%s_exchange);
+				}; if ($@) {
+					print "ERROR: could not insert exchange ", $exchange->id, " ($@)\n";
 				}
+				$self->call("SCALAR", 'Finance.Exchange.Create', \%s_exchange);
 			}
 			
 			# Add the indexes (TODO fix this, ID etc)
 			print "DEBUG: processing indexes\n";
+			my @s_indexes = $self->call("ARRAY", 'Finance.Index.List', "exchange EQUALS '" . $exchange->id . "'");
 			foreach my $index (@{$exchange->indexes}) {
 				print "DEBUG: adding index ", $index->id, "\n";
-				
-				$result = $self->xmlrpc->call('Finance.Index.List', 'name EQUALS \'' . $index->id . '\' AND exchange EQUALS \'' . $exchange->id . '\'');
-				if (ref $result eq "HASH" && defined $result->{'faultCode'}) {
-					die("Internal error");
-				}
-				if (ref $result eq "ARRAY" && scalar @{$result} != 1) {
-					$result = $self->xmlrpc->call('Finance.Security.Create', {
+				unless (grep { $_->{NAME} eq $index->id } @s_indexes) {
+					my %s_index = (
 						NAME		=> $index->id,
 						EXCHANGE	=> $index->exchange,
-					});
-					if (ref $result eq "HASH" && defined $result->{'faultCode'}) {
-						die("Internal error");
+					);
+					eval {
+						$self->call("SCALAR", 'Finance.Security.Create', \%s_index);
+					}; if ($@) {
+						print "ERROR: could not insert index ", $index->id, " ($@)\n";
 					}
+					push(@s_indexes, \%s_index);
 				}				
 			}
 			
 			# Add the securities
 			print "DEBUG: processing securities\n";
+			my @s_securities = $self->call("ARRAY", 'Finance.Security.List', "exchange EQUALS '" . $exchange->id . "'");
 			foreach my $security (@{$exchange->securities}) {
 				print "DEBUG: adding security ", $security->isin, "\n";
-				
-				$result = $self->xmlrpc->call('Finance.Security.List', 'isin EQUALS \'' . $security->isin . '\'');
-				if (ref $result eq "HASH" && defined $result->{'faultCode'}) {
-					die("Internal error");
-				}
-				if (ref $result eq "ARRAY" && scalar @{$result} != 1) {
-					$result = $self->xmlrpc->call('Finance.Security.Create', {
+				unless (grep { $_->{ISIN} eq $security->isin } @s_securities) {
+					my %s_security = (
 						SYMBOL		=> $security->id,
 						ISIN		=> $security->isin,
 						NAME		=> $security->name,
 						EXCHANGE	=> $exchange->id
-					});
-					if (ref $result eq "HASH" && defined $result->{'faultCode'}) {
-						die("Internal error");
+					);
+					eval {
+						$self->call("SCALAR", 'Finance.Security.Create', \%s_security);
+					}; if ($@) {
+						print "ERROR: could not insert security ", $security->isin, " ($@)\n";
 					}
-				}				
+					push(@s_securities, \%s_security);
+				}			
 			}
 		}
 	}
@@ -219,7 +218,28 @@ sub run {
 		
 		# Push the changes to the server
 		foreach my $quote (@quotes) {
-			
+			my %s_quote = (
+				ISIN	=> $quote->security,
+				TIME	=> $quote->time->strftime('%Y%m%dT%H:%M:%S'),
+				PRICE	=> $quote->price,
+				BID	=> $quote->bid,
+				ASK	=> $quote->ask,
+				LOW	=> $quote->low,
+				HIGH	=> $quote->high,
+				OPEN	=> $quote->open,
+				VOLUME	=> $quote->volume
+			);
+			use Data::Dumper;
+			print Dumper(\%s_quote);
+			foreach my $key (keys %s_quote) {
+				print "Ref for $key is ", ref(ref $s_quote{$key}), "\n";
+			}
+			eval {
+				$self->call("SCALAR", 'Finance.Security.Update', \%s_quote);
+			}; if ($@) {
+				print "ERROR: could not update security ", $quote->security, " ($@)\n";
+			}
+			exit();
 		}
 		
 		# Wait
@@ -238,6 +258,30 @@ sub run {
 =head1 AUXILIARY
 
 =cut
+
+sub call {
+	my ($self, $type, @params) = @_;
+	
+	my $result = $self->xmlrpc->call(@params);
+	
+	if (ref $result eq "HASH" && defined $result->{"faultCode"}) {
+		die($result->{"faultString"});
+	}
+	
+	if (wantarray && ref $result ne $type) {
+		die("Wrong type received");
+	}
+	
+	if ($type eq "SCALAR") {
+		return $result;
+	} elsif ($type eq "ARRAY") {
+		return @{$result};
+	} elsif ($type eq "HASH") {
+		return %{$result};
+	} else {
+		return $result;
+	}
+}
 
 1;
 

@@ -16,6 +16,9 @@ use StockPlay::Scraper::Daemon;
 use warnings;
 use strict;
 
+# Disable the output buffer
+$| = 1;
+
 # Constants
 my $PLUGIN_MAX_AGE = 3600*24*7;
 
