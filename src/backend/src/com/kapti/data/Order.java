@@ -33,7 +33,7 @@ public class Order extends Instruction {
     //
 
     public static enum Fields {
-        ID, USER, SECURITY, AMOUNT, PRICE, TYPE,    // Instruction.Fields
+        ID, USER, ISIN, AMOUNT, PRICE, TYPE,    // Instruction.Fields
         STATUS, CREATIONTIME, EXPIRATIONTIME, EXECUTIONTIME, PARAMETERS
     }
     
@@ -55,8 +55,8 @@ public class Order extends Instruction {
     public Order() {
     }
 
-    public Order(int id, int user, String security, int amount, double price, InstructionType type, OrderStatus status, Date creationTime, Date expirationTime, Date executionTime, String parameters) {
-        super(id, user, security, amount, price, type);
+    public Order(int id, int user, String isin, int amount, double price, InstructionType type, OrderStatus status, Date creationTime, Date expirationTime, Date executionTime, String parameters) {
+        super(id, user, isin, amount, price, type);
         this.status =status;
         this.creationTime = creationTime;
         this.expirationTime = expirationTime;
@@ -119,8 +119,8 @@ public class Order extends Instruction {
                 case USER:
                     oStruct.put(tField.name(), getUser());
                     break;
-                case SECURITY:
-                    oStruct.put(tField.name(), getSecurity());
+                case ISIN:
+                    oStruct.put(tField.name(), getIsin());
                     break;
                 case AMOUNT:
                     oStruct.put(tField.name(), getAmount());
@@ -168,8 +168,8 @@ public class Order extends Instruction {
                 case USER:
                     setUser((Integer)tValue);
                     break;
-                case SECURITY:
-                    setSecurity((String)tValue);
+                case ISIN:
+                    setIsin((String)tValue);
                     break;
                 case AMOUNT:
                     setAmount((Integer)tValue);

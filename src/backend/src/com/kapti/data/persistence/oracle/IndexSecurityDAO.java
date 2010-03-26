@@ -32,12 +32,12 @@ import java.util.Collection;
 
 public class IndexSecurityDAO implements GenericDAO<IndexSecurity, IndexSecurity> {
 
-    private static final String SELECT_USERSECURITY = "SELECT null FROM indexsecurities WHERE indexid = ? AND symbol = ?";
-    private static final String SELECT_USERSECURITIES_FILTER = "SELECT indexid, symbol FROM indexsecurities WHERE indexid LIKE ? AND sybmol LIKE ?";
-    private static final String SELECT_USERSECURITIES = "SELECT indexid, symbol FROM indexsecurities";
-    private static final String INSERT_USERSECURITY = "INSERT INTO indexsecurties(indexid, symbol) VALUES(?, ?, ?)";
-    private static final String UPDATE_USERSECURITY = "UPDATE indexsecurities SET null WHERE indexid = ? AND symbol = ?";
-    private static final String DELETE_USERSECURITY = "DELETE FROM indexsecurities WHERE indexid = ? AND symbol = ?";
+    private static final String SELECT_USERSECURITY = "SELECT null FROM indexsecurities WHERE indexid = ? AND isin = ?";
+    private static final String SELECT_USERSECURITIES_FILTER = "SELECT indexid, isin FROM indexsecurities WHERE indexid LIKE ? AND isin LIKE ?";
+    private static final String SELECT_USERSECURITIES = "SELECT indexid, isin FROM indexsecurities";
+    private static final String INSERT_USERSECURITY = "INSERT INTO indexsecurties(indexid, isin) VALUES(?, ?, ?)";
+    private static final String UPDATE_USERSECURITY = "UPDATE indexsecurities SET null WHERE indexid = ? AND isin = ?";
+    private static final String DELETE_USERSECURITY = "DELETE FROM indexsecurities WHERE indexid = ? AND isin = ?";
     private static IndexSecurityDAO instance = new IndexSecurityDAO();
 
     private IndexSecurityDAO() {
@@ -59,14 +59,14 @@ public class IndexSecurityDAO implements GenericDAO<IndexSecurity, IndexSecurity
                 stmt = conn.prepareStatement(SELECT_USERSECURITY);
 
                 stmt.setInt(1, pk.getIndex());
-                stmt.setString(2, pk.getSymbol());
+                stmt.setString(2, pk.getIsin());
 
                 rs = stmt.executeQuery();
                 if (rs.next()) {
 
-                    return new IndexSecurity(pk.getIndex(), pk.getSymbol());
+                    return new IndexSecurity(pk.getIndex(), pk.getIsin());
                 } else {
-                    throw new NonexistentEntityException("There is no indexsecurity with indexid '" + pk.getIndex() + "' and symbol " + pk.getSymbol() + "'");
+                    return null;
                 }
             } finally {
                 if (rs != null) {
@@ -140,7 +140,7 @@ public class IndexSecurityDAO implements GenericDAO<IndexSecurity, IndexSecurity
                     stmt.setString(1, "%%");
                 }
 
-                stmt.setString(2, '%' + example.getSymbol() + '%');
+                stmt.setString(2, '%' + example.getIsin() + '%');
 
 
                 rs = stmt.executeQuery();
@@ -217,7 +217,7 @@ public class IndexSecurityDAO implements GenericDAO<IndexSecurity, IndexSecurity
                 stmt = conn.prepareStatement(INSERT_USERSECURITY);
 
                 stmt.setInt(1, entity.getIndex());
-                stmt.setString(2, entity.getSymbol());
+                stmt.setString(2, entity.getIsin());
 
 
                 return stmt.executeUpdate() == 1;
@@ -295,7 +295,7 @@ public class IndexSecurityDAO implements GenericDAO<IndexSecurity, IndexSecurity
                 stmt = conn.prepareStatement(DELETE_USERSECURITY);
 
                 stmt.setInt(1, entity.getIndex());
-                stmt.setString(2, entity.getSymbol());
+                stmt.setString(2, entity.getIsin());
 
 
                 return stmt.executeUpdate() == 1;

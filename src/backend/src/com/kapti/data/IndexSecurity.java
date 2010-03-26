@@ -31,20 +31,20 @@ public class IndexSecurity {
     //
 
     public static enum Fields {
-        ID, INDEX
+        ISIN, INDEX
     }
     
     private int index;
-    private String symbol;
+    private String isin;
 
 
     //
     // Construction
     //
 
-    public IndexSecurity(int index, String symbol) {
+    public IndexSecurity(int index, String isin) {
         this.index = index;
-        this.symbol = symbol;
+        this.isin = isin;
     }
 
 
@@ -56,8 +56,8 @@ public class IndexSecurity {
         return index;
     }
 
-    public String getSymbol() {
-        return symbol;
+    public String getIsin() {
+        return isin;
     }
 
     public void setIndex(int iIndex) {
@@ -68,8 +68,8 @@ public class IndexSecurity {
         Hashtable<String, Object> oStruct = new Hashtable<String, Object>();
         for (Fields tField : iFields) {
             switch (tField) {
-                case ID:
-                    oStruct.put(tField.name(), getSymbol());
+                case ISIN:
+                    oStruct.put(tField.name(), getIsin());
                     break;
                 case INDEX:
                     oStruct.put(tField.name(), getIndex());
@@ -79,7 +79,7 @@ public class IndexSecurity {
         return oStruct;
     }
 
-    public void fromStruct(Hashtable<String, Object> iStruct) throws StockPlayException {
+    public void fromStruct(Hashtable<String, Object> iStruct) throws StockPlayException {/*
         for (String tKey : iStruct.keySet()) {
             Object tValue = iStruct.get(tKey);
             Fields tField = null;
@@ -97,6 +97,9 @@ public class IndexSecurity {
                 default:
                     throw new StockPlayException("requested key '" + tKey + "' cannot be modified");
             }
-        }
+        }*/
+
+
+        throw new StockPlayException("Niets om in te vullen normaalgezien??");
     }
 }

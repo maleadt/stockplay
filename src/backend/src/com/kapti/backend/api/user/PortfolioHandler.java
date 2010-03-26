@@ -57,7 +57,7 @@ public class PortfolioHandler extends MethodClass {
         for (com.kapti.data.UserSecurity tSecurity : tSecurities) {
             oVector.add(tSecurity.toStruct(
                     com.kapti.data.UserSecurity.Fields.AMOUNT,
-                    com.kapti.data.UserSecurity.Fields.SYMBOL,
+                    com.kapti.data.UserSecurity.Fields.ISIN,
                     com.kapti.data.UserSecurity.Fields.USER));
         }
 

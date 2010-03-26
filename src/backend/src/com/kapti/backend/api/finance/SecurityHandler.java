@@ -60,7 +60,7 @@ public class SecurityHandler extends MethodClass {
         Vector<Map<String, Object>> oVector = new Vector<Map<String, Object>>();
         for (com.kapti.data.Security tIndex : tIndexs) {
             oVector.add(tIndex.toStruct(
-                    com.kapti.data.Security.Fields.ID,
+                    com.kapti.data.Security.Fields.SYMBOL,
                     com.kapti.data.Security.Fields.NAME,
                     com.kapti.data.Security.Fields.EXCHANGE,
                     com.kapti.data.Security.Fields.VISIBLE,
@@ -82,7 +82,7 @@ public class SecurityHandler extends MethodClass {
         Vector<Map<String, Object>> oVector = new Vector<Map<String, Object>>();
         for (com.kapti.data.Security tIndex : tIndexs) {
             oVector.add(tIndex.toStruct(
-                    com.kapti.data.Security.Fields.ID,
+                    com.kapti.data.Security.Fields.SYMBOL,
                     com.kapti.data.Security.Fields.NAME,
                     com.kapti.data.Security.Fields.EXCHANGE,
                     com.kapti.data.Security.Fields.VISIBLE,

@@ -31,19 +31,19 @@ import java.util.Collection;
 
 public class SecurityDAO implements com.kapti.data.persistence.SecurityDAO {
 
-    private static final String SELECT_SECURITY = "SELECT name, exchange, visible, suspended FROM securities WHERE symbol = ?";
-    private static final String SELECT_SECURITIES_FILTER = "SELECT symbol, name, exchange, visible, suspended FROM securities WHERE symbol LIKE ? AND name LIKE ? AND exchange LIKE ? AND visible LIKE ? AND suspended LIKE ?";
-    private static final String SELECT_SECURITIES = "SELECT symbol, name, exchange, visible, suspended FROM securities";
-    private static final String INSERT_SECURITY = "INSERT INTO securities(symbol, name, exchange, visible, suspended) VALUES(?, ?, ?, ?, ?)";
-    private static final String UPDATE_SECURITY = "UPDATE securities SET name = ?, visible = ?, suspended = ? WHERE symbol = ? AND exchange = ?";
-    private static final String DELETE_SECURITY = "DELETE FROM securities WHERE symbol = ? AND exchange = ?";
+    private static final String SELECT_SECURITY = "SELECT symbol, name, exchange, visible, suspended FROM securities WHERE isin = ?";
+    private static final String SELECT_SECURITIES_FILTER = "SELECT isin, symbol, name, exchange, visible, suspended FROM securities WHERE isin LIKE ? AND symbol LIKE ? AND name LIKE ? AND exchange LIKE ? AND visible LIKE ? AND suspended LIKE ?";
+    private static final String SELECT_SECURITIES = "SELECT isin, symbol, name, exchange, visible, suspended FROM securities";
+    private static final String INSERT_SECURITY = "INSERT INTO securities(isin, symbol, name, exchange, visible, suspended) VALUES(?, ?, ?, ?, ?, ?)";
+    private static final String UPDATE_SECURITY = "UPDATE securities SET symbol = ?, exchange = ?, name = ?, visible = ?, suspended = ? WHERE isin = ?";
+    private static final String DELETE_SECURITY = "DELETE FROM securities WHERE isin = ?";
     private static SecurityDAO instance = new SecurityDAO();
 
     public static SecurityDAO getInstance() {
         return instance;
     }
 
-    public Security findById(String symbol) throws StockPlayException {
+    public Security findById(String isin) throws StockPlayException {
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -52,14 +52,14 @@ public class SecurityDAO implements com.kapti.data.persistence.SecurityDAO {
                 conn = OracleConnection.getConnection();
                 stmt = conn.prepareStatement(SELECT_SECURITY);
 
-                stmt.setString(1, symbol);
+                stmt.setString(1, isin);
 
                 rs = stmt.executeQuery();
                 if (rs.next()) {
 
-                    return new Security(symbol, rs.getString(1), rs.getString(2), rs.getBoolean(3), rs.getBoolean(4));
+                    return new Security(isin, rs.getString(1), rs.getString(2), rs.getString(3), rs.getBoolean(4), rs.getBoolean(5));
                 } else {
-                    return null; //throw new NonexistentEntityException("There is no security with symbol '" + symbol + "'");
+                    return null;
                 }
             } finally {
                 if (rs != null) {
@@ -92,7 +92,7 @@ public class SecurityDAO implements com.kapti.data.persistence.SecurityDAO {
                 rs = stmt.executeQuery();
                 ArrayList<Security> list = new ArrayList<Security>();
                 while (rs.next()) {
-                    list.add(new Security(rs.getString(1), rs.getString(2), rs.getString(3), rs.getBoolean(4), rs.getBoolean(5)));
+                    list.add(new Security(rs.getString(1), rs.getString(2), rs.getString(3) ,rs.getString(4), rs.getBoolean(5), rs.getBoolean(6)));
                 }
                 return list;
             } finally {
@@ -121,22 +121,21 @@ public class SecurityDAO implements com.kapti.data.persistence.SecurityDAO {
                 conn = OracleConnection.getConnection();
                 stmt = conn.prepareStatement(SELECT_SECURITIES_FILTER);
 
-                stmt.setString(1, '%' + example.getSymbol() + '%');
-                stmt.setString(2, '%' + example.getName() + '%');
+                stmt.setString(1, '%'+example.getIsin() +'%');
+                stmt.setString(2, '%' + example.getSymbol() + '%');
+                stmt.setString(3, '%' + example.getName() + '%');
                 if (example.getExchange() != null) {
-                    stmt.setString(3, '%' + example.getExchange() + '%');
+                    stmt.setString(4, '%' + example.getExchange() + '%');
                 } else {
-                    stmt.setString(3, "%%");
+                    stmt.setString(5, "%%");
                 }
-                stmt.setBoolean(4, example.isVisible());
-                stmt.setBoolean(5, example.isSuspended());
+                stmt.setBoolean(6, example.isVisible());
+                stmt.setBoolean(7, example.isSuspended());
 
                 rs = stmt.executeQuery();
                 ArrayList<Security> list = new ArrayList<Security>();
                 while (rs.next()) {
-
-                    list.add(new Security(rs.getString(1), rs.getString(2), rs.getString(3)));
-
+                    list.add(new Security(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getBoolean(5), rs.getBoolean(6)));
                 }
                 return list;
             } finally {
@@ -167,8 +166,7 @@ public class SecurityDAO implements com.kapti.data.persistence.SecurityDAO {
                 rs = stmt.executeQuery();
                 ArrayList<Security> list = new ArrayList<Security>();
                 while (rs.next()) {
-
-                    list.add(new Security(rs.getString(1), rs.getString(2), rs.getString(3), rs.getBoolean(4), rs.getBoolean(5)));
+                    list.add(new Security(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getBoolean(5), rs.getBoolean(6)));
                 }
                 return list;
             } finally {
@@ -201,17 +199,15 @@ public class SecurityDAO implements com.kapti.data.persistence.SecurityDAO {
             try {
                 conn = OracleConnection.getConnection();
                 stmt = conn.prepareStatement(INSERT_SECURITY);
-
-                stmt.setString(1, security.getSymbol());
-                stmt.setString(2, security.getName());
+                stmt.setString(1, security.getIsin());
+                stmt.setString(2, security.getSymbol());
+                stmt.setString(3, security.getName());
                 if (security.getExchange() != null) {
-                    stmt.setString(3, security.getExchange());
+                    stmt.setString(4, security.getExchange());
                 }
-                stmt.setBoolean(4, security.isVisible());
-                stmt.setBoolean(5, security.isSuspended());
+                stmt.setBoolean(5, security.isVisible());
+                stmt.setBoolean(6, security.isSuspended());
                 return stmt.executeUpdate() == 1;
-
-
             } finally {
                 if (rs != null) {
                     rs.close();
@@ -243,15 +239,14 @@ public class SecurityDAO implements com.kapti.data.persistence.SecurityDAO {
                 conn = OracleConnection.getConnection();
                 stmt = conn.prepareStatement(UPDATE_SECURITY);
 
-                stmt.setString(4, security.getSymbol());
-                stmt.setString(5, security.getExchange());
+                stmt.setString(6, security.getIsin());
 
-                stmt.setString(1, security.getName());
-                stmt.setBoolean(2, security.isVisible());
-                stmt.setBoolean(3, security.isSuspended());
+                stmt.setString(1, security.getSymbol());
+                stmt.setString(2, security.getExchange());
+                stmt.setString(3, security.getName());
+                stmt.setBoolean(4, security.isVisible());
+                stmt.setBoolean(5, security.isSuspended());
                 return stmt.executeUpdate() == 1;
-
-
             } finally {
                 if (rs != null) {
                     rs.close();
@@ -276,8 +271,7 @@ public class SecurityDAO implements com.kapti.data.persistence.SecurityDAO {
                 conn = OracleConnection.getConnection();
                 stmt = conn.prepareStatement(DELETE_SECURITY);
 
-                stmt.setString(1, security.getSymbol());
-                stmt.setString(2, security.getExchange());
+                stmt.setString(1, security.getIsin());
 
                 return stmt.executeUpdate() == 1;
 

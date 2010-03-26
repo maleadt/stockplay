@@ -32,12 +32,12 @@ import java.util.Collection;
 
 public class OrderDAO implements GenericDAO<Order, Integer> {
 
-    private static final String SELECT_ORDER = "SELECT userid, symbol, limit, amount, type, status, creationtime, expirationtime, executiontime FROM orders WHERE id = ?";
-    private static final String SELECT_ORDERS_FILTER = "SELECT id, userid, symbol, limit, amount, type, status, creationtime, expirationtime, executiontime FROM orders "
-            + "WHERE id LIKE ? AND userid LIKE ? AND symbol LIKE ? AND limit LIKE ? AND amount LIKE ? AND type LIKE ? AND status LIKE ? AND crationtime LIKE ? AND expirationtime LIKE ? AND executiontime LIKE ?";
-    private static final String SELECT_ORDERS = "SELECT id, userid, symbol, limit, amount, type, status, creationtime, expirationtime, executiontime FROM orders";
-    private static final String INSERT_ORDER = "INSERT INTO orders(id, userid, symbol, limit, amount, type, status, creationtime, expirationtime, executiontime) VALUES(orderid_seq.nextval, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    private static final String UPDATE_ORDER = "UPDATE orders SET userid = ?, symbol = ?, limit = ?, amount = ?, type = ?, status = ?, creationtime = ?, expirationtime = ?, executiontime = ? WHERE id = ?";
+    private static final String SELECT_ORDER = "SELECT userid, isin, limit, amount, type, status, creationtime, expirationtime, executiontime FROM orders WHERE id = ?";
+    private static final String SELECT_ORDERS_FILTER = "SELECT id, userid, isin, limit, amount, type, status, creationtime, expirationtime, executiontime FROM orders "
+            + "WHERE id LIKE ? AND userid LIKE ? AND isin LIKE ? AND limit LIKE ? AND amount LIKE ? AND type LIKE ? AND status LIKE ? AND crationtime LIKE ? AND expirationtime LIKE ? AND executiontime LIKE ?";
+    private static final String SELECT_ORDERS = "SELECT id, userid, isin, limit, amount, type, status, creationtime, expirationtime, executiontime FROM orders";
+    private static final String INSERT_ORDER = "INSERT INTO orders(id, userid, isin, limit, amount, type, status, creationtime, expirationtime, executiontime) VALUES(orderid_seq.nextval, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private static final String UPDATE_ORDER = "UPDATE orders SET userid = ?, isin = ?, limit = ?, amount = ?, type = ?, status = ?, creationtime = ?, expirationtime = ?, executiontime = ? WHERE id = ?";
     private static final String DELETE_ORDER = "DELETE FROM orders WHERE id = ?";
     private static OrderDAO instance = new OrderDAO();
 
@@ -64,7 +64,7 @@ public class OrderDAO implements GenericDAO<Order, Integer> {
 
                     Order o = new Order(id);
                     o.setUser(rs.getInt(1));
-                    o.setSecurity(rs.getString(2));
+                    o.setIsin(rs.getString(2));
                     o.setPrice(rs.getDouble(3));
                     o.setAmount(rs.getInt(4));
                     // type op 5
@@ -113,7 +113,7 @@ public class OrderDAO implements GenericDAO<Order, Integer> {
                 while (rs.next()) {
                     Order o = new Order(rs.getInt(1));
                     o.setUser(rs.getInt(2));
-                    o.setSecurity(rs.getString(3));
+                    o.setIsin(rs.getString(3));
                     o.setPrice(rs.getDouble(4));
                     o.setAmount(rs.getInt(5));
                     // type op 5
@@ -155,7 +155,7 @@ public class OrderDAO implements GenericDAO<Order, Integer> {
 
                 stmt.setString(1, "%" + example.getId() + "%");
                 stmt.setString(2, "%" + example.getUser() + "%");
-                stmt.setString(3, "%" + example.getSecurity() + "%");
+                stmt.setString(3, "%" + example.getIsin() + "%");
                 stmt.setString(4, "%" + example.getPrice() + "%");
                 stmt.setString(5, "%" + example.getType() + "%");
                 stmt.setString(6, "%" + example.getStatus() + "%");
@@ -169,7 +169,7 @@ public class OrderDAO implements GenericDAO<Order, Integer> {
                 while (rs.next()) {
                     Order o = new Order(rs.getInt(1));
                     o.setUser(rs.getInt(2));
-                    o.setSecurity(rs.getString(3));
+                    o.setIsin(rs.getString(3));
                     o.setPrice(rs.getDouble(4));
                     o.setAmount(rs.getInt(5));
                     // type op 5
@@ -214,7 +214,7 @@ public class OrderDAO implements GenericDAO<Order, Integer> {
                 while (rs.next()) {
                     Order o = new Order(rs.getInt(1));
                     o.setUser(rs.getInt(2));
-                    o.setSecurity(rs.getString(3));
+                    o.setIsin(rs.getString(3));
                     o.setPrice(rs.getDouble(4));
                     o.setAmount(rs.getInt(5));
                     // type op 5
@@ -260,7 +260,7 @@ public class OrderDAO implements GenericDAO<Order, Integer> {
                 stmt = conn.prepareStatement(INSERT_ORDER);
 
                 stmt.setInt(1, entity.getUser());
-                stmt.setString(2, entity.getSecurity());
+                stmt.setString(2, entity.getIsin());
                 stmt.setDouble(3, entity.getPrice());
                 stmt.setInt(4, entity.getAmount());
                 stmt.setString(5, entity.getType().toString());
@@ -314,7 +314,7 @@ public class OrderDAO implements GenericDAO<Order, Integer> {
 
                 stmt.setInt(10, entity.getId());
                 stmt.setInt(1, entity.getUser());
-                stmt.setString(2, entity.getSecurity());
+                stmt.setString(2, entity.getIsin());
                 stmt.setDouble(3, entity.getPrice());
                 stmt.setInt(4, entity.getAmount());
                 stmt.setString(5, entity.getType().toString());

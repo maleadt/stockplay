@@ -32,7 +32,7 @@ public class Quote {
     //
 
     public static enum Fields {
-        SECURITY, TIME, PRICE, VOLUME, BID, ASK, LOW, HIGH, OPEN
+        ISIN, TIME, PRICE, VOLUME, BID, ASK, LOW, HIGH, OPEN
     }
 
     private QuotePK pk = null;
@@ -49,12 +49,12 @@ public class Quote {
 
     public Quote(){}
 
-    public Quote(String security, Date time){
-        this.pk=new QuotePK(security, time);
+    public Quote(String isin, Date time){
+        this.pk=new QuotePK(isin, time);
     }
 
-    public Quote(String security, Date time, double price, int volume, double bid, double ask, double low, double high, double open) {
-        this.pk = new QuotePK(security, time);
+    public Quote(String isin, Date time, double price, int volume, double bid, double ask, double low, double high, double open) {
+        this.pk = new QuotePK(isin, time);
         this.price = price;
         this.volume = volume;
         this.bid = bid;
@@ -69,8 +69,8 @@ public class Quote {
     // Methods
     //
 
-    public String getSecurity() {
-        return pk.getSecurity();
+    public String getIsin() {
+        return pk.getIsin();
     }
 
     public double getBid() {
@@ -141,8 +141,8 @@ public class Quote {
         Hashtable<String, Object> oStruct = new Hashtable<String, Object>();
         for (Fields tField : iFields) {
             switch (tField) {
-                case SECURITY:
-                    oStruct.put(tField.name(), getSecurity());
+                case ISIN:
+                    oStruct.put(tField.name(), getIsin());
                     break;
                 case TIME:
                     oStruct.put(tField.name(), getTime());
@@ -219,19 +219,19 @@ public class Quote {
 
     public class QuotePK {
 
-        private String security = null;
+        private String isin = null;
         private Date time = null;
 
         public QuotePK() {
         }
 
-        public QuotePK(String security, Date time){
-            this.security = security;
+        public QuotePK(String isin, Date time){
+            this.isin = isin;
             this.time = time;
         }
 
-        public String getSecurity() {
-            return security;
+        public String getIsin() {
+            return isin;
         }
 
         public Date getTime() {

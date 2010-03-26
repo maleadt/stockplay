@@ -32,7 +32,7 @@ public class Transaction extends Instruction {
     //
 
     public static enum Fields {
-        ID, USER, SECURITY, AMOUNT, PRICE, TYPE,    // Instruction.Fields
+        ID, USER, ISIN, AMOUNT, PRICE, TYPE,    // Instruction.Fields
         TIME
     }
     
@@ -47,8 +47,8 @@ public class Transaction extends Instruction {
         super(id);
     }
 
-    public Transaction(int id, int user, String security, int amount, double price, InstructionType type, Date time) {
-        super(id, user, security, amount, price, type);
+    public Transaction(int id, int user, String isin, int amount, double price, InstructionType type, Date time) {
+        super(id, user, isin, amount, price, type);
         this.time = time;
     }
 
@@ -76,8 +76,8 @@ public class Transaction extends Instruction {
                 case USER:
                     oStruct.put(tField.name(), getUser());
                     break;
-                case SECURITY:
-                    oStruct.put(tField.name(), getSecurity());
+                case ISIN:
+                    oStruct.put(tField.name(), getIsin());
                     break;
                 case AMOUNT:
                     oStruct.put(tField.name(), getAmount());
@@ -113,8 +113,8 @@ public class Transaction extends Instruction {
                 case USER:
                     setUser((Integer)tValue);
                     break;
-                case SECURITY:
-                    setSecurity((String)tValue);
+                case ISIN:
+                    setIsin((String)tValue);
                     break;
                 case AMOUNT:
                     setAmount((Integer)tValue);

@@ -60,7 +60,8 @@ public class FinanceBackendTest {
 
                 HashMap security = (HashMap) sec;
 
-                Security res = new Security((String) security.get("ID"),
+                Security res = new Security((String) security.get("ISIN"),
+                        (String) security.get("SYMBOL"),
                         (String) security.get("NAME"),
                         (String) security.get("EXCHANGE"),
                         (Boolean) security.get("VISIBLE"),
@@ -83,7 +84,8 @@ public class FinanceBackendTest {
 
                 HashMap security = (HashMap) sec;
 
-                Security res = new Security((String) security.get("ID"),
+                Security res = new Security((String) security.get("ISIN"),
+                        (String) security.get("SYMBOL"),
                         (String) security.get("NAME"),
                         (String) security.get("EXCHANGE"),
                         (Boolean) security.get("VISIBLE"),
@@ -153,7 +155,7 @@ public class FinanceBackendTest {
                         (Double) quote.get("HIGH"),
                         (Double) quote.get("OPEN"));
 
-                System.out.println(res.getSecurity() + " op " + res.getTime() + ": " + res.getVolume() + " | visible: " + res.getPrice());
+                System.out.println(res.getIsin() + " op " + res.getTime() + ": " + res.getVolume() + " | visible: " + res.getPrice());
             }
         }
     }
@@ -181,7 +183,7 @@ public class FinanceBackendTest {
                         (Double) quote.get("HIGH"),
                         (Double) quote.get("OPEN"));
 
-                System.out.println(res.getSecurity() + " op " + res.getTime() + ": " + res.getVolume() + " | visible: " + res.getPrice());
+                System.out.println(res.getIsin() + " op " + res.getTime() + ": " + res.getVolume() + " | visible: " + res.getPrice());
             }
         }
     }

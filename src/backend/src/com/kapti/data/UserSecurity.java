@@ -31,7 +31,7 @@ public class UserSecurity {
     //
 
     public static enum Fields {
-        USER, SYMBOL, AMOUNT
+        USER, ISIN, AMOUNT
     }
     
     private UserSecurityPK pk;
@@ -47,8 +47,8 @@ public class UserSecurity {
         this.amount = amount;
     }
 
-    public UserSecurity(int user, String symbol, int amount){
-        this.pk = new UserSecurityPK(user, symbol);
+    public UserSecurity(int user, String isin, int amount){
+        this.pk = new UserSecurityPK(user, isin);
         this.amount = amount;
     }
 
@@ -76,8 +76,8 @@ public class UserSecurity {
                 case USER:
                     oStruct.put(tField.name(), getPk().user);
                     break;
-                case SYMBOL:
-                    oStruct.put(tField.name(), getPk().symbol);
+                case ISIN:
+                    oStruct.put(tField.name(), getPk().isin);
                     break;
                 case AMOUNT:
                     oStruct.put(tField.name(), getAmount());
@@ -115,10 +115,10 @@ public class UserSecurity {
 
     public class UserSecurityPK{
         private int user;
-        private String symbol;
+        private String isin;
 
         public String getSymbol() {
-            return symbol;
+            return isin;
         }
 
         public int getUser() {
@@ -127,10 +127,15 @@ public class UserSecurity {
 
         public UserSecurityPK(int user, String symbol) {
             this.user = user;
-            this.symbol = symbol;
+            this.isin = symbol;
         }
 
         public UserSecurityPK() {
         }
+
+        public String getIsin() {
+            return isin;
+        }
+        
     }
 }

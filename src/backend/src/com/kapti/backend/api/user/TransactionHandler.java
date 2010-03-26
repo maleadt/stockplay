@@ -58,7 +58,7 @@ public class TransactionHandler extends MethodClass {
                     com.kapti.data.Transaction.Fields.AMOUNT,
                     com.kapti.data.Transaction.Fields.ID,
                     com.kapti.data.Transaction.Fields.PRICE,
-                    com.kapti.data.Transaction.Fields.SECURITY,
+                    com.kapti.data.Transaction.Fields.ISIN,
                     com.kapti.data.Transaction.Fields.TIME,
                     com.kapti.data.Transaction.Fields.TYPE,
                     com.kapti.data.Transaction.Fields.USER));

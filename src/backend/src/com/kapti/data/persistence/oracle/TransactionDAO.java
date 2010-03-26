@@ -65,7 +65,7 @@ public class TransactionDAO implements GenericDAO<Transaction, Integer> {
                     Transaction t = new Transaction(id);
                     t.setUser(rs.getInt(1));
                     t.setTime(new Date(rs.getTimestamp(2).getTime()));
-                    t.setSecurity(rs.getString(3));
+                    t.setIsin(rs.getString(3));
                     t.setType(InstructionType.valueOf(rs.getString(4).toUpperCase()));
                     t.setAmount(rs.getInt(5));
                     t.setPrice(rs.getDouble(6));
@@ -107,7 +107,7 @@ public class TransactionDAO implements GenericDAO<Transaction, Integer> {
                     Transaction t = new Transaction(rs.getInt(1));
                     t.setUser(rs.getInt(2));
                     t.setTime(new Date(rs.getTimestamp(3).getTime()));
-                    t.setSecurity(rs.getString(4));
+                    t.setIsin(rs.getString(4));
                     t.setType(InstructionType.valueOf(rs.getString(5).toUpperCase()));
                     t.setAmount(rs.getInt(6));
                     t.setPrice(rs.getDouble(7));
@@ -144,7 +144,7 @@ public class TransactionDAO implements GenericDAO<Transaction, Integer> {
                 stmt.setString(1, "%" + example.getId() + "%");
                 stmt.setString(2, "%" + example.getUser() + "%");
                 stmt.setString(3, "%" + example.getTime() + "%");
-                stmt.setString(4, "%" + example.getSecurity() + "%");
+                stmt.setString(4, "%" + example.getIsin() + "%");
                 stmt.setString(5, "%" + example.getType() + "%");
                 stmt.setString(6, "%" + example.getAmount() + "%");
                 stmt.setString(7, "%" + example.getPrice() + "%");
@@ -156,7 +156,7 @@ public class TransactionDAO implements GenericDAO<Transaction, Integer> {
                     Transaction t = new Transaction(rs.getInt(1));
                     t.setUser(rs.getInt(2));
                     t.setTime(new Date(rs.getTimestamp(3).getTime()));
-                    t.setSecurity(rs.getString(4));
+                    t.setIsin(rs.getString(4));
                     t.setType(InstructionType.valueOf(rs.getString(5).toUpperCase()));
                     t.setAmount(rs.getInt(6));
                     t.setPrice(rs.getDouble(7));
@@ -196,7 +196,7 @@ public class TransactionDAO implements GenericDAO<Transaction, Integer> {
                     Transaction t = new Transaction(rs.getInt(1));
                     t.setUser(rs.getInt(2));
                     t.setTime(new Date(rs.getTimestamp(3).getTime()));
-                    t.setSecurity(rs.getString(4));
+                    t.setIsin(rs.getString(4));
                     t.setType(InstructionType.valueOf(rs.getString(5).toUpperCase()));
                     t.setAmount(rs.getInt(6));
                     t.setPrice(rs.getDouble(7));
@@ -237,7 +237,7 @@ public class TransactionDAO implements GenericDAO<Transaction, Integer> {
 
                 stmt.setInt(1, entity.getUser());
                 stmt.setTimestamp(2, new Timestamp(entity.getTime().getTime()));
-                stmt.setString(3, entity.getSecurity());
+                stmt.setString(3, entity.getIsin());
                 stmt.setString(4, entity.getType().toString());
                 stmt.setInt(5, entity.getAmount());
                 stmt.setDouble(6, entity.getPrice());
@@ -279,7 +279,7 @@ public class TransactionDAO implements GenericDAO<Transaction, Integer> {
                 stmt.setInt(7, entity.getId());
                 stmt.setInt(1, entity.getUser());
                 stmt.setTimestamp(2, new Timestamp(entity.getTime().getTime()));
-                stmt.setString(3, entity.getSecurity());
+                stmt.setString(3, entity.getIsin());
                 stmt.setString(4, entity.getType().toString());
                 stmt.setInt(5, entity.getAmount());
                 stmt.setDouble(6, entity.getPrice());

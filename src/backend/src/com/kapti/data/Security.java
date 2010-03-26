@@ -32,8 +32,9 @@ public class Security {
 
     public static enum Fields {
 
-        ID, NAME, EXCHANGE, VISIBLE, SUSPENDED
+        ISIN,SYMBOL, NAME, EXCHANGE, VISIBLE, SUSPENDED
     }
+    private String isin = "";
     private String symbol = "";
     private String name = "";
     private String exchange = "";
@@ -46,17 +47,19 @@ public class Security {
     public Security() {
     }
 
-    public Security(String symbol) {
-        this.symbol = symbol;
+    public Security(String isin) {
+        this.isin = isin;
     }
 
-    public Security(String symbol, String name, String exchange) {
+    public Security(String isin, String symbol, String name, String exchange) {
+        this.isin = isin;
         this.symbol = symbol;
         this.name = name;
         this.exchange = exchange;
     }
 
-    public Security(String symbol, String name, String exchange, boolean visible, boolean suspended) {
+    public Security(String isin, String symbol, String name, String exchange, boolean visible, boolean suspended) {
+        this.isin = isin;
         this.symbol = symbol;
         this.name = name;
         this.exchange = exchange;
@@ -81,11 +84,14 @@ public class Security {
         return symbol;
     }
 
-    /**
-     * Haalt beurskoers op van effect die het dichtst bij de opgegeven datum zit
-     * @param time
-     * @return
-     */
+    public void setSymbol(String symbol) {
+        this.symbol = symbol;
+    }
+    
+    public String getIsin() {
+        return isin;
+    }
+
     public String getExchange() {
         return exchange;
     }
@@ -114,7 +120,10 @@ public class Security {
         Hashtable<String, Object> oStruct = new Hashtable<String, Object>();
         for (Fields tField : iFields) {
             switch (tField) {
-                case ID:
+                case ISIN:
+                    oStruct.put(tField.name(), getIsin());
+                    break;
+                case SYMBOL:
                     oStruct.put(tField.name(), getSymbol());
                     break;
                 case NAME:
@@ -145,6 +154,8 @@ public class Security {
             }
 
             switch (tField) {
+                case SYMBOL:
+                    setSymbol((String) tValue);
                 case NAME:
                     setName((String) tValue);
                     break;

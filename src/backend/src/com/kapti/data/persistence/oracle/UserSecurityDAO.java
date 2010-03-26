@@ -33,14 +33,14 @@ import java.util.Collection;
 
 public class UserSecurityDAO implements GenericDAO<UserSecurity, UserSecurityPK> {
 
-    private static final String SELECT_USERSECURITY = "SELECT amount FROM usersecurities WHERE userid = ? AND symbol = ?";
-    private static final String SELECT_USERSECURITIES_FILTER = "SELECT userid, symbol, amount "
-            + "FROM usersecurities WHERE userid LIKE ? AND symbol LIKE ? AND amount LIKE ?";
-    private static final String SELECT_USERSECURITIES = "SELECT userid, symbol, amount FROM usersecurities";
-    private static final String INSERT_USERSECURITY = "INSERT INTO usersecurties(userid, symbol, amount) "
+    private static final String SELECT_USERSECURITY = "SELECT amount FROM usersecurities WHERE userid = ? AND isin = ?";
+    private static final String SELECT_USERSECURITIES_FILTER = "SELECT userid, isin, amount "
+            + "FROM usersecurities WHERE userid LIKE ? AND isin LIKE ? AND amount LIKE ?";
+    private static final String SELECT_USERSECURITIES = "SELECT userid, isin, amount FROM usersecurities";
+    private static final String INSERT_USERSECURITY = "INSERT INTO usersecurties(userid, isin, amount) "
             + "VALUES(?, ?, ?)";
-    private static final String UPDATE_USERSECURITY = "UPDATE usersecurities SET amount = ? WHERE userid = ? AND symbol = ?";
-    private static final String DELETE_USERSECURITY = "DELETE FROM usersecurities WHERE userid = ? AND symbol = ?";
+    private static final String UPDATE_USERSECURITY = "UPDATE usersecurities SET amount = ? WHERE userid = ? AND isin = ?";
+    private static final String DELETE_USERSECURITY = "DELETE FROM usersecurities WHERE userid = ? AND isin = ?";
     private static UserSecurityDAO instance = new UserSecurityDAO();
 
     private UserSecurityDAO() {
@@ -60,14 +60,14 @@ public class UserSecurityDAO implements GenericDAO<UserSecurity, UserSecurityPK>
                 stmt = conn.prepareStatement(SELECT_USERSECURITY);
 
                 stmt.setInt(1, pk.getUser());
-                stmt.setString(2, pk.getSymbol());
+                stmt.setString(2, pk.getIsin());
 
                 rs = stmt.executeQuery();
                 if (rs.next()) {
 
                     return new UserSecurity(pk, rs.getInt(1));
                 } else {
-                    throw new NonexistentEntityException("There is no usersecurity with userid '" + pk.getUser() + "' and symbol " + pk.getSymbol() + "'");
+                    return null;
                 }
             } finally {
                 if (rs != null) {
@@ -141,7 +141,7 @@ public class UserSecurityDAO implements GenericDAO<UserSecurity, UserSecurityPK>
                     stmt.setString(1, "%%");
                 }
 
-                stmt.setString(2, '%' + example.getPk().getSymbol() + '%');
+                stmt.setString(2, '%' + example.getPk().getIsin() + '%');
 
                 if (example.getAmount() != 0) {
                     stmt.setString(3, "%" + example.getAmount() + "%");
@@ -223,7 +223,7 @@ public class UserSecurityDAO implements GenericDAO<UserSecurity, UserSecurityPK>
                 stmt = conn.prepareStatement(INSERT_USERSECURITY);
 
                 stmt.setInt(1, entity.getPk().getUser());
-                stmt.setString(2, entity.getPk().getSymbol());
+                stmt.setString(2, entity.getPk().getIsin());
                 stmt.setInt(3, entity.getAmount());
 
                 return stmt.executeUpdate() == 1;
@@ -259,7 +259,7 @@ public class UserSecurityDAO implements GenericDAO<UserSecurity, UserSecurityPK>
                 stmt = conn.prepareStatement(UPDATE_USERSECURITY);
 
                 stmt.setInt(2, entity.getPk().getUser());
-                stmt.setString(3, entity.getPk().getSymbol());
+                stmt.setString(3, entity.getPk().getIsin());
                 stmt.setInt(1, entity.getAmount());
 
                 return stmt.executeUpdate() == 1;
@@ -297,7 +297,7 @@ public class UserSecurityDAO implements GenericDAO<UserSecurity, UserSecurityPK>
                 stmt = conn.prepareStatement(DELETE_USERSECURITY);
 
                 stmt.setInt(1, entity.getPk().getUser());
-                stmt.setString(2, entity.getPk().getSymbol());
+                stmt.setString(2, entity.getPk().getIsin());
 
 
                 return stmt.executeUpdate() == 1;

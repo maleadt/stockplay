@@ -57,7 +57,7 @@ public class OrderHandler extends MethodClass {
             oVector.add(tOrder.toStruct(
                     com.kapti.data.Order.Fields.ID,
                     com.kapti.data.Order.Fields.TYPE,
-                    com.kapti.data.Order.Fields.SECURITY,
+                    com.kapti.data.Order.Fields.ISIN,
                     com.kapti.data.Order.Fields.AMOUNT));
 
         return oVector;    

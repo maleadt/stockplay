@@ -31,12 +31,12 @@ public class Instruction {
     //
 
     public static enum Fields {
-        ID, USER, SECURITY, AMOUNT, PRICE, TYPE
+        ID, USER, ISIN, AMOUNT, PRICE, TYPE
     }
     
     private int id = -1;
     private int user;
-    private String security;
+    private String isin;
     private int amount;
     private double price;
     private InstructionType type;
@@ -53,18 +53,18 @@ public class Instruction {
         this.id = id;
     }
 
-    public Instruction(int id, int user, String security, int amount, double price, InstructionType type) {
+    public Instruction(int id, int user, String isin, int amount, double price, InstructionType type) {
         this.id = id;
         this.user = user;
-        this.security = security;
+        this.isin = isin;
         this.amount = amount;
         this.price = price;
         this.type = type;
     }
 
-    public Instruction (int user, String security, int amount, InstructionType type) {
+    public Instruction (int user, String isin, int amount, InstructionType type) {
         this.user = user;
-        this.security = security;
+        this.isin = isin;
         this.amount = amount;
         this.type = type;
     }
@@ -109,12 +109,12 @@ public class Instruction {
         this.user = user;
     }
 
-    public String getSecurity() {
-        return security;
+    public String getIsin() {
+        return isin;
     }
 
-    public void setSecurity(String security) {
-        this.security = security;
+    public void setIsin(String isin) {
+        this.isin = isin;
     }
 
     public Hashtable<String, Object> toStruct(Fields... iFields) {
@@ -127,8 +127,8 @@ public class Instruction {
                 case USER:
                     oStruct.put(tField.name(), getUser());
                     break;
-                case SECURITY:
-                    oStruct.put(tField.name(), getSecurity());
+                case ISIN:
+                    oStruct.put(tField.name(), getIsin());
                     break;
                 case AMOUNT:
                     oStruct.put(tField.name(), getAmount());
@@ -159,8 +159,8 @@ public class Instruction {
                 case USER:
                     setUser((Integer)tValue);
                     break;
-                case SECURITY:
-                    setSecurity((String)tValue);
+                case ISIN:
+                    setIsin((String)tValue);
                     break;
                 case AMOUNT:
                     setAmount((Integer)tValue);
