@@ -43,7 +43,7 @@ public class IndexHandler extends MethodClass {
     // Methodes
     //
 
-    public Vector<Hashtable<String, Object>> List(String iFilter) throws XmlRpcException, StockPlayException, FilterException {
+    public Vector<Hashtable<String, Object>> List(String iFilter) throws StockPlayException {
         // Get DAO reference
         GenericDAO<com.kapti.data.Index, Integer> tIndexDAO = getDAO().getIndexDAO();
 
@@ -60,7 +60,7 @@ public class IndexHandler extends MethodClass {
         return oVector;
     }
 
-    public int Modify(String iFilter, Hashtable<String, Object> iDetails) throws XmlRpcException, StockPlayException, FilterException {
+    public int Modify(String iFilter, Hashtable<String, Object> iDetails) throws StockPlayException {
         // Get DAO reference
         GenericDAO<com.kapti.data.Index, Integer> tIndexDAO = getDAO().getIndexDAO();
 
@@ -78,7 +78,7 @@ public class IndexHandler extends MethodClass {
         return 1;
     }
 
-    public int Create(Hashtable<String, Object> iDetails) throws XmlRpcException, StockPlayException {
+    public int Create(Hashtable<String, Object> iDetails) throws StockPlayException {
         // Get DAO reference
         GenericDAO<com.kapti.data.Index, Integer> tIndexDAO = getDAO().getIndexDAO();
 

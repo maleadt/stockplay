@@ -25,15 +25,12 @@ package com.kapti.backend.api.user;
 import com.kapti.backend.api.MethodClass;
 import com.kapti.data.OrderStatus;
 import com.kapti.data.persistence.GenericDAO;
-import com.kapti.exceptions.FilterException;
-import com.kapti.exceptions.ParserException;
 import com.kapti.exceptions.StockPlayException;
 import com.kapti.filter.Filter;
 import com.kapti.filter.parsing.Parser;
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Vector;
-import org.apache.xmlrpc.XmlRpcException;
 /**
  * \brief   Handler van de User.Order subklasse.
  *
@@ -43,7 +40,7 @@ import org.apache.xmlrpc.XmlRpcException;
  * op conforme wijze terug te sturen.
  */
 public class OrderHandler extends MethodClass {
-    public Vector<Hashtable<String, Object>> List(String iFilter) throws XmlRpcException, StockPlayException, FilterException, ParserException {
+    public Vector<Hashtable<String, Object>> List(String iFilter) throws StockPlayException {
         // Get DAO reference
         GenericDAO<com.kapti.data.Order, Integer> orDAO = getDAO().getOrderDAO();
 
@@ -63,7 +60,7 @@ public class OrderHandler extends MethodClass {
         return oVector;    
     }
 
-    public int Create(Hashtable<String, Object> iDetails) throws XmlRpcException, StockPlayException {
+    public int Create(Hashtable<String, Object> iDetails) throws StockPlayException {
         // Get DAO reference
         GenericDAO<com.kapti.data.Order, Integer> orDAO = getDAO().getOrderDAO();
 
@@ -74,7 +71,7 @@ public class OrderHandler extends MethodClass {
         return 1;
     }
     
-    public int Cancel(String iFilter) throws XmlRpcException, FilterException, StockPlayException, ParserException {
+    public int Cancel(String iFilter) throws StockPlayException {
         // Get DAO reference
         GenericDAO<com.kapti.data.Order, Integer> orDAO = getDAO().getOrderDAO();
 

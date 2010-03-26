@@ -22,8 +22,8 @@
 package com.kapti.backend.api.system;
 
 import com.kapti.backend.api.MethodClass;
+import com.kapti.exceptions.StockPlayException;
 import java.util.Hashtable;
-import org.apache.xmlrpc.XmlRpcException;
 
 /**
  * \brief   Handler van de System.Scraper subklasse.
@@ -38,20 +38,19 @@ public class ScraperHandler extends MethodClass {
     // Methodes
     //
 
-    public int Status() throws XmlRpcException {
+    public int Status() throws StockPlayException {
         return 1;
     }
 
-    public boolean Stop() throws XmlRpcException {
+    public boolean Stop() throws StockPlayException {
         return false;
     }
 
-    public boolean Restart() throws XmlRpcException {
+    public boolean Restart() throws StockPlayException {
         return true;
     }
     
-    public Hashtable<String, Object> Stats() throws XmlRpcException {
+    public Hashtable<String, Object> Stats() throws StockPlayException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }
-

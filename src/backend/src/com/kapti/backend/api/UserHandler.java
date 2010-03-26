@@ -19,12 +19,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
 package com.kapti.backend.api;
 
 import com.kapti.data.persistence.GenericDAO;
-import com.kapti.exceptions.ErrorException;
-import com.kapti.exceptions.FilterException;
-import com.kapti.exceptions.ParserException;
 import com.kapti.exceptions.StockPlayException;
 import com.kapti.filter.Filter;
 import com.kapti.filter.parsing.Parser;
@@ -32,7 +30,6 @@ import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Vector;
 import org.apache.xmlrpc.XmlRpcException;
-import java.security.SecureRandom;
 
 /**
  * \brief   Handler van de User klasse.
@@ -54,27 +51,17 @@ public class UserHandler extends MethodClass {
         return 1;
     }
 
-    public int Create(Hashtable<String, Object> iDetails) throws XmlRpcException {
+    public int Create(Hashtable<String, Object> iDetails) throws StockPlayException {
         // Get DAO reference
         GenericDAO<com.kapti.data.User, Integer> tUserDAO = getDAO().getUserDAO();
 
         com.kapti.data.User tUser = new com.kapti.data.User();
-        try {
-            tUser.fromStruct(iDetails);
-        } catch (ErrorException ex) {
-            mLogger.error(ex.getMessage());
-            throw Error.INTERNAL_FAILURE.getException();
-        }
-        try {
-            tUserDAO.create(tUser);
-        } catch (StockPlayException ex) {
-            mLogger.error(ex.getMessage());
-            throw Error.DATABASE_FAILURE.getException();
-        }
+        tUser.fromStruct(iDetails);
+        tUserDAO.create(tUser);
         return 1;
     }
 
-    public Vector<Hashtable<String, Object>> Details(String iFilter) throws XmlRpcException, StockPlayException {
+    public Vector<Hashtable<String, Object>> Details(String iFilter) throws StockPlayException {
         // Get DAO reference
         GenericDAO<com.kapti.data.User, Integer> userDAO = getDAO().getUserDAO();
 
@@ -94,7 +81,7 @@ public class UserHandler extends MethodClass {
         return oVector;
     }
 
-    public Vector<Hashtable<String, Object>> List(String iFilter) throws XmlRpcException, StockPlayException {
+    public Vector<Hashtable<String, Object>> List(String iFilter) throws StockPlayException {
         // Get DAO reference
         GenericDAO<com.kapti.data.User, Integer> userDAO = getDAO().getUserDAO();
 
@@ -112,7 +99,7 @@ public class UserHandler extends MethodClass {
         return oVector;
     }
 
-    public int Modify(String iFilter, Hashtable<String, Object> iDetails) throws XmlRpcException, StockPlayException, FilterException, ParserException {
+    public int Modify(String iFilter, Hashtable<String, Object> iDetails) throws StockPlayException {
         // Get DAO reference
         GenericDAO<com.kapti.data.User, Integer> tUserDAO = getDAO().getUserDAO();
 
@@ -130,7 +117,7 @@ public class UserHandler extends MethodClass {
         return 1;
     }
     
-    public int Remove(String iFilter) throws XmlRpcException, StockPlayException, FilterException, ParserException {
+    public int Remove(String iFilter) throws StockPlayException {
         // Get DAO reference
         GenericDAO<com.kapti.data.User, Integer> tUserDAO = getDAO().getUserDAO();
 

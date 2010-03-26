@@ -26,15 +26,12 @@ import com.kapti.backend.api.MethodClass;
 import com.kapti.data.UserSecurity;
 import com.kapti.data.UserSecurity.UserSecurityPK;
 import com.kapti.data.persistence.GenericDAO;
-import com.kapti.exceptions.FilterException;
-import com.kapti.exceptions.ParserException;
 import com.kapti.exceptions.StockPlayException;
 import com.kapti.filter.Filter;
 import com.kapti.filter.parsing.Parser;
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Vector;
-import org.apache.xmlrpc.XmlRpcException;
 /**
  * \brief   Handler van de User.Portfolio subklasse.
  *
@@ -44,7 +41,7 @@ import org.apache.xmlrpc.XmlRpcException;
  * op conforme wijze terug te sturen.
  */
 public class PortfolioHandler extends MethodClass {
-    public Vector<Hashtable<String, Object>> List(String iFilter) throws XmlRpcException, FilterException, StockPlayException, ParserException {
+    public Vector<Hashtable<String, Object>> List(String iFilter) throws StockPlayException {
         // Get DAO reference
         GenericDAO<com.kapti.data.UserSecurity, UserSecurityPK> tPortfolioDAO = getDAO().getUserSecurityDAO();
 
@@ -63,12 +60,4 @@ public class PortfolioHandler extends MethodClass {
 
         return oVector;
     }
-
-
-    // TODO 
-//    @Override
-//    public Vector<Hashtable<String, Object>> History(Filter iFilter) throws XmlRpcException, FilterException, StockPlayException {
-//        throw new UnsupportedOperationException("Not supported yet.");
-//    }
-
 }

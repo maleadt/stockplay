@@ -51,7 +51,7 @@ public class SecurityHandler extends MethodClass {
     // Methodes
     //
 
-    public List<Map<String, Object>> List() throws XmlRpcException, StockPlayException, FilterException {
+    public List<Map<String, Object>> List() throws StockPlayException {
         // Get DAO reference
         GenericDAO<com.kapti.data.Security, String> tSecurityDAO = getDAO().getSecurityDAO();
 
@@ -70,7 +70,7 @@ public class SecurityHandler extends MethodClass {
         return oVector;
     }
 
-    public List<Map<String, Object>> List(String iFilter) throws XmlRpcException, StockPlayException, FilterException, ParserException {
+    public List<Map<String, Object>> List(String iFilter) throws StockPlayException {
         // Get DAO reference
         GenericDAO<com.kapti.data.Security, String> tSecurityDAO = getDAO().getSecurityDAO();
 
@@ -92,7 +92,7 @@ public class SecurityHandler extends MethodClass {
         return oVector;
     }
 
-    public int Modify(String iFilter, Hashtable<String, Object> iDetails) throws XmlRpcException, StockPlayException, FilterException {
+    public int Modify(String iFilter, Hashtable<String, Object> iDetails) throws StockPlayException {
         // Get DAO reference
         GenericDAO<com.kapti.data.Security, String> tSecurityDAO = getDAO().getSecurityDAO();
 
@@ -110,7 +110,7 @@ public class SecurityHandler extends MethodClass {
         return 1;
     }
 
-    public int Create(Hashtable<String, Object> iDetails) throws XmlRpcException, StockPlayException {
+    public int Create(Hashtable<String, Object> iDetails) throws StockPlayException {
         // Get DAO reference
         GenericDAO<com.kapti.data.Security, String> tSecurityDAO = getDAO().getSecurityDAO();
 
@@ -121,7 +121,7 @@ public class SecurityHandler extends MethodClass {
         return 1;
     }
 
-    public List<Map<String, Object>> Details(String iFilter) throws XmlRpcException, StockPlayException, FilterException, ParserException {
+    public List<Map<String, Object>> Details(String iFilter) throws StockPlayException {
         // Get DAO reference
         QuoteDAO tQuoteDAO = getDAO().getQuoteDAO();
 
@@ -156,7 +156,7 @@ public class SecurityHandler extends MethodClass {
      * @throws FilterException
      * @throws ParserException
      */
-        public List<Map<String, Object>> Quotes(String iFilter) throws XmlRpcException, StockPlayException, FilterException, ParserException {
+        public List<Map<String, Object>> Quotes(String iFilter) throws StockPlayException {
         // Get DAO reference
         QuoteDAO tQuoteDAO = getDAO().getQuoteDAO();
 
@@ -181,5 +181,4 @@ public class SecurityHandler extends MethodClass {
 
         return oVector;
     }
-
 }
