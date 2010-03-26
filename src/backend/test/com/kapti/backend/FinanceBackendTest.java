@@ -136,7 +136,7 @@ public class FinanceBackendTest {
 
     @Test
     public void getSecurityDetailsTest() throws Exception {
-        Object[] quotes = (Object[]) client.execute("Finance.Security.Details", new Object[]{"symbol EQUALS 'AMZN'"});
+        Object[] quotes = (Object[]) client.execute("Finance.Security.Details", new Object[]{"isin EQUALS 'AMZN'"});
 
         //Assert.assertTrue(securities.length == 1);
 
@@ -164,7 +164,7 @@ public class FinanceBackendTest {
 
     @Test
     public void getSecurityQuotesTest() throws Exception {
-        Object[] quotes = (Object[]) client.execute("Finance.Security.Quotes", new Object[]{"symbol EQUALS 'EBAY'"});
+        Object[] quotes = (Object[]) client.execute("Finance.Security.Quotes", new Object[]{"isin EQUALS 'EBAY'"});
 
         //Assert.assertTrue(quotes.length == 1);
 

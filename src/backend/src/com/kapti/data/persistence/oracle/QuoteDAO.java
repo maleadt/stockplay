@@ -30,15 +30,15 @@ import java.util.Collection;
 
 public class QuoteDAO implements com.kapti.data.persistence.QuoteDAO {
 
-    private static final String SELECT_QUOTE = "SELECT price, volume, bid, ask, low, high, open FROM quotes WHERE symbol = ? AND timestamp = ?";
-    private static final String SELECT_QUOTE_FILTER = "SELECT symbol, timestamp, price, volume, bid, ask, low, high, open FROM quotes "
-            + "WHERE symbol LIKE ? AND price LIKE ? AND volume LIKE ? AND bid LIKE ? AND ask LIKE ? AND low LIKE ? AND high LIKE ? AND open LIKE ?";
-    private static final String SELECT_QUOTES = "SELECT symbol, timestamp, price, volume, bid, ask, low, high, open FROM quotes";
-    private static final String INSERT_QUOTE = "INSERT INTO quotes(symbol, timestamp, price, volume, bid, ask, low, high, open) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    private static final String UPDATE_QUOTE = "UPDATE quotes SET price = ?, volume ?, bid = ?, ask = ?, low = ?, high = ?, open ? WHERE symbol = ? AND timestamp = ?";
-    private static final String DELETE_QUOTE = "DELETE FROM quotes WHERE symbol = ? AND timestamp = ?";
-    private static final String SELECT_LATEST_QUOTE = "SELECT price, volume, bid, ask, low, high, open, timestamp FROM quotes WHERE symbol = ? AND timestamp = max(timestamp) over(partition by symbol)";
-    private static final String SELECT_LATEST_QUOTE_FILTER = "SELECT symbol, "
+    private static final String SELECT_QUOTE = "SELECT price, volume, bid, ask, low, high, open FROM quotes WHERE isin = ? AND timestamp = ?";
+    private static final String SELECT_QUOTE_FILTER = "SELECT isin, timestamp, price, volume, bid, ask, low, high, open FROM quotes "
+            + "WHERE isin LIKE ? AND price LIKE ? AND volume LIKE ? AND bid LIKE ? AND ask LIKE ? AND low LIKE ? AND high LIKE ? AND open LIKE ?";
+    private static final String SELECT_QUOTES = "SELECT isin, timestamp, price, volume, bid, ask, low, high, open FROM quotes";
+    private static final String INSERT_QUOTE = "INSERT INTO quotes(isin, timestamp, price, volume, bid, ask, low, high, open) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private static final String UPDATE_QUOTE = "UPDATE quotes SET price = ?, volume ?, bid = ?, ask = ?, low = ?, high = ?, open ? WHERE isin = ? AND timestamp = ?";
+    private static final String DELETE_QUOTE = "DELETE FROM quotes WHERE isin = ? AND timestamp = ?";
+    private static final String SELECT_LATEST_QUOTE = "SELECT price, volume, bid, ask, low, high, open, timestamp FROM quotes WHERE isin = 'AMZN' AND timestamp =(select max(timestamp) from quotes WHERE isin='AMZN')";
+    private static final String SELECT_LATEST_QUOTE_FILTER = "SELECT isin, "
             + "price, volume, bid, ask, low, high, open, timestamp FROM quotes where FILTER and timestamp=(select max(timestamp) from quotes where FILTER )";
     private static QuoteDAO instance = new QuoteDAO();
 
@@ -63,7 +63,7 @@ public class QuoteDAO implements com.kapti.data.persistence.QuoteDAO {
 
                     return new Quote(pk.getIsin(), pk.getTime(), rs.getDouble(1), rs.getInt(2), rs.getDouble(3), rs.getDouble(4), rs.getDouble(5), rs.getDouble(6), rs.getDouble(7));
                 } else {
-                    return null;//throw new NonexistentEntityException("There is no quote with symbol '" + pk.getSecurity() + "' and timestamp '" + pk.getTime() + "'");
+                    return null;//throw new NonexistentEntityException("There is no quote with isin '" + pk.getSecurity() + "' and timestamp '" + pk.getTime() + "'");
                 }
             } finally {
                 if (rs != null) {
@@ -344,7 +344,7 @@ public class QuoteDAO implements com.kapti.data.persistence.QuoteDAO {
         }
     }
 
-    public Quote findLatest(String symbol) throws StockPlayException {
+    public Quote findLatest(String isin) throws StockPlayException {
 
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -354,15 +354,15 @@ public class QuoteDAO implements com.kapti.data.persistence.QuoteDAO {
                 conn = OracleConnection.getConnection();
                 stmt = conn.prepareStatement(SELECT_LATEST_QUOTE);
 
-                stmt.setString(1, symbol);
+                stmt.setString(1, isin);
 
 
                 rs = stmt.executeQuery();
                 if (rs.next()) {
 
-                    return new Quote(symbol, rs.getTimestamp(8), rs.getDouble(1), rs.getInt(2), rs.getDouble(3), rs.getDouble(4), rs.getDouble(5), rs.getDouble(6), rs.getDouble(7));
+                    return new Quote(isin, rs.getTimestamp(8), rs.getDouble(1), rs.getInt(2), rs.getDouble(3), rs.getDouble(4), rs.getDouble(5), rs.getDouble(6), rs.getDouble(7));
                 } else {
-                    throw new NonexistentEntityException("There is no quote with symbol '" + symbol + "'");
+                    return null;
                 }
             } finally {
                 if (rs != null) {
@@ -400,7 +400,7 @@ public class QuoteDAO implements com.kapti.data.persistence.QuoteDAO {
                 ArrayList<Quote> result = new ArrayList<Quote>();
                 while (rs.next()) {
 
-                    result.add(new Quote(rs.getString("symbol"), rs.getTimestamp("timestamp"), rs.getDouble("price"), rs.getInt("volume"), rs.getDouble("bid"), rs.getDouble("ask"), rs.getDouble("low"), rs.getDouble("high"), rs.getDouble("open")));
+                    result.add(new Quote(rs.getString("isin"), rs.getTimestamp("timestamp"), rs.getDouble("price"), rs.getInt("volume"), rs.getDouble("bid"), rs.getDouble("ask"), rs.getDouble("low"), rs.getDouble("high"), rs.getDouble("open")));
                 }
                 return result;
             } finally {
