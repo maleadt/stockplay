@@ -7,7 +7,7 @@ package com.kapti.backend;
 import com.kapti.data.Exchange;
 import com.kapti.data.Quote;
 import com.kapti.data.Security;
-import com.kapti.exceptions.ErrorException;
+import com.kapti.exceptions.StockPlayException;
 import java.net.URL;
 import java.util.Date;
 import java.util.HashMap;
@@ -109,7 +109,7 @@ public class FinanceBackendTest {
                         (String) hashObj.get("NAME"),
                         (String) hashObj.get("LOCATION"));
             } else {
-                throw new ErrorException("Expected Hashtable, but got an " + exch.getClass());
+                throw new StockPlayException("Expected Hashtable, but got an " + exch.getClass());
             }
         }
     }
@@ -129,7 +129,7 @@ public class FinanceBackendTest {
                         (String) hashObj.get("NAME"),
                         (String) hashObj.get("LOCATION"));
             } else {
-                throw new ErrorException("Expected Hashtable, but got an " + exch.getClass());
+                throw new StockPlayException("Expected Hashtable, but got an " + exch.getClass());
             }
         }
     }

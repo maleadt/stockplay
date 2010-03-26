@@ -5,7 +5,7 @@
 package com.kapti.backend;
 
 import com.kapti.data.Security;
-import com.kapti.exceptions.ErrorException;
+import com.kapti.exceptions.StockPlayException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -65,7 +65,7 @@ public class SystemBackendTest {
             }
 
         } else {
-            throw new ErrorException("Expected Hashtable, but got an " + obj.getClass());
+            throw new StockPlayException("Expected Hashtable, but got an " + obj.getClass());
         }
     }
 }
