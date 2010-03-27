@@ -1,6 +1,6 @@
 /*
- * DBException.java
- * StockPlay - Niet gevonden
+ * SubsystemException.java
+ * StockPlay - Subsystem bezwaren
  *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.

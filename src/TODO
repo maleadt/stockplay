@@ -43,7 +43,4 @@ Filter
 
 ///////////
 
-*) Stroomlijnen van uppercase & lowercase
-
 *) Slechts 1 constructor per datatype afdwingen + de setters in fromStruct van die verwijderen!
-

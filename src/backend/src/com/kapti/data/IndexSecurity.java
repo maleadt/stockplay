@@ -91,12 +91,12 @@ public class IndexSecurity {
         for (String tKey : iStruct.keySet()) {
             Fields tField = null;
             try {
-                tField = Fields.valueOf(tKey);
+                tField = Fields.valueOf(tKey.toUpperCase());
             }
             catch (IllegalArgumentException e) {
                 throw new InvocationException(InvocationException.Type.NON_EXISTING_ENTITY, "requested key '" + tKey + "' does not exist");
             }
-            tStructMap.put(tField, tKey);
+            tStructMap.put(tField, tKey.toUpperCase());
         }
 
         // Check needed keys

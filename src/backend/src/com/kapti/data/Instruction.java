@@ -22,9 +22,6 @@
 
 package com.kapti.data;
 
-import com.kapti.exceptions.StockPlayException;
-import java.util.Hashtable;
-
 public class Instruction {
     //
     // Member data

@@ -84,7 +84,7 @@ public class UserSecurity {
 
     public void applyStruct(Hashtable<String, Object> iStruct) throws StockPlayException {
         for (String tKey : iStruct.keySet()) {
-            Object tValue = iStruct.get(tKey);
+            Object tValue = iStruct.get(tKey.toUpperCase());
             Fields tField = null;
             try {
                 tField = Fields.valueOf(tKey.toUpperCase());

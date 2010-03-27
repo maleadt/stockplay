@@ -49,7 +49,6 @@ public class Exchange  {
         this.symbol = symbol;
     }
 
-
     //
     // Methods
     //
@@ -123,7 +122,7 @@ public class Exchange  {
             Object tValue = iStruct.get(tKey.toUpperCase());
             Fields tField = null;
             try {
-                tField = Fields.valueOf(tKey);
+                tField = Fields.valueOf(tKey.toUpperCase());
             }
             catch (IllegalArgumentException e) {
                 throw new InvocationException(InvocationException.Type.NON_EXISTING_ENTITY, "requested key '" + tKey + "' does not exist");
@@ -148,12 +147,12 @@ public class Exchange  {
         for (String tKey : iStruct.keySet()) {
             Fields tField = null;
             try {
-                tField = Fields.valueOf(tKey);
+                tField = Fields.valueOf(tKey.toUpperCase());
             }
             catch (IllegalArgumentException e) {
                 throw new InvocationException(InvocationException.Type.NON_EXISTING_ENTITY, "requested key '" + tKey + "' does not exist");
             }
-            tStructMap.put(tField, tKey);
+            tStructMap.put(tField, tKey.toUpperCase());
         }
 
         // Check needed keys
@@ -165,5 +164,5 @@ public class Exchange  {
             throw new ServiceException(ServiceException.Type.NOT_ENOUGH_INFORMATION);
         }
     }
-   
+
 }

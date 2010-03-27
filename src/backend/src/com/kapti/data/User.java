@@ -194,7 +194,7 @@ public class User {
 
     public void applyStruct(Hashtable<String, Object> iStruct) throws StockPlayException {
         for (String tKey : iStruct.keySet()) {
-            Object tValue = iStruct.get(tKey);
+            Object tValue = iStruct.get(tKey.toUpperCase());
             Fields tField = null;
             try {
                 tField = Fields.valueOf(tKey.toUpperCase());
@@ -247,12 +247,12 @@ public class User {
         for (String tKey : iStruct.keySet()) {
             Fields tField = null;
             try {
-                tField = Fields.valueOf(tKey);
+                tField = Fields.valueOf(tKey.toUpperCase());
             }
             catch (IllegalArgumentException e) {
                 throw new InvocationException(InvocationException.Type.KEY_DOES_NOT_EXIST, "requested key '" + tKey + "' does not exist");
             }
-            tStructMap.put(tField, tKey);
+            tStructMap.put(tField, tKey.toUpperCase());
         }
 
         // Check needed keys
