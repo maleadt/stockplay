@@ -51,9 +51,34 @@ public class Security {
     }
 
 
+    public Security(String isin, String symbol, String name, String exchange) {
+        this.isin = isin;
+        this.symbol = symbol;
+        this.name = name;
+        this.exchange = exchange;
+    }
+
+    public Security(String isin, String symbol, String name, String exchange, boolean visible, boolean suspended) {
+        this.isin = isin;
+        this.symbol = symbol;
+        this.name = name;
+        this.exchange = exchange;
+        this.visible = visible;
+        this.suspended = suspended;
+    }
+
+
     //
     // Methods
     //
+    public String getIsin() {
+        return isin;
+    }
+
+    public void setIsin(String isin) {
+        this.isin = isin;
+    }
+
     public String getName() {
         return name;
     }
@@ -68,10 +93,6 @@ public class Security {
 
     public void setSymbol(String symbol) {
         this.symbol = symbol;
-    }
-    
-    public String getIsin() {
-        return isin;
     }
 
     public String getExchange() {
@@ -136,6 +157,9 @@ public class Security {
             }
 
             switch (tField) {
+                case ISIN:
+                    setIsin((String) tValue);
+                    break;
                 case SYMBOL:
                     setSymbol((String) tValue);
                     break;

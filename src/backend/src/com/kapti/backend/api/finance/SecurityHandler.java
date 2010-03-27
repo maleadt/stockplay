@@ -96,8 +96,11 @@ public class SecurityHandler extends MethodClass {
         // Get DAO reference
         GenericDAO<com.kapti.data.Security, String> tSecurityDAO = getDAO().getSecurityDAO();
 
+        Parser parser = Parser.getInstance();
+        Filter filter = parser.parse(iFilter);
+
         // Get the Indexs we need to modify
-        Collection<com.kapti.data.Security> tIndexs = tSecurityDAO.findAll();
+        Collection<com.kapti.data.Security> tIndexs = tSecurityDAO.findByFilter(filter);
 
         // Now apply the new properties
         // TODO: controleren of de struct geen ID field bevat, deze kan _enkel_
@@ -107,7 +110,9 @@ public class SecurityHandler extends MethodClass {
             tSecurityDAO.update(tIndex);
         }
 
-        return 1;
+        //Deze waarde kan gebruikt worden bij de unit tests om te verzekeren
+        //dat het correct aantal securities aangepast zijn.
+        return tIndexs.size();
     }
 
     public int Create(Hashtable<String, Object> iDetails) throws StockPlayException {
@@ -121,6 +126,20 @@ public class SecurityHandler extends MethodClass {
         tSecurityDAO.create(tSecurity);
 
         return 1;
+    }
+
+    public int Remove(String iFilter) throws StockPlayException {
+        GenericDAO<com.kapti.data.Security, String> tSecurityDAO = getDAO().getSecurityDAO();
+
+        Parser parser = Parser.getInstance();
+        Filter filter = parser.parse(iFilter);
+
+        Collection<com.kapti.data.Security> tSecurities = tSecurityDAO.findByFilter(filter);
+
+        for(com.kapti.data.Security security : tSecurities)
+            tSecurityDAO.delete(security);
+
+        return tSecurities.size();
     }
 
     public List<Map<String, Object>> Details(String iFilter) throws StockPlayException {
