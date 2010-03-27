@@ -225,11 +225,6 @@ sub getQuotes {
 	foreach my $site_id (keys %{$koersen->{stocks}}) {
 		my %data = %{$koersen->{stocks}->{$site_id}};
 		
-		# FIXME FIXME
-		my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(time);
-		$data{time} = "$hour:$min:$sec";
-		# FIXME FIXME
-		
 		my $security = (grep { $_->get('site_id') == $site_id } @securities)[0]
 			or die("Could not connect data to security");
 		eval {

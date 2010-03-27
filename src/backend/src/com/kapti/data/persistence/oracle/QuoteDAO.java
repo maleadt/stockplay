@@ -56,7 +56,7 @@ public class QuoteDAO implements com.kapti.data.persistence.QuoteDAO {
                 stmt = conn.prepareStatement(SELECT_QUOTE);
 
                 stmt.setString(1, pk.getIsin());
-                stmt.setDate(2, new Date(pk.getTime().getTime()));
+                stmt.setTimestamp(2, new Timestamp(pk.getTime().getTime()));
 
                 rs = stmt.executeQuery();
                 if (rs.next()) {
@@ -240,9 +240,9 @@ public class QuoteDAO implements com.kapti.data.persistence.QuoteDAO {
             try {
                 conn = OracleConnection.getConnection();
                 stmt = conn.prepareStatement(INSERT_QUOTE);
-
+                
                 stmt.setString(1, entity.getIsin());
-                stmt.setDate(2, new Date(entity.getTime().getTime()));
+                stmt.setTimestamp(2, new Timestamp(entity.getTime().getTime()));
                 stmt.setDouble(3, entity.getPrice());
                 stmt.setInt(4, entity.getVolume());
                 stmt.setDouble(5, entity.getBid());
@@ -293,7 +293,7 @@ public class QuoteDAO implements com.kapti.data.persistence.QuoteDAO {
                 stmt.setDouble(5, entity.getLow());
                 stmt.setDouble(6, entity.getHigh());
                 stmt.setString(8, entity.getIsin());
-                stmt.setDate(9, new Date(entity.getTime().getTime()));
+                stmt.setTimestamp(9, new Timestamp(entity.getTime().getTime()));
                 stmt.setDouble(7, entity.getOpen());
                 return stmt.executeUpdate() == 1;
 
@@ -324,7 +324,7 @@ public class QuoteDAO implements com.kapti.data.persistence.QuoteDAO {
                 stmt = conn.prepareStatement(DELETE_QUOTE);
 
                 stmt.setString(1, entity.getIsin());
-                stmt.setDate(2, new Date(entity.getTime().getTime()));
+                stmt.setTimestamp(2, new Timestamp(entity.getTime().getTime()));
 
                 return stmt.executeUpdate() == 1;
 

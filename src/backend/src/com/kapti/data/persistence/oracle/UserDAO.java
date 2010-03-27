@@ -143,7 +143,7 @@ public class UserDAO implements GenericDAO<User, Integer> {
                 stmt.setString(3, '%' + example.getLastname() + '%');
                 stmt.setString(4, '%' + example.getFirstname() + '%');
                 stmt.setBoolean(5, example.isAdmin());
-                //stmt.setDate(6, new Date(example.getRegdate().getTime()));
+                //stmt.setTimestamp(6, new Timestamp(example.getRegdate().getTime()));
                 stmt.setString(6, "%%"); //regtime
 
                 if (example.getRijksregisternummer() != 0) {
@@ -249,7 +249,7 @@ public class UserDAO implements GenericDAO<User, Integer> {
                 stmt.setString(3, entity.getLastname());
                 stmt.setString(4, entity.getFirstname());
                 stmt.setBoolean(5, entity.isAdmin());
-                stmt.setDate(6, new Date(entity.getRegdate().getTime()));
+                stmt.setTimestamp(6, new Timestamp(entity.getRegdate().getTime()));
                 stmt.setInt(7, entity.getRijksregisternummer());
                 stmt.setInt(8, entity.getPoints());
                 stmt.setDouble(9, entity.getStartamount());
@@ -295,7 +295,7 @@ public class UserDAO implements GenericDAO<User, Integer> {
                 stmt.setString(3, entity.getLastname());
                 stmt.setString(4, entity.getFirstname());
                 stmt.setBoolean(5, entity.isAdmin());
-                stmt.setDate(6, new Date(entity.getRegdate().getTime()));
+                stmt.setTimestamp(6, new Timestamp(entity.getRegdate().getTime()));
                 stmt.setInt(7, entity.getRijksregisternummer());
                 stmt.setInt(8, entity.getPoints());
                 stmt.setDouble(9, entity.getStartamount());

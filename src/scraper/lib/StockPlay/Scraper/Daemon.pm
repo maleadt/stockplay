@@ -217,6 +217,7 @@ sub run {
 		}
 		
 		# Push the changes to the server
+		print "- Saving changes\n";
 		foreach my $quote (@quotes) {
 			my %s_quote = (
 				ISIN	=> $quote->security,
@@ -234,8 +235,6 @@ sub run {
 			}; if ($@) {
 				print "ERROR: could not update security ", $quote->security, " ($@)\n";
 			}
-			print "DEBUG: Sent request: ", $self->xmlrpc->xml_out(), "\n";
-			exit();
 		}
 		
 		# Wait

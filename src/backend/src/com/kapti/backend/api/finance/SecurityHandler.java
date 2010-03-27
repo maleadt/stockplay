@@ -188,12 +188,16 @@ public class SecurityHandler extends MethodClass {
         return oVector;
     }
 
-    public int Update(Hashtable<String, Object> iQuote) throws StockPlayException {
+    public int Update(Hashtable<String, Object> iDetails) throws StockPlayException {
         // Get DAO reference
         QuoteDAO tQuoteDAO = getDAO().getQuoteDAO();
-
+        
         // Create a new quote
-        Quote tQuote = new Quote((String) iQuote.get("ISIN"), (Date) iQuote.get("TIME"));
+        Quote tQuote = new Quote((String) iDetails.get("ISIN"), (Date) iDetails.get("TIME"));
+        iDetails.remove("ISIN");
+        iDetails.remove("TIME");
+
+        tQuote.fromStruct(iDetails);
         tQuoteDAO.create(tQuote);
 
         return 1;
