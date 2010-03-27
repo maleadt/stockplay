@@ -29,7 +29,6 @@ use HTML::TreeBuilder;
 use StockPlay::Scraper::Plugin::Website;
 use Time::HiRes;
 use DateTime;
-use DateTime::Format::Strptime;
 use POSIX;
 
 # Roles
@@ -39,16 +38,32 @@ with 'StockPlay::Scraper::Plugin::Website';
 use strict;
 use warnings;
 
-# DateTime from String coercion
-class_type 'DateTime';
-my ($day, $month, $year) = (localtime())[3..5];
-my $datetime_parser = DateTime::Format::Strptime->new(
-	time_zone	=> strftime("%Z", localtime()),	# TODO: 28 maart, verandert dit naar CEST? Mss via module?
-	pattern		=> '%H:%M:%S',
-	#year		=> $year+1900,
-	#month		=> $month+1,
-	#day		=> $day
-);
+# DateTime from String #TODO: coercion
+#class_type 'DateTime';
+my $timezone = strftime("%Z", localtime()); # TODO: 28 maart, verandert dit naar CEST? Mss via module ophalen adhv locatie?
+sub parse_datetime {
+	my ($string) = @_;
+
+	# Get a localized datetime to fill in missing parameters
+	my $datetime_reference = DateTime->now(time_zone => $timezone);
+
+	# Create a new datetime object with all parameters filled in
+	my @items = split(/:/, $string);
+	die("invalid time specification") unless $#items == 2;
+	my $datetime = new DateTime (
+		time_zone	=> $timezone,
+		year		=> $datetime_reference->year,
+		month		=> $datetime_reference->month,
+		day		=> $datetime_reference->day,
+		hour		=> $items[0],
+		minute		=> $items[1],
+		second		=> $items[2],
+	);
+
+	# Convert back to UTC and return
+	$datetime->set_time_zone("UTC");
+	return $datetime;
+}
 
 
 ################################################################################
@@ -210,10 +225,15 @@ sub getQuotes {
 	foreach my $site_id (keys %{$koersen->{stocks}}) {
 		my %data = %{$koersen->{stocks}->{$site_id}};
 		
+		# FIXME FIXME
+		my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(time);
+		$data{time} = "$hour:$min:$sec";
+		# FIXME FIXME
+		
 		my $security = (grep { $_->get('site_id') == $site_id } @securities)[0]
 			or die("Could not connect data to security");
 		eval {
-			my $datetime = $datetime_parser->parse_datetime($data{time});
+			my $datetime = parse_datetime($data{time});
 			die("could not parse time") unless $datetime;
 			push(@quotes, new StockPlay::Quote({
 				time		=> $datetime,
@@ -230,7 +250,7 @@ sub getQuotes {
 			}));
 		};
 		if ($@) {
-			print "ERROR: could not create a quote for $site_id\n";
+			print "ERROR: could not create a quote for $site_id: $@";
 		}
 		
 	}

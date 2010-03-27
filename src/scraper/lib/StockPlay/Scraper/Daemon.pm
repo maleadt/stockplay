@@ -220,7 +220,7 @@ sub run {
 		foreach my $quote (@quotes) {
 			my %s_quote = (
 				ISIN	=> $quote->security,
-				TIME	=> $quote->time->strftime('%Y%m%dT%H:%M:%S'),
+				TIME	=> sub { to_datetime($quote->time) },
 				PRICE	=> $quote->price,
 				BID	=> $quote->bid,
 				ASK	=> $quote->ask,
@@ -229,16 +229,12 @@ sub run {
 				OPEN	=> $quote->open,
 				VOLUME	=> $quote->volume
 			);
-			use Data::Dumper;
-			print Dumper(\%s_quote);
-			foreach my $key (keys %s_quote) {
-				print "Ref for $key is ", ref(ref $s_quote{$key}), "\n";
-			}
 			eval {
 				$self->call("SCALAR", 'Finance.Security.Update', \%s_quote);
 			}; if ($@) {
 				print "ERROR: could not update security ", $quote->security, " ($@)\n";
 			}
+			print "DEBUG: Sent request: ", $self->xmlrpc->xml_out(), "\n";
 			exit();
 		}
 		
@@ -281,6 +277,12 @@ sub call {
 	} else {
 		return $result;
 	}
+}
+
+sub to_datetime {
+	my ($datetime) = @_;
+	
+	return { "dateTime.iso8601", $datetime->strftime('%Y%m%dT%H:%M:%S') };
 }
 
 1;
