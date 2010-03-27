@@ -2,7 +2,7 @@
 
 Voorafgaand aan de start van het spel is er een inschrijvingsperiode. (Uitbreiding: Spelers kunnen zich registeren met behulp van hun eID.) Spelers die zich registeren voor de start van het spel verkrijgen 100.000 euro virtuele cash.
 
-Het spel start op een vastgestelde moment: op 1 maart 2010 om 8u 's morgens, Central European Time. Gebruikers die na de start van het spel registreren krijgen een ander startbudget. Maximaal verkrijgen de spelers startbudget van 100.000 euro. Is de reÃ«le beurs sinds de start van het spel negatief geÃ«volueerd, dan wordt het startbudget ook in verhouding evenveel verlaagd.
+Het spel start op een vastgesteld moment: op 1 maart 2010 om 8u 's morgens, Central European Time. Gebruikers die na de start van het spel registreren krijgen een ander startbudget. Maximaal verkrijgen de spelers een startbudget van 100.000 euro. Is de re\"ele beurs sinds de start van het spel negatief ge\"evolueerd, dan wordt het startbudget ook in verhouding evenveel verlaagd.
 
 Van zodra gebruikers geregistreerd zijn, hebben de gebruikers toegang tot hun portfolio en kunnen daar effecten aan worden toegevoegd.
 
@@ -19,7 +19,7 @@ De gebruiker kan effecten aankopen en verkopen van onderstaande types:
 
 Tijdens het verloop van het spel worden er op gezette tijden (per dag/week/maand) klassementen opgemaakt met daarin het relatief rendement dat de spelers konden neerzetten. Op basis van deze tussenklassementen worden er ook punten toegekend, waarmee ook een apart puntenklassement wordt opgemaakt. Dit puntenklassement geeft een eerlijkere kijk op de prestaties van de speler, en zorgt ervoor dat niet enkel het uiteindelijke rendement tussen de start- en einddatum van belang is, maar ook de continue goede prestaties tijdens de duur van het spel.
 
-Het spel eindigt op 31 mei 2010, waarna een eindklassement wordt opgemaakt. De koersen op de website worden niet meer geÃ¼pdatet, en er kunnen ook geen transacties meer gedaan worden. Gebruikers kunnen wel nog steeds authenticeren op de website om statistieken van hun spelverloop te raadplegen.
+Het spel eindigt op 31 mei 2010, waarna een eindklassement wordt opgemaakt. De koersen op de website worden niet meer ge\"updatet, en er kunnen ook geen transacties meer gedaan worden. Gebruikers kunnen wel nog steeds authenticeren op de website om statistieken van hun spelverloop te raadplegen.
 
 \section{Website}
 
@@ -32,14 +32,14 @@ Het spel eindigt op 31 mei 2010, waarna een eindklassement wordt opgemaakt. De k
 \subsection{Uitwerking use cases}
 
 \subsubsection{Lidmaatschap aanvragen}
-\paragraph{Beschrijving}Een natuurlijk persoon kan zich inschrijven voor een lidmaatschap. Dit lidmaatschap is een vereiste om de interactieve delen van de website te kunnen beleven. Deze procedure bestaat uit een aantal velden die naar waarheid in te vullen zijn en een aantal velden waar men een waarde voor kan kiezen.
-\paragraph{Primaire actoren}Een natuurlijk persoon die de interactieve delen van de website wil gebruiken
+\paragraph{Beschrijving}Een persoon kan zich inschrijven voor een lidmaatschap. Dit lidmaatschap is een vereiste om de interactieve delen van de website te kunnen beleven. Deze procedure bestaat uit een aantal velden die naar waarheid in te vullen zijn en een aantal velden waar men een waarde voor kan kiezen.
+\paragraph{Primaire actoren}Een persoon die de interactieve delen van de website wil gebruiken
 \paragraph{Doel}De speler verkrijgt een lidmaatschap. Via dit lidmaatschap kunnen we een persoon (een speler) koppelen aan zijn portfolio.
 \paragraph{Precondities}De speler bezitte een geldig email adres, een eID lezer en hij was nog niet in bezit van een lidmaatschap (een persoon bezit een lidmaatschap als hij de combinatie gebruikersnaam en wachtwoord kent of over een eID bezit waar een lidmaatschap aan gekoppeld is). \small{Lidmaatschap aanvragen is pas mogelijk vanaf 1 maart 2010, 8u, Central European Time.}
 \paragraph{Postcondities}In de database zit een nieuw record waarmee we de speler kunnen authenticeren en waaraan zijn instellingen en portfolio gekoppeld worden.
 \paragraph{Triggers}Een persoon zit op de inleidende website en kiest daar voor de optie "Registreren".
 \paragraph{Notities}De velden die de gebruiker op de afzonderlijke registratie pagina dient in te vullen zijn terug te vinden in het database schema van de gebruikers. Alle velden zijn verplicht.
-\paragraph{Business rules}Het registreren (en dus onrechtstreeks het spelen van het beursspel) moet aangemoedigd worden vanuit gastsite.
+\paragraph{Business rules}Het registreren (en dus onrechtstreeks het spelen van het beursspel) moet aangemoedigd worden vanuit de gastsite.
 \paragraph{Prioriteit}Gemiddeld
 \paragraph{Complexiteit}Laag
 \paragraph{Successcenario}
@@ -52,7 +52,7 @@ Het spel eindigt op 31 mei 2010, waarna een eindklassement wordt opgemaakt. De k
  \item Speler bevestig zijn registratie
  \item \label{def:lidmaatschap:bevestiging} Speler krijgt een bevestiging van zijn registratie
 \end{enumerate}
-\paragraph{Alternatieve scenarioâ€™s}
+\paragraph{Alternatieve scenario's}
 Alternatief voor \ref{def:lidmaatschap:bevestiging}:
 \begin{itemize}
  \item Speler is een vereist veld vergeten en krijgt de mogelijkheid om dit aan te passen
@@ -63,28 +63,29 @@ Alternatief voor \ref{def:lidmaatschap:bevestiging}:
 \paragraph{Beschrijving}De website zal uit drie delen bestaan. Een deel bestaat uit een of meerdere pagina's. Een deel zal enkel zichtbaar zijn voor niet geauthenticeerde gebruikers of bezoekers zonder lidmaatschap. Een ander deel zal zichtbaar zijn voor zowel niet geauthenticeerde bezoekers als geauthenticeerde bezoekers. Geauthenticeerde bezoekers hebben dan ook nog toegang tot een enkel voor hen zichtbare derde deel. Het is in dat deel dat de interactieve site zich bevindt.
 \paragraph{Primaire actoren} Bezoekers zonder lidmaatschap die er wel een willen aanvragen, bezoekers zonder lidmaatschap die enkel op zoek zijn naar informatie over het spel en bezoekers met lidmaatschap die zich willen authenticeren voor toegang tot het voor hen zichtbare deel.
 \paragraph{Doel} Bezoekers snel laten inloggen, bezoekers informeren over het spel, bezoekers doorheen de registratieprocedure leiden.
-\paragraph{Precondities} De gastsite heeft de zelfde precondities als de overige delen van de website. De surfer was voorzien van een breedband internetverbinding, een desktop of draagbare computer met daarop een gangbaar en recent besturingssysteem en bijhorende standaard compatibele internetbrowser.
+\paragraph{Precondities} De gastsite heeft dezelfde precondities als de overige delen van de website. De surfer was voorzien van een breedband internetverbinding, een desktop of draagbare computer met daarop een gangbaar en recent besturingssysteem en bijhorende standaard compatibele internetbrowser.
 \paragraph{Postcondities} De gebruiker was ingelogd, geregistreerd of was voldoende geÃ¯nformeerd over het spel.
 \paragraph{Triggers} De surfer bezoekt de website door het ingeven van het webadres, het aanklikken van een favoriet in zijn internetbrowser of na het klikken op een webverwijzing op een andere internetwebsite.
 \paragraph{Notities} Het gastgedeelte zal op elke pagina een module bevatten waarmee bezoekers met lidmaatschap zich snel kunnen authenticeren.\small{Om de surfer te informeren over het spel zullen verschillende pagina's voorzien worden. Op die pagina's zijn visuele hulpmiddelen voorzien zoals afbeeldingen waarop te zien is hoe bepaalde spelprocedures verlopen en eventueel ook ondersteunde filmen.}
-\paragraph{Business rules}Het is op dit gedeelte van de site dat de surfer en potentiÃ«le speler overtuigd moet worden om actief mee te spelen.
+\paragraph{Business rules}Het is op dit gedeelte van de site dat de surfer en potenti\"ele speler overtuigd moet worden om actief mee te spelen.
 \paragraph{Prioriteit}Laag
 \paragraph{Complexiteit}Laag
 \paragraph{Successcenario}
 \begin{enumerate}
  \item Speler bezoekt de website
  \item Speler navigeert naar de juiste pagina
- \item Speler is voldoende geÃ¯nformeerd
+ \item Speler is voldoende ge\"'nformeerd
 \end{enumerate}
 
+\todo{De beschrijving van deze use case is gewoon een kopie van de vorige?? -Dieter}
 \subsubsection{Inloggen}
 \paragraph{Beschrijving} De website zal uit drie delen bestaan. Een deel bestaat uit een of meerdere pagina's. Een deel zal enkel zichtbaar zijn voor niet geauthenticeerde gebruikers of bezoekers zonder lidmaatschap. Een ander deel zal zichtbaar zijn voor zowel niet geauthenticeerde bezoekers als geauthenticeerde bezoekers. Geauthenticeerde bezoekers hebben dan ook nog toegang tot een enkel voor hen zichtbare derde deel. Het is in dat deel dat de interactieve site zich bevindt. Dat deel is enkel toegankelijk voor geauthenticeerde bezoekers.
 \paragraph{Actoren} Bezoekers met lidmaatschap die toegang willen tot het interactieve deel van de website.
 \paragraph{Doel} Een bezoeker koppelen aan zijn lidmaatschap en dus onrechtstreeks aan zijn portfolio, puntentotaal en instellingen.
 \paragraph{Precondities} De bezoeker bezit reeds een lidmaatschap en beschikt over voldoende informatie en hulpmiddelen om aan te kunnen tonen dat dit lidmaatschap van hem of haar is.
 \paragraph{Postcondities} De gebruiker is geauthenticeerd.
-\paragraph{Triggers} De gebruiker vult zijn gebruikersnaam en wachtwoord in of verbind zijn eID met de applicatie. Dit gebeurd vanaf de gastpagina.
-\paragraph{Notities} Het kan zijn dat de gebruiker niet moet inloggen omdat dit reeds voorheen gebeurd is en een bepaald mechanisme met een cookie de authenticatie reeds verzocht heeft. Dit laatste gebeurd dan onzichtbaar voor de gebruiker.
+\paragraph{Triggers} De gebruiker vult zijn gebruikersnaam en wachtwoord in of verbind zijn eID met de applicatie. Dit gebeurt vanaf de gastpagina.
+\paragraph{Notities} Het kan zijn dat de gebruiker niet moet inloggen omdat dit reeds voorheen gebeurd is en een bepaald mechanisme met een cookie de authenticatie reeds verzocht heeft. Dit laatste gebeurt dan onzichtbaar voor de gebruiker.
 \paragraph{Prioriteit}Hoog
 \paragraph{Complexiteit}Hoog
 \paragraph{Successcenario}
@@ -101,10 +102,10 @@ Alternatief voor \ref{def:inloggen:bevestiging}:
 
 \subsubsection{De gebruiker bekijkt zijn eigen Portfolio}
 \paragraph{Beschrijving} De gebruiker ziet een webpagina met daarop de effecten die deze momenteel in bezit heeft, de historische aankoopprijs per stuk, de historische aankoopprijs in totaal, de huidige koers, het rendement en het verschil op de waarde sinds de aankoop van het effect.
-\paragraph{Actoren} De speler bekijkt het portfolio. De huidige waarde hangt af van de reÃ«le beursevolutie (de scappers volgen deze evolutie).
+\paragraph{Actoren} De speler bekijkt het portfolio. De huidige waarde hangt af van de re\"ele beursevolutie (de scrapers volgen deze evolutie).
 \paragraph{Doel} De gebruiker ziet zijn portfolio en de gegevens die interessant zijn om erbij te zien.
 \paragraph{Precondities} De gebruiker is ingelogd.
-\paragraph{Triggers} De gebruiker kiest in het linkermenu de optie "Portfolio" aan.
+\paragraph{Triggers} De gebruiker kiest in het linkermenu de optie "Portfolio".
 \paragraph{Prioriteit}Hoog
 \paragraph{Complexiteit}Laag
 \paragraph{Successcenario}
@@ -114,9 +115,10 @@ Alternatief voor \ref{def:inloggen:bevestiging}:
  \item Een overzicht van de speler zijn huidige portfolio wordt getoond
 \end{enumerate}
 
+\todo{In deze use case staan al die verschillende orders beschreven. Maar die staan al uitgewerkt in "`Module geavanceerde orders"'! Het lijkt me best om hier gewoon een opsomming te geven van de mogelijkheden en te refereren naar dat ander hoofdstuk.}
 \subsubsection{Effecten aankopen}
 
-\paragraph{Overzicht}Een gebruiker kan zijn portfolio invullen of aanvullen door effecten bij te kopen. De speler kan effecten bijkopen van een reeks die hij/zei reeds bezit of een nieuwe reeks aankopen. Een effect kan nooit rechtstreeks aangekocht worden, dit gebeurd met een tussenstap. Deze tussenstap noemen we het plaatsen van een order. Een order bestaat er in twee types; een aankooporder of een verkooporder. Een order heeft een voorwaarde, type, aantal, eigenaar en effect. Orders worden periodiek (elke minuut) bekeken. Als aan de voorwaarde voldaan wordt, dan wordt het order omgezet in een effectieve aankoop of verkoop. Dan pas worden de effecten toegevoegd of verwijderd van het spelers portfolio. Het kan dus zijn dat een geplaatst order pas in de verre toekomst uitgevoerd wordt of in zijn geheel niet uitgevoerd wordt. De voorwaarden die op een order ingezet kunnen worden houden we in een eerste fase beperkt. Maar deze kunnen later aangevuld worden met geavanceerde orders, zoals ook te zien bij de huidige gespecialiseerde brokers. We beginnen met drie typen van orders:
+\paragraph{Overzicht}Een gebruiker kan zijn portfolio invullen of aanvullen door effecten bij te kopen. De speler kan effecten bijkopen van een effect die hij/zei reeds bezit of een nieuwe reeks aankopen. Een effect kan nooit rechtstreeks aangekocht worden, dit gebeurt met een tussenstap. Deze tussenstap noemen we het plaatsen van een order. Een order bestaat er in twee types; een aankooporder of een verkooporder. Een order heeft een voorwaarde, type, aantal, eigenaar en effect. Orders worden periodiek (elke minuut) bekeken. Als aan de voorwaarde voldaan wordt, dan wordt het order omgezet in een effectieve aankoop of verkoop. Dan pas worden de effecten toegevoegd of verwijderd van het spelers portfolio. Het kan dus zijn dat een geplaatst order pas in de verre toekomst uitgevoerd wordt of in zijn geheel niet uitgevoerd wordt. De voorwaarden die op een order ingezet kunnen worden houden we in een eerste fase beperkt. Maar deze kunnen later aangevuld worden met geavanceerde orders, zoals ook te zien is bij de huidige gespecialiseerde brokers. We beginnen met drie typen van orders:
 
 \begin{itemize}
  \item Voer onmiddellijk uit, ongeacht de huidige koers.
@@ -148,7 +150,7 @@ Alternatief voor \ref{def:aankopen:bevestiging}:
 \subsubsection{Effecten verkopen}
 Een effect verkopen verloopt op dezelfde manier als een effect aankopen. Er wordt ook een order aangemaakt voor een aantal effecten. Resulteert de voorwaarde van het order positief, dan worden zoveel effecten verkocht. Als een gebruiker geen effecten meer overhoudt van een bepaald symbool, dan wordt dit uit het portfolio gehaald.
 \paragraph{Actoren} De speler plaatst een order
-\paragraph{Doel} Een order plaatsen welke tot doel heeft omgezet te worden in een effectief order. Dit wordt bepaald door de voorwaarde die gevalueerd wordt ten op zichtte van de huidige beursevolutie. Het onrechtstreekse doel is het uitbreiden van het virtueel portfolio van de speler.
+\paragraph{Doel} Een order plaatsen welke tot doel heeft omgezet te worden in een effectief order. Dit wordt bepaald door de voorwaarde die ge\"evalueerd wordt ten op zichte van de huidige beursevolutie. Het onrechtstreekse doel is het uitbreiden van het virtueel portfolio van de speler.
 \paragraph{Precondities} De gebruiker zijn cash positie moet voldoen om het order te plaatsen en uit te voeren.
 \paragraph{Postcondities} Een order is geplaatst en kan later uitgevoerd worden, mislukken of verlopen.
 \paragraph{Triggers} De aankooppagina wordt getoond door het activeren van een optie op een effectenpagina.
@@ -168,11 +170,12 @@ Alternatief voor \ref{def:verkopen:bevestiging}:
 \end{enumerate}
 
 \subsubsection{Overzicht opvragen van de effecten die je in het spel actief kan verhandelen}
-\paragraph{Beschrijving} Een effect op de beurs kan ofwel opgenomen worden door onze scrappers of buiten bereik liggen van onze scrappers.
-Als deze binnen het bereik van een of meerdere scrappers valt, dan worden er gegevens van bijgehouden in onze dataopslag. Een effect kan dan nog onderverdeeld worden onder effecten die onzichtbaar zijn op de site, effecten die geschorst zijn en dus niet actief verhandeld kunnen worden en actief te verhandelen effecten. Bij het overzicht worden de gescrapte actieve of geschorste effecten getoond. Hierop kunnen dan filters geplaatst worden om de lijst in te korten.
-\paragraph{Doel} Een effect kunnen vinden waarvan je de detail pagina van wil bekijken. Met het onrechtstreekse doel op geschikt effect een order te plaatsen. Een detail pagina vind je door in het overzicht een aandeel aan te klikken.
+\paragraph{Beschrijving} Een effect op de beurs kan ofwel opgenomen worden door onze scrapers of buiten bereik liggen van onze scrapers.
+Als deze binnen het bereik van een of meerdere scrapers valt, dan worden er gegevens van bijgehouden in onze dataopslag. Een effect kan dan nog onderverdeeld worden onder effecten die onzichtbaar zijn op de site, effecten die geschorst zijn en dus niet actief verhandeld kunnen worden en actief te verhandelen effecten. Bij het overzicht worden de gescrapete actieve of geschorste effecten getoond. Hierop kunnen dan filters geplaatst worden om de lijst in te korten.
+\paragraph{Doel} Een effect kunnen vinden waarvan je de detailpagina wil bekijken. Met het onrechtstreekse doel op het geschikte effect een order te plaatsen. Een detail pagina vind je door in het overzicht een aandeel aan te klikken.
 \paragraph{Postcondities} De speler ziet een pagina met daarin een lijst van effecten die voldoen aan zijn ingestelde of geselecteerde filter
-\paragraph{Triggers} Via het menu vraag de speler de overzichtspagina op\paragraph{Notities} Er kan een combinatie van volgende filters ingesteld worden op de site:
+\paragraph{Triggers} Via het menu vraagt de speler de overzichtspagina op
+\paragraph{Notities} Er kan een combinatie van volgende filters ingesteld worden op de site:
 
 \begin{itemize}
 	\item Type
@@ -187,7 +190,7 @@ Als deze binnen het bereik van een of meerdere scrappers valt, dan worden er geg
 \end{itemize}
 
 \paragraph{Notities}In het overzicht zijn naast de link naar de detailpagina ook knoppen voorzien om rechtstreeks een aankoop of verkoop order te plaatsen op een bepaald effect.
-\paragraph{Business rules}Een aantal combinaties van filters moeten reeds voor ingesteld worden door de beheerders en gemakkelijk te selecteren zijn vanuit het menu.
+\paragraph{Business rules}Een aantal combinaties van filters moeten reeds vooraf ingesteld worden door de beheerders en gemakkelijk te selecteren zijn vanuit het menu.
 \paragraph{Prioriteit}Laag
 \paragraph{Complexiteit}Laag
 \paragraph{Successcenario}
@@ -207,7 +210,7 @@ Als deze binnen het bereik van een of meerdere scrappers valt, dan worden er geg
 \end{itemize}
 Het tijdsinterval kan de speler bepalen door een dubbele slider te verslepen. Deze slider heeft een beginpunt en een eindpunt. De periode wordt bepaald door deze twee punten en dus de grote van de periode door het verschil van het eindpunt en het beginpunt.
 \paragraph{Triggers} De surfer selecteert het overzichtsscherm in het menu op de linkerzijde van het scherm.
-\paragraph{Notities} De resultaten wordt getoond in tabellen die via een synchrome AJAX request opgehaald worden na het verplaatsen van een van beide punten van de slider.
+\paragraph{Notities} De resultaten worden getoond in tabellen die via een synchrome AJAX request opgehaald worden na het verplaatsen van een van beide punten van de slider.
 \paragraph{Prioriteit}Laag
 \paragraph{Complexiteit}Laag
 
@@ -269,8 +272,6 @@ Het tijdsinterval kan de speler bepalen door een dubbele slider te verslepen. De
 
 \section{Desktopapplicatie}
 
-\todo{vormgeving laten overeenstemmen met analyse webapplicatie, of omgekeerd}
-
 \begin{figure}[h!]
 	\centering
 		\includegraphics[width=0.5\textwidth]{images/analyse/ucd_desktop}
@@ -315,7 +316,7 @@ Het tijdsinterval kan de speler bepalen door een dubbele slider te verslepen. De
 \begin{enumerate}
  \item De administrator opent het statusmenu.
  \item De desktopapplicatie vraagt de backend om de status van de verschillende servers te controleren.
- \item De applicatie toont een paneel met de status van de servers samen met mogelijk acties die de administrator kan ondernemen.
+ \item De applicatie toont een paneel met de status van de servers samen met mogelijke acties die de administrator kan ondernemen.
  \item In het menu worden snelkoppelingen naar uitgebreidere statuspagina's getoond.
 \end{enumerate}
 \paragraph{Alternatieve Scenario's}
@@ -338,7 +339,7 @@ Het tijdsinterval kan de speler bepalen door een dubbele slider te verslepen. De
  \item De applicatie vraagt een lijst van recent geregistreerde gebruikers op bij de back-end en ontvangt deze via XML-RPC. Deze lijst wordt getoond aan de gebruiker in de vorm van een tabel.
  \item De administrator past filters toe om de getoonde lijst te beperken tot de gewenste gebruikers.
  \item Alle gebruikers die aan de filter voldoen worden opgehaald uit de databank en de backend stuurt deze terug via XML-RPC.
- \item De administrator kiest een gebruiker uit de tabel en de voert actie “Gebruiker bewerken” uit.
+ \item De administrator kiest een gebruiker uit de tabel en voert de actie \"Gebruiker bewerken\" uit.
  \item Er wordt een modaal venster getoond met daarin alle beschikbare gegevens van de gebruiker. Niet aanpasbare gegevens worden uitgegrijsd.
  \item De administrator brengt de gewenste wijzigen aan en kiest OK.
  \item De nieuwe gegevens worden doorgestuurd naar de backend.
@@ -353,7 +354,7 @@ Het tijdsinterval kan de speler bepalen door een dubbele slider te verslepen. De
 
 \subsubsection{Effect schorsen of verbergen}
 \paragraph{Beschrijving} Als er problemen zijn met een bepaald effect kan een administrator deze schorsen om het verhandelen ervan onmogelijk te maken. Eventueel kan het effect ook onzichtbaar gemaakt worden.
-\paragraph{Doel} Het effect is nu niet meer verhandelbaar in het spel, of is onzichtbaar gemaakt.
+\paragraph{Doel} Het effect is nu niet meer verhandelbaar in het spel, of is onzichtbaar gemaakt
 \paragraph{Triggers}De administrator is ingelogd en bevindt zich in het effectenbeheermenu
 \paragraph{Prioriteit}Hoog
 \paragraph{Complexiteit}Laag
@@ -364,9 +365,9 @@ Het tijdsinterval kan de speler bepalen door een dubbele slider te verslepen. De
  \item De administrator opent het effectenbeheermenu.
  \item De applicatie toont alle beschikbare effecten in een tabel samen met hun belangrijkste gegevens.
  \item De administrator kan desgewenst een filter toepassen om de lijst te beperken.
- \item De administrator selecteert één of meerdere effecten die hij wil aanpassen.
- \item De actie “Effect(en) verbergen” of “Effect(en) schorsen” wordt gekozen.
- \item De veranderingen worden doorgestuurd naar de backend en deze past ze aan in de databank.
+ \item De administrator selecteert \'e\'en of meerdere effecten die hij wil aanpassen.
+ \item De actie \"Effect(en) verbergen\" of \"Effect(en) schorsen\" wordt gekozen.
+ \item De veranderingen worden doorgestuurd naar de backend en deze past de databank aan.
 \end{enumerate}
 \paragraph{Alternatieve Scenario's}
 \begin{enumerate}
@@ -387,10 +388,10 @@ Het tijdsinterval kan de speler bepalen door een dubbele slider te verslepen. De
  \item De applicatie krijgt een beperkte lijst van gebruikers die het ontvangt vanuit de back-end.
  \item De administrator past filters toe om de getoonde lijst te beperken tot de gewenste gebruikers.
  \item Alle gebruikers die aan de filter voldoen worden opgehaald uit de databank en de backend stuurt deze terug via XML-RPC.
- \item De administrator selecteert de gewenste gebruikers en kiest voor “Gebruiker deactiveren”.
+ \item De administrator selecteert de gewenste gebruikers en kiest voor \"Gebruiker deactiveren\".
  \item Er wordt een venster getoond met daarin de mogelijkheid om een tijdsduur in te geven of een checkbox die aangeeft dat deze gebruiker permanent moet verbannen worden.
  \item De wijzigingen worden gestuurd naar de backend en deze past de gebruikers aan in de databank.
- \item De administrator krijgt opnieuw het gebruikersoverzicht te zien..
+ \item De administrator krijgt opnieuw het gebruikersoverzicht te zien.
 \end{enumerate}
 \paragraph{Alternatieve Scenario's}
 \begin{enumerate}

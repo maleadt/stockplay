@@ -207,11 +207,11 @@ De desktopapplicatie is opgesplitst in drie grote componenten.
 
 \subsection{Backend protocol}
 
-Om toegang te krijgen tot de backend vanuit de verschillende andere delen van het project (zoals de scraper, AI, of interfaces) moesten we op zoek naar een goed communicatieprotocol die aan verschillende vereisten moet voldoen:
+Om toegang te krijgen tot de backend vanuit de verschillende andere delen van het project (zoals de scraper, AI, of interfaces) moesten we op zoek gaan naar een goed communicatieprotocol dat aan verschillende vereisten moet voldoen:
 \begin{itemize}
 \item{taalonafhankelijk: aangezien de interfaces met behulp van verschillende programmeertalen gerealiseerd worden, moet de interface toegankelijk zijn vanuit verschillende programmeertalen.}
 \item{lichtgewicht: voor de communcicatie met onze mobiele interface, moet de gegenereerde data compact gehouden worden.}
-\item{toegankelijk: de interfaces moeten toegankelijk zijn vanaf een andere machine dan die waar de backand op draait.}
+\item{toegankelijk: de interfaces moeten toegankelijk zijn vanaf een andere machine dan die waar de backend op draait.}
 \end{itemize}
 
 Zo hebben we een aantal protocollen overwogen:
@@ -225,7 +225,7 @@ Zo hebben we een aantal protocollen overwogen:
 Het binair protocol viel nogal snel af, aangezien lastig is om te implementeren, relatief foutgevoelig is, en geen garanties biedt qua toegankelijkheid. RMI was ons niet toegestaan te gebruiken, waardoor nog twee kandidaten overbleven: SOAP en XML-RPC. Bij het vergelijken van beide bleek SOAP nogal zwaarwichtig te zijn, en bovendien veel te uitgebreid voor onze (relatief eenvoudige) eisen.
 
 Zo hebben we uiteindelijk gekozen voor het XML-RPC protocol. Dit is een lichtgewicht Remote Procedure protocol, die methodeaanvragen en -antwoorden verpakt in XML-data en ze als POST request verstuurd over het HTTP protocol (zie ook bijlage \ref{chap:xml-rpc} voor de specificaties).
-Het protocol voldoet ook aan de opgestelde eisen: aangezien het verder bouwt op het bestaande HTTP-protocol kan het gebruik maken van diens mogelijkheden (zoals compressie en encryptie) en kan het (indien een specifieke bibliotheek onbestaande zou zijn) eenvoudig verwerkt worden met behulp van reeds bestaande HTTP- en XML-bibliotheken. Bovendien verschilt de communicatie niet van regulier HTTP-verkeer waardoor de toegankelijkheid in gelimiteerde netwerkomgevingen ook toeneemt.
+Het protocol voldoet ook aan de opgestelde eisen: aangezien het verder bouwt op het bestaande HTTP-protocol kan het gebruik maken van diens mogelijkheden (zoals compressie en encryptie) en kan het (indien een specifieke bibliotheek niet beschikbaar zou zijn) eenvoudig verwerkt worden met behulp van reeds bestaande HTTP- en XML-bibliotheken. Bovendien verschilt de communicatie niet van regulier HTTP-verkeer waardoor de toegankelijkheid in gelimiteerde netwerkomgevingen ook toeneemt.
 
 Voor de programmeertalen die we gaan gebruiken bij het implementeren bleken er reeds verschillende bibliotheken beschikbaar te zijn, wat het gemak van gebruik opnieuw verhoogt. Een opsomming van de specifieke bibliotheken die we zullen gebruiken om informatie te versturen en ontvangen over het XML-RPC protocol:
 \begin{itemize}
@@ -235,11 +235,11 @@ Voor de programmeertalen die we gaan gebruiken bij het implementeren bleken er r
 \item{\textbf{Java ME}: \makeurl{kXML-RPC}{http://kxmlrpc.sourceforge.net/}}
 \end{itemize}
 
-Deze keuzes zijn eveneens voorzichtig gemaakt. Zo kent Perl nog verschillende andere XML-RPC bibliotheken (zoals de officiële \makeurl{RPC::XML}{http://search.cpan.org/dist/RPC-XML/} bibliotheek), waarvan XML::RPC verschilt in het beperkt aantal afhankelijkheden. Om XML-RPC te gebruiken in Java zijn er ook alternatieven, zoals de \makeurl{Redstone XML-RPC bibliotheek}{http://xmlrpc.sourceforge.net/} die afviel door .... Voor C\# en Java.ME hebben we geen alternatieve bibliotheken gevonden.
+Deze keuzes zijn eveneens voorzichtig gemaakt. Zo kent Perl nog verschillende andere XML-RPC bibliotheken (zoals de offici\"ele \makeurl{RPC::XML}{http://search.cpan.org/dist/RPC-XML/} bibliotheek), waarvan XML::RPC verschilt in het beperkt aantal afhankelijkheden. Om XML-RPC te gebruiken in Java zijn er ook alternatieven, zoals de \makeurl{Redstone XML-RPC bibliotheek}{http://xmlrpc.sourceforge.net/} die afviel door .... Voor C\# en Java.ME hebben we geen alternatieve bibliotheken gevonden.
 
 \section{Dynamische grafieken}
 
-Op de internetwebsite zullen we een extra module ontwikkelen waarin grafieken dynamisch gemanipuleerd kunnen worden. De gebruikers zullen met eenvoudige muishandelingen andere grafische weergaven van de grafieken kunnen opvragen, zonder de pagina te herladen. Hiervoor zal gebruik gemaakt worden van de interpreter taal Javascript en de javascript bibliotheken \makeurl{JQuery}{http://jquery.com/} en \makeurl{Flot}{http://code.google.com/p/flot/}. JQuery is benodigd om de Flot bibliotheek werkend te krijgen en kunnen we ook op andere plaatsen op de website gebruiken. Deze bibliotheek gaat wat extra functies aan de HTML-elementen hangen en geeft onze eenvoudige middelen om met AJAX extra informatie op te halen.
+Op de internetwebsite zullen we een extra module ontwikkelen waarin grafieken dynamisch gemanipuleerd kunnen worden. De gebruikers zullen met eenvoudige muishandelingen andere grafische weergaven van de grafieken kunnen opvragen, zonder de pagina te herladen. Hiervoor zal gebruik gemaakt worden van de interpreter taal Javascript en de javascript bibliotheken \makeurl{JQuery}{http://jquery.com/} en \makeurl{Flot}{http://code.google.com/p/flot/}. JQuery is benodigd om de Flot bibliotheek werkend te krijgen en kunnen we ook op andere plaatsen op de website gebruiken. Deze bibliotheek gaat wat extra functies aan de HTML-elementen hangen en geeft ons eenvoudige middelen om met AJAX extra informatie op te halen.
 
 We gebruiken Flot omdat aan deze bibliotheek nog acief ontwikkeld wordt. Alsook is ze heel eenvoudig gehouden en kan je er makkelijk op voortbouwen. Je kan er op voortbouwen door de ingebouwde events op te vangen en door gebruik te maken van de ingebouwde plugin functionaliteit. Er is ook ondersteuning voor datumweergave en er zijn plugins waarmee je een selectievenster op de grafiek kan activeren (om in te zoomen) en om de grafiek te kunnen verslepen.
 De grafieken worden getekend met een combinatie van HTML elementen en het CANVAS element. De HTML elementen kunnen we gemakkelijk vormgeven met CSS. Canvas wordt geëmuleerd in Internet Explorer. Alsook kunnen we de grafieken van deze bibliotheek op een eenvoudige manier vullen met JSON.

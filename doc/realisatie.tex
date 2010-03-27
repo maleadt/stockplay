@@ -50,6 +50,7 @@ Hogere-orde klassen zijn eventueel ook mogelijk (zoals \emph{System.Database}), 
 
 De XML-RPC specificatie biedt ook ondersteuning voor foutberichten, in de form van een bericht met een $<$fault$>$ tag. Die tag moet steeds twee $<$member$>$ tags bevatten, namelijk een foutcode $<$faultCode$>$ van het integer type, en een foutbericht $<$faultString$>$ van het string type. Elk van de klassen kan zo specifieke foutmeldingen vastleggen.
 Maar er zijn ook generieke foutmeldingen, die van toepassing zijn op alle klassen. Deze foutmeldingen, waarvan de foutcode in het bereik $[0, 100[$ valt, worden hieronder beschreven:
+\todo{De lijst van foutmeldingen staat er niet rechstreeks onder. -Dieter}
 
 \begin{table}
 \begin{tabular}{| c p{5cm} p{7cm} |}
@@ -429,7 +430,7 @@ Tenslotte zijn er nog de methodes gerelateerd met het effectieve beurswezen, die
 		\begin{itemize}
 		\item{...}
 		\end{itemize} }
-	{ niks }
+	{ aantal aangepaste effecten }
 	{ administrator-rechten of scraper-rechten }
 
 \function{Security.Create}
@@ -440,6 +441,12 @@ Tenslotte zijn er nog de methodes gerelateerd met het effectieve beurswezen, die
 		\end{itemize} }
 	{ niks }
 	{ administrator-rechten of scraper-rechten }
+	
+\function{Security.Delete}
+{ een effect verwijderen }
+{ een filter }
+{ aantal verwijderde effecten }
+{ administrator-rechten of scraper-rechten }
 
 \function{Security.Details}
 	{ defail-informatie van een effect opvragen }
@@ -516,11 +523,11 @@ De scraper is een elementair gedeelte van StockPlay, daar het hele project nood 
 
 \section{Databronnen}
 
-Vooraleer een scraper te ontwerpen, was het belangrijk de mogelijke bronnen te identificeren. Logischerwijs beperken we ons tot de gratis-beschikbare bronnen, maar zelfs dan zijn er verschillende sites die aan onze eisen voldoen. Om uiteindelijk een zo uitgebreid-mogelijke dataset te hebben, besloten we om het mogelijk te maken verschillende databronnen tegelijk te gebruiken.
+Vooraleer een scraper te ontwerpen, was het belangrijk de mogelijke bronnen te identificeren. Logischerwijs beperken we ons tot gratis beschikbare bronnen, maar zelfs dan zijn er verschillende sites die aan onze eisen voldoen. Om uiteindelijk een zo uitgebreid mogelijke dataset te hebben, besloten we om het mogelijk te maken verschillende databronnen tegelijk te gebruiken.
 
 \subsection{De Tijd}
 
-Een eerste kandidaat om onze scraper op te laten werken, was de website van De Tijd. Deze site voorziet in een uitgebreid zicht op de aandelen en indexen van verschillende beurzen, en heeft zelf ondersteuning voor realtime-updates van die data. Verder onderzoek van hoe die realtime updates gebeurden - en het reverse-engineering van de bijhorende HTTP-based API - leverde ons nogal snel een compact Perl-script op dat in staat was de aandelen en indexen van een bepaalde beurs eenmalig op te halen, om in een later stadium dan de effectieve koersen op te halen via de aangeboden API in kwestie.
+Een eerste kandidaat om onze scraper op te laten werken, was de website van De Tijd. Deze site voorziet in een uitgebreid zicht op de aandelen en indexen van verschillende beurzen, en heeft zelf ondersteuning voor realtime updates van die data. Verder onderzoek van hoe die realtime updates gebeurden - en het reverse-engineeren van de bijhorende HTTP-based API - leverde ons nogal snel een compact Perl-script op dat in staat was de aandelen en indexen van een bepaalde beurs eenmalig op te halen, om in een later stadium dan de effectieve koersen op te halen via de aangeboden API in kwestie.
 
 Aangezien deze bron een hele waaier aan aandelen zichtbaar maakt, er veel data over publiceert, en bovendien die data beschikbaar maakt via een compacte en handige interface, hebben we deze als belangrijkste bron gebruikt bij het opvullen en bijhouden van onze database.
 
@@ -534,13 +541,13 @@ Het Perl CPAN archief kent een uitgebreide selectie voorgemaakte modules die in 
 
 \section{Ontwerp}
 
-Om op een flexibele wijze verschillende databronnen parallel te kunnen gebruiken, hebben we geopteerd voor een plugin-based design. Hierbij wordt elke databron geassocieerd met een enkele plugin, die een vaste interface implementeert om de gestandaardiseerde data naar buitenaf toegankelijk te maken. De plugins kunnen echter ook hi\"erarchisch uitgebreid worden, zo zal een plugin die data scrapet niet rechtstreeks de Plugin interface implementeren, maar gebruik maken van de Website interface, die op zijn beurt de Plugin interface uitbreidt met functionaliteit toegespitst tot websites.
+Om op een flexibele wijze verschillende databronnen parallel te kunnen gebruiken, hebben we geopteerd voor een plugin-based design. Hierbij wordt elke databron geassocieerd met een enkele plugin, die een vaste interface implementeert om de gestandaardiseerde data van buitenaf toegankelijk te maken. De plugins kunnen echter ook hi\"erarchisch uitgebreid worden, zo zal een plugin die data scrapet niet rechtstreeks de Plugin interface implementeren, maar gebruik maken van de Website interface, die op zijn beurt de Plugin interface uitbreidt met functionaliteit toegespitst tot websites.
 
 De hoofdinterface Plugin beschrijft essentieel twee kenmerken: het beschikbaar zijn van een "exchanges" attribuut, en een "getQuotes" methode. Het "exchanges" attribuut is een lijst van beurzen die de plugin kan scrapen, waarbij de elementen van die lijst instanties zijn van de StockPlay::Exchange klasse. Dit object bevat geen functionaliteit, maar wel een hi\"erarchie aan andere objecten: twee lijsten, respectievelijk opgevuld met StockPlay::Security en StockPlay::Index objecten. De verantwoordelijkheid voor het opvullen van deze lijsten ligt bij de plugin die het Exchange object aangemaakt heeft.
 De Plugin interface dwingt ook een getQuotes functie af, die gebruikt wordt om eenmaal de initi\"ele opbouw aan Exchanges, Securities en Indexen voltooid is, de koersen van een lijst Securities op te halen. Deze functie geeft dan ook een lijst aan StockPlay::Quote objecten terug. Dergelijke objecten, 1 op 1 verbonden met een Security, bevatten de effectieve koersdata. Zo zijn verschillende velden beschikbaar zoals "time", "volume", of "price". Een ander belangrijk veld is het "delay" veld, dat omschrijft hoe lang er moet gewacht worden om een nieuwe koers op te halen.
 
-Nu vastligt hoe de data in een uniforme en gestructureerde wijze opgeslaan wordt, is het duidelijk dat de data opgedeelt kan worden in twee categorie\"en: presistente en variabele data.
-Onder de persistente data behoord de hi\"erarchie aan Exchange, Security en Index objecten die omschrijft welke beurzen en aandelen de plugin toegang tot heeft, en hoe die zich onderling relateren. Aangezien de objecten in kwestie steeds voorzien in een "private data container" (die plugins kunnen gebruiken om bronspecifieke maar verder niet relevante data op te slaan), volstaat het om die eenmaal op te bouwen. Ze kunnen daarna steeds opnieuw herbruikt worden om de variabele data op te halen. Die variabele data bestaat natuurlijk uit de uiteindelijke Quotes.
+Nu vastligt hoe de data in een uniforme en gestructureerde wijze opgeslaan wordt, is het duidelijk dat de data opgedeeld kan worden in twee categorie\"en: presistente en variabele data.
+Onder de persistente data behoort de hi\"erarchie aan Exchange, Security en Index objecten die omschrijft welke beurzen en aandelen de plugin toegang tot heeft, en hoe die zich onderling relateren. Aangezien de objecten in kwestie steeds voorzien in een "private data container" (die plugins kunnen gebruiken om bronspecifieke maar verder niet relevante data op te slaan), volstaat het om die eenmaal op te bouwen. Ze kunnen daarna steeds opnieuw herbruikt worden om de variabele data op te halen. Die variabele data bestaat natuurlijk uit de uiteindelijke Quotes.
 Door deze essenti\"ele splitsing is het mogelijk om de persistente data eenmaal op te halen en dan binnen een bepaald interval te herbruiken om variabele data op te halen. Dit maakt de scraper niet alleen sneller, het verlaagt ook de hoeveel data die steeds benodigd is om de aangevraagde data op halen. Hierbij reduceren we de kans dat de scraper teveel opvalt en eventueel zou verbannen worden van de databron in kwestie.
 
 \section{Communicatie}
@@ -548,7 +555,7 @@ Door deze essenti\"ele splitsing is het mogelijk om de persistente data eenmaal 
 Nu de scraper in staat is om gevraagde koersen op een effici\"ente manier op te halen, moet de methode van communicatie naar de backend nog ontworpen worden. Hierbij zijn er twee mogelijkheden: een PUSH of PULL model.
 
 In geval van een PULL model is de Backend de initiator, en zal die de scraper vragen om een bepaalde set data. In een PUSH model daarentegen zal de scraper zelf initiatief nemen. Hierbij is het vrij snel duidelijk dat het PUSH model de beste keuze is. Moesten we immers voor een PULL model gaan, dan zou de scraper nog een apart protocol moeten defini\"eren, of in geval van hergebruik van het XML-RPC protocol voorzien in een webserver en XML-RPC decoder. Als we echter voor een PUSH model kiezen, moet de scraper enkel voorzien in een XML-RPC client (wat veel minder werk is), en kan de reeds bestaande XML-RPC server code in de backend integraal herbruikt worden om die communicatie te gebruiken.
-Om dit te realiseren zal de backend wel moeten voorzien in speciale functies toegespitst op de doelen van de scraper, zoals het toevoegen van aandelen, of updaten van de bijhorende koersen. Ook is deze uitbreiding van het backend-protocol de druppel geweest die on overtuigde om ten behoeve van autorisatie om te schakelen van een eenvoudig boolean-flag (isAdmin) naar een flexibeler model gebaseerd op rechten.
+Om dit te realiseren zal de backend wel moeten voorzien in speciale functies toegespitst op de doelen van de scraper, zoals het toevoegen van aandelen, of updaten van de bijhorende koersen. Ook is deze uitbreiding van het backend-protocol de druppel geweest die ons overtuigde om ten behoeve van autorisatie om te schakelen van een eenvoudige boolean-flag (isAdmin) naar een flexibeler model gebaseerd op rechten.
 
 Om het PUSH model te realiseren moet de scraper voorzien in een algoritme dat continu alle aandelen overloopt, en selectief voor diegene die verlopen zijn nieuwe koersen ophaalt en die naar de backend stuurt. Deze functionaliteit wordt ge\"implementeerd door het StockPlay::Scraper::Daemon object, dewelke bezit over een lijst van de geactiveerde plugins, en zo in de \emph{run()} functie van alle plugins de aandelen ophaalt en ze eventueel vernieuwt. Tijdens de refresh-run wordt tevens bepaald hoelang minimaal moet gewacht worden vooraleer er een nieuwe cyclus kan gestart worden.
 
@@ -588,7 +595,7 @@ Hierna volgt een overzicht van de modules die we zullen implementeren.
 Deze module gebruikt de gegeven parameters niet en evalueert de voorwaarde steeds als waar. Het order wordt onmiddellijk uitgevoerd.
 
 \section{Koerslimiet}
-Deze module gebruikt de eerste parameter als limietwaarde. Bij een aankooporder gaat hij een positief antwoord geven als de koers lager is dan de limietwaarde. Deze koersinformatie komt hij via de backend te weten. Bij een verkooporder gebeurd het omgekeerde. 
+Deze module gebruikt de eerste parameter als limietwaarde. Bij een aankooporder gaat hij een positief antwoord geven als de koers lager is dan de limietwaarde. Deze koersinformatie komt hij via de backend te weten. Bij een verkooporder gebeurt het omgekeerde. 
 
 \section{Trailing-stop}
 Bij een verkoop order wordt de trigger waarde ingesteld op een vast aantal beurspunten onder de hoogste koers. Als de hoogste koers dus verhoogd in waarde, dan verhoogd ook de trigger waarde evenveel punten. Hetzelfde kan ook ingesteld worden bij een aankooporder. Deze trigger waarde krijgt de module via de parameters mee en het maximum sinds de periode van het plaatsen van de order en het huidige tijdstip vraagt deze aan de backend.
@@ -597,7 +604,7 @@ Bij een verkoop order wordt de trigger waarde ingesteld op een vast aantal beurs
 Als de koers buiten een van de twee limietwaarden valt dan geeft de module een positief antwoord terug.
 
 \section{Stop loss}
-De module vraagt bij een aankooporder aan de backend wat de laagste prijs was tussen het plaatsen van het order en het huidige tijdstip. Is dit minimum lager dan de eerste parameter, dan geeft de module een positief antwoord terug. Bij een verkooporder gebeurd het omgekeerde.
+De module vraagt bij een aankooporder aan de backend wat de laagste prijs was tussen het plaatsen van het order en het huidige tijdstip. Is dit minimum lager dan de eerste parameter, dan geeft de module een positief antwoord terug. Bij een verkooporder gebeurt het omgekeerde.
 
 
 %
@@ -697,7 +704,7 @@ Dit stadium bestaat dus essentieel uit twee onderdelen:
 
 Het eerste aspect hiervan is triviaal: gebruik makende van een secundaire set aan regels (opbouw identiek met de regels uit de tokenizer, echter komt een regel nu niet meer overeen met een TokenType maar met een Class) kunnen we op eenvoudige doch flexibele wijze tokens omzetten naar een lokaal object.
 
-Voor het tweede gedeelte gebruiken we een relatief eenvoudige algoritme dat normaal gebruikt wordt voor het \makeurl{evalueren}{http://en.wikipedia.org/wiki/Reverse\_Polish\_notation\#The\_postfix\_algorithm} van postfix-expressies. We breiden het echter uit, zodat we een boom van niet-ge\"evalueerde structuren kunnen opstellen. Om daarbij geavanceerde syntactictische expressies toe te laten, waarbij het (nog onbekende) uitvoeringsresultaat van een operator dient als input voor een andere operator, hebben we gekozen voor de volgens opzet: elk object dat in de boom kan optreden implementeert de Convertable interface, die voorziet in een \emph{compile()} instructie. Die instructie zal voor data-objecten louter zijn inhoud teruggeven, maar zal ovor complexere sub-bomen alle nodes evalueren en het eindresultaat van die evaluatie teruggeven. Zo kan waar een operator een data-object verwacht, eveneens een schakering aan operatoren doorgegeven worden aangezien die eveneens in dezelfde \emph{compile()} instructie voorzien.
+Voor het tweede gedeelte gebruiken we een relatief eenvoudig algoritme dat normaal gebruikt wordt voor het \makeurl{evalueren}{http://en.wikipedia.org/wiki/Reverse\_Polish\_notation\#The\_postfix\_algorithm} van postfix-expressies. We breiden het echter uit, zodat we een boom van niet-ge\"evalueerde structuren kunnen opstellen. Om daarbij geavanceerde syntactictische expressies toe te laten, waarbij het (nog onbekende) uitvoeringsresultaat van een operator dient als input voor een andere operator, hebben we gekozen voor de volgens opzet: elk object dat in de boom kan optreden implementeert de Convertable interface, die voorziet in een \emph{compile()} instructie. Die instructie zal voor data-objecten louter zijn inhoud teruggeven, maar zal ovor complexere sub-bomen alle nodes evalueren en het eindresultaat van die evaluatie teruggeven. Zo kan waar een operator een data-object verwacht, eveneens een schakering aan operatoren doorgegeven worden aangezien die eveneens in dezelfde \emph{compile()} instructie voorzien.
 
 \begin{figure}[h!]
 	\centering
@@ -711,9 +718,9 @@ Nu de semantiek en conversie van onze filter vastligt, konden we starten met de 
 
 \subsection{Lokale toepassing}
 
-Bij deze opzet wordt de filter lokaal toegepast op een binnengehaalde dataset. Het idee hierbij was om alle records op te halen, en de filter dan lokaal een selectie te laten maken. Die selectie, die voldoet aan de eisen door de gebruiker opgelegd, kan dan teruggestuurd worden.
+Bij deze opzet wordt de filter lokaal toegepast op een binnengehaalde dataset. Het idee hierbij was om alle records op te halen, en de filter dan lokaal een selectie te laten maken. Die selectie, die voldoet aan de eisen die door de gebruiker zijn opgelegd, kan dan teruggestuurd worden.
 
-Hoewel dit idee perfect toepasbaar is bij systemen waar alle data lokaal aanwezig is (zoals een lokale Java data-backend), treden er problemen op als de data enkel remote aanwezig is en lokaal nie gecachet wordt. In dit geval wordt de overhead van het ophalen van alle records veel te groot, zeker toegepast op StockPlay waarbij de Securities-tabel gemakkelijk meer dan duizend records kan bevatten. Hoewel deze evaluatietechniek dus eenvoudiger te implementeren is (het data-backend-specifieke gedeelte is niet meer aanwezig), hebben we door de grote overhead besloten een alternatief te zoeken.
+Hoewel dit idee perfect toepasbaar is bij systemen waar alle data lokaal aanwezig is (zoals een lokale Java data-backend), treden er problemen op als de data enkel remote aanwezig is en lokaal niet gecachet wordt. In dit geval wordt de overhead van het ophalen van alle records veel te groot, zeker toegepast op StockPlay waarbij de Securities-tabel gemakkelijk meer dan duizend records kan bevatten. Hoewel deze evaluatietechniek dus eenvoudiger te implementeren is (het data-backend-specifieke gedeelte is niet meer aanwezig), hebben we door de grote overhead besloten een alternatief te zoeken.
 
 \subsection{Omzetting}
 
@@ -723,7 +730,7 @@ Om hieraan te kunnen voldoen, hebben we de implementatie van filter sub-objecten
 
 De gemeenschappelijke functionaliteit in dergelijke abstracte objecten voorziet in de verwerking van parameters, het aanbieden van een vaste functie-signatuur, de generatie van een Graph-subtree, en tenslotte in een implementatie van de \emph{compile()} functie. Deze functie, een pijler van de filter-infrastructuur, doet enkele elementaire dingen: het haalt een specifieke Converter op, en het roept diens \emph{process()} functie aan met de gepaste parameters. Een dergelijke Converter -- de implementerende counterpart van het abstract object -- voorziet enkel in een \emph{process()} functie, die opgeroepen wordt wanneer het object gecompileerd wordt.
 
-Deze opzet (pseudo-abstracte Convertable objecten die Converters instanti\"eren) mag misschien complex lijken, maar het is elementair in het generiek maken van de filters. Aangezien de pseudo-abstracte Convertable objecten rechtstreeks instanti\"eerbaar zijn, kan de Parser een boomstructuur aan dergelijke objecten opstellen zonder weet te hebben van hoe die boom uiteindelijk zal gecompileerd worden. Het is slechts wanneer die aanroep effectief gebeurt, dat elk Convertable object zal opvragen hoe hij gecompileerd moet worden, om zo de juiste Converter op te roepen. Die Converters voorzien ook niet in een \emph{compile()} instructie, omdat die instructie geen parameters vastlegt en dus manueel de private dataleden zou moeten raadplegen om parameters op te halen. Om dit te vermijden hebben we gekozen voor een extra instructie, de \emph{process()} instructie, die wél voorziet in een specifieke signatuur om zo verkeerde implementaties van de Convertables te vermijden.
+Deze opzet (pseudo-abstracte Convertable objecten die Converters instanti\"eren) mag misschien complex lijken, maar het is elementair in het generiek maken van de filters. Aangezien de pseudo-abstracte Convertable objecten rechtstreeks instanti\"eerbaar zijn, kan de Parser een boomstructuur aan dergelijke objecten opstellen zonder weet te hebben van hoe die boom uiteindelijk zal gecompileerd worden. Het is slechts wanneer die aanroep effectief gebeurt, dat elk Convertable object zal opvragen hoe hij gecompileerd moet worden, om zo de juiste Converter op te roepen. Die Converters voorzien ook niet in een \emph{compile()} instructie, omdat die instructie geen parameters vastlegt en dus manueel de private dataleden zou moeten raadplegen om parameters op te halen. Om dit te vermijden hebben we gekozen voor een extra instructie, de \emph{process()} instructie, die w\'el voorziet in een specifieke signatuur om zo verkeerde implementaties van de Convertables te vermijden.
 
 \begin{code}
 \begin{verbatim}
