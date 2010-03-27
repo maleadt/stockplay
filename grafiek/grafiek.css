@@ -6,7 +6,7 @@
 }
 
 .plot {
-	font: 80% Arial, Verdana, sans-serif;
+	font: 60% Arial, Verdana, sans-serif;
 	color: #5A5A5A;
 }
 
@@ -58,6 +58,10 @@
 
 li.zoomOut {
 	background-image: url(magifier_zoom_out.png);
+}
+
+li.pan {
+	display: none;
 }
 
 li.reset {

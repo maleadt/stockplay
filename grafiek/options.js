@@ -6,73 +6,78 @@ var Options = function() {
 
 $.extend(Options.prototype, {
 
-	// object variables
-	legend: {
-		show: true,
-		position: "sw"
-	},
-	
-	series: {
-		lines: {
-			show: true,
-			fill: true,
-			lineWidth: 2
-		},
-		points: { show: false }
-	},
-	
-	xaxis: {
-		ticks: 9,
-		mode: "time"
-	},
-	
-	x2axis: {
-		ticks: 9,
-		mode: "time"
-	},
-	
-	yaxis: {
-		ticks: 6,
-		min: 0,
-		max: 80
-	},
-	
-	//selection: { mode: "x" },
-	
-	pan: {
-		interactive: true
-	},
-	
-	zoom: {
-		interactive: true
-	},
-	
-	grid: {
-		borderWidth: 1,
-		borderColor: "#d8d8d8",
-		labelMargin: 8,
-		color: "#444",
-		backgroundColor: "#fafafa",
-		borderColor: "#fff",
-		tickColor: "#ddd",
-		borderWidth: 0,
-		hoverable: true,
-		autoHighlight: true,
-		mouseActiveRadius: 50
-	},
-
 	init: function() {
+		
+		this.legend = {
+			show: true,
+			position: "sw"
+		};
+		
+		this.series = {
+			lines: {
+				show: true,
+				fill: true,
+				lineWidth: 2
+			},
+			points: { show: false }
+		};
+		
+		this.x2axis = {
+			ticks: 9,
+			mode: "time"
+		};
+		
+		this.yaxis = {
+			ticks: 6,
+			min: 0,
+			max: 80
+		};
+		
+		this.pan = {
+			interactive: true
+		};
+		
+		this.zoom = {
+			interactive: true
+		};
+		
+		this.grid = {
+			borderWidth: 1,
+			borderColor: "#d8d8d8",
+			labelMargin: 8,
+			color: "#444",
+			backgroundColor: "#fafafa",
+			borderColor: "#fff",
+			tickColor: "#ddd",
+			borderWidth: 0,
+			hoverable: true,
+			autoHighlight: true,
+			mouseActiveRadius: 50
+		};
+	
+		this.xaxis = {
+			ticks: 9,
+			mode: "time"
+		};
 	},
 	
     // Option changers
-	addSelection: function() {
+	setSelectionMode: function() {
 		this.selection = {
 			mode: "x"
 		};
+
+		this.pan = {
+			interactive: false
+		};
 	},
 
-	addPanning: function() {
-		this.pan.interactive = true;
+	setPanningMode: function() {
+		this.selection = {};
+
+		this.pan = {
+			interactive: true
+		};
 	},
 
 	setXRange: function(min, max) {

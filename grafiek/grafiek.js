@@ -4,12 +4,6 @@ var Flot = function(container, from, to) {
 
 $.extend(Flot.prototype, {
 
-	// object variables
-	container: '',
-	containerName: '',
-	data: {},
-	options: null,
-
 	init: function(container, from, to) {
 		this.containerName = container;
 		this.container = $(container+' div');
@@ -67,7 +61,21 @@ $.extend(Flot.prototype, {
     },
     
     addEvents: function() {
+    
 		this.container.bind('plotzoom', {me: this}, function (event, plot) {
+			var ranges = plot.getAxes();
+			event.data.me.options.setXRange(ranges.xaxis.min, ranges.xaxis.max);
+			event.data.me.options.setYRange(event.data.me.getMin(ranges.xaxis.min, ranges.xaxis.max), event.data.me.getMax(ranges.xaxis.min, ranges.xaxis.max));
+			event.data.me.draw();
+		});
+
+	    this.container.bind("plotselected", {me: this}, function (event, ranges) {
+			event.data.me.options.setXRange(ranges.xaxis.from, ranges.xaxis.to);
+			event.data.me.options.setYRange(event.data.me.getMin(ranges.xaxis.from, ranges.xaxis.to), event.data.me.getMax(ranges.xaxis.from, ranges.xaxis.to));
+			event.data.me.draw();
+		});
+
+		this.container.bind('plotpan', {me: this}, function (event, plot) {
 			var ranges = plot.getAxes();
 			event.data.me.options.setXRange(ranges.xaxis.min, ranges.xaxis.max);
 			event.data.me.options.setYRange(event.data.me.getMin(ranges.xaxis.min, ranges.xaxis.max), event.data.me.getMax(ranges.xaxis.min, ranges.xaxis.max));
@@ -75,7 +83,14 @@ $.extend(Flot.prototype, {
 		});
 		
 		$(this.containerName+' li.hand.selection').bind('click', {me: this}, function(event) {
-			event.data.me.options.addSelection();
+			event.data.me.options.setSelectionMode();
+			event.data.me.draw();
+			return false;
+		});
+
+		$(this.containerName+' li.hand.reset').bind('click', {me: this}, function(event) {
+			delete event.data.me.options;
+			event.data.me.options = new Options();
 			event.data.me.draw();
 			return false;
 		});
