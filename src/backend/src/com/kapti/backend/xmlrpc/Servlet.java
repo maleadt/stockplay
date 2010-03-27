@@ -26,6 +26,7 @@ import com.kapti.data.persistence.StockPlayDAOFactory;
 import com.kapti.exceptions.StockPlayException;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Date;
 import javax.servlet.ServletConfig;
 import org.apache.log4j.Logger;
 import org.apache.xmlrpc.XmlRpcException;
@@ -52,6 +53,7 @@ public class Servlet extends XmlRpcServlet {
 
     private StockPlayDAO mDAO;
     static Logger mLogger = Logger.getLogger(Servlet.class);
+    private static Date mDateStart = new Date();
 
     //
     // Constructie
@@ -135,5 +137,14 @@ public class Servlet extends XmlRpcServlet {
         //XmlRpcServletServer oServer = super.newXmlRpcServer(iConfig);
         XmlRpcServletServer oServer = new ServletServer();  // iConfig seems unused in XmlRpcServlet.java
         return oServer;
+    }
+
+    /**
+     * Ophalen van uptime.
+     * 
+     * @return
+     */
+    public static double getUptime() {
+        return (double)(((new Date()).getTime() - mDateStart.getTime())/1000.0);
     }
 }

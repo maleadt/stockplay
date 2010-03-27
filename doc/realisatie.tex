@@ -158,10 +158,8 @@ Deze klasse biedt de client mogelijkheden om het systeem te beheren. Zoals het o
 	{ geen }
 	{ struct met statistieken:
 		\begin{itemize}
-		\item{queries: aantal uitgevoerde queries}
 		\item{uptime: hoe lang de databank al draait}
-		\item{traffic: hoeveelheid data verzonden en ontvangen}
-		\item{slow\_queries: aantal queries die teveel uitvoeringstijd vergden}
+		\item{rate: aantal transacties per seconde}
 		\end{itemize} }
 	{ administrator-rechten }
 
@@ -617,6 +615,7 @@ Een bijkomend probleem kwam naar boven bij de effectieve implementatie van het b
 Naar verloop van tijd hebben we echter een bijkomende genericiteit geintroduceerd in de backend, namelijk de Data Access Objects, waardoor het niet meer vastligt welke database effectief gebruikt zou worden. Hierdoor voldeed een filter opgemaakt in SQL-syntax niet meer, aangezien niet alle mogelijke data-backends SQL-filters ondersteunen (denk maar aan een puur Java data-backend, gebruik makende van datastructuren eigen aan Java zelf).
 
 Daarom zijn we op zoek gegaan naar een methodiek om gemakkelijk filters door te geven aan de backend, mits mogelijkheden om eenzelfde filter te gebruiken in combinatie met verschillende data-backends. De JDBC backend die we nu gebruikten voor data toegang bleek daarvoor onvoldoende, aangezien die enerzijds enkel database-specifieke SQL queries aanvaardt, en anderzijds niet noodzakelijk gebruikt wordt in elke DAO implementatie. Ook bleken er geen bestaande paketten beschikbaar te zijn om deze taak te realiseren, het werd dus snel duidelijk dat we onze eigen implementatie zouden moeten voorzien.
+
 
 \section{Input formaat}
 

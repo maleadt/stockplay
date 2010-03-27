@@ -41,6 +41,7 @@ public class ServletServer extends XmlRpcServletServer {
     //
 
     static Logger mLogger = Logger.getLogger(ServletServer.class);
+    private static int mRequests = 0;
 
     //
     // Methods
@@ -54,6 +55,7 @@ public class ServletServer extends XmlRpcServletServer {
      */
     @Override
     public Object execute(XmlRpcRequest iRequest) throws XmlRpcException {
+        mRequests++;
         try {
             return super.execute(iRequest);
         } catch (XmlRpcException iException) {
@@ -76,5 +78,9 @@ public class ServletServer extends XmlRpcServletServer {
                 throw iException;
             }
         }
+    }
+
+    public static int getRequests() {
+        return mRequests;
     }
 }

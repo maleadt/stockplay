@@ -23,6 +23,7 @@
 package com.kapti.data.persistence;
 
 import com.kapti.data.*;
+import com.kapti.exceptions.StockPlayException;
 
 public interface StockPlayDAO {
 
@@ -35,4 +36,7 @@ public interface StockPlayDAO {
     public GenericDAO<User, Integer> getUserDAO();
     public GenericDAO<IndexSecurity, IndexSecurity> getIndexSecurityDAO();
     public GenericDAO<UserSecurity, UserSecurity.UserSecurityPK> getUserSecurityDAO();
+
+    public double getUptime() throws StockPlayException;
+    public double getRate() throws StockPlayException;
 }

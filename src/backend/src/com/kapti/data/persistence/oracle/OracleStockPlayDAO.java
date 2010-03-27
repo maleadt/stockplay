@@ -32,9 +32,18 @@ import com.kapti.data.UserSecurity;
 import com.kapti.data.UserSecurity.UserSecurityPK;
 import com.kapti.data.persistence.GenericDAO;
 import com.kapti.data.persistence.StockPlayDAO;
+import com.kapti.exceptions.DBException;
+import com.kapti.exceptions.ServiceException;
+import com.kapti.exceptions.StockPlayException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-public class OracleStockPlayDAO implements StockPlayDAO{
-
+public class OracleStockPlayDAO implements StockPlayDAO {
+    // Granted via 'grant select on sys.v_$instance to stockplay'
+    private static final String SELECT_UPTIME = "SELECT (sysdate - startup_time)*24*60*60 FROM sys.v_$instance";
+    private static final String SELECT_RATE = "SELECT MAX(VALUE) FROM sys.v_$sysmetric WHERE METRIC_NAME = 'User Transaction Per Sec' GROUP BY METRIC_NAME";
 
     public GenericDAO<Exchange, String> getExchangeDAO() {
         return ExchangeDAO.getInstance();
@@ -70,6 +79,70 @@ public class OracleStockPlayDAO implements StockPlayDAO{
 
     public GenericDAO<UserSecurity, UserSecurityPK> getUserSecurityDAO() {
         return UserSecurityDAO.getInstance();
+    }
+
+    public double getUptime() throws StockPlayException {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            try {
+                conn = OracleConnection.getConnection();
+                stmt = conn.prepareStatement(SELECT_UPTIME);
+
+                rs = stmt.executeQuery();
+                if (rs.next()) {
+                    long tUptime = rs.getLong(1);
+                    return (double)tUptime;
+                } else {
+                    throw new ServiceException(ServiceException.Type.SERVICE_UNAVAILABLE);
+                }
+            } finally {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            }
+        } catch (SQLException ex) {
+            throw new DBException(ex);
+        }
+    }
+
+    public double getRate() throws StockPlayException {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            try {
+                conn = OracleConnection.getConnection();
+                stmt = conn.prepareStatement(SELECT_RATE);
+
+                rs = stmt.executeQuery();
+                if (rs.next()) {
+                    double tRate = rs.getDouble(1);
+                    return tRate;
+                } else {
+                    throw new ServiceException(ServiceException.Type.SERVICE_UNAVAILABLE);
+                }
+            } finally {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            }
+        } catch (SQLException ex) {
+            throw new DBException(ex);
+        }
     }
 
 }

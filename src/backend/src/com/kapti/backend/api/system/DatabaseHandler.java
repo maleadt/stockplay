@@ -43,7 +43,9 @@ public class DatabaseHandler extends MethodClass {
     }
 
     public Hashtable<String, Object> Stats() throws StockPlayException {
-        throw new UnsupportedOperationException("Not supported yet.");
+        Hashtable<String, Object> oStats = new Hashtable<String, Object>();
+        oStats.put("rate", getDAO().getRate());
+        oStats.put("uptime", getDAO().getUptime());
+        return oStats;
     }
-
 }

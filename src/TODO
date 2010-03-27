@@ -13,6 +13,7 @@ kan geabstraheerd worden in de bovenliggende abstracte klassen.
 Het zou mooi zijn om de doorgegeven filters te controleren zodat slecht een
 vaste (gedocumenteerde) selectie er kan in voorkomen.
 
+
 *) pushAll
 
 
@@ -39,8 +40,3 @@ Filter
 
 *) DateTime
 
-
-
-///////////
-
-*) Slechts 1 constructor per datatype afdwingen + de setters in fromStruct van die verwijderen!

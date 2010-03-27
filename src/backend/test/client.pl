@@ -26,6 +26,14 @@ my $return;
 $return = $xmlrpc->call('User.Hello', "perl_testclient/0.1", 1);
 print "* Server hello:\n", Dumper(\$return), "\n";
 
+# Backend stats
+$return = $xmlrpc->call('System.Backend.Stats');
+print "* Backend stats\n", Dumper(\$return), "\n";
+
+# Database stats
+$return = $xmlrpc->call('System.Database.Stats');
+print "* Database stats\n", Dumper(\$return), "\n";
+
 # List of exchanges
 $return = $xmlrpc->call('Finance.Exchange.List', "symbol EQUALS 'BSE'");
 print "* Available exchanges:\n", Dumper(\$return), "\n";
