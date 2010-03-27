@@ -197,14 +197,14 @@ sub run {
 						push(@securities, $security);
 					}
 				}
+			
+				# Update them
+				print "     Fetching quotes for ", join(", ", map { $_->id } @securities ), "\n";
+				my @quotes_local = $plugin->getQuotes($exchange, @securities);
+				
+				# Save them
+				push(@quotes, @quotes_local);
 			}
-			
-			# Update them
-			print "     Fetching quotes for ", join(", ", map { $_->id } @securities ), "\n";
-			my @quotes_local = $plugin->getQuotes(@securities);
-			
-			# Save them
-			push(@quotes, @quotes_local);
 		}
 			
 		# Check delays

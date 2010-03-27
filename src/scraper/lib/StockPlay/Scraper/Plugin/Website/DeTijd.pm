@@ -37,11 +37,13 @@ with 'StockPlay::Scraper::Plugin::Website';
 use strict;
 use warnings;
 
-# DateTime from String #TODO: coercion
-#class_type 'DateTime';
-my $timezone = "Europe/Brussels";
+# Proper DateTime conversion
+my %TIMEZONES = (
+	"BSE"	=> "Europe/Brussels",
+	"PA"	=> "Europe/Paris"
+);
 sub parse_datetime {
-	my ($string) = @_;
+	my ($timezone, $string) = @_;
 
 	# Get a localized datetime to fill in missing parameters
 	my $datetime_reference = DateTime->now(time_zone => $timezone);
@@ -81,24 +83,26 @@ sub _build_exchanges {
 	# Euronext Brussel
 	my $brussel = new StockPlay::Exchange(
 		id		=> "BSE",
-		name		=> "Euronext Brussels",
 		location	=> "Brussel",
-		securities	=> [$self->getSecurities('http://www.tijd.be/beurzen/euronext-brussel/continumarkt')]
+		time_zone	=> new DateTime::TimeZone(name => "Europe/Brussels")
 	);
+	$self->addSecurities($brussel, 'http://www.tijd.be/beurzen/euronext-brussel/continumarkt');
 	
 	# Euronext Parijs
 	my $parijs = new StockPlay::Exchange(
 		id		=> "PA",
-		name		=> "Euronext Paris",
 		location	=> "Parijs",
-		securities	=> [$self->getSecurities('http://www.tijd.be/beurzen/euronext-parijs/frencha'), $self->getSecurities('http://www.tijd.be/beurzen/euronext-parijs/frenchb'), $self->getSecurities('http://www.tijd.be/beurzen/euronext-parijs/frenchc')]
+		time_zone	=> new DateTime::TimeZone(name => "Europe/Paris")
 	);
+	$self->addSecurities($parijs, 'http://www.tijd.be/beurzen/euronext-parijs/frencha');
+	$self->addSecurities($parijs, 'http://www.tijd.be/beurzen/euronext-parijs/frenchb');
+	$self->addSecurities($parijs, 'http://www.tijd.be/beurzen/euronext-parijs/frenchc');
 	
 	return [$brussel, $parijs];
 }
 
-sub getSecurities {
-	my ($self, $url) = @_;
+sub addSecurities {
+	my ($self, $exchange, $url) = @_;
 	my @securities;	
 	
 	# Process all pages
@@ -189,14 +193,14 @@ sub getSecurities {
 		
 		# Check for more pages
 		last unless ($res->decoded_content =~ 'Volgende');
-		$page++;	
-		
+		$page++;
 	}
-	return @securities;
+	
+	push(@{$exchange->securities}, @securities);
 }
 
 sub getQuotes {
-	my ($self, @securities) = @_;
+	my ($self, $exchange, @securities) = @_;
 	
 	# Query-parameters invullen
 	my %parameters = (
@@ -227,7 +231,7 @@ sub getQuotes {
 		my $security = (grep { $_->get('site_id') == $site_id } @securities)[0]
 			or die("Could not connect data to security");
 		eval {
-			my $datetime = parse_datetime($data{time});
+			my $datetime = parse_datetime($TIMEZONES{$exchange->id}, $data{time});
 			die("could not parse time") unless $datetime;
 			push(@quotes, new StockPlay::Quote({
 				time		=> $datetime,
