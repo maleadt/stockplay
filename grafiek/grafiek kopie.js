@@ -74,7 +74,6 @@ $(function (){
     };
 
 
-    // grafiek opstellen
     function getData(x1, x2) {
     	//alert("data opvragen");
         var d = [];
