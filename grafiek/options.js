@@ -65,30 +65,24 @@ $.extend(Options.prototype, {
 	},
 	
     // Option changers
-	addSelection: function(options) {
+	addSelection: function() {
 		this.selection = {
 			mode: "x"
-		}
+		};
 	},
 
-	addPanning: function(options) {
-		this.pan = {
-			interactive: true
-		}
+	addPanning: function() {
+		this.pan.interactive = true;
 	},
 
-	setXRange: function(options, min, max) {
-		this.xaxis = {
-			min: min,
-			max: max
-		}
+	setXRange: function(min, max) {
+		this.xaxis.min = min;
+		this.xaxis.max = max;
 	},
 
-	setYRange: function(options, min, max) {
-		this.yaxis = {
-			min: min,
-			max: max
-		}
+	setYRange: function(min, max) {
+		this.yaxis.min = min;
+		this.yaxis.max = max;
 	}	
 
 });

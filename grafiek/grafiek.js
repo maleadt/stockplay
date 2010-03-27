@@ -6,14 +6,17 @@ $.extend(Flot.prototype, {
 
 	// object variables
 	container: '',
+	containerName: '',
 	data: {},
 	options: null,
 
 	init: function(container, from, to) {
-		this.container = $(container);
+		this.containerName = container;
+		this.container = $(container+' div');
 		this.data = this.getData(from, to);
 		this.options = new Options();
 		this.draw();
+		this.addEvents();
 	},
 
 	getData: function(from, to) {
@@ -40,32 +43,48 @@ $.extend(Flot.prototype, {
     getMax: function(from, to) {
     	// ToDo min en max voor ALLE zichtbare lijnen berekenen
     	var max = null;
- 		for(i=0;i<startData[0]['data'].length;i++)
-        	if (startData[0]['data'][i][0] <= to && startData[0]['data'][i][0] >= from) {
+ 		for(i=0;i<this.data[0]['data'].length;i++)
+        	if (this.data[0]['data'][i][0] <= to && this.data[0]['data'][i][0] >= from) {
 	        	if (max == null)
-	        		max = startData[0]['data'][i][1];
-	        	if (startData[0]['data'][i][1] > max )
-    	    		max =  startData[0]['data'][i][1];
+	        		max = this.data[0]['data'][i][1];
+	        	if (this.data[0]['data'][i][1] > max )
+    	    		max =  this.data[0]['data'][i][1];
     	    }
     	return max;
     },
 
     getMin: function(from, to) {
     	// ToDo min en max voor ALLE zichtbare lijnen berekenen
-    	var min = null;
- 		for(i=0;i<startData[0]['data'].length;i++)
-        	if (startData[0]['data'][i][0] <= to && startData[0]['data'][i][0] >= from) {
+    	var min = null; 
+ 		for(i=0;i<this.data[0]['data'].length;i++)
+        	if (this.data[0]['data'][i][0] <= to && this.data[0]['data'][i][0] >= from) {
 	        	if (min == null)
-	        		min = startData[0]['data'][i][1];
-	        	if (startData[0]['data'][i][1] < min )
-	        		min =  startData[0]['data'][i][1];
+	        		min = this.data[0]['data'][i][1];
+	        	if (this.data[0]['data'][i][1] < min )
+	        		min =  this.data[0]['data'][i][1];
 	       	}
     	return min;
     },
+    
+    addEvents: function() {
+		this.container.bind('plotzoom', {me: this}, function (event, plot) {
+			var ranges = plot.getAxes();
+			event.data.me.options.setXRange(ranges.xaxis.min, ranges.xaxis.max);
+			event.data.me.options.setYRange(event.data.me.getMin(ranges.xaxis.min, ranges.xaxis.max), event.data.me.getMax(ranges.xaxis.min, ranges.xaxis.max));
+			event.data.me.draw();
+		});
+		
+		$(this.containerName+' li.hand.selection').bind('click', {me: this}, function(event) {
+			event.data.me.options.addSelection();
+			event.data.me.draw();
+			return false;
+		});
+
+    }
     
 });
 
 
 $(function (){
-	var widget1 = new Flot('#plotTest div', 2, 11);
+	var flot1 = new Flot('#plotTest', 2, 11);
 });
