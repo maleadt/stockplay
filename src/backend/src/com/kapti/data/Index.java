@@ -93,9 +93,9 @@ public class Index {
         return oStruct;
     }
 
-    public void fromStruct(Hashtable<String, Object> iStruct) throws StockPlayException {
+    public void applyStruct(Hashtable<String, Object> iStruct) throws StockPlayException {
         for (String tKey : iStruct.keySet()) {
-            Object tValue = iStruct.get(tKey);
+            Object tValue = iStruct.get(tKey.toUpperCase());
             Fields tField = null;
             try {
                 tField = Fields.valueOf(tKey);
@@ -115,6 +115,24 @@ public class Index {
                     throw new StockPlayException("requested key '" + tKey + "' cannot be modified");
             }
         }
+    }
+
+    public static Index fromStruct(Hashtable<String, Object> iStruct) throws StockPlayException {
+        // Create case mapping
+        Hashtable<Fields, String> tStructMap = new Hashtable<Fields, String>();
+        for (String tKey : iStruct.keySet()) {
+            Fields tField = null;
+            try {
+                tField = Fields.valueOf(tKey);
+            }
+            catch (IllegalArgumentException e) {
+                throw new StockPlayException("requested key '" + tKey + "' does not exist");
+            }
+            tStructMap.put(tField, tKey);
+        }
+
+        // Check needed keys (not needed here)
+        return new Index();
     }
 
 }

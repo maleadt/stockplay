@@ -23,6 +23,7 @@
 package com.kapti.backend.api.finance;
 
 import com.kapti.backend.api.MethodClass;
+import com.kapti.data.Exchange;
 import com.kapti.data.persistence.GenericDAO;
 import com.kapti.exceptions.StockPlayException;
 import com.kapti.filter.Filter;
@@ -98,7 +99,7 @@ public class ExchangeHandler extends MethodClass {
         // TODO: controleren of de struct geen ID field bevat, deze kan _enkel_
         //       gebruikt worden om een initiële Exchange aa nte maken (Create)
         for (com.kapti.data.Exchange tExchange : tExchanges) {
-            tExchange.fromStruct(iDetails);
+            tExchange.applyStruct(iDetails);
             exDAO.update(tExchange);
         }
 
@@ -109,11 +110,10 @@ public class ExchangeHandler extends MethodClass {
         // Get DAO reference
         GenericDAO<com.kapti.data.Exchange, String> exDAO = getDAO().getExchangeDAO();
 
-        // TODO: dit moet mooier, kan ook makkelijk crashen
-        com.kapti.data.Exchange tExchange = new com.kapti.data.Exchange((String)iDetails.get("SYMBOL"));
-        iDetails.remove("SYMBOL");
+        // Instantiate a new exchange
+        Exchange tExchange = Exchange.fromStruct(iDetails);
 
-        tExchange.fromStruct(iDetails);
+        tExchange.applyStruct(iDetails);
         exDAO.create(tExchange);
 
         return 1;

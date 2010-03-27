@@ -103,7 +103,7 @@ public class SecurityHandler extends MethodClass {
         // TODO: controleren of de struct geen ID field bevat, deze kan _enkel_
         //       gebruikt worden om een initiële Exchange aa nte maken (Create)
         for (com.kapti.data.Security tIndex : tIndexs) {
-            tIndex.fromStruct(iDetails);
+            tIndex.applyStruct(iDetails);
             tSecurityDAO.update(tIndex);
         }
 
@@ -114,11 +114,10 @@ public class SecurityHandler extends MethodClass {
         // Get DAO reference
         GenericDAO<com.kapti.data.Security, String> tSecurityDAO = getDAO().getSecurityDAO();
 
-        // TODO: dit moet mooier, kan ook makkelijk crashen
-        com.kapti.data.Security tSecurity = new Security((String)iDetails.get("ISIN"));
-        iDetails.remove("ISIN");
+        // Instantiate a new security
+        Security tSecurity = Security.fromStruct(iDetails);
         
-        tSecurity.fromStruct(iDetails);
+        tSecurity.applyStruct(iDetails);
         tSecurityDAO.create(tSecurity);
 
         return 1;
@@ -186,13 +185,11 @@ public class SecurityHandler extends MethodClass {
     public int Update(Hashtable<String, Object> iDetails) throws StockPlayException {
         // Get DAO reference
         QuoteDAO tQuoteDAO = getDAO().getQuoteDAO();
-        
-        // Create a new quote
-        Quote tQuote = new Quote((String) iDetails.get("ISIN"), (Date) iDetails.get("TIME"));
-        iDetails.remove("ISIN");
-        iDetails.remove("TIME");
 
-        tQuote.fromStruct(iDetails);
+        // Instantiate a new quote
+        Quote tQuote = Quote.fromStruct(iDetails);
+
+        tQuote.applyStruct(iDetails);
         tQuoteDAO.create(tQuote);
 
         return 1;

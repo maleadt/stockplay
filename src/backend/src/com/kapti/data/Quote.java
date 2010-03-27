@@ -160,12 +160,12 @@ public class Quote {
         return oStruct;
     }
 
-    public void fromStruct(Hashtable<String, Object> iStruct) throws StockPlayException {
+    public void applyStruct(Hashtable<String, Object> iStruct) throws StockPlayException {
         for (String tKey : iStruct.keySet()) {
             Object tValue = iStruct.get(tKey);
             Fields tField = null;
             try {
-                tField = Fields.valueOf(tKey);
+                tField = Fields.valueOf(tKey.toUpperCase());
             }
             catch (IllegalArgumentException e) {
                 throw new StockPlayException("requested key '" + tKey + "' does not exist");
@@ -196,6 +196,31 @@ public class Quote {
                 default:
                     throw new StockPlayException("requested key '" + tKey + "' cannot be modified");
             }
+        }
+    }
+
+    public static Quote fromStruct(Hashtable<String, Object> iStruct) throws StockPlayException {
+        // Create case mapping
+        Hashtable<Fields, String> tStructMap = new Hashtable<Fields, String>();
+        for (String tKey : iStruct.keySet()) {
+            Fields tField = null;
+            try {
+                tField = Fields.valueOf(tKey);
+            }
+            catch (IllegalArgumentException e) {
+                throw new StockPlayException("requested key '" + tKey + "' does not exist");
+            }
+            tStructMap.put(tField, tKey);
+        }
+
+        // Check needed keys
+        if (tStructMap.containsKey(Fields.TIME) && tStructMap.containsKey(Fields.ISIN)) {
+            Quote tQuote = new Quote((String)iStruct.get(tStructMap.get(Fields.ISIN)), (Date)iStruct.get(tStructMap.get(Fields.TIME)));
+            iStruct.remove(tStructMap.get(Fields.TIME));
+            iStruct.remove(tStructMap.get(Fields.ISIN));
+            return tQuote;
+        } else {
+            throw new StockPlayException("not enough information to instantiate object");
         }
     }
 

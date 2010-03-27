@@ -81,12 +81,12 @@ public class UserSecurity {
         return oStruct;
     }
 
-    public void fromStruct(Hashtable<String, Object> iStruct) throws StockPlayException {
+    public void applyStruct(Hashtable<String, Object> iStruct) throws StockPlayException {
         for (String tKey : iStruct.keySet()) {
             Object tValue = iStruct.get(tKey);
             Fields tField = null;
             try {
-                tField = Fields.valueOf(tKey);
+                tField = Fields.valueOf(tKey.toUpperCase());
             }
             catch (IllegalArgumentException e) {
                 throw new StockPlayException("requested key '" + tKey + "' does not exist");
@@ -107,7 +107,7 @@ public class UserSecurity {
     // Subclasses
     //
 
-    public class UserSecurityPK{
+    public class UserSecurityPK {
         private int user;
         private String isin;
 

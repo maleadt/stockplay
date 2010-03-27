@@ -23,6 +23,7 @@
 package com.kapti.backend.api.user;
 
 import com.kapti.backend.api.MethodClass;
+import com.kapti.data.Order;
 import com.kapti.data.OrderStatus;
 import com.kapti.data.persistence.GenericDAO;
 import com.kapti.exceptions.StockPlayException;
@@ -64,11 +65,10 @@ public class OrderHandler extends MethodClass {
         // Get DAO reference
         GenericDAO<com.kapti.data.Order, Integer> orDAO = getDAO().getOrderDAO();
 
-        com.kapti.data.Order tOrder = new com.kapti.data.Order((Integer)iDetails.get("USER"), (String)iDetails.get("ISIN"));
-        iDetails.remove("USER");
-        iDetails.remove("ISIN");
+        // Instantiate a new order
+        Order tOrder = Order.fromStruct(iDetails);
 
-        tOrder.fromStruct(iDetails);
+        tOrder.applyStruct(iDetails);
         orDAO.create(tOrder);
 
         return 1;

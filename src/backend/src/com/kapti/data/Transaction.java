@@ -95,14 +95,13 @@ public class Transaction extends Instruction {
         }
         return oStruct;
     }
-
-    @Override
-    public void fromStruct(Hashtable<String, Object> iStruct) throws StockPlayException {
+    
+    public void applyStruct(Hashtable<String, Object> iStruct) throws StockPlayException {
         for (String tKey : iStruct.keySet()) {
             Object tValue = iStruct.get(tKey);
             Fields tField = null;
             try {
-                tField = Fields.valueOf(tKey);
+                tField = Fields.valueOf(tKey.toUpperCase());
             }
             catch (IllegalArgumentException e) {
                 throw new StockPlayException("requested key '" + tKey + "' does not exist");
@@ -126,6 +125,31 @@ public class Transaction extends Instruction {
                 default:
                     throw new StockPlayException("requested key '" + tKey + "' cannot be modified");
             }
+        }
+    }
+
+    public static Transaction fromStruct(Hashtable<String, Object> iStruct) throws StockPlayException {
+        // Create case mapping
+        Hashtable<Fields, String> tStructMap = new Hashtable<Fields, String>();
+        for (String tKey : iStruct.keySet()) {
+            Fields tField = null;
+            try {
+                tField = Fields.valueOf(tKey);
+            }
+            catch (IllegalArgumentException e) {
+                throw new StockPlayException("requested key '" + tKey + "' does not exist");
+            }
+            tStructMap.put(tField, tKey);
+        }
+
+        // Check needed keys
+        if (tStructMap.containsKey(Fields.USER) && tStructMap.containsKey(Fields.ISIN)) {
+            Transaction tTransaction = new Transaction((Integer)iStruct.get(tStructMap.get(Fields.USER)), (String)iStruct.get(tStructMap.get(Fields.ISIN)));
+            iStruct.remove(tStructMap.get(Fields.USER));
+            iStruct.remove(tStructMap.get(Fields.ISIN));
+            return tTransaction;
+        } else {
+            throw new StockPlayException("not enough information to instantiate object");
         }
     }
    

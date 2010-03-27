@@ -56,7 +56,7 @@ public class UserHandler extends MethodClass {
         GenericDAO<com.kapti.data.User, Integer> tUserDAO = getDAO().getUserDAO();
 
         com.kapti.data.User tUser = new com.kapti.data.User();
-        tUser.fromStruct(iDetails);
+        tUser.applyStruct(iDetails);
         tUserDAO.create(tUser);
         return 1;
     }
@@ -110,7 +110,7 @@ public class UserHandler extends MethodClass {
         // TODO: controleren of de struct geen ID field bevat, deze kan _enkel_
         //       gebruikt worden om een initiële Exchange aa nte maken (Create)
         for (com.kapti.data.User tUser : tUserDAO.findByFilter(filter)) {
-            tUser.fromStruct(iDetails);
+            tUser.applyStruct(iDetails);
             tUserDAO.update(tUser);
         }
 

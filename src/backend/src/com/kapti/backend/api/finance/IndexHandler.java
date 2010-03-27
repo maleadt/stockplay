@@ -22,6 +22,7 @@
 package com.kapti.backend.api.finance;
 
 import com.kapti.backend.api.MethodClass;
+import com.kapti.data.Index;
 import com.kapti.data.persistence.GenericDAO;
 import com.kapti.exceptions.StockPlayException;
 import java.util.Collection;
@@ -69,7 +70,7 @@ public class IndexHandler extends MethodClass {
         // TODO: controleren of de struct geen ID field bevat, deze kan _enkel_
         //       gebruikt worden om een initiële Exchange aa nte maken (Create)
         for (com.kapti.data.Index tIndex : tIndexs) {
-            tIndex.fromStruct(iDetails);
+            tIndex.applyStruct(iDetails);
             tIndexDAO.update(tIndex);
         }
 
@@ -80,10 +81,10 @@ public class IndexHandler extends MethodClass {
         // Get DAO reference
         GenericDAO<com.kapti.data.Index, Integer> tIndexDAO = getDAO().getIndexDAO();
 
-        // TODO: dit moet mooier, kan ook makkelijk crashen
-        com.kapti.data.Index tIndex = new com.kapti.data.Index();
+        // Instantiate a new index
+        Index tIndex = Index.fromStruct(iDetails);
 
-        tIndex.fromStruct(iDetails);
+        tIndex.applyStruct(iDetails);
         tIndexDAO.create(tIndex);
 
         return 1;
