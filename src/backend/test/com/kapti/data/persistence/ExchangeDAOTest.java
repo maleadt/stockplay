@@ -45,7 +45,9 @@ public class ExchangeDAOTest {
     @Test
     public void testCreate() throws Exception {
         System.out.println("create");
-        Exchange entity = new Exchange("TESTSYMBOL", "Test exchange", "Nowhere");
+        Exchange entity = new Exchange("TESTSYMBOL");
+        entity.setName("Test exchange");
+        entity.setLocation("Nowhere");
         ExchangeDAO instance = ExchangeDAO.getInstance();
         boolean expResult = true;
         boolean result = instance.create(entity);
@@ -73,7 +75,7 @@ public class ExchangeDAOTest {
     @Test
     public void testFindByExample() throws Exception {
         System.out.println("findByExample");
-        Exchange example = new Exchange();
+        Exchange example = new Exchange("DIT MOET EEN SYMBOOL ZIJN");   // findByExample << findByFilter?
         example.setLocation("Nowhere");
         ExchangeDAO instance = ExchangeDAO.getInstance();
 
@@ -91,7 +93,9 @@ public class ExchangeDAOTest {
     @Test
     public void testUpdate() throws Exception {
         System.out.println("update");
-        Exchange entity = new Exchange("TESTSYMBOL","Test exchange","Elsewhere");
+        Exchange entity = new Exchange("TESTSYMBOL");
+        entity.setName("Test exchange");
+        entity.setLocation("Elsewhere");
         ExchangeDAO instance = ExchangeDAO.getInstance();
         boolean expResult = true;
         boolean result = instance.update(entity);

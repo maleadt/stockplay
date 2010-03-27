@@ -22,7 +22,11 @@ import static org.junit.Assert.*;
  */
 public class SecurityDAOTest {
 
-    private static Exchange testExch = new Exchange("TESTSYMBL2", "Test Exchange", "Nergens");
+    private static Exchange testExch = new Exchange("TESTSYMBL2");
+    static {
+        testExch.setName("Test Exchange");
+        testExch.setLocation("Nergens");
+    }
     private static ExchangeDAO exchDAO = ExchangeDAO.getInstance();
 
     public SecurityDAOTest() {
@@ -54,7 +58,10 @@ public class SecurityDAOTest {
     @Test
     public void testCreate() throws Exception {
         System.out.println("create");
-        Security security = new Security("BE0000000000","TEST","Test", "TESTSYMBL2");
+        Security security = new Security("BE0000000000");
+        security.setSymbol("TEST");
+        security.setName("Test");
+        security.setExchange("TESTSYMBL2");
         SecurityDAO instance = SecurityDAO.getInstance();
         boolean expResult = true;
         boolean result = instance.create(security);
@@ -83,7 +90,7 @@ public class SecurityDAOTest {
     @Test
     public void testFindByExample() throws Exception {
         System.out.println("findByExample");
-        Security example = new Security();
+        Security example = new Security("DIT HEEFT EEN SYMBOOL NODIG"); // FIXME: findByExample << findByFilter??
         example.setName("es");
         SecurityDAO instance = SecurityDAO.getInstance();
         Collection<Security> result = instance.findByExample(example);
@@ -97,7 +104,10 @@ public class SecurityDAOTest {
     @Test
     public void testUpdate() throws Exception {
         System.out.println("update");
-        Security security = new Security("BE0000000000", "TEST","Test om te updaten", "TESTSYMBL2");
+        Security security = new Security("BE0000000000");
+        security.setSymbol("TEST");
+        security.setName("Test om te updaten");
+        security.setExchange("TESTSYMBL2");
         SecurityDAO instance = SecurityDAO.getInstance();
         boolean expResult = true;
         boolean result = instance.update(security);

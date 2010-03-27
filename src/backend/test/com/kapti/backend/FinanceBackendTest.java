@@ -60,12 +60,12 @@ public class FinanceBackendTest {
 
                 HashMap security = (HashMap) sec;
 
-                Security res = new Security((String) security.get("ISIN"),
-                        (String) security.get("SYMBOL"),
-                        (String) security.get("NAME"),
-                        (String) security.get("EXCHANGE"),
-                        (Boolean) security.get("VISIBLE"),
-                        (Boolean) security.get("SUSPENDED"));
+                Security res = new Security((String) security.get("ISIN"));
+                res.setSymbol((String) security.get("SYMBOL"));
+                res.setName((String) security.get("NAME"));
+                res.setExchange((String) security.get("EXCHANGE"));
+                res.setVisible((Boolean) security.get("VISIBLE"));
+                res.setSuspended((Boolean) security.get("SUSPENDED"));
 
                 System.out.println(res.getSymbol() + ": " + res.getName() + " | visible: " + res.isVisible() + " | suspended: " + res.isSuspended());
             }
@@ -84,12 +84,12 @@ public class FinanceBackendTest {
 
                 HashMap security = (HashMap) sec;
 
-                Security res = new Security((String) security.get("ISIN"),
-                        (String) security.get("SYMBOL"),
-                        (String) security.get("NAME"),
-                        (String) security.get("EXCHANGE"),
-                        (Boolean) security.get("VISIBLE"),
-                        (Boolean) security.get("SUSPENDED"));
+                Security res = new Security((String) security.get("ISIN"));
+                res.setSymbol((String) security.get("SYMBOL"));
+                res.setName((String) security.get("NAME"));
+                res.setExchange((String) security.get("EXCHANGE"));
+                res.setVisible((Boolean) security.get("VISIBLE"));
+                res.setSuspended((Boolean) security.get("SUSPENDED"));
 
                 System.out.println(res.getSymbol() + ": " + res.getName() + " | visible: " + res.isVisible() + " | suspended: " + res.isSuspended());
             }
@@ -105,9 +105,9 @@ public class FinanceBackendTest {
             if (exch instanceof HashMap) {
                 HashMap hashObj = (HashMap) exch;
 
-                Exchange res = new Exchange((String) hashObj.get("ID"),
-                        (String) hashObj.get("NAME"),
-                        (String) hashObj.get("LOCATION"));
+                Exchange res = new Exchange((String) hashObj.get("ID"));
+                res.setName((String) hashObj.get("NAME"));
+                res.setLocation((String) hashObj.get("LOCATION"));
             } else {
                 throw new StockPlayException("Expected Hashtable, but got an " + exch.getClass());
             }
@@ -125,9 +125,9 @@ public class FinanceBackendTest {
             if (exch instanceof HashMap) {
                 HashMap hashObj = (HashMap) exch;
 
-                Exchange res = new Exchange((String) hashObj.get("ID"),
-                        (String) hashObj.get("NAME"),
-                        (String) hashObj.get("LOCATION"));
+                Exchange res = new Exchange((String) hashObj.get("ID"));
+                res.setName((String) hashObj.get("NAME"));
+                res.setLocation((String) hashObj.get("LOCATION"));
             } else {
                 throw new StockPlayException("Expected Hashtable, but got an " + exch.getClass());
             }
@@ -145,15 +145,14 @@ public class FinanceBackendTest {
 
                 HashMap quote = (HashMap) q;
 
-                Quote res = new Quote("AMZN",
-                        (Date) quote.get("TIME"),
-                        (Double) quote.get("PRICE"),
-                        (Integer) quote.get("VOLUME"),
-                        (Double) quote.get("BID"),
-                        (Double) quote.get("ASK"),
-                        (Double) quote.get("LOW"),
-                        (Double) quote.get("HIGH"),
-                        (Double) quote.get("OPEN"));
+                Quote res = new Quote("AMZN", (Date) quote.get("TIME"));
+                res.setPrice((Double) quote.get("PRICE"));
+                res.setVolume((Integer) quote.get("VOLUME"));
+                res.setBid((Double) quote.get("BID"));
+                res.setAsk((Double) quote.get("ASK"));
+                res.setLow((Double) quote.get("LOW"));
+                res.setHigh((Double) quote.get("HIGH"));
+                res.setOpen((Double) quote.get("OPEN"));
 
                 System.out.println(res.getIsin() + " op " + res.getTime() + ": " + res.getVolume() + " | visible: " + res.getPrice());
             }
@@ -173,15 +172,14 @@ public class FinanceBackendTest {
 
                 HashMap quote = (HashMap) q;
 
-                Quote res = new Quote("EBAY",
-                        (Date) quote.get("TIME"),
-                        (Double) quote.get("PRICE"),
-                        (Integer) quote.get("VOLUME"),
-                        (Double) quote.get("BID"),
-                        (Double) quote.get("ASK"),
-                        (Double) quote.get("LOW"),
-                        (Double) quote.get("HIGH"),
-                        (Double) quote.get("OPEN"));
+                Quote res = new Quote("AMZN", (Date) quote.get("TIME"));
+                res.setPrice((Double) quote.get("PRICE"));
+                res.setVolume((Integer) quote.get("VOLUME"));
+                res.setBid((Double) quote.get("BID"));
+                res.setAsk((Double) quote.get("ASK"));
+                res.setLow((Double) quote.get("LOW"));
+                res.setHigh((Double) quote.get("HIGH"));
+                res.setOpen((Double) quote.get("OPEN"));
 
                 System.out.println(res.getIsin() + " op " + res.getTime() + ": " + res.getVolume() + " | visible: " + res.getPrice());
             }
