@@ -29,7 +29,6 @@ use HTML::TreeBuilder;
 use StockPlay::Scraper::Plugin::Website;
 use Time::HiRes;
 use DateTime;
-use POSIX;
 
 # Roles
 with 'StockPlay::Scraper::Plugin::Website';
@@ -40,7 +39,7 @@ use warnings;
 
 # DateTime from String #TODO: coercion
 #class_type 'DateTime';
-my $timezone = strftime("%Z", localtime()); # TODO: 28 maart, verandert dit naar CEST? Mss via module ophalen adhv locatie?
+my $timezone = "Europe/Brussels";
 sub parse_datetime {
 	my ($string) = @_;
 
