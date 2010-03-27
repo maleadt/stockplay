@@ -61,11 +61,8 @@ public class TransactionDAO implements GenericDAO<Transaction, Integer> {
 
                 rs = stmt.executeQuery();
                 if (rs.next()) {
-
-                    Transaction t = new Transaction(id);
-                    t.setUser(rs.getInt(1));
+                    Transaction t = new Transaction(id, rs.getInt(1), rs.getString(3));
                     t.setTime(new Date(rs.getTimestamp(2).getTime()));
-                    t.setIsin(rs.getString(3));
                     t.setType(InstructionType.valueOf(rs.getString(4).toUpperCase()));
                     t.setAmount(rs.getInt(5));
                     t.setPrice(rs.getDouble(6));
@@ -104,10 +101,8 @@ public class TransactionDAO implements GenericDAO<Transaction, Integer> {
                 rs = stmt.executeQuery();
                 ArrayList<Transaction> list = new ArrayList<Transaction>();
                 while (rs.next()) {
-                    Transaction t = new Transaction(rs.getInt(1));
-                    t.setUser(rs.getInt(2));
+                    Transaction t = new Transaction(rs.getInt(1), rs.getInt(2), rs.getString(4));
                     t.setTime(new Date(rs.getTimestamp(3).getTime()));
-                    t.setIsin(rs.getString(4));
                     t.setType(InstructionType.valueOf(rs.getString(5).toUpperCase()));
                     t.setAmount(rs.getInt(6));
                     t.setPrice(rs.getDouble(7));
@@ -153,7 +148,7 @@ public class TransactionDAO implements GenericDAO<Transaction, Integer> {
                 ArrayList<Transaction> list = new ArrayList<Transaction>();
                 while (rs.next()) {
 
-                    Transaction t = new Transaction(rs.getInt(1));
+                    Transaction t = new Transaction(rs.getInt(1), rs.getInt(2), rs.getString(4));
                     t.setUser(rs.getInt(2));
                     t.setTime(new Date(rs.getTimestamp(3).getTime()));
                     t.setIsin(rs.getString(4));
@@ -193,7 +188,7 @@ public class TransactionDAO implements GenericDAO<Transaction, Integer> {
                 rs = stmt.executeQuery();
                 ArrayList<Transaction> list = new ArrayList<Transaction>();
                 while (rs.next()) {
-                    Transaction t = new Transaction(rs.getInt(1));
+                    Transaction t = new Transaction(rs.getInt(1), rs.getInt(2), rs.getString(4));
                     t.setUser(rs.getInt(2));
                     t.setTime(new Date(rs.getTimestamp(3).getTime()));
                     t.setIsin(rs.getString(4));

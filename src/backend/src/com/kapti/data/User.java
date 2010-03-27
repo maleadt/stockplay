@@ -59,20 +59,6 @@ public class User {
         this.id = id;
     }
 
-    public User(int id, String nickname, String password, String lastname, String firstname, boolean admin, Date regdate, int rrn, int points, double startamount, double cash) {
-        this.id = id;
-        this.nickname = nickname;
-        this.password = password;
-        this.lastname = lastname;
-        this.firstname = firstname;
-        this.regdate = regdate;
-        this.rrn = rrn;
-        this.admin = admin;
-        this.points = points;
-        this.startamount = startamount;
-        this.cash = cash;
-    }
-
 
     //
     // Methods

@@ -46,27 +46,15 @@ public class Instruction {
     // Construction
     //
 
-    public Instruction() {
-    }
-
-    public Instruction(int id) {
-        this.id = id;
-    }
-
-    public Instruction(int id, int user, String isin, int amount, double price, InstructionType type) {
+    public Instruction(int id, int user, String isin) {
         this.id = id;
         this.user = user;
         this.isin = isin;
-        this.amount = amount;
-        this.price = price;
-        this.type = type;
     }
 
-    public Instruction (int user, String isin, int amount, InstructionType type) {
+    public Instruction (int user, String isin) {
         this.user = user;
         this.isin = isin;
-        this.amount = amount;
-        this.type = type;
     }
 
     //
@@ -156,12 +144,6 @@ public class Instruction {
             }
 
             switch (tField) {
-                case USER:
-                    setUser((Integer)tValue);
-                    break;
-                case ISIN:
-                    setIsin((String)tValue);
-                    break;
                 case AMOUNT:
                     setAmount((Integer)tValue);
                     break;

@@ -62,8 +62,18 @@ public class UserDAO implements GenericDAO<User, Integer> {
 
                 rs = stmt.executeQuery();
                 if (rs.next()) {
-
-                    return new User(id, rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getBoolean(5), rs.getDate(6), rs.getInt(7), rs.getInt(8), rs.getDouble(9), rs.getDouble(10));
+                    User tUser = new User(id);
+                    tUser.setNickname(rs.getString(1));
+                    tUser.setPassword(rs.getString(2));
+                    tUser.setLastname(rs.getString(3));
+                    tUser.setFirstname(rs.getString(4));
+                    tUser.setAdmin(rs.getBoolean(5));
+                    tUser.setRegdate(rs.getDate(6));
+                    tUser.setRijksregisternummer(rs.getInt(7));
+                    tUser.setPoints(rs.getInt(8));
+                    tUser.setStartamount(rs.getDouble(9));
+                    tUser.setCash(rs.getDouble(10));
+                    return tUser;
                 } else {
                     throw new NonexistentEntityException("There is no user with id '" + id + "'");
                 }
@@ -97,7 +107,18 @@ public class UserDAO implements GenericDAO<User, Integer> {
                 rs = stmt.executeQuery();
                 ArrayList<User> list = new ArrayList<User>();
                 while (rs.next()) {
-                    list.add(new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getBoolean(6), rs.getDate(7), rs.getInt(8), rs.getInt(9), rs.getDouble(10), rs.getDouble(11)));
+                    User tUser = new User(rs.getInt(1));
+                    tUser.setNickname(rs.getString(2));
+                    tUser.setPassword(rs.getString(3));
+                    tUser.setLastname(rs.getString(4));
+                    tUser.setFirstname(rs.getString(5));
+                    tUser.setAdmin(rs.getBoolean(6));
+                    tUser.setRegdate(rs.getDate(7));
+                    tUser.setRijksregisternummer(rs.getInt(8));
+                    tUser.setPoints(rs.getInt(9));
+                    tUser.setStartamount(rs.getDouble(10));
+                    tUser.setCash(rs.getDouble(11));
+                    list.add(tUser);
                 }
                 return list;
             } finally {
@@ -173,7 +194,18 @@ public class UserDAO implements GenericDAO<User, Integer> {
                 rs = stmt.executeQuery();
                 ArrayList<User> list = new ArrayList<User>();
                 while (rs.next()) {
-                    list.add(new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getBoolean(6), rs.getDate(7), rs.getInt(8), rs.getInt(9), rs.getDouble(10), rs.getDouble(11)));
+                    User tUser = new User(rs.getInt(1));
+                    tUser.setNickname(rs.getString(2));
+                    tUser.setPassword(rs.getString(3));
+                    tUser.setLastname(rs.getString(4));
+                    tUser.setFirstname(rs.getString(5));
+                    tUser.setAdmin(rs.getBoolean(6));
+                    tUser.setRegdate(rs.getDate(7));
+                    tUser.setRijksregisternummer(rs.getInt(8));
+                    tUser.setPoints(rs.getInt(9));
+                    tUser.setStartamount(rs.getDouble(10));
+                    tUser.setCash(rs.getDouble(11));
+                    list.add(tUser);
                 }
                 return list;
             } finally {
@@ -209,7 +241,18 @@ public class UserDAO implements GenericDAO<User, Integer> {
                 rs = stmt.executeQuery();
                 ArrayList<User> list = new ArrayList<User>();
                 while (rs.next()) {
-                    list.add(new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getBoolean(6), rs.getDate(7), rs.getInt(8), rs.getInt(9), rs.getDouble(10), rs.getDouble(11)));
+                    User tUser = new User(rs.getInt(1));
+                    tUser.setNickname(rs.getString(2));
+                    tUser.setPassword(rs.getString(3));
+                    tUser.setLastname(rs.getString(4));
+                    tUser.setFirstname(rs.getString(5));
+                    tUser.setAdmin(rs.getBoolean(6));
+                    tUser.setRegdate(rs.getDate(7));
+                    tUser.setRijksregisternummer(rs.getInt(8));
+                    tUser.setPoints(rs.getInt(9));
+                    tUser.setStartamount(rs.getDouble(10));
+                    tUser.setCash(rs.getDouble(11));
+                    list.add(tUser);
                 }
                 return list;
             } finally {

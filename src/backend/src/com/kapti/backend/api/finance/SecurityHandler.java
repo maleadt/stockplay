@@ -25,8 +25,6 @@ import com.kapti.backend.api.MethodClass;
 import com.kapti.data.persistence.GenericDAO;
 import com.kapti.data.persistence.QuoteDAO;
 
-import com.kapti.exceptions.FilterException;
-import com.kapti.exceptions.ParserException;
 import com.kapti.exceptions.StockPlayException;
 import com.kapti.filter.Filter;
 import com.kapti.filter.parsing.Parser;
@@ -35,10 +33,8 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
-import org.apache.xmlrpc.XmlRpcException;
 import com.kapti.data.Quote;
 import com.kapti.data.Security;
-import com.kapti.data.persistence.SecurityDAO;
 import java.util.Date;
 
 /**
@@ -119,9 +115,8 @@ public class SecurityHandler extends MethodClass {
         GenericDAO<com.kapti.data.Security, String> tSecurityDAO = getDAO().getSecurityDAO();
 
         // TODO: dit moet mooier, kan ook makkelijk crashen
-        com.kapti.data.Security tSecurity = new com.kapti.data.Security((String)iDetails.get("ISIN"), (String)iDetails.get("SYMBOL"));
+        com.kapti.data.Security tSecurity = new Security((String)iDetails.get("ISIN"));
         iDetails.remove("ISIN");
-        iDetails.remove("SYMBOL");
         
         tSecurity.fromStruct(iDetails);
         tSecurityDAO.create(tSecurity);

@@ -43,21 +43,8 @@ public class Exchange  {
     // Construction
     //
 
-    public Exchange(){}
-
     public Exchange(String symbol) {
         this.symbol = symbol;
-    }
-
-    public Exchange(String symbol, String name){
-        this.symbol = symbol;
-        this.name = name;
-    }
-
-    public Exchange(String symbol, String name, String location){
-        this.symbol = symbol;
-        this.name = name;
-        this.location = location;
     }
 
 

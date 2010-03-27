@@ -64,8 +64,9 @@ public class UserSecurityDAO implements GenericDAO<UserSecurity, UserSecurityPK>
 
                 rs = stmt.executeQuery();
                 if (rs.next()) {
-
-                    return new UserSecurity(pk, rs.getInt(1));
+                    UserSecurity tSecurity = new UserSecurity(pk.getUser(), pk.getIsin());
+                    tSecurity.setAmount(rs.getInt(1));
+                    return tSecurity;
                 } else {
                     return null;
                 }
@@ -99,7 +100,9 @@ public class UserSecurityDAO implements GenericDAO<UserSecurity, UserSecurityPK>
                 rs = stmt.executeQuery();
                 ArrayList<UserSecurity> list = new ArrayList<UserSecurity>();
                 while (rs.next()) {
-                    list.add(new UserSecurity(rs.getInt(1), rs.getString(2), rs.getInt(3)));
+                    UserSecurity tSecurity = new UserSecurity(rs.getInt(1), rs.getString(2));
+                    tSecurity.setAmount(rs.getInt(3));
+                    list.add(tSecurity);
                 }
                 return list;
             } finally {
@@ -152,7 +155,9 @@ public class UserSecurityDAO implements GenericDAO<UserSecurity, UserSecurityPK>
                 rs = stmt.executeQuery();
                 ArrayList<UserSecurity> list = new ArrayList<UserSecurity>();
                 while (rs.next()) {
-                    list.add(new UserSecurity(rs.getInt(1), rs.getString(2), rs.getInt(3)));
+                    UserSecurity tSecurity = new UserSecurity(rs.getInt(1), rs.getString(2));
+                    tSecurity.setAmount(rs.getInt(3));
+                    list.add(tSecurity);
                 }
                 return list;
             } finally {
@@ -188,7 +193,9 @@ public class UserSecurityDAO implements GenericDAO<UserSecurity, UserSecurityPK>
                 rs = stmt.executeQuery();
                 ArrayList<UserSecurity> list = new ArrayList<UserSecurity>();
                 while (rs.next()) {
-                    list.add(new UserSecurity(rs.getInt(1), rs.getString(2), rs.getInt(3)));
+                    UserSecurity tSecurity = new UserSecurity(rs.getInt(1), rs.getString(2));
+                    tSecurity.setAmount(rs.getInt(3));
+                    list.add(tSecurity);
                 }
                 return list;
             } finally {

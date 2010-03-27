@@ -50,12 +50,6 @@ public class Index {
     public Index() {
     }
 
-    public Index(int id, String name, String exchange) {
-        this.id = id;
-        this.name = name;
-        this.exchange = exchange;
-    }
-
 
     //
     // Methods

@@ -62,9 +62,7 @@ public class OrderDAO implements GenericDAO<Order, Integer> {
                 rs = stmt.executeQuery();
                 if (rs.next()) {
 
-                    Order o = new Order(id);
-                    o.setUser(rs.getInt(1));
-                    o.setIsin(rs.getString(2));
+                    Order o = new Order(id, rs.getInt(1), rs.getString(2));
                     o.setPrice(rs.getDouble(3));
                     o.setAmount(rs.getInt(4));
                     // type op 5
@@ -111,9 +109,7 @@ public class OrderDAO implements GenericDAO<Order, Integer> {
                 rs = stmt.executeQuery();
                 ArrayList<Order> list = new ArrayList<Order>();
                 while (rs.next()) {
-                    Order o = new Order(rs.getInt(1));
-                    o.setUser(rs.getInt(2));
-                    o.setIsin(rs.getString(3));
+                    Order o = new Order(rs.getInt(1), rs.getInt(2), rs.getString(3));
                     o.setPrice(rs.getDouble(4));
                     o.setAmount(rs.getInt(5));
                     // type op 5
@@ -167,9 +163,7 @@ public class OrderDAO implements GenericDAO<Order, Integer> {
                 rs = stmt.executeQuery();
                 ArrayList<Order> list = new ArrayList<Order>();
                 while (rs.next()) {
-                    Order o = new Order(rs.getInt(1));
-                    o.setUser(rs.getInt(2));
-                    o.setIsin(rs.getString(3));
+                    Order o = new Order(rs.getInt(1), rs.getInt(2), rs.getString(3));
                     o.setPrice(rs.getDouble(4));
                     o.setAmount(rs.getInt(5));
                     // type op 5
@@ -212,9 +206,7 @@ public class OrderDAO implements GenericDAO<Order, Integer> {
                 rs = stmt.executeQuery();
                 ArrayList<Order> list = new ArrayList<Order>();
                 while (rs.next()) {
-                    Order o = new Order(rs.getInt(1));
-                    o.setUser(rs.getInt(2));
-                    o.setIsin(rs.getString(3));
+                    Order o = new Order(rs.getInt(1), rs.getInt(2), rs.getString(3));
                     o.setPrice(rs.getDouble(4));
                     o.setAmount(rs.getInt(5));
                     // type op 5

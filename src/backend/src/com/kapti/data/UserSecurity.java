@@ -42,14 +42,8 @@ public class UserSecurity {
     // Construction
     //
 
-    public UserSecurity(UserSecurityPK pk, int amount) {
-        this.pk = pk;
-        this.amount = amount;
-    }
-
-    public UserSecurity(int user, String isin, int amount){
+    public UserSecurity(int user, String isin){
         this.pk = new UserSecurityPK(user, isin);
-        this.amount = amount;
     }
 
 

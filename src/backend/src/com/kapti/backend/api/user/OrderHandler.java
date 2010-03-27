@@ -64,7 +64,10 @@ public class OrderHandler extends MethodClass {
         // Get DAO reference
         GenericDAO<com.kapti.data.Order, Integer> orDAO = getDAO().getOrderDAO();
 
-        com.kapti.data.Order tOrder = new com.kapti.data.Order();
+        com.kapti.data.Order tOrder = new com.kapti.data.Order((Integer)iDetails.get("USER"), (String)iDetails.get("ISIN"));
+        iDetails.remove("USER");
+        iDetails.remove("ISIN");
+
         tOrder.fromStruct(iDetails);
         orDAO.create(tOrder);
 

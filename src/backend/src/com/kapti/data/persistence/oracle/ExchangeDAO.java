@@ -60,8 +60,10 @@ public class ExchangeDAO implements GenericDAO<Exchange, String> {
 
                 rs = stmt.executeQuery();
                 if (rs.next()) {
-
-                    return new Exchange(symbol, rs.getString(1), rs.getString(2));
+                    Exchange tExchange = new Exchange(symbol);
+                    tExchange.setName(rs.getString(1));
+                    tExchange.setLocation(rs.getString(2));
+                    return tExchange;
                 } else {
                     throw new NonexistentEntityException("There is no security with symbol '" + symbol + "'");
                 }
@@ -95,8 +97,12 @@ public class ExchangeDAO implements GenericDAO<Exchange, String> {
 
                 rs = stmt.executeQuery();
                 ArrayList<Exchange> list = new ArrayList<Exchange>();
-                while (rs.next())
-                    list.add(new Exchange(rs.getString(1), rs.getString(2), rs.getString(3)));
+                while (rs.next()) {
+                    Exchange tExchange = new Exchange(rs.getString(1));
+                    tExchange.setName(rs.getString(2));
+                    tExchange.setLocation(rs.getString(3));
+                    list.add(tExchange);
+                }
                 return list;
             } finally {
                 if (rs != null)
@@ -126,8 +132,12 @@ public class ExchangeDAO implements GenericDAO<Exchange, String> {
 
                 rs = stmt.executeQuery();
                 ArrayList<Exchange> list = new ArrayList<Exchange>();
-                while (rs.next())
-                    list.add(new Exchange(rs.getString(1), rs.getString(2), rs.getString(3)));
+                while (rs.next()) {
+                    Exchange tExchange = new Exchange(rs.getString(1));
+                    tExchange.setName(rs.getString(2));
+                    tExchange.setLocation(rs.getString(3));
+                    list.add(tExchange);
+                }
                 return list;
             } finally {
                 if (rs != null)
@@ -154,8 +164,10 @@ public class ExchangeDAO implements GenericDAO<Exchange, String> {
                 rs = stmt.executeQuery();
                 ArrayList<Exchange> list = new ArrayList<Exchange>();
                 while (rs.next()) {
-
-                    list.add(new Exchange(rs.getString(1), rs.getString(2), rs.getString(3)));
+                    Exchange tExchange = new Exchange(rs.getString(1));
+                    tExchange.setName(rs.getString(2));
+                    tExchange.setLocation(rs.getString(3));
+                    list.add(tExchange);
                 }
                 return list;
             } finally {

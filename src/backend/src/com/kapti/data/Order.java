@@ -47,21 +47,12 @@ public class Order extends Instruction {
     // Construction
     //
 
-
-    public Order(int id){
-        super(id);
+    public Order(int user, String isin) {
+        super(user, isin);
     }
 
-    public Order() {
-    }
-
-    public Order(int id, int user, String isin, int amount, double price, InstructionType type, OrderStatus status, Date creationTime, Date expirationTime, Date executionTime, String parameters) {
-        super(id, user, isin, amount, price, type);
-        this.status =status;
-        this.creationTime = creationTime;
-        this.expirationTime = expirationTime;
-        this.executionTime = executionTime;
-        this.parameters = parameters;
+    public Order(int id, int user, String isin) {
+        super(id, user, isin);
     }
 
     //
@@ -165,12 +156,6 @@ public class Order extends Instruction {
             }
 
             switch (tField) {
-                case USER:
-                    setUser((Integer)tValue);
-                    break;
-                case ISIN:
-                    setIsin((String)tValue);
-                    break;
                 case AMOUNT:
                     setAmount((Integer)tValue);
                     break;
@@ -196,6 +181,7 @@ public class Order extends Instruction {
                 case PARAMETERS:
                     setParameters((String)tValue);
                     break;
+                    
                 default:
                     throw new StockPlayException("requested key '" + tKey + "' cannot be modified");
             }

@@ -47,21 +47,8 @@ public class Quote {
     // Construction
     //
 
-    public Quote(){}
-
     public Quote(String isin, Date time){
         this.pk = new QuotePK(isin, time);
-    }
-
-    public Quote(String isin, Date time, double price, int volume, double bid, double ask, double low, double high, double open) {
-        this.pk = new QuotePK(isin, time);
-        this.price = price;
-        this.volume = volume;
-        this.bid = bid;
-        this.ask = ask;
-        this.low = low;
-        this.high = high;
-        this.open = open;
     }
 
 

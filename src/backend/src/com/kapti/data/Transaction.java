@@ -43,13 +43,12 @@ public class Transaction extends Instruction {
     // Construction
     //
 
-    public Transaction(int id){
-        super(id);
+    public Transaction(int user, String isin) {
+        super(user, isin);
     }
 
-    public Transaction(int id, int user, String isin, int amount, double price, InstructionType type, Date time) {
-        super(id, user, isin, amount, price, type);
-        this.time = time;
+    public Transaction(int id, int user, String isin) {
+        super(id, user, isin);
     }
 
 
@@ -110,12 +109,6 @@ public class Transaction extends Instruction {
             }
 
             switch (tField) {
-                case USER:
-                    setUser((Integer)tValue);
-                    break;
-                case ISIN:
-                    setIsin((String)tValue);
-                    break;
                 case AMOUNT:
                     setAmount((Integer)tValue);
                     break;

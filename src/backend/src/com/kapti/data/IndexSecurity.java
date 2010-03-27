@@ -79,27 +79,7 @@ public class IndexSecurity {
         return oStruct;
     }
 
-    public void fromStruct(Hashtable<String, Object> iStruct) throws StockPlayException {/*
-        for (String tKey : iStruct.keySet()) {
-            Object tValue = iStruct.get(tKey);
-            Fields tField = null;
-            try {
-                tField = Fields.valueOf(tKey);
-            }
-            catch (IllegalArgumentException e) {
-                throw new StockPlayException("requested key '" + tKey + "' does not exist");
-            }
-
-            switch (tField) {
-                case INDEX:
-                    setIndex((Integer)tValue);
-                    break;
-                default:
-                    throw new StockPlayException("requested key '" + tKey + "' cannot be modified");
-            }
-        }*/
-
-
-        throw new StockPlayException("Niets om in te vullen normaalgezien??");
+    public void fromStruct(Hashtable<String, Object> iStruct) throws StockPlayException {
+        throw new StockPlayException("no keys can be modified");
     }
 }

@@ -32,7 +32,7 @@ public class Security {
 
     public static enum Fields {
 
-        ISIN,SYMBOL, NAME, EXCHANGE, VISIBLE, SUSPENDED
+        ISIN, SYMBOL, NAME, EXCHANGE, VISIBLE, SUSPENDED
     }
     private String isin = "";
     private String symbol = "";
@@ -44,32 +44,9 @@ public class Security {
     //
     // Construction
     //
-    public Security() {
-    }
 
     public Security(String isin) {
         this.isin = isin;
-    }
-
-    public Security(String isin, String symbol) {
-        this.isin = isin;
-        this.symbol = symbol;
-    }
-
-    public Security(String isin, String symbol, String name, String exchange) {
-        this.isin = isin;
-        this.symbol = symbol;
-        this.name = name;
-        this.exchange = exchange;
-    }
-
-    public Security(String isin, String symbol, String name, String exchange, boolean visible, boolean suspended) {
-        this.isin = isin;
-        this.symbol = symbol;
-        this.name = name;
-        this.exchange = exchange;
-        this.visible = visible;
-        this.suspended = suspended;
     }
 
 
@@ -159,6 +136,9 @@ public class Security {
             }
 
             switch (tField) {
+                case SYMBOL:
+                    setSymbol((String) tValue);
+                    break;
                 case NAME:
                     setName((String) tValue);
                     break;
