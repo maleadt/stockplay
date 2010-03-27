@@ -65,7 +65,7 @@ public class IndexDAO implements GenericDAO<Index, Integer> {
                     tIndex.setExchange(rs.getString(2));
                     return tIndex;
                 } else {
-                    throw new NonexistentEntityException("There is no index with id '" + id + "'");
+                    throw new InvocationException(InvocationException.Type.NON_EXISTING_ENTITY, "There is no index with id '" + id + "'");
                 }
             } finally {
                 if (rs != null) {

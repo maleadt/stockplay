@@ -22,6 +22,8 @@
 
 package com.kapti.data;
 
+import com.kapti.exceptions.InvocationException;
+import com.kapti.exceptions.ServiceException;
 import com.kapti.exceptions.StockPlayException;
 import java.util.Hashtable;
 
@@ -124,7 +126,7 @@ public class Exchange  {
                 tField = Fields.valueOf(tKey);
             }
             catch (IllegalArgumentException e) {
-                throw new StockPlayException("requested key '" + tKey + "' does not exist");
+                throw new InvocationException(InvocationException.Type.NON_EXISTING_ENTITY, "requested key '" + tKey + "' does not exist");
             }
 
             switch (tField) {
@@ -135,7 +137,7 @@ public class Exchange  {
                     setLocation((String)tValue);
                     break;
                 default:
-                    throw new StockPlayException("requested key '" + tKey + "' cannot be modified");
+                    throw new InvocationException(InvocationException.Type.READ_ONLY_KEY, "requested key '" + tKey + "' cannot be modified");
             }
         }
     }
@@ -149,7 +151,7 @@ public class Exchange  {
                 tField = Fields.valueOf(tKey);
             }
             catch (IllegalArgumentException e) {
-                throw new StockPlayException("requested key '" + tKey + "' does not exist");
+                throw new InvocationException(InvocationException.Type.NON_EXISTING_ENTITY, "requested key '" + tKey + "' does not exist");
             }
             tStructMap.put(tField, tKey);
         }
@@ -160,7 +162,7 @@ public class Exchange  {
             iStruct.remove(tStructMap.get(Fields.SYMBOL));
             return tExchange;
         } else {
-            throw new StockPlayException("not enough information to instantiate object");
+            throw new ServiceException(ServiceException.Type.NOT_ENOUGH_INFORMATION);
         }
     }
    

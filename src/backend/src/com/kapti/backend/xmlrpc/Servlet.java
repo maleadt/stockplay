@@ -24,10 +24,10 @@ package com.kapti.backend.xmlrpc;
 import com.kapti.data.persistence.StockPlayDAO;
 import com.kapti.data.persistence.StockPlayDAOFactory;
 import com.kapti.exceptions.StockPlayException;
-import com.kapti.backend.api.Error;
 import java.io.IOException;
 import java.net.URL;
 import javax.servlet.ServletConfig;
+import org.apache.log4j.Logger;
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.server.AbstractReflectiveHandlerMapping.AuthenticationHandler;
 import org.apache.xmlrpc.server.PropertyHandlerMapping;
@@ -51,7 +51,7 @@ public class Servlet extends XmlRpcServlet {
     //
 
     private StockPlayDAO mDAO;
-
+    static Logger mLogger = Logger.getLogger(Servlet.class);
 
     //
     // Constructie
@@ -63,7 +63,8 @@ public class Servlet extends XmlRpcServlet {
             mDAO = StockPlayDAOFactory.getDAO();
         }
         catch (StockPlayException e) {
-            throw Error.INTERNAL_FAILURE.getException();
+            mLogger.error("Can't start StockPlayDAOFactory");
+            throw new RuntimeException("Can't start StockPlayDAOFactory");
         }
     }
 

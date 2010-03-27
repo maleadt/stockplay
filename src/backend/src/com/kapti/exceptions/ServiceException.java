@@ -1,6 +1,6 @@
 /*
- * FilterException.java
- * StockPlay - Fout met de filter
+ * ServiceException.java
+ * StockPlay - Service bezwaren
  *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
@@ -22,14 +22,16 @@
 
 package com.kapti.exceptions;
 
-public final class FilterException extends StockPlayException {
-
+public final class ServiceException extends StockPlayException {
+    
     public static enum Type implements Error {
         //
         // Beschikbare foutmeldingen
         //
 
-        FILTER_FAILURE(31, "Filter Failure");
+        SERVICE_UNAVAILABLE(10, "Service Unavailable"),
+        UNAUTHORIZED(11, "Unauthorized"),
+        NOT_ENOUGH_INFORMATION(12, "not enough information to instantiate object");
 
         private final int mCode;
         private final String mMessage;
@@ -54,12 +56,20 @@ public final class FilterException extends StockPlayException {
         }
     }
 
-    public FilterException(Type iType, String message) {
+    public ServiceException(Type iType, String message) {
         super(iType.getCode(), iType.getMessage() + ": " + message);
     }
 
-    public FilterException(Type iType, String message, Throwable cause) {
+    public ServiceException(Type iType, String message, Throwable cause) {
         super(iType.getCode(), iType.getMessage() + ": " + message, cause);
+    }
+
+    public ServiceException(Type iType) {
+        super(iType.getCode(), iType.getMessage());
+    }
+
+    public ServiceException(Type iType, Throwable cause) {
+        super(iType.getCode(), iType.getMessage(), cause);
     }
 
 }

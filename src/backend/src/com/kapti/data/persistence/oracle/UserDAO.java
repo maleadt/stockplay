@@ -75,7 +75,7 @@ public class UserDAO implements GenericDAO<User, Integer> {
                     tUser.setCash(rs.getDouble(10));
                     return tUser;
                 } else {
-                    throw new NonexistentEntityException("There is no user with id '" + id + "'");
+                    throw new InvocationException(InvocationException.Type.NON_EXISTING_ENTITY, "There is no user with id '" + id + "'");
                 }
             } finally {
                 if (rs != null) {

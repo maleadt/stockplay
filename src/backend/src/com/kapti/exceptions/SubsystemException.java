@@ -1,6 +1,6 @@
 /*
- * FilterException.java
- * StockPlay - Fout met de filter
+ * DBException.java
+ * StockPlay - Niet gevonden
  *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
@@ -22,14 +22,15 @@
 
 package com.kapti.exceptions;
 
-public final class FilterException extends StockPlayException {
-
+public final class SubsystemException extends StockPlayException {
+    
     public static enum Type implements Error {
         //
         // Beschikbare foutmeldingen
         //
 
-        FILTER_FAILURE(31, "Filter Failure");
+        DATABASE_FAILURE(1, "Database Failure"),
+        SCRAPER_FAILURE(2, "Scraper Failure");
 
         private final int mCode;
         private final String mMessage;
@@ -54,11 +55,11 @@ public final class FilterException extends StockPlayException {
         }
     }
 
-    public FilterException(Type iType, String message) {
+    public SubsystemException(Type iType, String message) {
         super(iType.getCode(), iType.getMessage() + ": " + message);
     }
 
-    public FilterException(Type iType, String message, Throwable cause) {
+    public SubsystemException(Type iType, String message, Throwable cause) {
         super(iType.getCode(), iType.getMessage() + ": " + message, cause);
     }
 

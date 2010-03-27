@@ -35,7 +35,6 @@ import java.util.Map;
 import java.util.Vector;
 import com.kapti.data.Quote;
 import com.kapti.data.Security;
-import java.util.Date;
 
 /**
  * \brief   Handler van de Finance.Security subklasse.

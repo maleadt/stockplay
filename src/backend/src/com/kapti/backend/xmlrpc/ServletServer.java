@@ -24,7 +24,7 @@ package com.kapti.backend.xmlrpc;
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.XmlRpcRequest;
 import org.apache.xmlrpc.webserver.XmlRpcServletServer;
-import com.kapti.backend.api.Error;
+import com.kapti.exceptions.InvocationException;
 import org.apache.log4j.Logger;
 
 /**
@@ -64,16 +64,15 @@ public class ServletServer extends XmlRpcServletServer {
                 mLogger.error("untrapped exception (" + tMessage + ")");
                 
                 // Detect exception subtype
-                if (tMessage.contains("No method matching arguments")) {
-                    throw Error.BAD_REQUEST.getException(iException.getCause());
-                }
-                else if (tMessage.contains("No such handler")) {
-                    throw Error.NOT_FOUND.getException(iException.getCause());
-                }
+                if (tMessage.contains("No method matching arguments"))
+                    throw new InvocationException(InvocationException.Type.BAD_REQUEST,iException.getCause());
+                else if (tMessage.contains("No such handler"))
+                    throw new InvocationException(InvocationException.Type.NOT_FOUND,iException.getCause());
                 
                 // No exception subtype matched, throw an internal failure
-                throw Error.INTERNAL_FAILURE.getException(iException.getCause());
+                throw new RuntimeException(iException.getCause());
             } else {
+                mLogger.error(iException.getMessage() + iException.getCause());
                 throw iException;
             }
         }

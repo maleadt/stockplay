@@ -1,13 +1,31 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * SystemBackandTest.java
+ * StockPlay - Testcase voor de Finance Backand
+ *
+ * Copyright (c) 2010 StockPlay development team
+ * All rights reserved.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
+
 package com.kapti.backend;
 
 import com.kapti.data.Exchange;
 import com.kapti.data.Quote;
 import com.kapti.data.Security;
-import com.kapti.exceptions.StockPlayException;
+import com.kapti.exceptions.InternalException;
 import java.net.URL;
 import java.util.Date;
 import java.util.HashMap;
@@ -20,10 +38,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.Assert;
 
-/**
- *
- * @author Thijs
- */
 public class FinanceBackendTest {
 
     private static XmlRpcClient client = null;
@@ -109,7 +123,7 @@ public class FinanceBackendTest {
                 res.setName((String) hashObj.get("NAME"));
                 res.setLocation((String) hashObj.get("LOCATION"));
             } else {
-                throw new StockPlayException("Expected Hashtable, but got an " + exch.getClass());
+                throw new InternalException(InternalException.Type.INTERNAL_FAILURE, "Expected Hashtable, but got an " + exch.getClass());
             }
         }
     }
@@ -129,7 +143,7 @@ public class FinanceBackendTest {
                 res.setName((String) hashObj.get("NAME"));
                 res.setLocation((String) hashObj.get("LOCATION"));
             } else {
-                throw new StockPlayException("Expected Hashtable, but got an " + exch.getClass());
+                throw new InternalException(InternalException.Type.INTERNAL_FAILURE, "Expected Hashtable, but got an " + exch.getClass());
             }
         }
     }

@@ -22,14 +22,9 @@
 
 package com.kapti.exceptions;
 
-public class NonexistentEntityException extends StockPlayException {
+public interface Error {
 
-    public NonexistentEntityException(String message) {
-        super(message);
-    }
-
-    public NonexistentEntityException(String message, Throwable cause) {
-        super(message, cause);
-    }
+    public int getCode();
+    public String getMessage();
 
 }

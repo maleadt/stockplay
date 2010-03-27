@@ -1,6 +1,6 @@
 /*
- * FilterException.java
- * StockPlay - Fout met de filter
+ * InvocationException.java
+ * StockPlay - Niet gevonden
  *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
@@ -22,14 +22,20 @@
 
 package com.kapti.exceptions;
 
-public final class FilterException extends StockPlayException {
+public final class InvocationException extends StockPlayException {
 
     public static enum Type implements Error {
         //
         // Beschikbare foutmeldingen
         //
 
-        FILTER_FAILURE(31, "Filter Failure");
+        VERSION_NOT_SUPPORTED(20, "Version Not Supported"),
+        NOT_FOUND(21, "Not Found"),
+        BAD_REQUEST(22, "Bad Request"),
+        NON_EXISTING_ENTITY(23, "Non Existing Entity"),
+        PRE_EXISTING_ENTITY(24, "Pre Existing Entity"),
+        READ_ONLY_KEY(25, "Request to modify a read only key"),
+        KEY_DOES_NOT_EXIST(25, "Requested key does not exist");
 
         private final int mCode;
         private final String mMessage;
@@ -54,12 +60,20 @@ public final class FilterException extends StockPlayException {
         }
     }
 
-    public FilterException(Type iType, String message) {
+    public InvocationException(Type iType, String message) {
         super(iType.getCode(), iType.getMessage() + ": " + message);
     }
 
-    public FilterException(Type iType, String message, Throwable cause) {
+    public InvocationException(Type iType, String message, Throwable cause) {
         super(iType.getCode(), iType.getMessage() + ": " + message, cause);
+    }
+
+    public InvocationException(Type iType) {
+        super(iType.getCode(), iType.getMessage());
+    }
+
+    public InvocationException(Type iType, Throwable cause) {
+        super(iType.getCode(), iType.getMessage(), cause);
     }
 
 }

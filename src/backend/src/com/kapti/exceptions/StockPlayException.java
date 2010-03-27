@@ -25,11 +25,20 @@ package com.kapti.exceptions;
 import org.apache.xmlrpc.XmlRpcException;
 
 public class StockPlayException extends XmlRpcException {
-    public StockPlayException(String message, Throwable cause) {
-        super(message, cause);
+
+    private final int mCode;
+    private final String mMessage;
+
+    public StockPlayException(int iCode, String message) {
+        super(iCode, message);
+        this.mCode = iCode;
+        mMessage = message;
     }
 
-    public StockPlayException(String message) {
-        super(message);
+    public StockPlayException(int iCode, String message, Throwable cause) {
+        super(iCode, message, cause);
+        this.mCode = iCode;
+        mMessage = message;
     }
+
 }

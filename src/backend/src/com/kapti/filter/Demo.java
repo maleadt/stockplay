@@ -22,8 +22,10 @@
 package com.kapti.filter;
 
 import com.kapti.exceptions.FilterException;
-import com.kapti.exceptions.ParserException;
+import com.kapti.exceptions.StockPlayException;
 import com.kapti.filter.parsing.Parser;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
@@ -51,7 +53,7 @@ public class Demo {
         try {
             tFilter = tParser.parse("");
         }
-        catch (ParserException e) {
+        catch (StockPlayException e) {
             System.err.println("Parsing failed");
             e.printStackTrace();
         }
@@ -60,7 +62,7 @@ public class Demo {
         try {
             tFilter.debug("/tmp/AST");
         }
-        catch (FilterException e) {
+        catch (StockPlayException e) {
             System.out.println("Debug dump failed");
             e.printStackTrace();
         }

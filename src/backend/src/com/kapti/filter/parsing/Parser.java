@@ -21,7 +21,8 @@
  */
 package com.kapti.filter.parsing;
 
-import com.kapti.exceptions.ParserException;
+import com.kapti.exceptions.FilterException;
+import com.kapti.exceptions.StockPlayException;
 import com.kapti.filter.Convertable;
 import com.kapti.filter.Filter;
 import com.kapti.filter.condition.Condition;
@@ -122,7 +123,7 @@ public class Parser {
     //
 
     // Main method
-    public Filter parse(String iSource) throws ParserException {
+    public Filter parse(String iSource) throws StockPlayException {
         mLogger.debug("parsing string '" + iSource + "'");
 
         // Lexical analysis
@@ -136,7 +137,7 @@ public class Parser {
     }
 
     // Lexical analysis: the tokenizer
-    List<Token> tokenize(String iSource) throws ParserException {
+    List<Token> tokenize(String iSource) throws StockPlayException {
         // Setup
         int tPosition = 0;
         final int tEnd = iSource.length();
@@ -157,11 +158,9 @@ public class Parser {
                     // Fetch the relevant content
                     String tContent = null;
                     int tGroup = tMatcher.groupCount();
-                    if (tGroup > 1) {
-                        throw new ParserException("found multiple matching groups within rule");
-                    }
+                    if (tGroup > 1)
+                        throw new FilterException(FilterException.Type.FILTER_FAILURE, "found multiple matching groups within rule");
                     tContent = iSource.substring(tMatcher.start(tGroup), tMatcher.end(tGroup));
-
                     tMatches.add(new Token(tRule.getType(), tMatcher.start(), tMatcher.end(), tContent));
                 }
             }
@@ -177,7 +176,7 @@ public class Parser {
                 oTokens.add(tTokenLongest);
                 tPosition = tTokenLongest.getEnd();
             } else
-                throw new ParserException("unknown character '" + iSource.substring(tPosition, tPosition+1) + "'");
+                throw new FilterException(FilterException.Type.FILTER_FAILURE, "unknown character '" + iSource.substring(tPosition, tPosition+1) + "'");
         }
         return oTokens;
     }
@@ -185,7 +184,7 @@ public class Parser {
     // Lexical analysis: the infix to postfix convertor (the shunting-yard algorithm)
     // TODO: support functions with variable amount of parameters
     //       http://www.kallisti.net.nz/blog/2008/02/extension-to-the-shunting-yard-algorithm-to-allow-variable-numbers-of-arguments-to-functions/
-    public Queue<Token> infix_to_postfix(List<Token> iInfix) throws ParserException {
+    public Queue<Token> infix_to_postfix(List<Token> iInfix) throws StockPlayException {
         Queue<Token> tQueue = new LinkedList<Token>();
         Stack<Token> tStack = new Stack<Token>();
 
@@ -202,12 +201,12 @@ public class Parser {
 
                 case COMMA:
                     if (tStack.isEmpty())
-                        throw new ParserException("misplaced comma or mismatched parenthesis");
+                        throw new FilterException(FilterException.Type.FILTER_FAILURE, "misplaced comma or mismatched parenthesis");
                     
                     while (tStack.peek().getType() != TokenType.LEFT_PARENTHESIS) {
                         tQueue.add(tStack.pop());
                         if (tStack.isEmpty())
-                            throw new ParserException("misplaced comma or mismatched parenthesis");
+                            throw new FilterException(FilterException.Type.FILTER_FAILURE, "misplaced comma or mismatched parenthesis");
                     }
                     break;
 
@@ -231,7 +230,7 @@ public class Parser {
                                 break;
                             }
                             else
-                                throw new ParserException("precedence between equally-typed operators has not been defined (e.g. use brackets!)");
+                                throw new FilterException(FilterException.Type.FILTER_FAILURE, "precedence between equally-typed operators has not been defined (e.g. use brackets!)");
                         }
                         tStack.push(tToken);
                     }
@@ -248,12 +247,12 @@ public class Parser {
 
                 case RIGHT_PARENTHESIS:
                     if (tStack.isEmpty())
-                        throw new ParserException("mismatched parenthesis");
+                        throw new FilterException(FilterException.Type.FILTER_FAILURE, "mismatched parenthesis");
 
                     while (!tStack.isEmpty() && tStack.peek().getType() != TokenType.LEFT_PARENTHESIS) {
                         tQueue.add(tStack.pop());
                         if (tStack.isEmpty())
-                            throw new ParserException("mismatched parenthesis");
+                            throw new FilterException(FilterException.Type.FILTER_FAILURE, "mismatched parenthesis");
                     }
                     
                     tStack.pop();
@@ -266,7 +265,7 @@ public class Parser {
                     break;
                     
                 default: {
-                    throw new ParserException("unknown token " + tToken);
+                    throw new FilterException(FilterException.Type.FILTER_FAILURE, "unknown token " + tToken);
                 }
             }
         }
@@ -277,14 +276,14 @@ public class Parser {
             switch (tToken.getType()) {
                 case LEFT_PARENTHESIS:
                 case RIGHT_PARENTHESIS:
-                    throw new ParserException("mismatched parenthesis");
+                    throw new FilterException(FilterException.Type.FILTER_FAILURE, "mismatched parenthesis");
 
                 case WORD:
                     tQueue.add(tToken);
                     break;
                     
                 default:
-                    throw new ParserException("mismatched token " + tToken);
+                    throw new FilterException(FilterException.Type.FILTER_FAILURE, "mismatched token " + tToken);
             }
         }
         
@@ -292,7 +291,7 @@ public class Parser {
     }
 
     // Syntactic analysis: the interpreter
-    public Filter interprete(Queue<Token> iTokens) throws ParserException {
+    public Filter interprete(Queue<Token> iTokens) throws StockPlayException {
         Filter oFilter = new Filter();
         Stack<Convertable> tStack = new Stack<Convertable>();
 
@@ -328,32 +327,31 @@ public class Parser {
                         // Fetch parameter signature
                         Method[] tMethods = tClass.getMethods();
                         Method tSignatureMethod = null;
-                        for (Method tMethod : tMethods) {
+                        for (Method tMethod : tMethods)
                             if (Modifier.isStatic(tMethod.getModifiers()) && tMethod.getName().compareTo("getSignature") == 0)
                                 tSignatureMethod = tMethod;
-                        }
                         if (tSignatureMethod == null)
-                            throw new ParserException("could not get parameter signature of class due to missing definition");
+                            throw new FilterException(FilterException.Type.FILTER_FAILURE, "could not get parameter signature of class due to missing definition");
                         Class[] tParameterSignature;
                         try {
                             Object tReturn = tSignatureMethod.invoke(null);
                             tParameterSignature = (Class[]) tReturn;
                         }
                         catch (Exception e) {
-                            throw new ParserException("could not get parameter signature of class", e.getCause());
+                            throw new FilterException(FilterException.Type.FILTER_FAILURE, "could not get parameter signature of class", e.getCause());
                         }
 
                         // Handle parameters
                         int tParameterCount = tParameterSignature.length;
                         if (tStack.size() < tParameterCount)
-                            throw new ParserException("parameter mismatch, I expected " + tParameterCount + " of them but only got " + tStack.size());
+                            throw new FilterException(FilterException.Type.FILTER_FAILURE, "parameter mismatch, I expected " + tParameterCount + " of them but only got " + tStack.size());
                         Vector<Convertable> tParameters = new Vector<Convertable>();
                         tParameters.setSize(tParameterCount);
                         for (int i = tParameterCount-1; i >= 0; i--) { // mind the reversion of the argument order
                             Convertable tParameter = tStack.pop();
                             Class tExpected = tParameterSignature[i];
                             if (!(tExpected.isInstance(tParameter)))
-                                throw new ParserException("parameter mismatch, I expected a " + tExpected + " but got a " + tParameter.getClass());
+                                throw new FilterException(FilterException.Type.FILTER_FAILURE, "parameter mismatch, I expected a " + tExpected + " but got a " + tParameter.getClass());
                             tParameters.set(i, tParameter);
                         }
 
@@ -365,10 +363,10 @@ public class Parser {
                             tObject = tConstructor.newInstance(tParameters);
                         }
                         catch (Exception e) {
-                            throw new ParserException("error instantiating operator", e.getCause());
+                            throw new FilterException(FilterException.Type.FILTER_FAILURE, "error instantiating operator", e.getCause());
                         }
                         if (!(tObject instanceof Condition))
-                            throw new ParserException("attempt to instantiate non condition-typed operator (check the ruleset)");
+                            throw new FilterException(FilterException.Type.FILTER_FAILURE, "attempt to instantiate non condition-typed operator (check the ruleset)");
                         tCondition = (Condition) tObject;
 
                         // Push the result
@@ -380,16 +378,16 @@ public class Parser {
                     break;
                 
                 default:
-                    throw new ParserException("unknown token " + tToken);
+                    throw new FilterException(FilterException.Type.FILTER_FAILURE, "unknown token " + tToken);
             }
         }
 
         if (tStack.size() != 1) {
-            throw new ParserException("filter evaluation failed: result count mismatch");
+            throw new FilterException(FilterException.Type.FILTER_FAILURE, "filter evaluation failed: result count mismatch");
         }
         Convertable tRoot = tStack.pop();
         if (!(tRoot instanceof Condition))
-            throw new ParserException("root node should be a condition");
+            throw new FilterException(FilterException.Type.FILTER_FAILURE, "root node should be a condition");
 
         oFilter.setRoot((Condition)tRoot);
 

@@ -22,6 +22,8 @@
 
 package com.kapti.data;
 
+import com.kapti.exceptions.InvocationException;
+import com.kapti.exceptions.ServiceException;
 import com.kapti.exceptions.StockPlayException;
 import java.util.Hashtable;
 
@@ -80,7 +82,7 @@ public class IndexSecurity {
     }
 
     public void applyStruct(Hashtable<String, Object> iStruct) throws StockPlayException {
-        throw new StockPlayException("no keys can be modified");
+        throw new InvocationException(InvocationException.Type.READ_ONLY_KEY, "No keys can be modified");
     }
 
     public static IndexSecurity fromStruct(Hashtable<String, Object> iStruct) throws StockPlayException {
@@ -92,7 +94,7 @@ public class IndexSecurity {
                 tField = Fields.valueOf(tKey);
             }
             catch (IllegalArgumentException e) {
-                throw new StockPlayException("requested key '" + tKey + "' does not exist");
+                throw new InvocationException(InvocationException.Type.NON_EXISTING_ENTITY, "requested key '" + tKey + "' does not exist");
             }
             tStructMap.put(tField, tKey);
         }
@@ -103,8 +105,7 @@ public class IndexSecurity {
             iStruct.remove(tStructMap.get(Fields.ISIN));
             iStruct.remove(tStructMap.get(Fields.INDEX));
             return tIndexSecurity;
-        } else {
-            throw new StockPlayException("not enough information to instantiate object");
-        }
+        } else
+            throw new ServiceException(ServiceException.Type.NOT_ENOUGH_INFORMATION);
     }
 }

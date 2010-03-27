@@ -22,6 +22,8 @@
 
 package com.kapti.data;
 
+import com.kapti.exceptions.InvocationException;
+import com.kapti.exceptions.ServiceException;
 import com.kapti.exceptions.StockPlayException;
 import java.util.Date;
 import java.util.Hashtable;
@@ -198,7 +200,7 @@ public class User {
                 tField = Fields.valueOf(tKey.toUpperCase());
             }
             catch (IllegalArgumentException e) {
-                throw new StockPlayException("requested key '" + tKey + "' does not exist");
+                throw new InvocationException(InvocationException.Type.KEY_DOES_NOT_EXIST, "requested key '" + tKey + "' does not exist");
             }
 
             switch (tField) {
@@ -234,7 +236,7 @@ public class User {
                     break;
 
                 default:
-                    throw new StockPlayException("requested key '" + tKey + "' cannot be modified");
+                    throw new InvocationException(InvocationException.Type.READ_ONLY_KEY, "requested key '" + tKey + "' cannot be modified");
             }
         }
     }
@@ -248,7 +250,7 @@ public class User {
                 tField = Fields.valueOf(tKey);
             }
             catch (IllegalArgumentException e) {
-                throw new StockPlayException("requested key '" + tKey + "' does not exist");
+                throw new InvocationException(InvocationException.Type.KEY_DOES_NOT_EXIST, "requested key '" + tKey + "' does not exist");
             }
             tStructMap.put(tField, tKey);
         }
@@ -258,8 +260,7 @@ public class User {
             User tUser = new User((Integer)iStruct.get(tStructMap.get(Fields.ID)));
             iStruct.remove(tStructMap.get(Fields.ID));
             return tUser;
-        } else {
-            throw new StockPlayException("not enough information to instantiate object");
-        }
+        } else
+            throw new ServiceException(ServiceException.Type.NOT_ENOUGH_INFORMATION);
     }
 }

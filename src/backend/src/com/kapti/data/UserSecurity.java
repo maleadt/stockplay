@@ -22,6 +22,7 @@
 
 package com.kapti.data;
 
+import com.kapti.exceptions.InvocationException;
 import com.kapti.exceptions.StockPlayException;
 import java.util.Hashtable;
 
@@ -89,7 +90,7 @@ public class UserSecurity {
                 tField = Fields.valueOf(tKey.toUpperCase());
             }
             catch (IllegalArgumentException e) {
-                throw new StockPlayException("requested key '" + tKey + "' does not exist");
+                throw new InvocationException(InvocationException.Type.KEY_DOES_NOT_EXIST, "requested key '" + tKey + "' does not exist");
             }
 
             switch (tField) {
@@ -97,7 +98,7 @@ public class UserSecurity {
                     setAmount((Integer)tValue);
                     break;
                 default:
-                    throw new StockPlayException("requested key '" + tKey + "' cannot be modified");
+                    throw new InvocationException(InvocationException.Type.READ_ONLY_KEY,  "requested key '" + tKey + "' cannot be modified");
             }
         }
     }

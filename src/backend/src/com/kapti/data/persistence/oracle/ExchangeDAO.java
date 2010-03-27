@@ -65,7 +65,7 @@ public class ExchangeDAO implements GenericDAO<Exchange, String> {
                     tExchange.setLocation(rs.getString(2));
                     return tExchange;
                 } else {
-                    throw new NonexistentEntityException("There is no security with symbol '" + symbol + "'");
+                    throw new InvocationException(InvocationException.Type.NON_EXISTING_ENTITY, "There is no security with symbol '" + symbol + "'");
                 }
             } finally {
                 if (rs != null) {

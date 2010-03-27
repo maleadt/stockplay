@@ -23,13 +23,13 @@
 package com.kapti.backend.api;
 
 import com.kapti.data.persistence.GenericDAO;
+import com.kapti.exceptions.InvocationException;
 import com.kapti.exceptions.StockPlayException;
 import com.kapti.filter.Filter;
 import com.kapti.filter.parsing.Parser;
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Vector;
-import org.apache.xmlrpc.XmlRpcException;
 
 /**
  * \brief   Handler van de User klasse.
@@ -44,10 +44,10 @@ public class UserHandler extends MethodClass {
     // Methodes
     //
 
-    public int Hello(String iClient, int iProtocolVersion) throws XmlRpcException {
+    public int Hello(String iClient, int iProtocolVersion) throws StockPlayException {
         getLogger().info("Client connected: " + iClient);
         if (iProtocolVersion != PROTOCOL_VERSION)
-            throw Error.VERSION_NOT_SUPPORTED.getException();
+            throw new InvocationException(InvocationException.Type.VERSION_NOT_SUPPORTED);
         return 1;
     }
 

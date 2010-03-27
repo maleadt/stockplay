@@ -69,7 +69,7 @@ public class TransactionDAO implements GenericDAO<Transaction, Integer> {
                     return t;
 
                 } else {
-                    throw new NonexistentEntityException("There is no transaction with id '" + id + "'");
+                    throw new InvocationException(InvocationException.Type.NON_EXISTING_ENTITY, "There is no transaction with id '" + id + "'");
                 }
             } finally {
                 if (rs != null) {

@@ -90,4 +90,3 @@ public class IndexHandler extends MethodClass {
         return 1;
     }
 }
-

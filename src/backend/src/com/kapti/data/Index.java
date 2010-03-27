@@ -22,6 +22,7 @@
 
 package com.kapti.data;
 
+import com.kapti.exceptions.InvocationException;
 import com.kapti.exceptions.StockPlayException;
 import java.util.Hashtable;
 
@@ -101,7 +102,7 @@ public class Index {
                 tField = Fields.valueOf(tKey);
             }
             catch (IllegalArgumentException e) {
-                throw new StockPlayException("requested key '" + tKey + "' does not exist");
+                throw new InvocationException(InvocationException.Type.NON_EXISTING_ENTITY, "requested key '" + tKey + "' does not exist");
             }
 
             switch (tField) {
@@ -112,7 +113,7 @@ public class Index {
                     setExchange((String)tValue);
                     break;
                 default:
-                    throw new StockPlayException("requested key '" + tKey + "' cannot be modified");
+                    throw new InvocationException(InvocationException.Type.NON_EXISTING_ENTITY, "requested key '" + tKey + "' cannot be modified");
             }
         }
     }
@@ -126,7 +127,7 @@ public class Index {
                 tField = Fields.valueOf(tKey);
             }
             catch (IllegalArgumentException e) {
-                throw new StockPlayException("requested key '" + tKey + "' does not exist");
+                throw new InvocationException(InvocationException.Type.NON_EXISTING_ENTITY, "requested key '" + tKey + "' does not exist");
             }
             tStructMap.put(tField, tKey);
         }

@@ -1,6 +1,6 @@
 /*
- * FilterException.java
- * StockPlay - Fout met de filter
+ * InternalException.java
+ * StockPlay - Internal Exception
  *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
@@ -22,14 +22,14 @@
 
 package com.kapti.exceptions;
 
-public final class FilterException extends StockPlayException {
+public final class InternalException extends StockPlayException {
 
     public static enum Type implements Error {
         //
         // Beschikbare foutmeldingen
         //
 
-        FILTER_FAILURE(31, "Filter Failure");
+        INTERNAL_FAILURE(0, "Internal Failure");
 
         private final int mCode;
         private final String mMessage;
@@ -54,12 +54,12 @@ public final class FilterException extends StockPlayException {
         }
     }
 
-    public FilterException(Type iType, String message) {
-        super(iType.getCode(), iType.getMessage() + ": " + message);
+    public InternalException(Type iType, String message) {
+        super(iType.getCode(), iType.getMessage() + ':' + message);
     }
 
-    public FilterException(Type iType, String message, Throwable cause) {
-        super(iType.getCode(), iType.getMessage() + ": " + message, cause);
+    public InternalException(Type iType, String message, Throwable cause) {
+        super(iType.getCode(), iType.getMessage() + ':' + message, cause);
     }
 
 }

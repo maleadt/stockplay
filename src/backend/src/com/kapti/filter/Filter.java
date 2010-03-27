@@ -22,6 +22,8 @@
 package com.kapti.filter;
 
 import com.kapti.exceptions.FilterException;
+import com.kapti.exceptions.InternalException;
+import com.kapti.exceptions.StockPlayException;
 import com.kapti.filter.graph.Graph;
 import com.kapti.filter.condition.Condition;
 import java.io.File;
@@ -82,7 +84,7 @@ public class Filter {
      * @param iFilename
      * @throws FilterException
      */
-    public void debug(String iFilename) throws FilterException {
+    public void debug(String iFilename) throws StockPlayException {
         if (empty())
             return;
 
@@ -99,7 +101,7 @@ public class Filter {
             graph.render(new PrintStream(tFile));
         }
         catch (IOException e) {
-            throw new FilterException("Problem creating output file", e.getCause());
+            throw new InternalException(InternalException.Type.INTERNAL_FAILURE, "Problem creating output file", e.getCause());
         }
 
         if (true) return;
@@ -111,13 +113,13 @@ public class Filter {
 
             tConverter.waitFor();
             if (tConverter.exitValue() != 0)
-                throw new FilterException("Conversion failed");
+                throw new InternalException(InternalException.Type.INTERNAL_FAILURE, "Conversion failed");
         }
         catch (IOException e) {
-            throw new FilterException("Problem executing child process to convert DOT code", e.getCause());
+            throw new InternalException(InternalException.Type.INTERNAL_FAILURE, "Problem executing child process to convert DOT code", e.getCause());
         }
         catch (InterruptedException e) {
-            throw new FilterException("Was not allowed to wait for DOT output due to interrupt", e.getCause());
+            throw new InternalException(InternalException.Type.INTERNAL_FAILURE, "Was not allowed to wait for DOT output due to interrupt", e.getCause());
         }
     }
 
