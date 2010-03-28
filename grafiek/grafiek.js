@@ -42,7 +42,7 @@ $.extend(Flot.prototype, {
 	        	if (max == null)
 	        		max = this.data[0]['data'][i][1];
 	        	if (this.data[0]['data'][i][1] > max )
-    	    		max =  this.data[0]['data'][i][1];
+    	    		max =  this.data[0]['data'][i][1]; // Zou het niet sneller zijn om enkel de index van het grooste element bij te houden?
     	    }
     	return max;
     },
