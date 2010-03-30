@@ -19,14 +19,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
 package com.kapti.data;
 
 import com.kapti.exceptions.InvocationException;
 import com.kapti.exceptions.ServiceException;
 import com.kapti.exceptions.StockPlayException;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.Hashtable;
+import java.security.MessageDigest;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class User {
     //
@@ -34,9 +40,9 @@ public class User {
     //
 
     public static enum Fields {
+
         ID, NICKNAME, PASSWORD, LASTNAME, FIRSTNAME, REGDATE, ADMIN, POINTS, STARTAMOUNT, CASH, RRN
     }
-    
     private int id = -1;
     private String nickname = "";
     private String password = "";
@@ -49,11 +55,9 @@ public class User {
     private double cash = 0;
     private int rrn = 0;
 
-
     //
     // Construction
     //
-
     public User() {
     }
 
@@ -61,17 +65,57 @@ public class User {
         this.id = id;
     }
 
+    public User(int id, String nickname, String password, String lastname, String firstname, boolean admin, Date regdate, int rrn, int points, double startamount, double cash) {
+        this.id = id;
+        this.nickname = nickname;
+        setPassword(password);
+        this.lastname = lastname;
+        this.firstname = firstname;
+        this.regdate = regdate;
+        this.rrn = rrn;
+        this.admin = admin;
+        this.points = points;
+        this.startamount = startamount;
+        this.cash = cash;
+    }
 
     //
     // Methods
     //
+    public void setPassword(String password) {
+
+        this.password = encryptPassword(password);
+    }
 
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    
+
+    private String encryptPassword(String password) {
+        try {
+            //we halen de salt op
+
+            Properties properties = new Properties();
+            properties.load(new FileInputStream("backend.properties"));
+            String salt = properties.getProperty("salt");
+
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            digest.reset();
+            digest.update(salt.getBytes());
+            return digest.digest(password.getBytes("UTF-8")).toString();
+        } catch (IOException ex) {
+            Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+    }
+
+    public boolean checkPassword(String password) {
+        return this.password.equals(encryptPassword(password));
     }
 
     public String getFirstname() {
@@ -150,6 +194,12 @@ public class User {
         this.rrn = rrn;
     }
 
+    /**
+     * Geeft het User-object in een generiek hashtable-object terug, zodat het geserialiseerd kan worden voor XML-RPC
+     * @param iFields De velden die moeten worden opgenomen in de struct (Opmerking: een paswoord kan niet worden opgevraagd!)
+     * @return
+     *
+     */
     public Hashtable<String, Object> toStruct(Fields... iFields) {
         Hashtable<String, Object> oStruct = new Hashtable<String, Object>();
         for (Fields tField : iFields) {
@@ -159,9 +209,6 @@ public class User {
                     break;
                 case NICKNAME:
                     oStruct.put(tField.name(), getNickname());
-                    break;
-                case PASSWORD:
-                    oStruct.put(tField.name(), getPassword());
                     break;
                 case LASTNAME:
                     oStruct.put(tField.name(), getLastname());
@@ -192,6 +239,7 @@ public class User {
         return oStruct;
     }
 
+    
     public void applyStruct(Hashtable<String, Object> iStruct) throws StockPlayException {
         for (String tKey : iStruct.keySet()) {
             Object tValue = iStruct.get(tKey.toUpperCase());
@@ -202,6 +250,7 @@ public class User {
             catch (IllegalArgumentException e) {
                 throw new InvocationException(InvocationException.Type.KEY_DOES_NOT_EXIST, "requested key '" + tKey + "' does not exist");
             }
+
 
             switch (tField) {
                 case NICKNAME:
@@ -240,6 +289,55 @@ public class User {
             }
         }
     }
+
+    /*
+    public void fromStruct(Hashtable<String, Object> iStruct) throws StockPlayException {
+        for (String tKey : iStruct.keySet()) {
+            Object tValue = iStruct.get(tKey);
+            Fields tField = null;
+            try {
+                tField = Fields.valueOf(tKey);
+            } catch (IllegalArgumentException e) {
+                throw new StockPlayException("requested key '" + tKey + "' does not exist");
+            }
+
+            switch (tField) {
+                case NICKNAME:
+                    setNickname((String) tValue);
+                    break;
+                case PASSWORD:
+                    setPassword((String) tValue);
+                    break;
+                case LASTNAME:
+                    setLastname((String) tValue);
+                    break;
+                case FIRSTNAME:
+                    setFirstname((String) tValue);
+                    break;
+                case REGDATE:
+                    setRegdate((Date) tValue);
+                    break;
+                case ADMIN:
+                    setAdmin((Boolean) tValue);
+                    break;
+                case POINTS:
+                    setPoints((Integer) tValue);
+                    break;
+                case STARTAMOUNT:
+                    setStartamount((Double) tValue);
+                    break;
+                case CASH:
+                    setCash((Double) tValue);
+                    break;
+                case RRN:
+                    setRijksregisternummer((Integer) tValue);
+                    break;
+
+                default:
+                    throw new StockPlayException("requested key '" + tKey + "' cannot be modified");
+            }
+        }
+    }*/
 
     public static User fromStruct(Hashtable<String, Object> iStruct) throws StockPlayException {
         // Create case mapping
