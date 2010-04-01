@@ -6,10 +6,12 @@
     <!-- Gridlines op none en cellspacing op -1 zijn nodig om de html attributen uit de html tags te kunnen wegwerken! -->
     <asp:GridView ID="SecuritiesGridview" runat="server" AutoGenerateColumns="False" AllowSorting="True" AllowPaging="True"
         OnSorting="SecuritiesGridview_Sorting" OnPageIndexChanging="SecuritiesGridview_PageIndexChanging" GridLines="None" 
-        onrowdatabound="SecuritiesGridview_RowDataBound" CellSpacing="-1" PageSize="6" >
+        onrowdatabound="SecuritiesGridview_RowDataBound" CellSpacing="-1" PageSize="20" >
         <Columns>
-            <asp:HyperLinkField DataTextField="Symbol" DataNavigateUrlFields="Symbol" SortExpression="Symbol"
-            DataNavigateUrlFormatString="SecurityDetail.aspx?param={0}" HeaderText="Symbol">
+            <asp:BoundField DataField="Isin" />
+            <asp:HyperLinkField DataTextField="Symbol" DataNavigateUrlFields="Isin" SortExpression="Symbol"
+            DataNavigateUrlFormatString="SecurityDetail.aspx?param={0}" 
+                HeaderText="Symbol">
                 <ItemStyle CssClass="name" />
             </asp:HyperLinkField>
             <asp:BoundField DataField="Name" HeaderText="Name" SortExpression="Name">
@@ -19,7 +21,7 @@
                 <ItemStyle CssClass="action" />
             </asp:BoundField>
             <asp:BoundField DataField="Change" HeaderText="Change" SortExpression="Change" HtmlEncode="false" DataFormatString="{0:0.00}" />
-            <asp:BoundField DataField="Quote" HeaderText="Quote" SortExpression="Quote" />
+            <asp:BoundField DataField="Quote" HeaderText="Quote" SortExpression="Quote" HtmlEncode="false" DataFormatString="{0:0.00}" />
             <asp:BoundField DataField="Date" HeaderText="Date" SortExpression="Date" HtmlEncode="false" DataFormatString="{0:dd/MM, HH:MM:ss}" />
             <asp:TemplateField HeaderText="Buy">
                 <ItemStyle CssClass="action" />

@@ -17,7 +17,7 @@ using System.Collections.Generic;
 /// </summary>
 public class Security : ISecurity
 {
-
+    private string isin;
     private string symbol;
     private string name;
     private string type;
@@ -25,8 +25,9 @@ public class Security : ISecurity
     private Exchange exchange;
 
 
-	public Security(string symbol, string name, string type, Exchange exchange)
+	public Security(string isin, string symbol, string name, string type, Exchange exchange)
 	{
+        this.isin = isin;
         this.symbol = symbol;
         this.name = name;
         this.type = type;
@@ -37,10 +38,12 @@ public class Security : ISecurity
     {
         DataAccess data = DataAccess.GetInstance();
         Quote qLatest = data.GetLatestQuoteFromSecurity(symbol);
-        Quote qYesterday = data.GetQuoteFromSecurity(symbol, qLatest.Time.AddDays(-1));
+        if (qLatest == null)
+            return 0;
 
-        Console.WriteLine(qLatest.Time);
-        Console.WriteLine(qYesterday.Time);
+        Quote qYesterday = data.GetQuoteFromSecurity(symbol, qLatest.Time.AddDays(-1));
+        if (qYesterday == null)
+            return 0;
 
         return Math.Round((qLatest.Price - qYesterday.Price) / qLatest.Price * 100, 2);
     }
@@ -48,13 +51,21 @@ public class Security : ISecurity
     public Quote GetLatestQuote()
     {
         DataAccess data = DataAccess.GetInstance();
-        return data.GetLatestQuoteFromSecurity(symbol);
+        return data.GetLatestQuoteFromSecurity(isin);
     }
 
     public Quote GetQuote(DateTime date)
     {
         DataAccess data = DataAccess.GetInstance();
-        return data.GetQuoteFromSecurity(symbol, date);
+        return data.GetQuoteFromSecurity(isin, date);
+    }
+
+    public string Isin
+    {
+        get
+        {
+            return isin;
+        }
     }
 
     public string Symbol

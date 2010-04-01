@@ -38,7 +38,8 @@ public partial class SecurityDetail : System.Web.UI.Page
 
         //General
         Name.InnerText = security.Name;
-        Value.InnerText = Convert.ToString(latestQuote.Price);
+        if(latestQuote != null)
+            Value.InnerText = Convert.ToString(latestQuote.Price);
 
         double quoteChange = security.GetChange();
         Change.InnerText = (quoteChange>=0 ? "+" : "") + Convert.ToString(quoteChange) + "%";
@@ -49,13 +50,16 @@ public partial class SecurityDetail : System.Web.UI.Page
         
         
         Exchange.InnerText = security.Exchange.Name;
-        //ISIN.InnerText = security.ISIN;
+        ISIN.InnerText = security.Isin;
         Symbol.InnerText = security.Symbol;
 
         //Data
-        Open.InnerText = Convert.ToString(latestQuote.Open);
-        High.InnerText = Convert.ToString(latestQuote.High);
-        Low.InnerText = Convert.ToString(latestQuote.Low);
+        if (latestQuote != null)
+        {
+            Open.InnerText = Convert.ToString(latestQuote.Open);
+            High.InnerText = Convert.ToString(latestQuote.High);
+            Low.InnerText = Convert.ToString(latestQuote.Low);
+        }
 
         //History
         DataTable historyTable = new DataTable();
@@ -71,13 +75,13 @@ public partial class SecurityDetail : System.Web.UI.Page
         historyTable.Columns.Add("Low");
         historyTable.Columns["Low"].DataType = typeof(Double);
 
-        for (int i = 0; i < 7; i++)
+        for (int i = 0; i < 30; i++)
         {
             DateTime date = DateTime.Now.Subtract(new TimeSpan(i+1, 0, 0, 0));
             Quote quote = security.GetQuote(date);
 
             DataRow row = historyTable.NewRow();
-            if (quote.Time.Day == date.Day) //We controleren ofdat er die dag wel een quote beschikbaar was
+            if (quote != null && quote.Time.Day == date.Day) //We controleren ofdat er die dag wel een quote beschikbaar was
             {
                 row[0] = quote.Time;
                 row[1] = Math.Round((latestQuote.Price - quote.Open) / latestQuote.Price * 100, 2);

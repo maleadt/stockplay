@@ -37,6 +37,8 @@ public partial class SecuritiesOverview : System.Web.UI.Page
     {
         DataTable securitiesTable = new DataTable("Securities");
 
+        securitiesTable.Columns.Add("Isin");
+        securitiesTable.Columns["Isin"].DataType = typeof(string);
         securitiesTable.Columns.Add("Symbol");
         securitiesTable.Columns["Symbol"].DataType = typeof(string);
         securitiesTable.Columns.Add("Name");
@@ -50,18 +52,22 @@ public partial class SecuritiesOverview : System.Web.UI.Page
         securitiesTable.Columns.Add("Date");
         securitiesTable.Columns["Date"].DataType = typeof(DateTime);
 
-
         foreach (Security security in securities)
         {
+            DataRow row = securitiesTable.NewRow();
+            row[0] = security.Isin;
+            row[1] = security.Symbol;
+            row[2] = security.Name;
+            row[3] = security.Exchange.Name;
+            row[5] = security.GetChange();
+
             Quote q = security.GetLatestQuote();
 
-            DataRow row = securitiesTable.NewRow();
-            row[0] = security.Symbol;
-            row[1] = security.Name;
-            row[2] = security.Exchange.Name;
-            row[3] = q.Buy;
-            row[4] = security.GetChange();
-            row[5] = q.Time;
+            if (q != null)
+            {
+                row[4] = q.Buy;
+                row[6] = q.Time;
+            }
 
             securitiesTable.Rows.Add(row);
         }
@@ -107,17 +113,32 @@ public partial class SecuritiesOverview : System.Web.UI.Page
             SecuritiesGridview.DataSource = dataView;
             SecuritiesGridview.DataBind();
         }
-    }
+    }    
 
-    //Zorgt ervoor dat de kleur van de tekst correct ingesteld wordt in de "Change" kolom
+    //Zorgt ervoor dat de kleur en formaat van de tekst correct ingesteld wordt in de "Change" kolom
+    //Ook wordt de kolom met de Isin nummers onzichtbaar gemaakt voor de gebruiker
     protected void SecuritiesGridview_RowDataBound(object sender, GridViewRowEventArgs e)
     {
-        if (e.Row.RowType == DataControlRowType.DataRow)
+        if(e.Row.RowType == DataControlRowType.DataRow)
         {
-            if (Convert.ToDouble(e.Row.Cells[3].Text) >= 0)
-                e.Row.Cells[3].CssClass = "pos";
+            e.Row.Cells[0].Visible = false;
+
+            //Opmaak Change kolom
+            if(Convert.ToDouble(e.Row.Cells[4].Text) > 0)
+            {
+                e.Row.Cells[4].CssClass = "pos";
+                e.Row.Cells[4].Text = "+" + e.Row.Cells[4].Text + "%";
+            }
+            else if(Convert.ToDouble(e.Row.Cells[4].Text) < 0)
+            {
+                e.Row.Cells[4].CssClass = "neg";
+                e.Row.Cells[4].Text = e.Row.Cells[4].Text + "%";
+            }
             else
-                e.Row.Cells[3].CssClass = "neg";
+                e.Row.Cells[4].Text = " " + e.Row.Cells[4].Text + "%";
         }
+
+        if (e.Row.RowType == DataControlRowType.Header)
+            e.Row.Cells[0].Visible = false;
     }
 }

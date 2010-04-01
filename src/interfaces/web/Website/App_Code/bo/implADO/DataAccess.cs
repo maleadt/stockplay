@@ -17,6 +17,7 @@ using System.Collections;
 /// <summary>
 /// De DataAccess klasse is verantwoordelijk voor het verbinden met de databank (ADO.NET) en de gewenste gegevens op te
 /// halen en om te zetten naar business objects in de C#-applicatie.
+/// Deze klasse gebruikt het singleton pattern
 /// </summary>
 public class DataAccess : IDataAccess
 {
@@ -25,9 +26,13 @@ public class DataAccess : IDataAccess
 
     private DbProviderFactory factory;
 
+    private Dictionary<string, Exchange> exchangeCache;
+
 	private DataAccess()
 	{
         factory = DbProviderFactories.GetFactory(ConfigurationManager.ConnectionStrings["OracleDatabaseKapti"].ProviderName);
+
+        exchangeCache = new Dictionary<string, Exchange>();
 	}
 
     public static DataAccess GetInstance()
@@ -56,30 +61,17 @@ public class DataAccess : IDataAccess
     public List<Security> GetSecuritiesList()
     {
         DbConnection conn = GetConnection();
-        conn.Open();
-
         List<Security> securitiesList = new List<Security>();
+        DbDataReader securitiesReader = null;
 
         try
         {
+            conn.Open();
             DbCommand command = CreateCommand(ConfigurationManager.AppSettings["SELECT_SECURITIES"], conn);
-            DbDataReader securities = command.ExecuteReader();
+            securitiesReader = command.ExecuteReader();
 
-            string symbol, name, type, exchangeSymbol;
-            Exchange exchange;
-
-            while (securities.Read())
-            {
-                symbol = securities.GetString(0);
-                name = securities.GetString(1);
-                //type = securities.GetString(2);   //Type zit momenteel nog niet in de databank
-
-                //Exchange object aanmaken
-                exchangeSymbol = securities.GetString(2);
-                exchange = getExchangeBySymbol(exchangeSymbol);
-
-                securitiesList.Add(new Security(symbol, name, "", exchange));
-            }
+            while (securitiesReader.Read())
+                securitiesList.Add(GenerateSecurity(securitiesReader));
         }
         catch (Exception e)
         {
@@ -88,45 +80,35 @@ public class DataAccess : IDataAccess
         }
         finally
         {
+            if (securitiesReader != null)
+                securitiesReader.Close();
             conn.Close();
         }
 
         return securitiesList;
     }
 
-    public Security GetSecurityBySymbol(string symbol)
+    public Security GetSecurityBySymbol(string isin)
     {
         DbConnection conn = GetConnection();
-        conn.Open();
-
         Security security = null;
+        DbDataReader securityReader = null;
 
         try
         {
+            conn.Open();
             DbCommand command = CreateCommand(ConfigurationManager.AppSettings["SELECT_SECURITY"], conn);
 
-            DbParameter paramSymbol = factory.CreateParameter();
-            paramSymbol.ParameterName = ":symbol";
-            paramSymbol.DbType = DbType.String;
-            paramSymbol.Value = symbol;
+            DbParameter paramIsin = factory.CreateParameter();
+            paramIsin.ParameterName = ":isin";
+            paramIsin.DbType = DbType.String;
+            paramIsin.Value = isin;
+            command.Parameters.Add(paramIsin);
 
-            command.Parameters.Add(paramSymbol);
+            securityReader = command.ExecuteReader();
 
-            DbDataReader securityReader = command.ExecuteReader();
-
-            string name, type, exchangeSymbol;
-            Exchange exchange;
-
-            securityReader.Read();
-
-            name = securityReader.GetString(1);
-            //type = securityReader.GetString(2);   //Type zit momenteel nog niet in de databank
-
-            //Exchange object aanmaken
-            exchangeSymbol = securityReader.GetString(2);
-            exchange = getExchangeBySymbol(exchangeSymbol);
-
-            security = new Security(symbol, name, "", exchange);
+            if (securityReader.Read())
+                security = GenerateSecurity(securityReader);
         }
         catch (Exception e)
         {
@@ -135,6 +117,8 @@ public class DataAccess : IDataAccess
         }
         finally
         {
+            if(securityReader != null)
+                securityReader.Close();
             conn.Close();
         }
 
@@ -146,43 +130,27 @@ public class DataAccess : IDataAccess
         throw new NotImplementedException();
     }
 
-    public Quote GetLatestQuoteFromSecurity(string symbol)
+    public Quote GetLatestQuoteFromSecurity(string isin)
     {
         DbConnection conn = GetConnection();
-        conn.Open();
-
         Quote quote= null;
+        DbDataReader quoteReader = null;
 
         try
         {
+            conn.Open();
             DbCommand command = CreateCommand(ConfigurationManager.AppSettings["SELECT_LATEST_QUOTE_FROM_SECURITY"], conn);
 
             DbParameter paramSymbol = factory.CreateParameter();
-            paramSymbol.ParameterName = ":symbol";
+            paramSymbol.ParameterName = ":isin";
             paramSymbol.DbType = DbType.String;
-            paramSymbol.Value = symbol;
-
+            paramSymbol.Value = isin;
             command.Parameters.Add(paramSymbol);
 
+            quoteReader = command.ExecuteReader();
 
-            DbDataReader quoteReader = command.ExecuteReader();
-
-            DateTime time;
-            double price, open, buy, sell, low, high;
-            int volume;
-
-            quoteReader.Read();
-
-            time = quoteReader.GetDateTime(1);
-            price = quoteReader.GetDouble(2);
-            volume = quoteReader.GetInt32(3);
-            open = quoteReader.GetDouble(4);
-            buy = quoteReader.GetDouble(5);
-            sell = quoteReader.GetDouble(6);
-            low = quoteReader.GetDouble(7);
-            high = quoteReader.GetDouble(8);
-
-            quote = new Quote(time, price, open, volume, buy, sell, low, high);
+            if (quoteReader.Read())
+                quote = GenerateQuote(quoteReader);
         }
         catch (Exception e)
         {
@@ -191,53 +159,41 @@ public class DataAccess : IDataAccess
         }
         finally
         {
+            if (quoteReader != null)
+                quoteReader.Close();
             conn.Close();
         }
 
         return quote;
     }
 
-    public Quote GetQuoteFromSecurity(string symbol, DateTime date)
+    public Quote GetQuoteFromSecurity(string isin, DateTime date)
     {
         DbConnection conn = GetConnection();
-        conn.Open();
-
         Quote quote = null;
+        DbDataReader quoteReader = null;
 
         try
         {
+            conn.Open();
             DbCommand command = CreateCommand(ConfigurationManager.AppSettings["SELECT_QUOTE_FROM_SECURITY"], conn);
 
-            DbParameter paramSymbol = factory.CreateParameter();
-            paramSymbol.ParameterName = ":symbol";
-            paramSymbol.DbType = DbType.String;
-            paramSymbol.Value = symbol;
+            DbParameter paramIsin = factory.CreateParameter();
+            paramIsin.ParameterName = ":isin";
+            paramIsin.DbType = DbType.String;
+            paramIsin.Value = isin;
             DbParameter paramDate = factory.CreateParameter();
             paramDate.ParameterName = ":quotedate";
             paramDate.DbType = DbType.DateTime;
             paramDate.Value = date;
 
-            command.Parameters.Add(paramSymbol);
+            command.Parameters.Add(paramIsin);
             command.Parameters.Add(paramDate);
 
-            DbDataReader quoteReader = command.ExecuteReader();
+            quoteReader = command.ExecuteReader();
 
-            DateTime time;
-            double price, open, buy, sell, low, high;
-            int volume;
-
-            quoteReader.Read();
-
-            time = quoteReader.GetDateTime(1);
-            price = quoteReader.GetDouble(2);
-            volume = quoteReader.GetInt32(3);
-            open = quoteReader.GetDouble(4);
-            buy = quoteReader.GetDouble(5);
-            sell = quoteReader.GetDouble(6);
-            low = quoteReader.GetDouble(7);
-            high = quoteReader.GetDouble(8);
-
-            quote = new Quote(time, price, open, volume, buy, sell, low, high);
+            if (quoteReader.Read())
+                quote = GenerateQuote(quoteReader);
         }
         catch (Exception e)
         {
@@ -246,6 +202,8 @@ public class DataAccess : IDataAccess
         }
         finally
         {
+            if(quoteReader != null)
+                quoteReader.Close();
             conn.Close();
         }
 
@@ -254,41 +212,46 @@ public class DataAccess : IDataAccess
 
     public Exchange getExchangeBySymbol(string symbol)
     {
-        DbConnection conn = GetConnection();
-        conn.Open();
-
         Exchange exchange = null;
 
-        try
+        //Indien de exchange nog niet in de cache zit halen we hem op
+        if (!exchangeCache.ContainsKey(symbol))
         {
-            DbCommand command = CreateCommand(ConfigurationManager.AppSettings["SELECT_EXCHANGE"], conn);
-            
-            DbParameter paramSymbol = factory.CreateParameter();
-            paramSymbol.ParameterName = ":symbol";
-            paramSymbol.DbType = DbType.String;
-            paramSymbol.Value = symbol;
+            DbConnection conn = GetConnection();
+            DbDataReader exchangeReader = null;
 
-            command.Parameters.Add(paramSymbol);
+            try
+            {
+                conn.Open();
+                DbCommand command = CreateCommand(ConfigurationManager.AppSettings["SELECT_EXCHANGE"], conn);
 
-            DbDataReader exchangeReader = command.ExecuteReader();
+                DbParameter paramSymbol = factory.CreateParameter();
+                paramSymbol.ParameterName = ":symbol";
+                paramSymbol.DbType = DbType.String;
+                paramSymbol.Value = symbol;
+                command.Parameters.Add(paramSymbol);
 
-            string name, location;
+                exchangeReader = command.ExecuteReader();
+                if (exchangeReader.Read())
+                    exchange = GenerateExchange(exchangeReader);
 
-            exchangeReader.Read();
-
-            name = exchangeReader.GetString(1);
-            location = exchangeReader.GetString(2);
-
-            exchange = new Exchange(symbol, name, location);
+                exchangeCache[symbol] = exchange;
+            }
+            catch (Exception e)
+            {
+                //TODO: Loggen
+                Console.WriteLine(e.Message);
+            }
+            finally
+            {
+                if(exchangeReader != null)
+                    exchangeReader.Close();
+                conn.Close();
+            }
         }
-        catch (Exception e)
+        else
         {
-            //TODO: Loggen
-            Console.WriteLine(e.Message);
-        }
-        finally
-        {
-            conn.Close();
+            exchange = exchangeCache[symbol];
         }
 
         return exchange;
@@ -297,25 +260,17 @@ public class DataAccess : IDataAccess
     public List<Exchange> getExchanges()
     {
         DbConnection conn = GetConnection();
-        conn.Open();
-
         List<Exchange> exchangesList = new List<Exchange>();
+        DbDataReader exchangesReader = null;
 
         try
         {
+            conn.Open();
             DbCommand command = CreateCommand(ConfigurationManager.AppSettings["SELECT_EXCHANGES"], conn);
-            DbDataReader exchanges = command.ExecuteReader();
+            exchangesReader = command.ExecuteReader();
 
-            string symbol, name, location;
-
-            while (exchanges.Read())
-            {
-                symbol = exchanges.GetString(0);
-                name = exchanges.GetString(1);
-                location = exchanges.GetString(2);
-
-                exchangesList.Add(new Exchange(symbol, name, location));
-            }
+            while (exchangesReader.Read())
+                exchangesList.Add(GenerateExchange(exchangesReader));
         }
         catch (Exception e)
         {
@@ -323,10 +278,59 @@ public class DataAccess : IDataAccess
         }
         finally
         {
+            if(exchangesReader != null)
+                exchangesReader.Close();
             conn.Close();
         }
 
         return exchangesList;
+    }
+
+    private Security GenerateSecurity(DbDataReader securityData)
+    {
+        string isin, symbol, name, type, exchangeSymbol;
+        Exchange exchange;
+
+        isin = securityData.GetString(securityData.GetOrdinal("isin"));
+        symbol = securityData.GetString(securityData.GetOrdinal("symbol"));
+        name = securityData.GetString(securityData.GetOrdinal("name"));
+        //type = securityData.GetString(securityData.GetOrdinal("type")); //type zit nog niet in de databank
+        type = "";
+
+        //Exchange object aanmaken
+        exchangeSymbol = securityData.GetString(securityData.GetOrdinal("exchange"));
+        exchange = getExchangeBySymbol(exchangeSymbol);
+
+        return new Security(isin, symbol, name, type, exchange);
+    }
+
+    private Quote GenerateQuote(DbDataReader quoteData)
+    {
+        DateTime time;
+        double price, open, buy, sell, low, high;
+        int volume;
+
+        time = quoteData.GetDateTime(1);
+        price = quoteData.GetDouble(2);
+        volume = quoteData.GetInt32(3);
+        open = quoteData.GetDouble(4);
+        buy = quoteData.GetDouble(5);
+        sell = quoteData.GetDouble(6);
+        low = quoteData.GetDouble(7);
+        high = quoteData.GetDouble(8);
+
+        return new Quote(time, price, open, volume, buy, sell, low, high);
+    }
+
+    private Exchange GenerateExchange(DbDataReader exchangeData)
+    {
+        string symbol, name, location;
+
+        symbol = exchangeData.GetString(exchangeData.GetOrdinal("symbol"));
+        name = exchangeData.GetString(exchangeData.GetOrdinal("name"));
+        location = exchangeData.GetString(exchangeData.GetOrdinal("location"));
+
+        return new Exchange(symbol, name, location);
     }
 
     #endregion
