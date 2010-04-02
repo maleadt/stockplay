@@ -69,7 +69,7 @@ public class UserDAO implements GenericDAO<User, Integer> {
                     tUser.setFirstname(rs.getString(4));
                     tUser.setAdmin(rs.getBoolean(5));
                     tUser.setRegdate(rs.getDate(6));
-                    tUser.setRijksregisternummer(rs.getInt(7));
+                    tUser.setRijksregisternummer(rs.getLong(7));
                     tUser.setPoints(rs.getInt(8));
                     tUser.setStartamount(rs.getDouble(9));
                     tUser.setCash(rs.getDouble(10));
@@ -114,7 +114,7 @@ public class UserDAO implements GenericDAO<User, Integer> {
                     tUser.setFirstname(rs.getString(5));
                     tUser.setAdmin(rs.getBoolean(6));
                     tUser.setRegdate(rs.getDate(7));
-                    tUser.setRijksregisternummer(rs.getInt(8));
+                    tUser.setRijksregisternummer(rs.getLong(8));
                     tUser.setPoints(rs.getInt(9));
                     tUser.setStartamount(rs.getDouble(10));
                     tUser.setCash(rs.getDouble(11));
@@ -201,7 +201,7 @@ public class UserDAO implements GenericDAO<User, Integer> {
                     tUser.setFirstname(rs.getString(5));
                     tUser.setAdmin(rs.getBoolean(6));
                     tUser.setRegdate(rs.getDate(7));
-                    tUser.setRijksregisternummer(rs.getInt(8));
+                    tUser.setRijksregisternummer(rs.getLong(8));
                     tUser.setPoints(rs.getInt(9));
                     tUser.setStartamount(rs.getDouble(10));
                     tUser.setCash(rs.getDouble(11));
@@ -248,7 +248,7 @@ public class UserDAO implements GenericDAO<User, Integer> {
                     tUser.setFirstname(rs.getString(5));
                     tUser.setAdmin(rs.getBoolean(6));
                     tUser.setRegdate(rs.getDate(7));
-                    tUser.setRijksregisternummer(rs.getInt(8));
+                    tUser.setRijksregisternummer(rs.getLong(8));
                     tUser.setPoints(rs.getInt(9));
                     tUser.setStartamount(rs.getDouble(10));
                     tUser.setCash(rs.getDouble(11));
@@ -280,7 +280,7 @@ public class UserDAO implements GenericDAO<User, Integer> {
     public boolean create(User entity) throws StockPlayException {
         Connection conn = null;
         PreparedStatement stmt = null;
-        ResultSet rs = null;
+
         try {
             try {
                 conn = OracleConnection.getConnection();
@@ -293,7 +293,7 @@ public class UserDAO implements GenericDAO<User, Integer> {
                 stmt.setString(4, entity.getFirstname());
                 stmt.setBoolean(5, entity.isAdmin());
                 stmt.setTimestamp(6, new Timestamp(entity.getRegdate().getTime()));
-                stmt.setInt(7, entity.getRijksregisternummer());
+                stmt.setLong(7, entity.getRijksregisternummer());
                 stmt.setInt(8, entity.getPoints());
                 stmt.setDouble(9, entity.getStartamount());
                 stmt.setDouble(10, entity.getCash());
@@ -302,9 +302,7 @@ public class UserDAO implements GenericDAO<User, Integer> {
 
 
             } finally {
-                if (rs != null) {
-                    rs.close();
-                }
+
                 if (stmt != null) {
                     stmt.close();
                 }
@@ -339,7 +337,7 @@ public class UserDAO implements GenericDAO<User, Integer> {
                 stmt.setString(4, entity.getFirstname());
                 stmt.setBoolean(5, entity.isAdmin());
                 stmt.setTimestamp(6, new Timestamp(entity.getRegdate().getTime()));
-                stmt.setInt(7, entity.getRijksregisternummer());
+                stmt.setLong(7, entity.getRijksregisternummer());
                 stmt.setInt(8, entity.getPoints());
                 stmt.setDouble(9, entity.getStartamount());
                 stmt.setDouble(10, entity.getCash());

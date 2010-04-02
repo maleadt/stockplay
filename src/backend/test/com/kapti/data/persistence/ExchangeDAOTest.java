@@ -69,22 +69,22 @@ public class ExchangeDAOTest {
 
     }
 
-    /**
-     * Test of findByExample method, of class ExchangeDAO.
-     */
-    @Test
-    public void testFindByExample() throws Exception {
-        System.out.println("findByExample");
-        Exchange example = new Exchange("DIT MOET EEN SYMBOOL ZIJN");   // findByExample << findByFilter?
-        example.setLocation("Nowhere");
-        ExchangeDAO instance = ExchangeDAO.getInstance();
-
-        Collection<Exchange> result = instance.findByExample(example);
-        for (Exchange ex : result) {
-            System.out.println("\t " + ex.getSymbol() + ": " + ex.getName() + " - "+ ex.getLocation());
-        }
-        assertTrue(!result.isEmpty());
-    }
+//    /**
+//     * Test of findByExample method, of class ExchangeDAO.
+//     */
+//    @Test
+//    public void testFindByExample() throws Exception {
+//        System.out.println("findByExample");
+//        Exchange example = new Exchange("DIT MOET EEN SYMBOOL ZIJN");   // findByExample << findByFilter?
+//        example.setLocation("Nowhere");
+//        ExchangeDAO instance = ExchangeDAO.getInstance();
+//
+//        Collection<Exchange> result = instance.findByExample(example);
+//        for (Exchange ex : result) {
+//            System.out.println("\t " + ex.getSymbol() + ": " + ex.getName() + " - "+ ex.getLocation());
+//        }
+//        assertTrue(!result.isEmpty());
+//    }
 
 
         /**

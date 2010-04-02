@@ -19,7 +19,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
 package com.kapti.backend.api;
 
 import com.kapti.data.persistence.GenericDAO;
@@ -27,6 +26,7 @@ import com.kapti.exceptions.InvocationException;
 import com.kapti.exceptions.StockPlayException;
 import com.kapti.filter.Filter;
 import com.kapti.filter.parsing.Parser;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Vector;
@@ -46,8 +46,9 @@ public class UserHandler extends MethodClass {
 
     public int Hello(String iClient, int iProtocolVersion) throws StockPlayException {
         getLogger().info("Client connected: " + iClient);
-        if (iProtocolVersion != PROTOCOL_VERSION)
+        if (iProtocolVersion != PROTOCOL_VERSION) {
             throw new InvocationException(InvocationException.Type.VERSION_NOT_SUPPORTED);
+        }
         return 1;
     }
 
@@ -57,6 +58,10 @@ public class UserHandler extends MethodClass {
 
         com.kapti.data.User tUser = new com.kapti.data.User();
         tUser.applyStruct(iDetails);
+        tUser.setRegdate(Calendar.getInstance().getTime());
+        tUser.setStartamount(100000); //TODO hier berekenen van het startamount
+        tUser.setCash(100000);
+
         tUserDAO.create(tUser);
         return 1;
     }
@@ -65,17 +70,24 @@ public class UserHandler extends MethodClass {
         // Get DAO reference
         GenericDAO<com.kapti.data.User, Integer> userDAO = getDAO().getUserDAO();
 
+        Parser parser = Parser.getInstance();
+        Filter filter = parser.parse(iFilter);
+
         // Fetch and convert all Indexs
-        Collection<com.kapti.data.User> tUsers = userDAO.findAll();
+        Collection<com.kapti.data.User> tUsers = userDAO.findByFilter(filter);
         Vector<Hashtable<String, Object>> oVector = new Vector<Hashtable<String, Object>>();
         for (com.kapti.data.User tUser : tUsers) {
-            oVector.add(tUser.toStruct (
+            oVector.add(tUser.toStruct(
                     com.kapti.data.User.Fields.ID,
-                    com.kapti.data.User.Fields.FIRSTNAME,
+                    com.kapti.data.User.Fields.NICKNAME,
                     com.kapti.data.User.Fields.LASTNAME,
-                    com.kapti.data.User.Fields.RRN,
+                    com.kapti.data.User.Fields.FIRSTNAME,
                     com.kapti.data.User.Fields.CASH,
-                    com.kapti.data.User.Fields.STARTAMOUNT));
+                    com.kapti.data.User.Fields.ADMIN,
+                    com.kapti.data.User.Fields.RRN,
+                    com.kapti.data.User.Fields.STARTAMOUNT,
+                    com.kapti.data.User.Fields.REGDATE,
+                    com.kapti.data.User.Fields.POINTS));
         }
 
         return oVector;
@@ -85,13 +97,21 @@ public class UserHandler extends MethodClass {
         // Get DAO reference
         GenericDAO<com.kapti.data.User, Integer> userDAO = getDAO().getUserDAO();
 
+        Parser parser = Parser.getInstance();
+        Filter filter = parser.parse(iFilter);
         // Fetch and convert all Indexs
-        Collection<com.kapti.data.User> tUsers = userDAO.findAll();
+        Collection<com.kapti.data.User> tUsers = userDAO.findByFilter(filter);
         Vector<Hashtable<String, Object>> oVector = new Vector<Hashtable<String, Object>>();
         for (com.kapti.data.User tUser : tUsers) {
-            oVector.add(tUser.toStruct (
+            oVector.add(tUser.toStruct(
                     com.kapti.data.User.Fields.ID,
                     com.kapti.data.User.Fields.NICKNAME,
+                    com.kapti.data.User.Fields.LASTNAME,
+                    com.kapti.data.User.Fields.FIRSTNAME,
+                    com.kapti.data.User.Fields.CASH,
+                    com.kapti.data.User.Fields.ADMIN,
+                    com.kapti.data.User.Fields.RRN,
+                    com.kapti.data.User.Fields.STARTAMOUNT,
                     com.kapti.data.User.Fields.REGDATE,
                     com.kapti.data.User.Fields.POINTS));
         }
@@ -116,7 +136,7 @@ public class UserHandler extends MethodClass {
 
         return 1;
     }
-    
+
     public int Remove(String iFilter) throws StockPlayException {
         // Get DAO reference
         GenericDAO<com.kapti.data.User, Integer> tUserDAO = getDAO().getUserDAO();
@@ -124,9 +144,10 @@ public class UserHandler extends MethodClass {
         Parser parser = Parser.getInstance();
         Filter filter = parser.parse(iFilter);
 
-        for (com.kapti.data.User tUser : tUserDAO.findByFilter(filter))
+        for (com.kapti.data.User tUser : tUserDAO.findByFilter(filter)) {
             tUserDAO.delete(tUser);
-        
+        }
+
         return 1;
     }
 }

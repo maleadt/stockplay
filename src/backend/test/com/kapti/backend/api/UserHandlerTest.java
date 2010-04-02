@@ -36,9 +36,11 @@ public class UserHandlerTest {
     public static void setUpClass() throws Exception {
 
         XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
-        config.setServerURL(new URL("http://localhost:8080/xmlrpc"));
         config.setEnabledForExtensions(true);
+        config.setServerURL(new URL("http://localhost:8080/xmlrpc"));
+
         client = new XmlRpcClient();
+        
         client.setConfig(config);
 
     }
@@ -66,7 +68,7 @@ public class UserHandlerTest {
         hash.put(Fields.LASTNAME.toString(), "TestLast");
         hash.put(Fields.FIRSTNAME.toString(), "TestFirst");
         hash.put(Fields.ADMIN.toString(), true);
-        hash.put(Fields.RRN.toString(), new Long(89020112345L));
+        hash.put(Fields.RRN.toString(), "89020112345");
 
         Object result = client.execute("User.Create", new Object[]{hash});
 
@@ -82,7 +84,14 @@ public class UserHandlerTest {
 
         Assert.assertEquals("Geen gebruikers met aangemaakte nickname gevonden", 1, result.length);
 
-        HashMap hash = (HashMap) result[1];
+        HashMap hash = (HashMap) result[0];
+        for(Object s : hash.keySet())
+            System.out.println(s.toString());
+
+        Assert.assertEquals("TestLast", hash.get(Fields.LASTNAME.toString()));
+        Assert.assertEquals("TestFirst", hash.get(Fields.FIRSTNAME.toString()));
+        Assert.assertEquals(true, hash.get(Fields.ADMIN.toString()));
+        System.out.println("Cash: " + hash.get(Fields.CASH.toString()));
 
 
     }

@@ -153,6 +153,7 @@ public class SecurityHandler extends MethodClass {
         Vector<Map<String, Object>> oVector = new Vector<Map<String, Object>>();
         for (com.kapti.data.Quote tQuote : tQuotes) {
             oVector.add(tQuote.toStruct(
+                    Quote.Fields.ISIN,
                     Quote.Fields.TIME,
                     Quote.Fields.PRICE,
                     Quote.Fields.VOLUME,
@@ -188,6 +189,7 @@ public class SecurityHandler extends MethodClass {
         Vector<Map<String, Object>> oVector = new Vector<Map<String, Object>>();
         for (com.kapti.data.Quote tQuote : tQuotes) {
             oVector.add(tQuote.toStruct(
+                    Quote.Fields.ISIN,
                     Quote.Fields.TIME,
                     Quote.Fields.PRICE,
                     Quote.Fields.VOLUME,
@@ -199,6 +201,42 @@ public class SecurityHandler extends MethodClass {
         }
         return oVector;
     }
+
+
+        /**
+     * Geeft alle koersen die aan aan de opgegeven filter voldoen
+     * @param iFilter
+     * @return
+     * @throws XmlRpcException
+     * @throws StockPlayException
+     * @throws FilterException
+     * @throws ParserException
+     */
+    public List<Map<String, Object>> LatestQuotes(String iFilter) throws StockPlayException {
+        // Get DAO reference
+        QuoteDAO tQuoteDAO = getDAO().getQuoteDAO();
+
+        Parser parser = Parser.getInstance();
+        Filter filter = parser.parse(iFilter);
+
+        // Fetch and convert all Indexs
+        Collection<com.kapti.data.Quote> tQuotes = tQuoteDAO.findLatestByFilter(filter);
+        Vector<Map<String, Object>> oVector = new Vector<Map<String, Object>>();
+        for (com.kapti.data.Quote tQuote : tQuotes) {
+            oVector.add(tQuote.toStruct(
+                    Quote.Fields.ISIN,
+                    Quote.Fields.TIME,
+                    Quote.Fields.PRICE,
+                    Quote.Fields.VOLUME,
+                    Quote.Fields.BID,
+                    Quote.Fields.ASK,
+                    Quote.Fields.LOW,
+                    Quote.Fields.HIGH,
+                    Quote.Fields.OPEN));
+        }
+        return oVector;
+    }
+
 
     public int Update(Hashtable<String, Object> iDetails) throws StockPlayException {
         // Get DAO reference

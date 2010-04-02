@@ -53,7 +53,7 @@ public class User {
     private int points = 0;
     private double startamount = 0;
     private double cash = 0;
-    private int rrn = 0;
+    private long rrn = 0;
 
     //
     // Construction
@@ -65,7 +65,7 @@ public class User {
         this.id = id;
     }
 
-    public User(int id, String nickname, String password, String lastname, String firstname, boolean admin, Date regdate, int rrn, int points, double startamount, double cash) {
+    public User(int id, String nickname, String password, String lastname, String firstname, boolean admin, Date regdate, long rrn, int points, double startamount, double cash) {
         this.id = id;
         this.nickname = nickname;
         setPassword(password);
@@ -98,7 +98,9 @@ public class User {
             //we halen de salt op
 
             Properties properties = new Properties();
-            properties.load(new FileInputStream("backend.properties"));
+            properties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("backend.properties"));
+
+            //properties.load(new FileInputStream("backend.properties"));
             String salt = properties.getProperty("salt");
 
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
@@ -186,11 +188,11 @@ public class User {
         this.startamount = startamount;
     }
 
-    public int getRijksregisternummer() {
+    public long getRijksregisternummer() {
         return rrn;
     }
 
-    public void setRijksregisternummer(int rrn) {
+    public void setRijksregisternummer(long rrn) {
         this.rrn = rrn;
     }
 
@@ -232,7 +234,7 @@ public class User {
                     oStruct.put(tField.name(), getCash());
                     break;
                 case RRN:
-                    oStruct.put(tField.name(), getRijksregisternummer());
+                    oStruct.put(tField.name(), Long.toString(getRijksregisternummer()));
                     break;
             }
         }
@@ -281,7 +283,10 @@ public class User {
                     setCash((Double)tValue);
                     break;
                 case RRN:
-                    setRijksregisternummer((Integer)tValue);
+                    if(tValue instanceof String)
+                    setRijksregisternummer(Long.parseLong((String)tValue));
+                    else
+                        setRijksregisternummer((Long)tValue);
                     break;
 
                 default:

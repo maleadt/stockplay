@@ -84,19 +84,19 @@ public class SecurityDAOTest {
 
     }
 
-    /**
-     * Test of findByExample method, of class SecurityDAO.
-     */
-    @Test
-    public void testFindByExample() throws Exception {
-        System.out.println("findByExample");
-        Security example = new Security("DIT HEEFT EEN SYMBOOL NODIG"); // FIXME: findByExample << findByFilter??
-        example.setName("es");
-        SecurityDAO instance = SecurityDAO.getInstance();
-        Collection<Security> result = instance.findByExample(example);
-        assertTrue(!result.isEmpty());
-
-    }
+//    /**
+//     * Test of findByExample method, of class SecurityDAO.
+//     */
+//    @Test
+//    public void testFindByExample() throws Exception {
+//        System.out.println("findByExample");
+//        Security example = new Security("DIT HEEFT EEN SYMBOOL NODIG"); // FIXME: findByExample << findByFilter??
+//        example.setName("es");
+//        SecurityDAO instance = SecurityDAO.getInstance();
+//        Collection<Security> result = instance.findByExample(example);
+//        assertTrue(!result.isEmpty());
+//
+//    }
 
     /**
      * Test of update method, of class SecurityDAO.
