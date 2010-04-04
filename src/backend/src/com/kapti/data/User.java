@@ -24,7 +24,6 @@ package com.kapti.data;
 import com.kapti.exceptions.InvocationException;
 import com.kapti.exceptions.ServiceException;
 import com.kapti.exceptions.StockPlayException;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
