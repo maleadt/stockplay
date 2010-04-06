@@ -270,8 +270,10 @@ sub run {
 		}
 		
 		# Wait
-		print "  Waiting $delay seconds\n";	
-		sleep($delay);
+		print "  Waiting $delay seconds\n";
+		if ($delay > 0) {
+			sleep($delay);
+		}
 	}
 }
 
