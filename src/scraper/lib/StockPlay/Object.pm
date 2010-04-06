@@ -39,12 +39,6 @@ use warnings;
 
 =cut
 
-has 'id' => (
-	is		=> 'ro',
-	isa		=> 'Str',
-	required	=> 1
-);
-
 has 'private' => (
 	is		=> 'ro',
 	isa		=> 'HashRef',

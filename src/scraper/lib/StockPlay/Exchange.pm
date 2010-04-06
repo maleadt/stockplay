@@ -41,6 +41,12 @@ use warnings;
 
 =cut
 
+has 'symbol' => (
+	is		=> 'ro',
+	isa		=> 'Str',
+	required	=> 1
+);
+
 has 'name' => (
 	is		=> 'ro',
 	isa		=> 'Str',

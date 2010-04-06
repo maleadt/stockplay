@@ -113,34 +113,34 @@ sub BUILD {
 			
 			# Add the exchange
 			print "DEBUG: adding exchange ", $exchange->name, "\n";
-			unless (grep { $_->{SYMBOL} eq $exchange->id } @s_exchanges) {
+			unless (grep { $_->{SYMBOL} eq $exchange->symbol } @s_exchanges) {
 				my %s_exchange = (
-					SYMBOL		=> $exchange->id,
+					SYMBOL		=> $exchange->symbol,
 					NAME		=> $exchange->name,
 					LOCATION	=> $exchange->location
 				);
 				eval {
 					$self->call("SCALAR", 'Finance.Exchange.Create', \%s_exchange);
 				}; if ($@) {
-					print "ERROR: could not insert exchange ", $exchange->id, " ($@)\n";
+					print "ERROR: could not insert exchange ", $exchange->name, " ($@)\n";
 				}
-				$self->call("SCALAR", 'Finance.Exchange.Create', \%s_exchange);
+				push(@s_exchanges, %s_exchange);
 			}
 			
-			# Add the indexes (TODO fix this, ID etc)
+			# Add the indexes
 			print "DEBUG: processing indexes\n";
-			my @s_indexes = $self->call("ARRAY", 'Finance.Index.List', "exchange EQUALS '" . $exchange->id . "'");
+			my @s_indexes = $self->call("ARRAY", 'Finance.Index.List', "exchange EQUALS '" . $exchange->symbol . "'");
 			foreach my $index (@{$exchange->indexes}) {
-				print "DEBUG: adding index ", $index->id, "\n";
-				unless (grep { $_->{NAME} eq $index->id } @s_indexes) {
+				print "DEBUG: adding index ", $index->name, "\n";
+				unless (grep { $_->{NAME} eq $index->name } @s_indexes) {
 					my %s_index = (
-						NAME		=> $index->id,
-						EXCHANGE	=> $index->exchange,
+						NAME		=> $index->name,
+						EXCHANGE	=> $exchange->symbol,
 					);
 					eval {
-						$self->call("SCALAR", 'Finance.Security.Create', \%s_index);
+						$self->call("SCALAR", 'Finance.Index.Create', \%s_index);
 					}; if ($@) {
-						print "ERROR: could not insert index ", $index->id, " ($@)\n";
+						print "ERROR: could not insert index ", $index->name, " ($@)\n";
 					}
 					push(@s_indexes, \%s_index);
 				}				
@@ -148,15 +148,15 @@ sub BUILD {
 			
 			# Add the securities
 			print "DEBUG: processing securities\n";
-			my @s_securities = $self->call("ARRAY", 'Finance.Security.List', "exchange EQUALS '" . $exchange->id . "'");
+			my @s_securities = $self->call("ARRAY", 'Finance.Security.List', "exchange EQUALS '" . $exchange->symbol . "'");
 			foreach my $security (@{$exchange->securities}) {
 				print "DEBUG: adding security ", $security->isin, "\n";
 				unless (grep { $_->{ISIN} eq $security->isin } @s_securities) {
 					my %s_security = (
-						SYMBOL		=> $security->id,
+						SYMBOL		=> $security->symbol,
 						ISIN		=> $security->isin,
 						NAME		=> $security->name,
-						EXCHANGE	=> $exchange->id
+						EXCHANGE	=> $exchange->symbol
 					);
 					eval {
 						$self->call("SCALAR", 'Finance.Security.Create', \%s_security);
@@ -192,18 +192,50 @@ sub run {
 			
 			# Check which plugins need to be updated
 			foreach my $exchange (@{$plugin->exchanges}) {
+				# Check if the delay has already passed
 				foreach my $security (@{$exchange->securities}) {
-					if (not $security->has_quote or (time-$security->quote->time) > $security->quote->delay) {
+					# Don't update securities which error'd before					
+					if ($security->wait != 0) {
+						$security->wait($security->wait-1);
+						next;
+					}
+					
+					if (not $security->has_quote or (time-$security->quote->fetchtime) > $security->quote->delay) {
 						push(@securities, $security);
 					}
 				}
 			
 				# Update them
-				print "     Fetching quotes for ", join(", ", map { $_->id } @securities ), "\n";
+				print "     Fetching quotes for ", join(", ", map { $_->name } @securities ), "\n";
 				my @quotes_local = $plugin->getQuotes($exchange, @securities);
 				
-				# Save them
-				push(@quotes, @quotes_local);
+				# Save them (if no errors && updated)
+				foreach my $quote (@quotes_local) {
+					my $security = (grep { $_->isin eq $quote->security } @securities)[0];
+					if (not defined $security) {
+						print "ERROR: received not-requested quote for security ", $quote->security, "\n";
+						next;
+					}
+					
+					if (not $security->has_quote or $security->quote->time != $quote->time) {
+						push (@quotes, $quote);
+						
+						# All quotes in a single quote fetch have the same delay time, also if some of
+						# those aren't updated nearly that frequently. That's why we don't juse replace
+						# the delay with the new one, but divide it in half. Consistently, when a  quote
+						# didn't seem to be updated, the delay time is doubled.
+						if ($security->has_quote) {
+							my $olddelay = $security->quote->delay;
+							if ($olddelay/2 > $quote->delay) {
+								$quote->delay($olddelay/2);
+							}
+						}
+						$security->quote($quote);
+					} else {
+						# Doubling of the delay (see big comment block above)
+						$security->quote->delay($security->quote->delay * 2);
+					}
+				}
 			}
 		}
 			
@@ -220,15 +252,15 @@ sub run {
 		print "- Saving changes\n";
 		foreach my $quote (@quotes) {
 			my %s_quote = (
-				ISIN	=> $quote->security,
-				TIME	=> sub { to_datetime($quote->time) },
-				PRICE	=> $quote->price,
-				BID	=> $quote->bid,
-				ASK	=> $quote->ask,
-				LOW	=> $quote->low,
-				HIGH	=> $quote->high,
-				OPEN	=> $quote->open,
-				VOLUME	=> $quote->volume
+				isin	=> $quote->security,
+				time	=> sub { to_datetime($quote->time) },
+				price	=> $quote->price,
+				bid	=> $quote->bid,
+				ask	=> $quote->ask,
+				low	=> $quote->low,
+				high	=> $quote->high,
+				open	=> $quote->open,
+				volume	=> $quote->volume
 			);
 			eval {
 				$self->call("SCALAR", 'Finance.Security.Update', \%s_quote);
@@ -240,7 +272,6 @@ sub run {
 		# Wait
 		print "  Waiting $delay seconds\n";	
 		sleep($delay);
-		exit();
 	}
 }
 

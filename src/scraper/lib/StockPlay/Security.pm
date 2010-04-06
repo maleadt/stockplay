@@ -48,6 +48,12 @@ has 'isin' => (
 	required	=> 1
 );
 
+has 'symbol' => (
+	is		=> 'ro',
+	isa		=> 'Str',
+	required	=> 1
+);
+
 has 'name' => (
 	is		=> 'ro',
 	isa		=> 'Str'
@@ -57,6 +63,12 @@ has 'quote' => (
 	is		=> 'rw',
 	isa		=> 'StockPlay::Quote',
 	predicate	=> 'has_quote'
+);
+
+has [qw/errors wait/] => (
+	is		=> 'rw',
+	isa		=> 'Int',
+	default		=> 0
 );
 
 ################################################################################

@@ -41,6 +41,12 @@ use warnings;
 
 =cut
 
+has 'name' => (
+	is		=> 'ro',
+	isa		=> 'Str',
+	required	=> 1
+);
+
 has 'securities' => (
 	is		=> 'ro',
 	isa		=> 'ArrayRef[StockPlay::Security]',

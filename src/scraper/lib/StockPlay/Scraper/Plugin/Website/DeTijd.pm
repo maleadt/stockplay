@@ -38,10 +38,6 @@ use strict;
 use warnings;
 
 # Proper DateTime conversion
-my %TIMEZONES = (
-	"BSE"	=> "Europe/Brussels",
-	"PA"	=> "Europe/Paris"
-);
 sub parse_datetime {
 	my ($timezone, $string) = @_;
 
@@ -82,23 +78,111 @@ sub _build_exchanges {
 	
 	# Euronext Brussel
 	my $brussel = new StockPlay::Exchange(
-		id		=> "BSE",
+		symbol		=> "BSE",
+		name		=> "Euronext Brussels",
 		location	=> "Brussel",
-		time_zone	=> new DateTime::TimeZone(name => "Europe/Brussels")
+		private => {
+			time_zone	=> new DateTime::TimeZone(name => "Europe/Brussels")
+		}
 	);
 	$self->addSecurities($brussel, 'http://www.tijd.be/beurzen/euronext-brussel/continumarkt');
+	my $bel20 = new StockPlay::Index(
+		name		=> "bel20"
+	);
+	$self->addSecuritiesIndex($brussel, $bel20, 'http://www.tijd.be/beurzen/euronext-brussel/bel20');
+	push(@{$brussel->indexes}, $bel20);
 	
 	# Euronext Parijs
 	my $parijs = new StockPlay::Exchange(
-		id		=> "PA",
+		symbol		=> "PA",
+		name		=> "Euronext Paris",
 		location	=> "Parijs",
-		time_zone	=> new DateTime::TimeZone(name => "Europe/Paris")
+		private => {
+			time_zone	=> new DateTime::TimeZone(name => "Europe/Paris")
+		}
 	);
 	$self->addSecurities($parijs, 'http://www.tijd.be/beurzen/euronext-parijs/frencha');
 	$self->addSecurities($parijs, 'http://www.tijd.be/beurzen/euronext-parijs/frenchb');
 	$self->addSecurities($parijs, 'http://www.tijd.be/beurzen/euronext-parijs/frenchc');
+	my $cac40 = new StockPlay::Index(
+		name		=> "cac40"
+	);
+	$self->addSecuritiesIndex($parijs, $cac40, 'http://www.tijd.be/beurzen/euronext-parijs/cac40');
+	push(@{$parijs->indexes}, $cac40);
 	
 	return [$brussel, $parijs];
+}
+
+sub addSecuritiesIndex {
+	my ($self, $exchange, $index, $url) = @_;
+	my @securities;
+	
+	# Process all pages
+	my $page = 1;
+	while (1) {
+		# Fetch HTML
+		print "DEBUG: processing page $page\n";
+		my $res = $self->browser->get($url . "?p=$page") || die();
+
+		# Build a HTML tree
+		my $tree = HTML::TreeBuilder->new();
+		$tree->parse($res->decoded_content);
+
+		# Find main table
+		my $table = $tree->look_down(
+			'_tag' => 'table',
+			sub {
+				defined $_[0]->attr('class') && $_[0]->attr('class') =~ m{maintable};
+			}
+		);
+		die("Could not find main table") unless $table;
+		
+		# Extract securities
+		$table->look_down(
+			'_tag'	=> 'td',
+			sub {
+				my $cell = shift;
+				return unless $cell->parent()->parent()->tag eq "tbody";
+				return unless defined $cell->attr('class') && $cell->attr('class') =~ m{st_name};
+				my ($name, $site_id);
+				foreach my $child ($cell->content_list) {
+					if ($child->tag eq "a") {
+						$name = $child->as_text;
+					} elsif ($child->tag eq "form") {
+						$child->look_down(
+							'_tag', 'input',
+							sub {
+								if ($_[0]->attr('name') eq "id") {
+									$site_id = $_[0]->attr('value');
+								}
+								return 0;
+							}
+						);
+					}
+				}
+				
+				if (defined $site_id) {	
+					print "DEBUG: processing $name\n";
+					foreach my $security (@{$exchange->securities}) {
+						if ($security->get('site_id') eq $site_id) {
+							push(@securities, $security);
+							return 0;
+						}
+					}
+					print "ERROR: could not find requested security on exchange\n";
+				}
+				return 0;
+			}
+		);
+		$tree->delete;
+		
+		# Check for more pages
+		last unless ($res->decoded_content =~ 'Volgende');
+		$page++;
+	}
+	
+	push(@{$index->securities}, @securities);
+	
 }
 
 sub addSecurities {
@@ -169,16 +253,18 @@ sub addSecurities {
 							}
 							($isin, $symbol) = @items[1..2];
 							
-							# HACK HACK HACK
-							# TODO: misschien checken && goed fixen? Moet dan wel in de BEL20, maar niet in de BSE...
-							return 0 if ($items[0] eq "Euronext Brussels" && ($isin eq "FR0010208488" || $isin eq "FR0000121501"));
+							# FIXME: sommige securities komen voor op de BEL20 maar niet op de BSE
+							if ($items[0]ne $exchange->name) {
+								print "ERROR: $name found, but not on exchange\n";
+								return 0;
+							}
 						}
 					);
 					$tree2->delete();
 					return unless (defined $isin and defined $symbol);
 					
 					push(@securities, new StockPlay::Security({
-						id		=> $symbol,
+						symbol		=> $symbol,
 						isin		=> $isin,
 						name		=> $name,
 						private		=> {
@@ -231,7 +317,7 @@ sub getQuotes {
 		my $security = (grep { $_->get('site_id') == $site_id } @securities)[0]
 			or die("Could not connect data to security");
 		eval {
-			my $datetime = parse_datetime($TIMEZONES{$exchange->id}, $data{time});
+			my $datetime = parse_datetime($exchange->get('time_zone'), $data{time});
 			die("could not parse time") unless $datetime;
 			push(@quotes, new StockPlay::Quote({
 				time		=> $datetime,
@@ -246,9 +332,12 @@ sub getQuotes {
 				delay		=> $koersen->{delay},
 				fetchtime	=> time
 			}));
+			$security->errors(0);
 		};
 		if ($@) {
-			print "ERROR: could not create a quote for $site_id: $@";
+			print "ERROR: could not create a quote for ", $security->name, ": $@";
+			$security->errors($security->errors + 1);
+			$security->wait($security->errors);
 		}
 		
 	}
