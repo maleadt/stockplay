@@ -96,7 +96,7 @@ public class IndexSecurity {
             catch (IllegalArgumentException e) {
                 throw new InvocationException(InvocationException.Type.NON_EXISTING_ENTITY, "requested key '" + tKey + "' does not exist");
             }
-            tStructMap.put(tField, tKey.toUpperCase());
+            tStructMap.put(tField, tKey);
         }
 
         // Check needed keys

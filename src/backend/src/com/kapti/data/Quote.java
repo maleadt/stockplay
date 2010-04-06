@@ -165,7 +165,7 @@ public class Quote {
 
     public void applyStruct(Hashtable<String, Object> iStruct) throws StockPlayException {
         for (String tKey : iStruct.keySet()) {
-            Object tValue = iStruct.get(tKey.toUpperCase());
+            Object tValue = iStruct.get(tKey);
             Fields tField = null;
             try {
                 tField = Fields.valueOf(tKey.toUpperCase());
@@ -213,7 +213,7 @@ public class Quote {
             catch (IllegalArgumentException e) {
                 throw new InvocationException(InvocationException.Type.KEY_DOES_NOT_EXIST, "requested key '" + tKey + "' does not exist");
             }
-            tStructMap.put(tField, tKey.toUpperCase());
+            tStructMap.put(tField, tKey);
         }
 
         // Check needed keys
