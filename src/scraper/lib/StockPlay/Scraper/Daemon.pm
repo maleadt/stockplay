@@ -188,11 +188,11 @@ sub run {
 		foreach my $plugin (@{$self->plugins}) {
 			my $pluginname = $plugin->infohash->{name};
 			print "  -> $pluginname\n";
-			my @securities;
 			
 			# Check which plugins need to be updated
 			foreach my $exchange (@{$plugin->exchanges}) {
 				# Check if the delay has already passed
+				my @securities;
 				foreach my $security (@{$exchange->securities}) {
 					# Don't update securities which error'd before					
 					if ($security->wait != 0) {
