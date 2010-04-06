@@ -118,6 +118,7 @@ public class Parser {
         return instance;
     }
 
+    
     //
     // Methods
     //
@@ -137,7 +138,7 @@ public class Parser {
     }
 
     // Lexical analysis: the tokenizer
-    List<Token> tokenize(String iSource) throws StockPlayException {
+    public List<Token> tokenize(String iSource) throws StockPlayException {
         // Setup
         int tPosition = 0;
         final int tEnd = iSource.length();
@@ -301,6 +302,7 @@ public class Parser {
         Iterator<Token> tIterator = iTokens.iterator();
         while (tIterator.hasNext()) {
             Token tToken = tIterator.next();
+            System.out.println(tToken);
 
             switch (tToken.getType()) {
                 case INT:

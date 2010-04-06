@@ -33,7 +33,6 @@ public class Security {
     //
 
     public static enum Fields {
-
         ISIN, SYMBOL, NAME, EXCHANGE, VISIBLE, SUSPENDED
     }
     private String isin = "";
@@ -48,25 +47,10 @@ public class Security {
     // Construction
     //
 
-    public Security(String isin) {
-        this.isin = isin;
-    }
-
-
-    public Security(String isin, String symbol, String name, String exchange) {
+    public Security(String isin, String symbol, String exchange) {
         this.isin = isin;
         this.symbol = symbol;
-        this.name = name;
         this.exchange = exchange;
-    }
-
-    public Security(String isin, String symbol, String name, String exchange, boolean visible, boolean suspended) {
-        this.isin = isin;
-        this.symbol = symbol;
-        this.name = name;
-        this.exchange = exchange;
-        this.visible = visible;
-        this.suspended = suspended;
     }
 
 
@@ -93,16 +77,8 @@ public class Security {
         return symbol;
     }
 
-    public void setSymbol(String symbol) {
-        this.symbol = symbol;
-    }
-
     public String getExchange() {
         return exchange;
-    }
-
-    public void setExchange(String exchange) {
-        this.exchange = exchange;
     }
 
     public boolean isSuspended() {
@@ -159,17 +135,8 @@ public class Security {
             }
 
             switch (tField) {
-                case ISIN:
-                    setIsin((String) tValue);
-                    break;
-                case SYMBOL:
-                    setSymbol((String) tValue);
-                    break;
                 case NAME:
                     setName((String) tValue);
-                    break;
-                case EXCHANGE:
-                    setExchange((String) tValue);
                     break;
                 case VISIBLE:
                     setVisible((Boolean) tValue);
@@ -198,9 +165,15 @@ public class Security {
         }
 
         // Check needed keys
-        if (tStructMap.containsKey(Fields.ISIN)) {
-            Security tSecurity = new Security((String)iStruct.get(tStructMap.get(Fields.ISIN)));
+        if (tStructMap.containsKey(Fields.ISIN) && tStructMap.containsKey(Fields.SYMBOL) && tStructMap.containsKey(Fields.EXCHANGE)) {
+            Security tSecurity = new Security(
+                    (String) iStruct.get(tStructMap.get(Fields.ISIN)),
+                    (String) iStruct.get(tStructMap.get(Fields.SYMBOL)),
+                    (String) iStruct.get(tStructMap.get(Fields.EXCHANGE))
+                );
             iStruct.remove(tStructMap.get(Fields.ISIN));
+            iStruct.remove(tStructMap.get(Fields.SYMBOL));
+            iStruct.remove(tStructMap.get(Fields.EXCHANGE));
             return tSecurity;
         } else
             throw new ServiceException(ServiceException.Type.NOT_ENOUGH_INFORMATION);

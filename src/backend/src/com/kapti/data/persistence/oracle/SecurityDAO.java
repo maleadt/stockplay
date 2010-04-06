@@ -56,10 +56,8 @@ public class SecurityDAO implements com.kapti.data.persistence.SecurityDAO {
 
                 rs = stmt.executeQuery();
                 if (rs.next()) {
-                    Security tSecurity = new Security(isin);
-                    tSecurity.setSymbol(rs.getString(1));
+                    Security tSecurity = new Security(isin, rs.getString(1), rs.getString(3));
                     tSecurity.setName(rs.getString(2));
-                    tSecurity.setExchange(rs.getString(3));
                     tSecurity.setVisible(rs.getBoolean(4));
                     tSecurity.setSuspended(rs.getBoolean(5));
                     return tSecurity;
@@ -97,10 +95,8 @@ public class SecurityDAO implements com.kapti.data.persistence.SecurityDAO {
                 rs = stmt.executeQuery();
                 ArrayList<Security> list = new ArrayList<Security>();
                 while (rs.next()) {
-                    Security tSecurity = new Security(rs.getString(1));
-                    tSecurity.setSymbol(rs.getString(2));
+                    Security tSecurity = new Security(rs.getString(1), rs.getString(2), rs.getString(4));
                     tSecurity.setName(rs.getString(3));
-                    tSecurity.setExchange(rs.getString(4));
                     tSecurity.setVisible(rs.getBoolean(5));
                     tSecurity.setSuspended(rs.getBoolean(6));
                     list.add(tSecurity);
@@ -142,10 +138,8 @@ public class SecurityDAO implements com.kapti.data.persistence.SecurityDAO {
                 rs = stmt.executeQuery();
                 ArrayList<Security> list = new ArrayList<Security>();
                 while (rs.next()) {
-                    Security tSecurity = new Security(rs.getString(1));
-                    tSecurity.setSymbol(rs.getString(2));
+                    Security tSecurity = new Security(rs.getString(1), rs.getString(2), rs.getString(4));
                     tSecurity.setName(rs.getString(3));
-                    tSecurity.setExchange(rs.getString(4));
                     tSecurity.setVisible(rs.getBoolean(5));
                     tSecurity.setSuspended(rs.getBoolean(6));
                     list.add(tSecurity);
@@ -179,10 +173,8 @@ public class SecurityDAO implements com.kapti.data.persistence.SecurityDAO {
                 rs = stmt.executeQuery();
                 ArrayList<Security> list = new ArrayList<Security>();
                 while (rs.next()) {
-                    Security tSecurity = new Security(rs.getString(1));
-                    tSecurity.setSymbol(rs.getString(2));
+                    Security tSecurity = new Security(rs.getString(1), rs.getString(2), rs.getString(4));
                     tSecurity.setName(rs.getString(3));
-                    tSecurity.setExchange(rs.getString(4));
                     tSecurity.setVisible(rs.getBoolean(5));
                     tSecurity.setSuspended(rs.getBoolean(6));
                     list.add(tSecurity);

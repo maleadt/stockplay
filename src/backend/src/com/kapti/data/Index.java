@@ -44,11 +44,12 @@ public class Index {
     // Construction
     //
 
-    public Index(int id){
-        this.id = id;
+    public Index() {
     }
 
-    public Index() {
+    public Index(int id){
+        this();
+        this.id = id;
     }
 
 

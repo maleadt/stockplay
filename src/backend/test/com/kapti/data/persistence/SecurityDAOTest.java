@@ -58,10 +58,8 @@ public class SecurityDAOTest {
     @Test
     public void testCreate() throws Exception {
         System.out.println("create");
-        Security security = new Security("BE0000000000");
-        security.setSymbol("TEST");
+        Security security = new Security("BE0000000000", "TEST", "TESTSYMBL2");
         security.setName("Test");
-        security.setExchange("TESTSYMBL2");
         SecurityDAO instance = SecurityDAO.getInstance();
         boolean expResult = true;
         boolean result = instance.create(security);
@@ -104,10 +102,8 @@ public class SecurityDAOTest {
     @Test
     public void testUpdate() throws Exception {
         System.out.println("update");
-        Security security = new Security("BE0000000000");
-        security.setSymbol("TEST");
-        security.setName("Test om te updaten");
-        security.setExchange("TESTSYMBL2");
+        Security security = new Security("BE0000000000", "TEST", "TESTSYMBL2");
+        security.setName("Test om up te daten");
         SecurityDAO instance = SecurityDAO.getInstance();
         boolean expResult = true;
         boolean result = instance.update(security);
@@ -134,7 +130,8 @@ public class SecurityDAOTest {
     @Test
     public void testDelete() throws Exception {
         System.out.println("delete");
-        Security security = new Security("BE0000000000");
+        Security security = new Security("BE0000000000", "TEST", "TESTSYMBL2");
+        security.setName("Test");
         SecurityDAO instance = SecurityDAO.getInstance();
         boolean expResult = true;
         boolean result = instance.delete(security);

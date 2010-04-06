@@ -74,10 +74,8 @@ public class FinanceBackendTest {
 
                 HashMap security = (HashMap) sec;
 
-                Security res = new Security((String) security.get("ISIN"));
-                res.setSymbol((String) security.get("SYMBOL"));
+                Security res = new Security((String) security.get("ISIN"), (String) security.get("SYMBOL"), (String) security.get("EXCHANGE"));
                 res.setName((String) security.get("NAME"));
-                res.setExchange((String) security.get("EXCHANGE"));
                 res.setVisible((Boolean) security.get("VISIBLE"));
                 res.setSuspended((Boolean) security.get("SUSPENDED"));
 
@@ -98,10 +96,8 @@ public class FinanceBackendTest {
 
                 HashMap security = (HashMap) sec;
 
-                Security res = new Security((String) security.get("ISIN"));
-                res.setSymbol((String) security.get("SYMBOL"));
+                Security res = new Security((String) security.get("ISIN"), (String) security.get("SYMBOL"), (String) security.get("EXCHANGE"));
                 res.setName((String) security.get("NAME"));
-                res.setExchange((String) security.get("EXCHANGE"));
                 res.setVisible((Boolean) security.get("VISIBLE"));
                 res.setSuspended((Boolean) security.get("SUSPENDED"));
 

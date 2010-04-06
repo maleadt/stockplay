@@ -39,7 +39,6 @@ public class User {
     //
 
     public static enum Fields {
-
         ID, NICKNAME, PASSWORD, LASTNAME, FIRSTNAME, REGDATE, ADMIN, POINTS, STARTAMOUNT, CASH, RRN
     }
     private int id = -1;
@@ -57,25 +56,17 @@ public class User {
     //
     // Construction
     //
-    public User() {
-    }
 
-    public User(int id) {
-        this.id = id;
-    }
-
-    public User(int id, String nickname, String password, String lastname, String firstname, boolean admin, Date regdate, long rrn, int points, double startamount, double cash) {
-        this.id = id;
+    public User(String nickname, String lastname, String firstname, Date regdate) {
         this.nickname = nickname;
-        setPassword(password);
         this.lastname = lastname;
         this.firstname = firstname;
         this.regdate = regdate;
-        this.rrn = rrn;
-        this.admin = admin;
-        this.points = points;
-        this.startamount = startamount;
-        this.cash = cash;
+    }
+
+    public User(int id, String nickname, String lastname, String firstname, Date regdate) {
+        this(nickname, lastname, firstname, regdate);
+        this.id = id;
     }
 
     //
@@ -123,10 +114,6 @@ public class User {
         return firstname;
     }
 
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
-    }
-
     public boolean isAdmin() {
         return admin;
     }
@@ -139,16 +126,8 @@ public class User {
         return lastname;
     }
 
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
-    }
-
     public String getNickname() {
         return nickname;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
     }
 
     public double getCash() {
@@ -177,10 +156,6 @@ public class User {
 
     public void setPoints(int points) {
         this.points = points;
-    }
-
-    public void setRegdate(Date regdate) {
-        this.regdate = regdate;
     }
 
     public void setStartamount(double startamount) {
@@ -254,20 +229,8 @@ public class User {
 
 
             switch (tField) {
-                case NICKNAME:
-                    setNickname((String)tValue);
-                    break;
                 case PASSWORD:
                     setPassword((String)tValue);
-                    break;
-                case LASTNAME:
-                    setLastname((String)tValue);
-                    break;
-                case FIRSTNAME:
-                    setFirstname((String)tValue);
-                    break;
-                case REGDATE:
-                    setRegdate((Date)tValue);
                     break;
                 case ADMIN:
                     setAdmin((Boolean)tValue);
@@ -283,9 +246,9 @@ public class User {
                     break;
                 case RRN:
                     if(tValue instanceof String)
-                    setRijksregisternummer(Long.parseLong((String)tValue));
+                        setRijksregisternummer(Long.parseLong((String)tValue));
                     else
-                        setRijksregisternummer((Long)tValue);
+                        setRijksregisternummer(((Integer)tValue).longValue());
                     break;
 
                 default:
@@ -293,55 +256,6 @@ public class User {
             }
         }
     }
-
-    /*
-    public void fromStruct(Hashtable<String, Object> iStruct) throws StockPlayException {
-        for (String tKey : iStruct.keySet()) {
-            Object tValue = iStruct.get(tKey);
-            Fields tField = null;
-            try {
-                tField = Fields.valueOf(tKey);
-            } catch (IllegalArgumentException e) {
-                throw new StockPlayException("requested key '" + tKey + "' does not exist");
-            }
-
-            switch (tField) {
-                case NICKNAME:
-                    setNickname((String) tValue);
-                    break;
-                case PASSWORD:
-                    setPassword((String) tValue);
-                    break;
-                case LASTNAME:
-                    setLastname((String) tValue);
-                    break;
-                case FIRSTNAME:
-                    setFirstname((String) tValue);
-                    break;
-                case REGDATE:
-                    setRegdate((Date) tValue);
-                    break;
-                case ADMIN:
-                    setAdmin((Boolean) tValue);
-                    break;
-                case POINTS:
-                    setPoints((Integer) tValue);
-                    break;
-                case STARTAMOUNT:
-                    setStartamount((Double) tValue);
-                    break;
-                case CASH:
-                    setCash((Double) tValue);
-                    break;
-                case RRN:
-                    setRijksregisternummer((Integer) tValue);
-                    break;
-
-                default:
-                    throw new StockPlayException("requested key '" + tKey + "' cannot be modified");
-            }
-        }
-    }*/
 
     public static User fromStruct(Hashtable<String, Object> iStruct) throws StockPlayException {
         // Create case mapping
@@ -358,9 +272,17 @@ public class User {
         }
 
         // Check needed keys
-        if (tStructMap.containsKey(Fields.ID)) {
-            User tUser = new User((Integer)iStruct.get(tStructMap.get(Fields.ID)));
-            iStruct.remove(tStructMap.get(Fields.ID));
+        if (tStructMap.containsKey(Fields.NICKNAME) && tStructMap.containsKey(Fields.FIRSTNAME) && tStructMap.containsKey(Fields.LASTNAME) && tStructMap.containsKey(Fields.REGDATE)) {
+            User tUser = new User(
+                    (String) iStruct.get(tStructMap.get(Fields.NICKNAME)),
+                    (String) iStruct.get(tStructMap.get(Fields.LASTNAME)),
+                    (String) iStruct.get(tStructMap.get(Fields.FIRSTNAME)),
+                    (Date) iStruct.get(tStructMap.get(Fields.REGDATE))
+                    );
+            iStruct.remove(tStructMap.get(Fields.NICKNAME));
+            iStruct.remove(tStructMap.get(Fields.LASTNAME));
+            iStruct.remove(tStructMap.get(Fields.FIRSTNAME));
+            iStruct.remove(tStructMap.get(Fields.REGDATE));
             return tUser;
         } else
             throw new ServiceException(ServiceException.Type.NOT_ENOUGH_INFORMATION);

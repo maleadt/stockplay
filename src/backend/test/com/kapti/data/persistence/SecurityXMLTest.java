@@ -87,13 +87,11 @@ public class SecurityXMLTest {
     public void modifySecurity() throws Exception {
         Hashtable<String, Object> iDetails = new Hashtable<String, Object>();
 
-        iDetails.put("SYMBOL", "AAAB");
         iDetails.put("NAME", "JUnit aangepast testaandeel");
-        iDetails.put("EXCHANGE", "NASDAQ");
         iDetails.put("VISIBLE", false);
         iDetails.put("SUSPENDED", true);
 
-        int result = (Integer) client.execute("Finance.Security.Modify", new Object[] {"isin EQUALS 'BE123456789", iDetails});
+        int result = (Integer) client.execute("Finance.Security.Modify", new Object[] {"isin EQUALS 'BE123456789'", iDetails});
 
         assertTrue(result + " items affected, expected only one change",result == 1);
     }

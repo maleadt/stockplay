@@ -40,9 +40,8 @@ public class Instruction {
     //
 
     public Instruction(int id, int user, String isin) {
+        this(user, isin);
         this.id = id;
-        this.user = user;
-        this.isin = isin;
     }
 
     public Instruction (int user, String isin) {
