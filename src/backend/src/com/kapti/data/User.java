@@ -195,6 +195,7 @@ public class User {
                 case REGDATE:
                     oStruct.put(tField.name(), getRegdate());
                     break;
+                    
                 case ADMIN:
                     oStruct.put(tField.name(), isAdmin());
                     break;

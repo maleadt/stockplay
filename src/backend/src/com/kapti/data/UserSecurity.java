@@ -74,6 +74,7 @@ public class UserSecurity {
                 case ISIN:
                     oStruct.put(tField.name(), getPk().isin);
                     break;
+                    
                 case AMOUNT:
                     oStruct.put(tField.name(), getAmount());
                     break;

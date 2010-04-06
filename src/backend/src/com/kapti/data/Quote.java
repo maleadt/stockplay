@@ -136,6 +136,7 @@ public class Quote {
                 case TIME:
                     oStruct.put(tField.name(), getTime());
                     break;
+                    
                 case PRICE:
                     oStruct.put(tField.name(), getPrice());
                     break;

@@ -107,10 +107,12 @@ public class Exchange  {
                     oStruct.put(tField.name(), getSymbol());
                     break;
                 case NAME:
-                    oStruct.put(tField.name(), getName());
+                    if (getName() != null)
+                        oStruct.put(tField.name(), getName());
                     break;
                 case LOCATION:
-                    oStruct.put(tField.name(), getLocation());
+                    if (getLocation() != null)
+                        oStruct.put(tField.name(), getLocation());
                     break;
             }
         }

@@ -23,6 +23,7 @@
 package com.kapti.data;
 
 import com.kapti.exceptions.InvocationException;
+import com.kapti.exceptions.ServiceException;
 import com.kapti.exceptions.StockPlayException;
 import java.util.Hashtable;
 
@@ -44,11 +45,13 @@ public class Index {
     // Construction
     //
 
-    public Index() {
+    public Index(String name, String exchange) {
+        this.name = name;
+        this.exchange = exchange;
     }
 
-    public Index(int id){
-        this();
+    public Index(int id, String name, String exchange) {
+        this(name, exchange);
         this.id = id;
     }
 
@@ -61,16 +64,8 @@ public class Index {
         return exchange;
     }
 
-    public void setExchange(String exchange) {
-        this.exchange = exchange;
-    }
-
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public int getId() {
@@ -107,12 +102,6 @@ public class Index {
             }
 
             switch (tField) {
-                case NAME:
-                    setName((String)tValue);
-                    break;
-                case EXCHANGE:
-                    setExchange((String)tValue);
-                    break;
                 default:
                     throw new InvocationException(InvocationException.Type.NON_EXISTING_ENTITY, "requested key '" + tKey + "' cannot be modified");
             }
@@ -133,8 +122,18 @@ public class Index {
             tStructMap.put(tField, tKey.toUpperCase());
         }
 
-        // Check needed keys (not needed here)
-        return new Index();
+        // Check needed keys
+        if (tStructMap.containsKey(Fields.NAME) && tStructMap.containsKey(Fields.EXCHANGE)) {
+            Index tIndex = new Index(
+                    (String)iStruct.get(tStructMap.get(Fields.NAME)),
+                    (String)iStruct.get(tStructMap.get(Fields.EXCHANGE))
+                );
+            iStruct.remove(tStructMap.get(Fields.NAME));
+            iStruct.remove(tStructMap.get(Fields.EXCHANGE));
+            return tIndex;
+        } else {
+            throw new ServiceException(ServiceException.Type.NOT_ENOUGH_INFORMATION);
+        }
     }
 
 }

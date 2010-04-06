@@ -60,9 +60,7 @@ public class IndexDAO implements GenericDAO<Index, Integer> {
 
                 rs = stmt.executeQuery();
                 if (rs.next()) {
-                    Index tIndex = new Index(id);
-                    tIndex.setName(rs.getString(1));
-                    tIndex.setExchange(rs.getString(2));
+                    Index tIndex = new Index(id, rs.getString(1), rs.getString(2));
                     return tIndex;
                 } else {
                     throw new InvocationException(InvocationException.Type.NON_EXISTING_ENTITY, "There is no index with id '" + id + "'");
@@ -97,9 +95,7 @@ public class IndexDAO implements GenericDAO<Index, Integer> {
                 rs = stmt.executeQuery();
                 ArrayList<Index> list = new ArrayList<Index>();
                 while (rs.next()) {
-                    Index tIndex = new Index(rs.getInt(1));
-                    tIndex.setName(rs.getString(2));
-                    tIndex.setExchange(rs.getString(2));
+                    Index tIndex = new Index(rs.getInt(1), rs.getString(2), rs.getString(3));
                     list.add(tIndex);
                }
                 return list;
@@ -137,9 +133,7 @@ public class IndexDAO implements GenericDAO<Index, Integer> {
                 rs = stmt.executeQuery();
                 ArrayList<Index> list = new ArrayList<Index>();
                 while (rs.next()) {
-                    Index tIndex = new Index(rs.getInt(1));
-                    tIndex.setName(rs.getString(2));
-                    tIndex.setExchange(rs.getString(2));
+                    Index tIndex = new Index(rs.getInt(1), rs.getString(2), rs.getString(3));
                     list.add(tIndex);
                }
                 return list;
@@ -171,9 +165,7 @@ public class IndexDAO implements GenericDAO<Index, Integer> {
                 rs = stmt.executeQuery();
                 ArrayList<Index> list = new ArrayList<Index>();
                 while (rs.next()) {
-                    Index tIndex = new Index(rs.getInt(1));
-                    tIndex.setName(rs.getString(2));
-                    tIndex.setExchange(rs.getString(2));
+                    Index tIndex = new Index(rs.getInt(1), rs.getString(2), rs.getString(3));
                     list.add(tIndex);
                }
                 return list;

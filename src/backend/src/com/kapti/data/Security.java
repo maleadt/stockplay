@@ -107,11 +107,13 @@ public class Security {
                 case SYMBOL:
                     oStruct.put(tField.name(), getSymbol());
                     break;
-                case NAME:
-                    oStruct.put(tField.name(), getName());
-                    break;
                 case EXCHANGE:
                     oStruct.put(tField.name(), getExchange());
+                    break;
+
+                case NAME:
+                    if (getName() != null)
+                        oStruct.put(tField.name(), getName());
                     break;
                 case VISIBLE:
                     oStruct.put(tField.name(), isVisible());

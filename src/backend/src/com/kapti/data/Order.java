@@ -122,23 +122,29 @@ public class Order extends Instruction {
                     oStruct.put(tField.name(), getPrice());
                     break;
                 case TYPE:
-                    oStruct.put(tField.name(), getType());
+                    if (getType() != null)
+                        oStruct.put(tField.name(), getType());
                     break;
 
                 case STATUS:
-                    oStruct.put(tField.name(), getStatus().name());
+                    if (getStatus() != null)
+                        oStruct.put(tField.name(), getStatus().name());
                     break;
                 case CREATIONTIME:
-                    oStruct.put(tField.name(), getCreationTime());
+                    if (getCreationTime() != null)
+                        oStruct.put(tField.name(), getCreationTime());
                     break;
                 case EXPIRATIONTIME:
-                    oStruct.put(tField.name(), getExpirationTime());
+                    if (getExpirationTime() != null)
+                        oStruct.put(tField.name(), getExpirationTime());
                     break;
                 case EXECUTIONTIME:
-                    oStruct.put(tField.name(), getExecutionTime());
+                    if (getExecutionTime() != null)
+                        oStruct.put(tField.name(), getExecutionTime());
                     break;
                 case PARAMETERS:
-                    oStruct.put(tField.name(), getParameters());
+                    if (getParameters() != null)
+                        oStruct.put(tField.name(), getParameters());
                     break;
             }
         }

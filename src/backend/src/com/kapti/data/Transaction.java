@@ -87,11 +87,13 @@ public class Transaction extends Instruction {
                     oStruct.put(tField.name(), getPrice());
                     break;
                 case TYPE:
-                    oStruct.put(tField.name(), getType());
+                    if (getType() != null)
+                        oStruct.put(tField.name(), getType());
                     break;
 
                 case TIME:
-                    oStruct.put(tField.name(), getTime());
+                    if (getTime() != null)
+                        oStruct.put(tField.name(), getTime());
                     break;
             }
         }
