@@ -31,6 +31,8 @@
                 
                 <div id="leftBottom">
                     <asp:SiteMapPath ID="SiteMapPath1" runat="server"></asp:SiteMapPath>
+                    <p><asp:LoginStatus ID="LoginStatus1" runat="server" LogoutText="Logged in as " />
+                    <asp:LoginName ID="LoginName1" runat="server" /></p>
                     <p>Logged in as: <a href="">Laurens</a></p>
                     <p>Your capital: &#8364;100,045.04</p>
                 </div>

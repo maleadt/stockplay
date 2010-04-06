@@ -75,7 +75,7 @@ public partial class SecurityDetail : System.Web.UI.Page
         historyTable.Columns.Add("Low");
         historyTable.Columns["Low"].DataType = typeof(Double);
 
-        for (int i = 0; i < 30; i++)
+        for (int i = 0; i < 80; i++)
         {
             DateTime date = DateTime.Now.Subtract(new TimeSpan(i+1, 0, 0, 0));
             Quote quote = security.GetQuote(date);

@@ -38,7 +38,7 @@
     </table>
     
     <asp:GridView ID="HistoryGridView" runat="server" AutoGenerateColumns="False" 
-                            onrowdatabound="HistoryGridView_RowDataBound">
+    onrowdatabound="HistoryGridView_RowDataBound" GridLines="None"  CellSpacing="-1">
         <Columns>
             <asp:BoundField DataField="Date" HeaderText="Date" HtmlEncode="false" DataFormatString="{0:dd/MM/yyyy}" />
             <asp:BoundField DataField="Change" HeaderText="Change" />

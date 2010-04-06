@@ -41,11 +41,7 @@ public class Security : ISecurity
         if (qLatest == null)
             return 0;
 
-        Quote qYesterday = data.GetQuoteFromSecurity(symbol, qLatest.Time.AddDays(-1));
-        if (qYesterday == null)
-            return 0;
-
-        return Math.Round((qLatest.Price - qYesterday.Price) / qLatest.Price * 100, 2);
+        return Math.Round((qLatest.Price - qLatest.Open) / qLatest.Price * 100, 2);
     }
 
     public Quote GetLatestQuote()

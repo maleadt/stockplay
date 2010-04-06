@@ -19,7 +19,7 @@ public partial class Login : System.Web.UI.Page
     }
     protected void btnLogin_Click(object sender, EventArgs e)
     {
-        if(txtUsername.Text.Equals("stockplay") && txtPassword.Text.Equals("chocolademousse")) {
+        if(Membership.ValidateUser(txtUsername.Text, txtPassword.Text)) {
             FormsAuthentication.RedirectFromLoginPage(txtUsername.Text, chkRememberMe.Enabled);
         }
     }
