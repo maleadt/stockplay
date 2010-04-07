@@ -76,29 +76,39 @@ public class User {
     //
     public void setPassword(String password) {
 
-        this.password = encryptPassword(password);
+        this.password = password;
     }
 
     public String getPassword() {
         return password;
     }
 
-    
+      private static String byteArrayToHexString(byte[] b){
+     StringBuffer sb = new StringBuffer(b.length * 2);
+     for (int i = 0; i < b.length; i++){
+       int v = b[i] & 0xff;
+       if (v < 16) {
+         sb.append('0');
+       }
+       sb.append(Integer.toHexString(v));
+     }
+     return sb.toString().toUpperCase();
+  }
+
 
     private String encryptPassword(String password) {
         try {
             //we halen de salt op
-
             Properties properties = new Properties();
             properties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("backend.properties"));
 
-            //properties.load(new FileInputStream("backend.properties"));
             String salt = properties.getProperty("salt");
 
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             digest.reset();
             digest.update(salt.getBytes());
-            return digest.digest(password.getBytes("UTF-8")).toString();
+
+            return byteArrayToHexString(digest.digest(password.getBytes()));
         } catch (IOException ex) {
             Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
             return null;
@@ -243,7 +253,7 @@ public class User {
 
             switch (tField) {
                 case PASSWORD:
-                    setPassword((String)tValue);
+                    setPassword(encryptPassword((String)tValue));
                     break;
                 case EMAIL:
                     setEmail((String) tValue);

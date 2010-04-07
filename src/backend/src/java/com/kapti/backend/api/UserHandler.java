@@ -31,6 +31,7 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.GregorianCalendar;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.TimeZone;
 import java.util.Vector;
 
@@ -154,6 +155,19 @@ public class UserHandler extends MethodClass {
         }
 
         return 1;
+    }
+
+    public boolean Validate(String nickname, String password) throws StockPlayException {
+        GenericDAO<com.kapti.data.User, Integer> tUserDAO = getDAO().getUserDAO();
+
+        Parser parser = Parser.getInstance();
+        Filter filter = parser.parse("NICKNAME EQUALS '" + nickname + "'");
+
+        Collection<com.kapti.data.User> tUsers = tUserDAO.findByFilter(filter);
+        Iterator<User> uIterator = tUsers.iterator();
+        User user = uIterator.next();
+        boolean resultaat = user.checkPassword(password);
+        return user.checkPassword(password);
     }
 
     /**

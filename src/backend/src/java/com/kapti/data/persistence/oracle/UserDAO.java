@@ -103,8 +103,8 @@ public class UserDAO implements GenericDAO<User, Integer> {
                 rs = stmt.executeQuery();
                 ArrayList<User> list = new ArrayList<User>();
                 while (rs.next()) {
-                    User tUser = new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(5), rs.getString(6), rs.getDate(8));
-                    tUser.setPassword(rs.getString(4));
+                    User tUser = new User(rs.getInt(1), rs.getString(2), rs.getString(4), rs.getString(5), rs.getString(6), rs.getDate(8));
+                    tUser.setPassword(rs.getString(3));
                     tUser.setAdmin(rs.getBoolean(7));
                     tUser.setRijksregisternummer(rs.getLong(9));
                     tUser.setPoints(rs.getInt(10));
