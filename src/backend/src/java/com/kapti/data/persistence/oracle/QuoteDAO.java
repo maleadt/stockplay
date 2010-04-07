@@ -38,8 +38,8 @@ public class QuoteDAO implements com.kapti.data.persistence.QuoteDAO {
     private static final String UPDATE_QUOTE = "UPDATE quotes SET price = ?, volume ?, bid = ?, ask = ?, low = ?, high = ?, open ? WHERE isin = ? AND timestamp = ?";
     private static final String DELETE_QUOTE = "DELETE FROM quotes WHERE isin = ? AND timestamp = ?";
     private static final String SELECT_LATEST_QUOTE = "SELECT price, volume, bid, ask, low, high, open, timestamp FROM quotes WHERE isin = 'AMZN' AND timestamp =(select max(timestamp) from quotes WHERE isin='AMZN')";
-    private static final String SELECT_LATEST_QUOTE_FILTER = "SELECT isin, "
-            + "price, volume, bid, ask, low, high, open, timestamp FROM quotes where FILTER and timestamp=(select max(timestamp) from quotes where FILTER )";
+    private static final String SELECT_LATEST_QUOTE_FILTER = "SELECT isin, max(price) price, max(volume) volume, max(bid) bid, max(ask) ask, max(low) low, max(high) high, max(open) open, max(timestamp) timestamp "
+            + "FROM quotes q WHERE FILTER and timestamp = (select max(timestamp) from quotes where isin = q.isin ) GROUP BY isin";
     private static QuoteDAO instance = new QuoteDAO();
 
     public static QuoteDAO getInstance() {
