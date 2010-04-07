@@ -11,6 +11,8 @@ use lib '../lib';
 use LWP::Simple;
 use XML::RPC;
 use Date::Manip;
+use DateTime::Format::DateManip;
+use StockPlay::Factory;
 use StockPlay::Exchange;
 use StockPlay::Index;
 use StockPlay::Security;
@@ -27,92 +29,62 @@ my $PLUGIN_MAX_AGE = 3600*24*7;
 # Main
 #
 
-print "* Loading scraper\n";
+# Load the factory
+print "- Loading factory\n";
+my $factory = new StockPlay::Factory(
+	server	=> 'http://localhost:8080/backend/public',
+);
 
-# Verify server connection
-my $ua = LWP::UserAgent->new();
-$ua->timeout(60);
-my $xmlrpc = new XML::RPC("http://localhost:8080/backend/public", lwp_useragent => $ua);
-eval {
-	call($xmlrpc, "SCALAR", 'User.Hello', "scraper/0.1", 1);
-};
-if ($@) {
-	if ($@ =~ m{^no data}) {
-		die("! Connection failed, is the server running?\n");
-	} else {
-		die("! Connection failed: $@");
-	}
-}
-
+# Load the exchanges
+print "- Building hierarchy\n";
 my %markets = (
 	'PA'	=> 1,
 	'BSE'	=> 3
 );
-my @s_exchanges = call($xmlrpc, 'ARRAY', 'Finance.Exchange.List', '');
-foreach (grep { $_->{SYMBOL} =~ m{^(BSE|PA)} } @s_exchanges) {
-	# Build exchange
-	my $exchange = new StockPlay::Exchange(
-		symbol		=> $_->{SYMBOL},
-		name		=> $_->{NAME},
-		location	=> $_->{LOCATION}
-	);
-	
-	# Build securities
-	my @s_securities = call($xmlrpc, 'ARRAY', 'Finance.Security.List', "exchange EQUALS '" . $exchange->symbol ."'");
-	foreach (@s_securities) {
-		my $security = new StockPlay::Security(
-			isin	=> $_->{ISIN},
-			symbol	=> $_->{SYMBOL},
-			name	=> $_->{NAME}
-		);
-		push(@{$exchange->securities}, $security);
-	}
-	
-	# Build indexes
-	my @s_indexes = call($xmlrpc, 'ARRAY', 'Finance.Index.List', "exchange EQUALS '" . $exchange->symbol ."'");
-	foreach (@s_indexes) {
-		my $index = new StockPlay::Index(
-			name	=> $_->{NAME}
-		);
-		push(@{$exchange->indexes}, $index);
-	}
-	
-	# Process each security
+my @exchanges = $factory->buildExchanges( sub {
+	grep { $_->symbol =~ m{^(BSE|PA)$} } @_;
+});
+
+# Process all securities (per exchange)
+print "- Fetching and saving historic data\n";
+foreach my $exchange (@exchanges) {
 	foreach my $security (@{$exchange->securities}) {
+		# Fetch historic data
 		print "DEBUG: Processing " . $security->name, " (ISIN " . $security->isin . ")\n";
 		my ($d1, $d2) = (UnixDate("2 year ago", "%d\/%m\/%Y"), UnixDate("today", "%d\/%m\/%Y"));
 		my $isin = $security->isin;
 		my $mep = $markets{$exchange->symbol};
 		my $content = get("http://www.euronext.com/tools/datacentre/dataCentreDownloadExcell.jcsv?cha=2593&lan=EN&fileFormat=txt&separator=.&dateFormat=dd/MM/yy&isinCode=$isin&selectedMep=$mep&indexCompo=&opening=on&high=on&low=on&closing=on&volume=on&dateFrom=$d1&dateTo=$d2&typeDownload=2");
 		
-		my @s_quotes;
+		# Convert to quotes
+		my @quotes;
 		foreach (split(/\n/, $content)) {
-			chomp;
+			s/\s//g;	# Because chomp doesn't remove CR's
+			s/,//g;		# We want no thousands-separator
 			my @fields = split(/;/);
 			if (@fields == 6) {
 				my ($date, $open, $high, $low, $close, $volume) =  @fields;
 				next unless $date =~ m{^[\d\/]+$};
 				
-				my %s_quote = (
-					isin	=> $isin,
-					time	=> sub { to_datetime($date) },
-					price	=> $close,
-					low	=> $low,
-					high	=> $high,
-					open	=> $open,
-					volume	=> int($volume)
+				my $quote = new StockPlay::Quote (
+					security	=> $isin,
+					time		=> to_datetime($date),	# TODO: timezone (now floating) && closing hour
+					price		=> $close,
+					low		=> $low,
+					high		=> $high,
+					open		=> $open,
+					volume		=> $volume
 				);
-				push(@s_quotes, \%s_quote);
+				
+				push(@quotes, $quote);
 			}
 		}
-		if (@s_quotes > 0) {
-			eval {
-				call($xmlrpc, "SCALAR", 'Finance.Security.UpdateBulk', \@s_quotes);
-			}; if ($@) {
-				print "ERROR: could not update security ", $security->name, " ($@)\n";
-			}
+		
+		# Save the quotes
+		if (@quotes > 0) {
+			$factory->createQuotes(@quotes);
 		} else {
-			print "ERROR: no quotes received\n";
+			print "ERROR: no quotes found\n";
 		}
 	}
 }
@@ -123,36 +95,18 @@ exit(0);
 # Routines
 #
 
-sub call {
-	my ($xmlrpc, $type, @params) = @_;
-	
-	my $result = $xmlrpc->call(@params);
-	
-	if (ref $result eq "HASH" && defined $result->{"faultCode"}) {
-		die($result->{"faultString"});
-	}
-	
-	if (wantarray && ref $result ne $type) {
-		die("Wrong type received");
-	}
-	
-	if ($type eq "SCALAR") {
-		return $result;
-	} elsif ($type eq "ARRAY") {
-		return @{$result};
-	} elsif ($type eq "HASH") {
-		return %{$result};
-	} else {
-		return $result;
-	}
-}
-
 sub to_datetime {
 	my ($date) = @_;
 	my ($day, $month, $year) = split(/\//, $date);
 	$year = "20".$year;
 	
-	return { "dateTime.iso8601", $year . $month . $day . "T23:59:00" };
+	return new DateTime(
+		year	=> $year,
+		month	=> $month,
+		day	=> $day,
+		hour	=> 23,
+		minute	=> 59
+	);
 }
 
 __END__

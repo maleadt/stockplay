@@ -7,10 +7,7 @@ package StockPlay::Scraper::Daemon;
 
 =pod
 
-=head1 NAMEbase functionality for all
-plugins.
-
-StockPlay::Scraper::Daemon - StockPlay scraper plugin daemon
+=head1 NAME StockPlay::Scraper::Daemon - StockPlay scraper plugin daemon
 
 =head1 DESCRIPTION
 
@@ -24,8 +21,7 @@ XML-RPC backend.
 
 # Packages
 use Moose;
-use XML::RPC;
-use Data::Dumper;
+use StockPlay::Factory;
 use StockPlay::Exchange;
 use StockPlay::Index;
 use StockPlay::Security;
@@ -54,17 +50,10 @@ has 'plugins' => (
 	required	=> 1
 );
 
-has 'server' => (
+has 'factory' => (
 	is		=> 'ro',
-	isa		=> 'Str',
+	isa		=> 'StockPlay::Factory',
 	required	=> 1
-);
-
-has 'xmlrpc' => (
-	is		=> 'ro',
-	isa		=> 'XML::RPC',
-	lazy		=> 1,
-	builder		=> '_build_xmlrpc'
 );
 
 
@@ -87,95 +76,45 @@ sub BUILD {
 		}
 	}
 	
-	# Build data members which require other data members
-	$self->xmlrpc;
-	
-	# Verify server connection
-	eval {
-		$self->call("SCALAR", 'User.Hello', "scraper/0.1", 1);
-	};
-	if ($@) {
-		if ($@ =~ m{^no data}) {
-			die("! Connection failed, is the server running?\n");
-		} else {
-			die("! Connection failed: $@");
-		}
-	}
-	
 	# Process all plugins
 	foreach my $plugin (@{$self->plugins}) {
 		print "DEBUG: checking database structure for plugin ", $plugin->infohash->{name}, "\n";
 		
 		# Check exchanges
-		my @s_exchanges = $self->call("ARRAY", 'Finance.Exchange.List', '');
+		my @s_exchanges = $self->factory->getExchanges();
 		foreach my $exchange (@{$plugin->exchanges}) {
 			print "DEBUG: processing exchange ", $exchange->name, "\n";
 			
 			# Add the exchange
 			print "DEBUG: adding exchange ", $exchange->name, "\n";
-			unless (grep { $_->{SYMBOL} eq $exchange->symbol } @s_exchanges) {
-				my %s_exchange = (
-					SYMBOL		=> $exchange->symbol,
-					NAME		=> $exchange->name,
-					LOCATION	=> $exchange->location
-				);
-				eval {
-					$self->call("SCALAR", 'Finance.Exchange.Create', \%s_exchange);
-				}; if ($@) {
-					print "ERROR: could not insert exchange ", $exchange->name, " ($@)\n";
-				}
-				push(@s_exchanges, %s_exchange);
+			unless (grep { $_->symbol eq $exchange->symbol } @s_exchanges) {
+				$self->factory->createExchange($exchange);
+				push(@s_exchanges, $exchange);
 			}
 			
 			# Add the indexes
 			print "DEBUG: processing indexes\n";
-			my @s_indexes = $self->call("ARRAY", 'Finance.Index.List', "exchange EQUALS '" . $exchange->symbol . "'");
+			my @s_indexes = $self->factory->getIndexes($exchange);
 			foreach my $index (@{$exchange->indexes}) {
 				print "DEBUG: adding index ", $index->name, "\n";
-				unless (grep { $_->{NAME} eq $index->name } @s_indexes) {
-					my %s_index = (
-						NAME		=> $index->name,
-						EXCHANGE	=> $exchange->symbol,
-					);
-					eval {
-						$self->call("SCALAR", 'Finance.Index.Create', \%s_index);
-					}; if ($@) {
-						print "ERROR: could not insert index ", $index->name, " ($@)\n";
-					}
-					push(@s_indexes, \%s_index);
+				unless (grep { $_->name eq $index->name } @s_indexes) {
+					$self->factory->createIndex($exchange, $index);
+					push(@s_indexes, $index);
 				}				
 			}
 			
 			# Add the securities
 			print "DEBUG: processing securities\n";
-			my @s_securities = $self->call("ARRAY", 'Finance.Security.List', "exchange EQUALS '" . $exchange->symbol . "'");
+			my @s_securities = $self->factory->getSecurities($exchange);
 			foreach my $security (@{$exchange->securities}) {
-				print "DEBUG: adding security ", $security->isin, "\n";
-				unless (grep { $_->{ISIN} eq $security->isin } @s_securities) {
-					my %s_security = (
-						SYMBOL		=> $security->symbol,
-						ISIN		=> $security->isin,
-						NAME		=> $security->name,
-						EXCHANGE	=> $exchange->symbol
-					);
-					eval {
-						$self->call("SCALAR", 'Finance.Security.Create', \%s_security);
-					}; if ($@) {
-						print "ERROR: could not insert security ", $security->isin, " ($@)\n";
-					}
-					push(@s_securities, \%s_security);
+				print "DEBUG: adding security ", $security->name, " (ISIN ", $security->isin, ")\n";
+				unless (grep { $_->isin eq $security->isin } @s_securities) {
+					$self->factory->createSecurity($exchange, $security);
+					push(@s_securities, $security);
 				}			
 			}
 		}
 	}
-}
-
-sub _build_xmlrpc {
-	my ($self) = @_;
-	
-	my $xmlrpc = new XML::RPC($self->server);
-	
-	return $xmlrpc;
 }
 
 sub run {
@@ -250,26 +189,7 @@ sub run {
 		
 		# Push the changes to the server
 		print "- Saving changes\n";
-		my @s_quotes;
-		foreach my $quote (@quotes) {
-			my %s_quote = (
-				isin	=> $quote->security,
-				time	=> sub { to_datetime($quote->time) },
-				price	=> $quote->price,
-				bid	=> $quote->bid,
-				ask	=> $quote->ask,
-				low	=> $quote->low,
-				high	=> $quote->high,
-				open	=> $quote->open,
-				volume	=> $quote->volume
-			);
-			push(@s_quotes, \%s_quote);
-		}
-		eval {
-			$self->call("SCALAR", 'Finance.Security.UpdateBulk', \@s_quotes);
-		}; if ($@) {
-			print "ERROR: could not update securities ($@)\n";
-		}
+		$self->factory->updateBulk(@quotes);
 		
 		# Wait
 		if ($delay < 60) {
@@ -290,36 +210,6 @@ sub run {
 =head1 AUXILIARY
 
 =cut
-
-sub call {
-	my ($self, $type, @params) = @_;
-	
-	my $result = $self->xmlrpc->call(@params);
-	
-	if (ref $result eq "HASH" && defined $result->{"faultCode"}) {
-		die($result->{"faultString"});
-	}
-	
-	if (wantarray && ref $result ne $type) {
-		die("Wrong type received");
-	}
-	
-	if ($type eq "SCALAR") {
-		return $result;
-	} elsif ($type eq "ARRAY") {
-		return @{$result};
-	} elsif ($type eq "HASH") {
-		return %{$result};
-	} else {
-		return $result;
-	}
-}
-
-sub to_datetime {
-	my ($datetime) = @_;
-	
-	return { "dateTime.iso8601", $datetime->strftime('%Y%m%dT%H:%M:%S') };
-}
 
 1;
 

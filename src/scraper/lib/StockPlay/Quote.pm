@@ -53,8 +53,7 @@ has 'security' => (
 
 has [qw/price bid ask low high open/] => (
 	is		=> 'ro',
-	isa		=> 'Num',
-	required	=> 1
+	isa		=> 'Num'
 );
 
 has 'volume' => (
@@ -69,7 +68,7 @@ has 'delay' => (
 	default		=> 60
 );
 
-has 'fetchtime' => (
+has 'fetchtime' => (	# TODO: as private
 	is		=> 'rw',
 	isa		=> 'Int'
 );

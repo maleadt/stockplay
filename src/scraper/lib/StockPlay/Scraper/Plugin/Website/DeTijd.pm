@@ -220,6 +220,7 @@ sub addSecurities {
 				foreach my $child ($cell->content_list) {
 					if ($child->tag eq "a") {
 						$name = $child->as_text;
+						$name !~ s/[^[:ascii:]]//g;
 					} elsif ($child->tag eq "form") {
 						$child->look_down(
 							'_tag', 'input',

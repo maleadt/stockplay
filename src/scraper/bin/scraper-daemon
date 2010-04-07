@@ -61,10 +61,16 @@ foreach my $infohash (@infohashes) {
 	push(@plugins, $plugin);
 }
 
+# Load the factory
+print "- Loading factory\n";
+my $factory = new StockPlay::Factory(
+	server	=> 'http://localhost:8080/backend/public',
+);
+
 # Load the daemon
 print "- Loading daemon\n";
 my $daemon = new StockPlay::Scraper::Daemon(
-	server	=> 'http://localhost:8080/backend/public',
+	factory	=> $factory,
 	plugins	=> \@plugins
 );
 $daemon->run();
