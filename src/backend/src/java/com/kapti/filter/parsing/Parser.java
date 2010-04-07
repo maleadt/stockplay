@@ -90,8 +90,8 @@ public class Parser {
 
         // Create token ruleset
         mTokenRules = new ArrayList<Rule<TokenType>>();
-        mTokenRules.add(new Rule(TokenType.INT, "[0-9]+"));
-        mTokenRules.add(new Rule(TokenType.FLOAT, "[0-9.]+"));
+        mTokenRules.add(new Rule(TokenType.INT, "-?[0-9]+"));
+        mTokenRules.add(new Rule(TokenType.FLOAT, "-?[0-9.]+"));
         mTokenRules.add(new Rule(TokenType.WORD, "[A-Za-z_]+"));
         mTokenRules.add(new Rule(TokenType.QUOTE, "'([^\']*+)'([sdifk]?)"));
         mTokenRules.add(new Rule(TokenType.LEFT_PARENTHESIS, "\\("));
