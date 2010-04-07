@@ -738,3 +738,116 @@ id = 42 AND name = "StockPlay"
 \caption{Finaal resultaat na omzetting door de SQL-converters.}
 \end{code}
 
+
+\section{Syntaxreferentie}
+
+Zoals reeds beschreven bestaat een filter essenti\"eel uit drie verschillende mogelijke objecten: condities, relaties, en data-objecten. In deze sectie documenteren we die types, en de exacte grammatica die gebruikt moet worden.
+
+\subsection{Operatoren}
+
+\begin{itemize}
+\item{Ronde haakjes: wordt gebruikt om conditites en relaties te groeperen om precedentie in te voeren.}
+\item{Komma: wordt gebruikt om de argumenten die aan een functie doorgegeven worden, te scheiden (momenteel ongebruikt).}
+\end{itemize}
+
+\subsection{Datatypes}
+
+De verschillende datatypes kunnen op verschillende manieren opgesteld worden: rechtstreeks, of indirect. De directe manier is echter enkel beschikbaar voor primitieve dataobjecten (integers, floating-point getallen, strings, en sleutels). Hierbij moet de gebruiker louter de waarde van het getal invoegen in de filter, en zal de parser detecteren om welk formaat het gaat.
+Indirecte contructie is steeds mogelijk, en is some de enige optie (bij complexere dataobjecten). Hierbij geeft de gebruiker de data in als een \emph{quoted string} (die voldoet aan een vaste grammatica), en zal een karakter na de laatste quote (de \emph{modifier}) indiceren om welk datatype het gaat.
+
+\subsubsection{Sleutels}
+
+Dit speciaal datatype wordt gebruikt om bij een conditie een specifieke kolom te selecteren. Het mag enkel bestaan uit alfabetische karakters (zowel lower- als uppercase), en een \_ symbool. Het wordt niet omringd door aanhalingstekens, indien dit wel het geval zou zijn wordt het gewoon ge\"interpreteerd als een reguliere string.
+
+\begin{code}
+\begin{verbatim}
+-- id is een sleutel: verwijst naar een specifieke kolom om de
+-- gelijkheids-conditie op in te laten werken
+id EQUALS 5
+\end{verbatim}
+\caption{Voorbeeldgebruik van een sleutel.}
+\end{code}
+
+\subsubsection{Tekenreeksen}
+
+Dit datatype stelt een ordinaire string voor, en kan alle karakters omvatten op voorwaarde dat het omsloten wordt door enkele quotes (en mag er dus geen bevatten, \emph{escaping} wordt niet ondersteund. Zoals wellicht zal opvallen lijkt deze notatie sterk op de indirecte constructiemethode die kan gebruikt worden voor andere datatypes, en eigenlijk is het ook zo geimplementeerd: bij afwezigheid van een modifier na de laatste quote wordt die impliciet verondersteld als zijnde een 's', de modifier voor strings.
+
+\begin{code}
+\begin{verbatim}
+name EQUALS 'Foo'
+name EQUALS 'Foo's
+\end{verbatim}
+\caption{Voorbeeldgebruik van een tekenreeks.}
+\end{code}
+
+\subsubsection{Natuurlijke getallen -- int}
+
+Dit primitief datatype wordt gebruikt om natuurlijk getallen te detecteren, en mag enkel getallen bevatten (eventueel voorafgegaan door een minteken). Het datatype kan rechtstreeks geconstrueerd worden, en bij indirecte constructie wordt het voorgesteld door de modifier 'i'.
+
+\begin{code}
+\begin{verbatim}
+id EQUALS 5
+id EQUALS '5'i
+\end{verbatim}
+\caption{Voorbeeldgebruik van een natuurlijk getal.}
+\end{code}
+
+\subsubsection{Gehele getallen -- float}
+
+Dit is een uitbreiding van de natuurlijke getallen, en mag zo ook een decimaal punt bevatten om kommagetallen aan te duiden. Het datatype kan rechtstreeks geconstrueerd worden, en bij indirecte constructie wordt het voorgesteld door de modifier 'f'.
+
+\begin{code}
+\begin{verbatim}
+cash EQUALS 123.45
+cash EQUALS '123.45'f
+\end{verbatim}
+\caption{Voorbeeldgebruik van een geheel getal.}
+\end{code}
+
+\subsubsection{Datums -- date}
+
+Dit is een voorbeeld van een complex type dat enkel kan geconstrueerd worden via de indirecte methode, gebruik maken van modifier 'd'. Aangezien datums op verschillende manieren kunnen voorgesteld worden, accepteren we enkel volgende methoden (gestandaardiseerd in ISO 8601):
+\begin{itemize}
+\item{YYYY-MM-DD: 2010-04-07}
+\item{YYYY-MM-DD'T'HH:MM'Z': 2010-04-07 05:56Z}
+\end{itemize}
+
+Uren zijn steeds in 24-uurs formaat, gespecifi\"eerd in de UTC-tijdzone. Bij afwezigheid van het uur (vb. in YYYY-MM-DD), wordt dit impliciet ingesteld op '00:00' (middernacht), en zal ook zo in de database-backend verwerkt worden. De converters hebben dus geen weet van de manier waarop de datum ingegeven is (al dan niet met gespecifieerd uur).
+
+\begin{code}
+\begin{verbatim}
+date EQUALS '2010-04-07'd
+date EQUALS '2010-04-07T16:01Z'd
+\end{verbatim}
+\caption{Voorbeeldgebruik van een datum.}
+\end{code}
+
+\subsection{Condities}
+
+Een conditie wordt gebruikt om een specifieke vergelijkingsoperatie toe te passen op een kolom, zodat er een selectie gebeurd op basis van deze conditie. De mogelije condities (met tussen haken de signatuur) zijn:
+
+\begin{itemize}
+\item EQUALS: vereist dat twee velden identiek zijn [Key, *]
+\item NOT: vereist dat twee velden verschillend zijn [Key, *]
+\item GREATHERTHAN: vereist dat het ene veld groter is dan het andere [Key, *]
+\item LESSTHAN: vereist dat het ene veld kleiner is dan het andere [Key, *]
+\item GREATHERTHANOREQUAL: vereist dat het ene veld strikt groter is dan het andere [Key, *]
+\item LESSTHANOREQUAL: vereist dat het ene veld strikt kleiner is dan het andere [Key, *]
+\item LIKE: vereist dat het ene veld voldoet aan de string (met wildcards) in het tweede veld [Key, String]
+\item NOTLIKE: vereist dat het ene veld verschilt van de string (met wildcards) in het tweede veld [Key, String]
+\end{itemize}
+
+\subsection{Relaties}
+
+Relaties dienen om verschillende condities aan elkaar te schakelen, en het resultaat op een specifieke wijze te interpreteren.
+
+\begin{itemize}
+\item AND
+\item OR
+\end{itemize}
+
+\subsection{Functies}
+
+Momenteel zijn er nog geen functies gedefini\"eerd in de parser, maar de infrastructuur is er op voorzien.
+
+
