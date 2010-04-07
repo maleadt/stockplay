@@ -44,6 +44,10 @@ if ($@) {
 	}
 }
 
+my %markets = (
+	'PA'	=> 1,
+	'BSE'	=> 3
+);
 my @s_exchanges = call($xmlrpc, 'ARRAY', 'Finance.Exchange.List', '');
 foreach (grep { $_->{SYMBOL} =~ m{^(BSE|PA)} } @s_exchanges) {
 	# Build exchange
@@ -75,10 +79,11 @@ foreach (grep { $_->{SYMBOL} =~ m{^(BSE|PA)} } @s_exchanges) {
 	
 	# Process each security
 	foreach my $security (@{$exchange->securities}) {
-		print "DEBUG: Processing " . $security->name, "\n";
+		print "DEBUG: Processing " . $security->name, " (ISIN " . $security->isin . ")\n";
 		my ($d1, $d2) = (UnixDate("2 year ago", "%d\/%m\/%Y"), UnixDate("today", "%d\/%m\/%Y"));
 		my $isin = $security->isin;
-		my $content = get("http://www.euronext.com/tools/datacentre/dataCentreDownloadExcell.jcsv?cha=2593&lan=EN&fileFormat=txt&separator=.&dateFormat=dd/MM/yy&isinCode=$isin&selectedMep=3&indexCompo=&opening=on&high=on&low=on&closing=on&volume=on&dateFrom=$d1&dateTo=$d2&typeDownload=2");
+		my $mep = $markets{$exchange->symbol};
+		my $content = get("http://www.euronext.com/tools/datacentre/dataCentreDownloadExcell.jcsv?cha=2593&lan=EN&fileFormat=txt&separator=.&dateFormat=dd/MM/yy&isinCode=$isin&selectedMep=$mep&indexCompo=&opening=on&high=on&low=on&closing=on&volume=on&dateFrom=$d1&dateTo=$d2&typeDownload=2");
 		
 		my @s_quotes;
 		foreach (split(/\n/, $content)) {
@@ -106,6 +111,8 @@ foreach (grep { $_->{SYMBOL} =~ m{^(BSE|PA)} } @s_exchanges) {
 			}; if ($@) {
 				print "ERROR: could not update security ", $security->name, " ($@)\n";
 			}
+		} else {
+			print "ERROR: no quotes received\n";
 		}
 	}
 }
