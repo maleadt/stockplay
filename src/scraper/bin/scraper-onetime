@@ -68,7 +68,7 @@ foreach (grep { $_->{SYMBOL} =~ m{^(BSE|PA)} } @s_exchanges) {
 		push(@{$exchange->securities}, $security);
 	}
 	
-	# Build indexes (TODO: werkt niet goed, returnt ook CAC40)
+	# Build indexes
 	my @s_indexes = call($xmlrpc, 'ARRAY', 'Finance.Index.List', "exchange EQUALS '" . $exchange->symbol ."'");
 	foreach (@s_indexes) {
 		my $index = new StockPlay::Index(

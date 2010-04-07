@@ -250,6 +250,7 @@ sub run {
 		
 		# Push the changes to the server
 		print "- Saving changes\n";
+		my @s_quotes;
 		foreach my $quote (@quotes) {
 			my %s_quote = (
 				isin	=> $quote->security,
@@ -262,15 +263,16 @@ sub run {
 				open	=> $quote->open,
 				volume	=> $quote->volume
 			);
-			eval {
-				$self->call("SCALAR", 'Finance.Security.Update', \%s_quote);
-			}; if ($@) {
-				print "ERROR: could not update security ", $quote->security, " ($@)\n";
-			}
+			push(@s_quotes, \%s_quote);
+		}
+		eval {
+			$self->call("SCALAR", 'Finance.Security.UpdateBulk', \@s_quotes);
+		}; if ($@) {
+			print "ERROR: could not update securities ($@)\n";
 		}
 		
 		# Wait
-		if ($delay < 10) {
+		if ($delay < 60) {
 			$delay = 60;
 		}
 		$delay = int($delay);
