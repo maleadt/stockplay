@@ -27,6 +27,7 @@ import com.kapti.filter.Filter;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public class QuoteDAO implements com.kapti.data.persistence.QuoteDAO {
 
@@ -289,6 +290,61 @@ public class QuoteDAO implements com.kapti.data.persistence.QuoteDAO {
                     stmt.close();
                 }
                 if (conn != null) {
+                    conn.close();
+                }
+            }
+        } catch (SQLException ex) {
+            throw new DBException(ex);
+        }
+    }
+
+    /**
+     * Maakt de opgegeven security aan in de database
+     * @param entity Het object dat moet worden aangemaakt in de database
+     * @return
+     * @throws StockPlayException
+     */
+    public boolean createBulk(List<Quote> iEntities) throws StockPlayException {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            try {
+                conn = OracleConnection.getConnection();
+                stmt = conn.prepareStatement(INSERT_QUOTE);
+                conn.setAutoCommit(false);
+
+                for (Quote entity : iEntities) {
+                    stmt.setString(1, entity.getIsin());
+                    stmt.setTimestamp(2, new Timestamp(entity.getTime().getTime()));
+                    stmt.setDouble(3, entity.getPrice());
+                    stmt.setInt(4, entity.getVolume());
+                    stmt.setDouble(5, entity.getBid());
+                    stmt.setDouble(6, entity.getAsk());
+                    stmt.setDouble(7, entity.getLow());
+                    stmt.setDouble(8, entity.getHigh());
+                    stmt.setDouble(9, entity.getOpen());
+                    stmt.addBatch();
+                }
+
+                int [] numUpdates = stmt.executeBatch();
+                conn.commit();
+                for (int i = 0; i < numUpdates.length; i++) {
+                    if (numUpdates[i] != 1)
+                        return false;
+                }
+                return true;
+
+
+            } finally {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (conn != null) {
+                    conn.setAutoCommit(true);
                     conn.close();
                 }
             }

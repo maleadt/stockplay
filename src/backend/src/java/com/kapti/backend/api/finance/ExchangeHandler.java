@@ -45,10 +45,9 @@ public class ExchangeHandler extends MethodClass {
     // Methodes
     //
 
-        public Vector<Hashtable<String, Object>> List() throws StockPlayException {
+    public Vector<Hashtable<String, Object>> List() throws StockPlayException {
         // Get DAO reference
         GenericDAO<com.kapti.data.Exchange, String> exDAO = getDAO().getExchangeDAO();
-
 
         // Fetch and convert all exchanges
         Collection<com.kapti.data.Exchange> tExchanges = exDAO.findAll();

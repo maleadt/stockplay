@@ -35,6 +35,10 @@ import java.util.Map;
 import java.util.Vector;
 import com.kapti.data.Quote;
 import com.kapti.data.Security;
+import com.kapti.exceptions.FilterException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import org.apache.xmlrpc.XmlRpcException;
 
 /**
  * \brief   Handler van de Finance.Security subklasse.
@@ -248,6 +252,25 @@ public class SecurityHandler extends MethodClass {
 
         tQuote.applyStruct(iDetails);
         tQuoteDAO.create(tQuote);
+
+        return 1;
+    }
+
+    public int UpdateBulk(Vector<HashMap<String, Object>> iQuotes) throws StockPlayException {
+        // Get DAO reference
+        QuoteDAO tQuoteDAO = getDAO().getQuoteDAO();
+
+        List<Quote> tQuotes = new ArrayList<Quote>();
+        for (HashMap<String, Object> iDetails : iQuotes) {
+            Hashtable<String, Object> iDetails2 = new Hashtable<String, Object>(iDetails);
+            
+            // Instantiate a new quote
+            Quote tQuote = Quote.fromStruct(iDetails2);
+
+            tQuote.applyStruct(iDetails2);
+            tQuotes.add(tQuote);
+        }
+        tQuoteDAO.createBulk(tQuotes);
 
         return 1;
     }

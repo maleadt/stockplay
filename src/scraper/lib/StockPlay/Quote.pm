@@ -65,7 +65,7 @@ has 'volume' => (
 
 has 'delay' => (
 	is		=> 'rw',
-	isa		=> 'Int',
+	isa		=> 'Num',
 	default		=> 60
 );
 

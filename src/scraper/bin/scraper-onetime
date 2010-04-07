@@ -1,0 +1,176 @@
+#!/usr/bin/env perl
+
+################################################################################
+# Configuration
+#
+
+# XXX: library location
+use lib '../lib';
+
+# Packages
+use LWP::Simple;
+use XML::RPC;
+use Date::Manip;
+use StockPlay::Exchange;
+use StockPlay::Index;
+use StockPlay::Security;
+
+# Write nicely
+use warnings;
+use strict;
+
+# Constants
+my $PLUGIN_MAX_AGE = 3600*24*7;
+
+
+################################################################################
+# Main
+#
+
+print "* Loading scraper\n";
+
+# Verify server connection
+my $ua = LWP::UserAgent->new();
+$ua->timeout(60);
+my $xmlrpc = new XML::RPC("http://localhost:8080/backend/public", lwp_useragent => $ua);
+eval {
+	call($xmlrpc, "SCALAR", 'User.Hello', "scraper/0.1", 1);
+};
+if ($@) {
+	if ($@ =~ m{^no data}) {
+		die("! Connection failed, is the server running?\n");
+	} else {
+		die("! Connection failed: $@");
+	}
+}
+
+my @s_exchanges = call($xmlrpc, 'ARRAY', 'Finance.Exchange.List', '');
+foreach (grep { $_->{SYMBOL} =~ m{^(BSE|PA)} } @s_exchanges) {
+	# Build exchange
+	my $exchange = new StockPlay::Exchange(
+		symbol		=> $_->{SYMBOL},
+		name		=> $_->{NAME},
+		location	=> $_->{LOCATION}
+	);
+	
+	# Build securities
+	my @s_securities = call($xmlrpc, 'ARRAY', 'Finance.Security.List', "exchange EQUALS '" . $exchange->symbol ."'");
+	foreach (@s_securities) {
+		my $security = new StockPlay::Security(
+			isin	=> $_->{ISIN},
+			symbol	=> $_->{SYMBOL},
+			name	=> $_->{NAME}
+		);
+		push(@{$exchange->securities}, $security);
+	}
+	
+	# Build indexes (TODO: werkt niet goed, returnt ook CAC40)
+	my @s_indexes = call($xmlrpc, 'ARRAY', 'Finance.Index.List', "exchange EQUALS '" . $exchange->symbol ."'");
+	foreach (@s_indexes) {
+		my $index = new StockPlay::Index(
+			name	=> $_->{NAME}
+		);
+		push(@{$exchange->indexes}, $index);
+	}
+	
+	# Process each security
+	foreach my $security (@{$exchange->securities}) {
+		print "DEBUG: Processing " . $security->name, "\n";
+		my ($d1, $d2) = (UnixDate("2 year ago", "%d\/%m\/%Y"), UnixDate("today", "%d\/%m\/%Y"));
+		my $isin = $security->isin;
+		my $content = get("http://www.euronext.com/tools/datacentre/dataCentreDownloadExcell.jcsv?cha=2593&lan=EN&fileFormat=txt&separator=.&dateFormat=dd/MM/yy&isinCode=$isin&selectedMep=3&indexCompo=&opening=on&high=on&low=on&closing=on&volume=on&dateFrom=$d1&dateTo=$d2&typeDownload=2");
+		
+		my @s_quotes;
+		foreach (split(/\n/, $content)) {
+			chomp;
+			my @fields = split(/;/);
+			if (@fields == 6) {
+				my ($date, $open, $high, $low, $close, $volume) =  @fields;
+				next unless $date =~ m{^[\d\/]+$};
+				
+				my %s_quote = (
+					isin	=> $isin,
+					time	=> sub { to_datetime($date) },
+					price	=> $close,
+					low	=> $low,
+					high	=> $high,
+					open	=> $open,
+					volume	=> int($volume)
+				);
+				push(@s_quotes, \%s_quote);
+			}
+		}
+		if (@s_quotes > 0) {
+			eval {
+				call($xmlrpc, "SCALAR", 'Finance.Security.UpdateBulk', \@s_quotes);
+			}; if ($@) {
+				print "ERROR: could not update security ", $security->name, " ($@)\n";
+			}
+		}
+	}
+}
+
+exit(0);
+
+################################################################################
+# Routines
+#
+
+sub call {
+	my ($xmlrpc, $type, @params) = @_;
+	
+	my $result = $xmlrpc->call(@params);
+	
+	if (ref $result eq "HASH" && defined $result->{"faultCode"}) {
+		die($result->{"faultString"});
+	}
+	
+	if (wantarray && ref $result ne $type) {
+		die("Wrong type received");
+	}
+	
+	if ($type eq "SCALAR") {
+		return $result;
+	} elsif ($type eq "ARRAY") {
+		return @{$result};
+	} elsif ($type eq "HASH") {
+		return %{$result};
+	} else {
+		return $result;
+	}
+}
+
+sub to_datetime {
+	my ($date) = @_;
+	my ($day, $month, $year) = split(/\//, $date);
+	$year = "20".$year;
+	
+	return { "dateTime.iso8601", $year . $month . $day . "T23:59:00" };
+}
+
+__END__
+
+################################################################################
+# Documentation
+#
+
+=pod
+
+=head1 NAME
+
+stockplay-scraper - Scraper component of StockPlay
+
+=head1 SYNOPSIS
+
+=head1 COPYRIGHT
+
+Copyright 2010 The StockPlay development team as listed in the AUTHORS file.
+
+This software is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public Licence (GPL) as published by the
+Free Software Foundation (FSF).
+
+The full text of the license can be found in the
+LICENSE file included with this module.
+
+=cut

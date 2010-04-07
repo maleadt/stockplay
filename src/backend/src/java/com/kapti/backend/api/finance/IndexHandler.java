@@ -25,6 +25,8 @@ import com.kapti.backend.api.MethodClass;
 import com.kapti.data.Index;
 import com.kapti.data.persistence.GenericDAO;
 import com.kapti.exceptions.StockPlayException;
+import com.kapti.filter.Filter;
+import com.kapti.filter.parsing.Parser;
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Vector;
@@ -42,15 +44,37 @@ public class IndexHandler extends MethodClass {
     // Methodes
     //
 
+    public Vector<Hashtable<String, Object>> List() throws StockPlayException {
+        // Get DAO reference
+        GenericDAO<com.kapti.data.Index, Integer> exDAO = getDAO().getIndexDAO();
+
+        // Fetch and convert all exchanges
+        Collection<com.kapti.data.Index> tExchanges = exDAO.findAll();
+        Vector<Hashtable<String, Object>> oVector = new Vector<Hashtable<String, Object>>();
+        for (com.kapti.data.Index tExchange : tExchanges) {
+            oVector.add(tExchange.toStruct(
+                    com.kapti.data.Index.Fields.ID,
+                    com.kapti.data.Index.Fields.NAME,
+                    com.kapti.data.Index.Fields.EXCHANGE));
+        }
+
+        return oVector;
+    }
+
+
+
     public Vector<Hashtable<String, Object>> List(String iFilter) throws StockPlayException {
         // Get DAO reference
-        GenericDAO<com.kapti.data.Index, Integer> tIndexDAO = getDAO().getIndexDAO();
+        GenericDAO<com.kapti.data.Index, Integer> exDAO = getDAO().getIndexDAO();
 
-        // Fetch and convert all Indexs
-        Collection<com.kapti.data.Index> tIndexs = tIndexDAO.findAll();
+        Parser parser = Parser.getInstance();
+        Filter filter = parser.parse(iFilter);
+
+        // Fetch and convert all exchanges
+        Collection<com.kapti.data.Index> tExchanges = exDAO.findByFilter(filter);
         Vector<Hashtable<String, Object>> oVector = new Vector<Hashtable<String, Object>>();
-        for (com.kapti.data.Index tIndex : tIndexs) {
-            oVector.add(tIndex.toStruct(
+        for (com.kapti.data.Index tExchange : tExchanges) {
+            oVector.add(tExchange.toStruct(
                     com.kapti.data.Index.Fields.ID,
                     com.kapti.data.Index.Fields.NAME,
                     com.kapti.data.Index.Fields.EXCHANGE));

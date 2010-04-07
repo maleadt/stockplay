@@ -26,10 +26,12 @@ import com.kapti.exceptions.FilterException;
 import com.kapti.exceptions.StockPlayException;
 import com.kapti.filter.Filter;
 import java.util.Collection;
+import java.util.List;
 
 public interface QuoteDAO extends GenericDAO<Quote, Quote.QuotePK> {
 
     Quote findLatest(String symbol) throws StockPlayException;
+    boolean createBulk(List<Quote> iQuotes) throws StockPlayException;
 
     Collection<Quote> findLatestByFilter(Filter iFilter) throws StockPlayException, FilterException;
 }

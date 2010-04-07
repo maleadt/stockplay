@@ -225,15 +225,15 @@ sub run {
 						# the delay with the new one, but divide it in half. Consistently, when a  quote
 						# didn't seem to be updated, the delay time is doubled.
 						if ($security->has_quote) {
-							my $olddelay = $security->quote->delay;
+							my $olddelay = (time-$security->quote->fetchtime);
 							if ($olddelay/2 > $quote->delay) {
-								$quote->delay($olddelay/2);
+								$quote->delay($olddelay/1.5);
 							}
 						}
 						$security->quote($quote);
 					} else {
 						# Doubling of the delay (see big comment block above)
-						$security->quote->delay($security->quote->delay * 2);
+						$security->quote->delay((time-$security->quote->fetchtime) * 2);
 					}
 				}
 			}
@@ -270,10 +270,12 @@ sub run {
 		}
 		
 		# Wait
-		print "  Waiting $delay seconds\n";
-		if ($delay > 0) {
-			sleep($delay);
+		if ($delay < 10) {
+			$delay = 60;
 		}
+		$delay = int($delay);
+		print "  Waiting $delay seconds\n";
+		sleep($delay);
 	}
 }
 

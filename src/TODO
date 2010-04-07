@@ -13,8 +13,9 @@ kan geabstraheerd worden in de bovenliggende abstracte klassen.
 Het zou mooi zijn om de doorgegeven filters te controleren zodat slecht een
 vaste (gedocumenteerde) selectie er kan in voorkomen.
 
+*) Verhinderen dat RunTimeExcepties bij de gebruiker terechtkomen (nullpointers
+ook).
 
-*) pushAll
 
 
 BusinessObjects
