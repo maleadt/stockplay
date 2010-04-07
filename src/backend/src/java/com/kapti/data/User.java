@@ -39,11 +39,12 @@ public class User {
     //
 
     public static enum Fields {
-        ID, NICKNAME, PASSWORD, LASTNAME, FIRSTNAME, REGDATE, ADMIN, POINTS, STARTAMOUNT, CASH, RRN
+        ID, NICKNAME, PASSWORD, EMAIL, LASTNAME, FIRSTNAME, REGDATE, ADMIN, POINTS, STARTAMOUNT, CASH, RRN
     }
     private int id = -1;
     private String nickname = "";
     private String password = "";
+    private String email = "";
     private String lastname = "";
     private String firstname = "";
     private Date regdate = null;
@@ -57,15 +58,16 @@ public class User {
     // Construction
     //
 
-    public User(String nickname, String lastname, String firstname, Date regdate) {
+    public User(String nickname, String email, String lastname, String firstname, Date regdate) {
         this.nickname = nickname;
+        this.email = email;
         this.lastname = lastname;
         this.firstname = firstname;
         this.regdate = regdate;
     }
 
-    public User(int id, String nickname, String lastname, String firstname, Date regdate) {
-        this(nickname, lastname, firstname, regdate);
+    public User(int id, String nickname, String email, String lastname, String firstname, Date regdate) {
+        this(nickname, email, lastname, firstname, regdate);
         this.id = id;
     }
 
@@ -108,6 +110,14 @@ public class User {
 
     public boolean checkPassword(String password) {
         return this.password.equals(encryptPassword(password));
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getFirstname() {
@@ -186,6 +196,8 @@ public class User {
                 case NICKNAME:
                     oStruct.put(tField.name(), getNickname());
                     break;
+                case EMAIL:
+                    oStruct.put(tField.name(), getEmail());
                 case LASTNAME:
                     oStruct.put(tField.name(), getLastname());
                     break;
@@ -233,6 +245,9 @@ public class User {
                 case PASSWORD:
                     setPassword((String)tValue);
                     break;
+                case EMAIL:
+                    setEmail((String) tValue);
+                    break;
                 case ADMIN:
                     setAdmin((Boolean)tValue);
                     break;
@@ -276,11 +291,13 @@ public class User {
         if (tStructMap.containsKey(Fields.NICKNAME) && tStructMap.containsKey(Fields.FIRSTNAME) && tStructMap.containsKey(Fields.LASTNAME) && tStructMap.containsKey(Fields.REGDATE)) {
             User tUser = new User(
                     (String) iStruct.get(tStructMap.get(Fields.NICKNAME)),
+                    (String) iStruct.get(tStructMap.get(Fields.EMAIL)),
                     (String) iStruct.get(tStructMap.get(Fields.LASTNAME)),
                     (String) iStruct.get(tStructMap.get(Fields.FIRSTNAME)),
                     (Date) iStruct.get(tStructMap.get(Fields.REGDATE))
                     );
             iStruct.remove(tStructMap.get(Fields.NICKNAME));
+            iStruct.remove(tStructMap.get(Fields.EMAIL));
             iStruct.remove(tStructMap.get(Fields.LASTNAME));
             iStruct.remove(tStructMap.get(Fields.FIRSTNAME));
             iStruct.remove(tStructMap.get(Fields.REGDATE));

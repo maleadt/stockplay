@@ -32,13 +32,13 @@ import java.util.Collection;
 
 public class UserDAO implements GenericDAO<User, Integer> {
 
-    private static final String SELECT_USER = "SELECT nickname, password, lastname, firstname, is_admin, regtime, rrn, points, startamount, cash FROM users WHERE id = ?";
-    private static final String SELECT_USERS_FILTER = "SELECT id, nickname, lastname, firstname, is_admin, regtime, rrn, points, startamount, cash "
-            + "FROM users WHERE id LIKE ? AND nickname LIKE ? AND lastname LIKE ? AND firstname LIKE ? AND is_admin LIKE ? AND regtime LIKE ? AND rrn LIKE ? AND points LIKE ? AND startamount LIKE ? AND cash LIKE ?";
-    private static final String SELECT_USERS = "SELECT id, nickname, password, lastname, firstname, is_admin, regtime, rrn, points, startamount, cash FROM users";
-    private static final String INSERT_USER = "INSERT INTO users(id, nickname, password, lastname, firstname, is_admin, regtime, rrn, points, startamount, cash) "
-            + "VALUES(userid_seq.nextval, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    private static final String UPDATE_USER = "UPDATE users SET nickname = ?, password = ?, lastname = ?, firstname = ?, is_admin = ?, regtime = ?, rrn = ?, points = ?, startamount = ?, cash = ?  WHERE id = ?";
+    private static final String SELECT_USER = "SELECT nickname, password, email, lastname, firstname, is_admin, regtime, rrn, points, startamount, cash FROM users WHERE id = ?";
+    private static final String SELECT_USERS_FILTER = "SELECT id, nickname, email, lastname, firstname, is_admin, regtime, rrn, points, startamount, cash "
+            + "FROM users WHERE id LIKE ? AND nickname LIKE ? AND email LIKE ? AND lastname LIKE ? AND firstname LIKE ? AND is_admin LIKE ? AND regtime LIKE ? AND rrn LIKE ? AND points LIKE ? AND startamount LIKE ? AND cash LIKE ?";
+    private static final String SELECT_USERS = "SELECT id, nickname, password, email, lastname, firstname, is_admin, regtime, rrn, points, startamount, cash FROM users";
+    private static final String INSERT_USER = "INSERT INTO users(id, nickname, password, email, lastname, firstname, is_admin, regtime, rrn, points, startamount, cash) "
+            + "VALUES(userid_seq.nextval, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private static final String UPDATE_USER = "UPDATE users SET nickname = ?, password = ?, email = ?, lastname = ?, firstname = ?, is_admin = ?, regtime = ?, rrn = ?, points = ?, startamount = ?, cash = ?  WHERE id = ?";
     private static final String DELETE_USER = "DELETE FROM users WHERE id = ?";
     private static UserDAO instance = new UserDAO();
 
@@ -62,13 +62,13 @@ public class UserDAO implements GenericDAO<User, Integer> {
 
                 rs = stmt.executeQuery();
                 if (rs.next()) {
-                    User tUser = new User(id, rs.getString(1), rs.getString(3), rs.getString(4), rs.getDate(6));
+                    User tUser = new User(id, rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(5), rs.getDate(7));
                     tUser.setPassword(rs.getString(2));
-                    tUser.setAdmin(rs.getBoolean(5));
-                    tUser.setRijksregisternummer(rs.getLong(7));
-                    tUser.setPoints(rs.getInt(8));
-                    tUser.setStartamount(rs.getDouble(9));
-                    tUser.setCash(rs.getDouble(10));
+                    tUser.setAdmin(rs.getBoolean(6));
+                    tUser.setRijksregisternummer(rs.getLong(8));
+                    tUser.setPoints(rs.getInt(9));
+                    tUser.setStartamount(rs.getDouble(10));
+                    tUser.setCash(rs.getDouble(11));
                     return tUser;
                 } else {
                     throw new InvocationException(InvocationException.Type.NON_EXISTING_ENTITY, "There is no user with id '" + id + "'");
@@ -103,13 +103,13 @@ public class UserDAO implements GenericDAO<User, Integer> {
                 rs = stmt.executeQuery();
                 ArrayList<User> list = new ArrayList<User>();
                 while (rs.next()) {
-                    User tUser = new User(rs.getInt(1), rs.getString(2), rs.getString(4), rs.getString(5), rs.getDate(7));
-                    tUser.setPassword(rs.getString(3));
-                    tUser.setAdmin(rs.getBoolean(6));
-                    tUser.setRijksregisternummer(rs.getLong(8));
-                    tUser.setPoints(rs.getInt(9));
-                    tUser.setStartamount(rs.getDouble(10));
-                    tUser.setCash(rs.getDouble(11));
+                    User tUser = new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(5), rs.getString(6), rs.getDate(8));
+                    tUser.setPassword(rs.getString(4));
+                    tUser.setAdmin(rs.getBoolean(7));
+                    tUser.setRijksregisternummer(rs.getLong(9));
+                    tUser.setPoints(rs.getInt(10));
+                    tUser.setStartamount(rs.getDouble(11));
+                    tUser.setCash(rs.getDouble(12));
                     list.add(tUser);
                 }
                 return list;
@@ -153,46 +153,47 @@ public class UserDAO implements GenericDAO<User, Integer> {
                 }
 
                 stmt.setString(2, '%' + example.getNickname() + '%');
-                stmt.setString(3, '%' + example.getLastname() + '%');
-                stmt.setString(4, '%' + example.getFirstname() + '%');
-                stmt.setBoolean(5, example.isAdmin());
+                stmt.setString(3, '%' + example.getEmail() + '%');
+                stmt.setString(4, '%' + example.getLastname() + '%');
+                stmt.setString(5, '%' + example.getFirstname() + '%');
+                stmt.setBoolean(6, example.isAdmin());
                 //stmt.setTimestamp(6, new Timestamp(example.getRegdate().getTime()));
-                stmt.setString(6, "%%"); //regtime
+                stmt.setString(7, "%%"); //regtime
 
                 if (example.getRijksregisternummer() != 0) {
-                    stmt.setString(7, "%" + example.getRijksregisternummer() + "%");
-                } else {
-                    stmt.setString(7, "%%");
-                }
-
-                if (example.getPoints() != 0) {
-                    stmt.setString(8, "%" + example.getPoints() + "%");
-                } else {
-                    stmt.setString(8, "%%");
-                }
-
-                if (example.getStartamount() != 0.0) {
-                    stmt.setString(9, "%" + example.getStartamount() + "%");
+                    stmt.setString(8, "%" + example.getRijksregisternummer() + "%");
                 } else {
                     stmt.setString(9, "%%");
                 }
 
-                if (example.getCash() != 0.0) {
-                    stmt.setString(10, "%" + example.getCash() + "%");
+                if (example.getPoints() != 0) {
+                    stmt.setString(9, "%" + example.getPoints() + "%");
+                } else {
+                    stmt.setString(9, "%%");
+                }
+
+                if (example.getStartamount() != 0.0) {
+                    stmt.setString(10, "%" + example.getStartamount() + "%");
                 } else {
                     stmt.setString(10, "%%");
+                }
+
+                if (example.getCash() != 0.0) {
+                    stmt.setString(11, "%" + example.getCash() + "%");
+                } else {
+                    stmt.setString(11, "%%");
                 }
 
                 rs = stmt.executeQuery();
                 ArrayList<User> list = new ArrayList<User>();
                 while (rs.next()) {
-                    User tUser = new User(rs.getInt(1), rs.getString(2), rs.getString(4), rs.getString(5), rs.getDate(7));
-                    tUser.setPassword(rs.getString(3));
-                    tUser.setAdmin(rs.getBoolean(6));
-                    tUser.setRijksregisternummer(rs.getLong(8));
-                    tUser.setPoints(rs.getInt(9));
-                    tUser.setStartamount(rs.getDouble(10));
-                    tUser.setCash(rs.getDouble(11));
+                    User tUser = new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(5), rs.getString(6), rs.getDate(8));
+                    tUser.setPassword(rs.getString(4));
+                    tUser.setAdmin(rs.getBoolean(7));
+                    tUser.setRijksregisternummer(rs.getLong(9));
+                    tUser.setPoints(rs.getInt(10));
+                    tUser.setStartamount(rs.getDouble(11));
+                    tUser.setCash(rs.getDouble(12));
                     list.add(tUser);
                 }
                 return list;
@@ -229,13 +230,13 @@ public class UserDAO implements GenericDAO<User, Integer> {
                 rs = stmt.executeQuery();
                 ArrayList<User> list = new ArrayList<User>();
                 while (rs.next()) {
-                    User tUser = new User(rs.getInt(1), rs.getString(2), rs.getString(4), rs.getString(5), rs.getDate(7));
-                    tUser.setPassword(rs.getString(3));
-                    tUser.setAdmin(rs.getBoolean(6));
-                    tUser.setRijksregisternummer(rs.getLong(8));
-                    tUser.setPoints(rs.getInt(9));
-                    tUser.setStartamount(rs.getDouble(10));
-                    tUser.setCash(rs.getDouble(11));
+                    User tUser = new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(5), rs.getString(6), rs.getDate(8));
+                    tUser.setPassword(rs.getString(4));
+                    tUser.setAdmin(rs.getBoolean(7));
+                    tUser.setRijksregisternummer(rs.getLong(9));
+                    tUser.setPoints(rs.getInt(10));
+                    tUser.setStartamount(rs.getDouble(11));
+                    tUser.setCash(rs.getDouble(12));
                     list.add(tUser);
                 }
                 return list;
@@ -273,14 +274,15 @@ public class UserDAO implements GenericDAO<User, Integer> {
                 //stmt.setInt(1, entity.getId()); dit wordt automatisch gegenereerd door de database
                 stmt.setString(1, entity.getNickname());
                 stmt.setString(2, entity.getPassword());
-                stmt.setString(3, entity.getLastname());
-                stmt.setString(4, entity.getFirstname());
-                stmt.setBoolean(5, entity.isAdmin());
-                stmt.setTimestamp(6, new Timestamp(entity.getRegdate().getTime()));
-                stmt.setLong(7, entity.getRijksregisternummer());
-                stmt.setInt(8, entity.getPoints());
-                stmt.setDouble(9, entity.getStartamount());
-                stmt.setDouble(10, entity.getCash());
+                stmt.setString(3, entity.getEmail());
+                stmt.setString(4, entity.getLastname());
+                stmt.setString(5, entity.getFirstname());
+                stmt.setBoolean(6, entity.isAdmin());
+                stmt.setTimestamp(7, new Timestamp(entity.getRegdate().getTime()));
+                stmt.setLong(8, entity.getRijksregisternummer());
+                stmt.setInt(9, entity.getPoints());
+                stmt.setDouble(10, entity.getStartamount());
+                stmt.setDouble(11, entity.getCash());
 
                 return stmt.executeUpdate() == 1;
 
@@ -317,14 +319,15 @@ public class UserDAO implements GenericDAO<User, Integer> {
                 stmt.setInt(11, entity.getId());
                 stmt.setString(1, entity.getNickname());
                 stmt.setString(2, entity.getPassword());
-                stmt.setString(3, entity.getLastname());
-                stmt.setString(4, entity.getFirstname());
-                stmt.setBoolean(5, entity.isAdmin());
-                stmt.setTimestamp(6, new Timestamp(entity.getRegdate().getTime()));
-                stmt.setLong(7, entity.getRijksregisternummer());
-                stmt.setInt(8, entity.getPoints());
-                stmt.setDouble(9, entity.getStartamount());
-                stmt.setDouble(10, entity.getCash());
+                stmt.setString(3, entity.getEmail());
+                stmt.setString(4, entity.getLastname());
+                stmt.setString(5, entity.getFirstname());
+                stmt.setBoolean(6, entity.isAdmin());
+                stmt.setTimestamp(7, new Timestamp(entity.getRegdate().getTime()));
+                stmt.setLong(8, entity.getRijksregisternummer());
+                stmt.setInt(9, entity.getPoints());
+                stmt.setDouble(10, entity.getStartamount());
+                stmt.setDouble(11, entity.getCash());
 
                 return stmt.executeUpdate() == 1;
 
