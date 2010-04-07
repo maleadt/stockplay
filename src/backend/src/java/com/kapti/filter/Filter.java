@@ -104,8 +104,6 @@ public class Filter {
             throw new InternalException(InternalException.Type.INTERNAL_FAILURE, "Problem creating output file", e.getCause());
         }
 
-        if (true) return;
-
         // Render the DOT file to a PNG
         String[] cmd = { "/usr/bin/dot", "-Tpng", iFilename+".dot", "-o", iFilename+".png" };
         try {

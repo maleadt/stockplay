@@ -1,6 +1,6 @@
 /*
- * DataFloat.java
- * StockPlay - Float dataobject.
+ * DataDateTime.java
+ * StockPlay - Datetime dataobject.
  *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
@@ -24,21 +24,37 @@ package com.kapti.filter.data;
 import com.kapti.exceptions.FilterException;
 import com.kapti.filter.graph.Graph;
 import com.kapti.filter.graph.Node;
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.regex.Pattern;
 
 /**
  *
  * @author tim
  */
-public class DataFloat extends Data {
+public class DataDate extends Data {
+    //
+    // Data members
+    //
+
+    // DateTime parse patterns
+    private static SimpleDateFormat tFormatISO8601_date = new SimpleDateFormat("yyyy-MM-dd");
+    private static SimpleDateFormat tFormatISO8601_full = new SimpleDateFormat("yyyy-MM-dd'T'HH:MM'Z'");
+    static {
+        tFormatISO8601_date.setLenient(false);
+    }
+
+
     //
     // Construction
     //
 
-    public DataFloat(DataFloat iObject) {
+    public DataDate(DataDate iObject) {
         super(iObject);
     }
 
-    public DataFloat(Double iData) {
+    public DataDate(Date iData) {
         super(iData);
     }
 
@@ -47,18 +63,29 @@ public class DataFloat extends Data {
     // Methods
     //
 
+    public static Date parseDate(String iString) throws FilterException {
+        Date oDate;
+
+        oDate = tFormatISO8601_date.parse(iString, new ParsePosition(0));
+        if (oDate != null) {
+            return oDate;
+        }
+
+        throw new FilterException(FilterException.Type.FILTER_FAILURE, "could not match input DateTime string against any format");
+    }
+
     @Override
     public final Object compile() throws FilterException {
-        DataFloat tConverter = (DataFloat) getConverter();
+        DataKey tConverter = (DataKey) getConverter();
 
-        return tConverter.process((Double) mData);
+        return tConverter.process((String) mData);
     }
 
     @Override
     public Node addNode(Graph iGraph) {
         // Self
         Node tNodeSelf = super.addNode(iGraph);
-        tNodeSelf.setAttribute("label", "Float::"+(Double)mData);
+        tNodeSelf.setAttribute("label", "Date::"+tFormatISO8601_full.format((Date)mData));
 
         return tNodeSelf;
     }
@@ -68,7 +95,7 @@ public class DataFloat extends Data {
     // Interface
     //
 
-    public Object process(Double a) throws FilterException {
+    public Object process(String a) throws FilterException {
         throw new RuntimeException();
     }
 

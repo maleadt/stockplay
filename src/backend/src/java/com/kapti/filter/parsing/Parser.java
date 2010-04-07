@@ -34,6 +34,8 @@ import com.kapti.filter.condition.ConditionLessThanOrEqual;
 import com.kapti.filter.condition.ConditionLike;
 import com.kapti.filter.condition.ConditionNot;
 import com.kapti.filter.condition.ConditionNotLike;
+import com.kapti.filter.data.Data;
+import com.kapti.filter.data.DataDate;
 import com.kapti.filter.data.DataFloat;
 import com.kapti.filter.data.DataInt;
 import com.kapti.filter.data.DataKey;
@@ -91,7 +93,7 @@ public class Parser {
         mTokenRules.add(new Rule(TokenType.INT, "[0-9]+"));
         mTokenRules.add(new Rule(TokenType.FLOAT, "[0-9.]+"));
         mTokenRules.add(new Rule(TokenType.WORD, "[A-Za-z_]+"));
-        mTokenRules.add(new Rule(TokenType.QUOTE, "'([^\']*+)'"));
+        mTokenRules.add(new Rule(TokenType.QUOTE, "'([^\']*+)'([sdifk]?)"));
         mTokenRules.add(new Rule(TokenType.LEFT_PARENTHESIS, "\\("));
         mTokenRules.add(new Rule(TokenType.RIGHT_PARENTHESIS, "\\)"));
         mTokenRules.add(new Rule(TokenType.COMMA, ","));
@@ -156,13 +158,28 @@ public class Parser {
             List<Token> tMatches = new ArrayList<Token>();
             for (Rule<TokenType> tRule : mTokenRules) {
                 if (tMatcher.usePattern(tRule.getPattern()).lookingAt()) {
+                    Token tToken;
+
                     // Fetch the relevant content
-                    String tContent = null;
-                    int tGroup = tMatcher.groupCount();
-                    if (tGroup > 1)
-                        throw new FilterException(FilterException.Type.FILTER_FAILURE, "found multiple matching groups within rule");
-                    tContent = iSource.substring(tMatcher.start(tGroup), tMatcher.end(tGroup));
-                    tMatches.add(new Token(tRule.getType(), tMatcher.start(), tMatcher.end(), tContent));
+                    int tContentGroup = 0;  // Group 0 equals the entire string
+                    int tGroups = tMatcher.groupCount();
+                    if (tGroups > 0) {
+                        tContentGroup = 1;
+                    }
+                    String tContent = tContent = iSource.substring(tMatcher.start(tContentGroup), tMatcher.end(tContentGroup));
+
+                    // Construct and save the token (minding eventual extra groups)
+                    List<String> tExtra = new ArrayList<String>();
+                    for (int i = 2; i <= tGroups; i++) {
+                        String tExtraString = iSource.substring(tMatcher.start(i), tMatcher.end(i));
+                        if (tExtraString.length() > 0)  // because groups are always present...
+                            tExtra.add(tExtraString);
+                    }
+                    if (tExtra.size() == 0)
+                        tExtra = null;
+                    tToken = new Token(tRule.getType(), tMatcher.start(), tMatcher.end(), tContent, tExtra);
+                    
+                    tMatches.add(tToken);
                 }
             }
 
@@ -314,7 +331,34 @@ public class Parser {
                     break;
 
                 case QUOTE:
-                    tStack.push(new DataString(tToken.getContent()));
+                    if (tToken.getExtra() == null) {
+                        tStack.push(new DataString(tToken.getContent()));
+                    } else if (tToken.getExtra().size() != 1) {
+                        throw new FilterException(FilterException.Type.FILTER_FAILURE, "incorrect amount of extra data for quote construction");
+                    } else {
+                        String tModifier = tToken.getExtra().get(0);
+                        if (tModifier.length() != 1) {
+                            throw new FilterException(FilterException.Type.FILTER_FAILURE, "quote modifier can only be one character");
+                        }
+
+                        // Process all modifiers
+                        Data tData = null;
+                        if (tModifier.equalsIgnoreCase("s")) {
+                            tData = new DataString(tToken.getContent());
+                        } else if (tModifier.equalsIgnoreCase("i")) {
+                            tData = new DataInt(Integer.parseInt(tToken.getContent()));
+                        } else if (tModifier.equalsIgnoreCase("f")) {
+                            tData = new DataFloat(Double.parseDouble(tToken.getContent()));
+                        } else if (tModifier.equalsIgnoreCase("d")) {
+                            tData = new DataDate(DataDate.parseDate(tToken.getContent()));
+                        } else if (tModifier.equalsIgnoreCase("d")) {
+                            tData = new DataKey(tToken.getContent());
+                        } else {
+                            throw new FilterException(FilterException.Type.FILTER_FAILURE, "unknown quote modifier '" + tModifier + "'");
+                        }
+                        tStack.push(tData);
+                    }
+                    
                     break;
 
                 case WORD:

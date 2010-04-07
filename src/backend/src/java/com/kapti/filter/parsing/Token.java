@@ -21,6 +21,8 @@
  */
 package com.kapti.filter.parsing;
 
+import java.util.List;
+
 /**
  *
  * @author tim
@@ -33,6 +35,7 @@ public class Token {
     private final Parser.TokenType mType;
     private final int mStart, mEnd;
     private final String mContent;
+    private final List<String> mExtra;
 
 
     //
@@ -40,10 +43,15 @@ public class Token {
     //
 
     Token(Parser.TokenType iType, int iStart, int iEnd, String iContent) {
+        this(iType, iStart, iEnd, iContent, null);
+    }
+
+    Token(Parser.TokenType iType, int iStart, int iEnd, String iContent, List<String> iExtra) {
         mType = iType;
         mStart = iStart;
         mEnd = iEnd;
         mContent = iContent;
+        mExtra = iExtra;
     }
 
 
@@ -78,5 +86,9 @@ public class Token {
 
     public int getContentLength() {
         return mContent.length();
+    }
+
+    public List<String> getExtra() {
+        return mExtra;
     }
 }
