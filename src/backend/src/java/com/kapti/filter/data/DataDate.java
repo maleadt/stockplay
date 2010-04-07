@@ -39,11 +39,7 @@ public class DataDate extends Data {
 
     // DateTime parse patterns
     private static SimpleDateFormat tFormatISO8601_date = new SimpleDateFormat("yyyy-MM-dd");
-    private static SimpleDateFormat tFormatISO8601_full = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm'Z'");
-    static {
-        tFormatISO8601_date.setLenient(false);
-        tFormatISO8601_full.setLenient(false);
-    }
+    private static SimpleDateFormat tFormatISO8601_full = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'");    // using HH forces the Calender in 24-hour mode, maybe to this explicitely?
 
 
     //
@@ -65,11 +61,17 @@ public class DataDate extends Data {
 
     public static Date parseDate(String iString) throws FilterException {
         Date oDate;
+        ParsePosition tPosition;
 
-        oDate = tFormatISO8601_date.parse(iString, new ParsePosition(0));
-        if (oDate != null) {
+        tPosition = new ParsePosition(0);
+        oDate = tFormatISO8601_date.parse(iString, tPosition);
+        if (tPosition.getIndex() == iString.length())
             return oDate;
-        }
+        
+        tPosition = new ParsePosition(0);
+        oDate = tFormatISO8601_full.parse(iString, tPosition);
+        if (tPosition.getIndex() == iString.length())
+            return oDate;
 
         throw new FilterException(FilterException.Type.FILTER_FAILURE, "could not match input DateTime string against any format");
     }

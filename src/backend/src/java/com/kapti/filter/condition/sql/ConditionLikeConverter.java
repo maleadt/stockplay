@@ -23,7 +23,8 @@ package com.kapti.filter.condition.sql;
 
 import com.kapti.exceptions.FilterException;
 import com.kapti.filter.condition.ConditionLike;
-import com.kapti.filter.data.Data;
+import com.kapti.filter.data.DataKey;
+import com.kapti.filter.data.DataString;
 
 public class ConditionLikeConverter extends ConditionLike {
 
@@ -40,7 +41,7 @@ public class ConditionLikeConverter extends ConditionLike {
     //
 
     @Override
-    public Object process(Data a, Data b) throws FilterException {
+    public Object process(DataKey a, DataString b) throws FilterException {
         return (String)a.compile() + " LIKE " + (String)b.compile();
     }
 }

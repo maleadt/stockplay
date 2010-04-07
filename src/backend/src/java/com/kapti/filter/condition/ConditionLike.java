@@ -26,6 +26,7 @@ import com.kapti.exceptions.FilterException;
 import com.kapti.filter.Convertable;
 import com.kapti.filter.data.Data;
 import com.kapti.filter.data.DataKey;
+import com.kapti.filter.data.DataString;
 import com.kapti.filter.graph.Edge;
 import com.kapti.filter.graph.Graph;
 import com.kapti.filter.graph.Node;
@@ -56,14 +57,14 @@ public class ConditionLike extends Condition {
     //
 
     public static Class[] getSignature() {
-        return new Class[] {DataKey.class, Data.class};
+        return new Class[] {DataKey.class, DataString.class};
     }
 
     @Override
     public final Object compile() throws FilterException {
         ConditionLike tConverter = (ConditionLike) getConverter();
 
-        return tConverter.process(getData(0), getData(1));
+        return tConverter.process((DataKey)getData(0), (DataString)getData(1));
     }
 
     @Override
@@ -87,7 +88,7 @@ public class ConditionLike extends Condition {
     // Interface
     //
 
-    public Object process(Data a, Data b) throws FilterException {
+    public Object process(DataKey a, DataString b) throws FilterException {
         throw new RuntimeException();
     }
 }

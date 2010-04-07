@@ -24,6 +24,7 @@ package com.kapti.filter.condition.sql;
 import com.kapti.exceptions.FilterException;
 import com.kapti.filter.condition.ConditionGreaterThan;
 import com.kapti.filter.data.Data;
+import com.kapti.filter.data.DataKey;
 
 public class ConditionGreaterThanConverter extends ConditionGreaterThan {
 
@@ -40,7 +41,7 @@ public class ConditionGreaterThanConverter extends ConditionGreaterThan {
     //
 
     @Override
-    public Object process(Data a, Data b) throws FilterException {
+    public Object process(DataKey a, Data b) throws FilterException {
         return (String)a.compile() + " > " + (String)b.compile();
     }
 }

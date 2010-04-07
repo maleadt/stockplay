@@ -24,6 +24,7 @@ package com.kapti.filter.condition.sql;
 import com.kapti.exceptions.FilterException;
 import com.kapti.filter.condition.ConditionEquals;
 import com.kapti.filter.data.Data;
+import com.kapti.filter.data.DataKey;
 
 public class ConditionEqualsConverter extends ConditionEquals {
 
@@ -40,7 +41,7 @@ public class ConditionEqualsConverter extends ConditionEquals {
     //
 
     @Override
-    public Object process(Data a, Data b) throws FilterException {
+    public Object process(DataKey a, Data b) throws FilterException {
         return (String)a.compile() + " = " + (String)b.compile();
     }
 }

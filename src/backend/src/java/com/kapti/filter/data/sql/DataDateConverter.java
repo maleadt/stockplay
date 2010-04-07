@@ -36,7 +36,7 @@ public class DataDateConverter extends DataDate {
     //
 
     private final String mFormat = "YYYY-MM-DD HH:MI:SS";
-    private final SimpleDateFormat mFormatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+    private final SimpleDateFormat mFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 
     //
@@ -54,7 +54,7 @@ public class DataDateConverter extends DataDate {
 
     @Override
     public Object process(Date d) throws FilterException {
-        return "TO_DATE('" + mFormatter.format(d) + "', '" + mFormat + "'";
+        return "TO_DATE('" + mFormatter.format(d) + "', '" + mFormat + "')";
     }
 
 }

@@ -1,6 +1,7 @@
 <%@ page import="java.io.*, com.kapti.filter.*, com.kapti.filter.parsing.*" %>
 <%
     String iFilter = request.getParameter("filter");
+    String iAction = request.getParameter("submit");
 
     if (iFilter == null) {
         response.setContentType("text/html");
@@ -14,7 +15,6 @@
     </head>
     <body>
         <h1>Filter debug page</h1>
-        <p>Deze pagina dient om filters te debuggen, door na het renderen de AST weer te geven.</p>
         <form action="filter.jsp" method="post">
             <table>
                 <tr>
@@ -23,7 +23,11 @@
                 </tr>
                 <tr>
                     <td></td>
-                    <td><input type="submit" value="submit" /></td>
+                    <td><input type="submit" name="submit" value="Parse" /></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><input type="submit" name="submit" value="Compile" /></td>
                 </tr>
             </table>
         </form>
@@ -31,7 +35,7 @@
 </html>
 
 <%
-    } else {
+    } else if (iAction.equalsIgnoreCase("parse")) {
         // Parse filter
         com.kapti.filter.Filter tFilter = Parser.getInstance().parse(iFilter);
         tFilter.debug("/tmp/AST");
@@ -44,5 +48,20 @@
         OutputStream os = response.getOutputStream();
         bis.read(bytes);
         os.write(bytes);
+    } else if (iAction.equalsIgnoreCase("compile")) {
+        // Parse filter
+        com.kapti.filter.Filter tFilter = Parser.getInstance().parse(iFilter);
+%>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>StockPlay -- Filter test</title>
+    </head>
+    <body>
+        <h1>Filter debug page</h1>
+        <pre><%=tFilter.compile()%></pre>
+    </body>
+</html>
+<%
     }
 %>

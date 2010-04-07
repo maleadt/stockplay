@@ -63,7 +63,7 @@ public class ConditionNot extends Condition {
     public final Object compile() throws FilterException {
         ConditionNot tConverter = (ConditionNot) getConverter();
 
-        return tConverter.process(getData(0), getData(1));
+        return tConverter.process((DataKey)getData(0), getData(1));
     }
 
     @Override
@@ -87,7 +87,7 @@ public class ConditionNot extends Condition {
     // Interface
     //
 
-    public Object process(Data a, Data b) throws FilterException {
+    public Object process(DataKey a, Data b) throws FilterException {
         throw new RuntimeException();
     }
 }
