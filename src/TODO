@@ -20,12 +20,6 @@ vaste (gedocumenteerde) selectie er kan in voorkomen.
 BusinessObjects
 ---------------
 
-*) Introductie ISIN
-
-Zowel indexen als securities worden internationaal geidentificeerd via hun
-ISIN (International Security Identification Number). Het is misschien handig
-om deze te gebruiken, aangezien er anders ambiguïteiten optreden (vb. Ford).
-
 
 *) Corrigeren van autorisatie
 
@@ -37,6 +31,4 @@ Filter
 ------
 
 *) Alternatieve regels voor condities (=, <, >, <=, >=, =~)
-
-*) DateTime
 
