@@ -319,7 +319,6 @@ public class Parser {
         Iterator<Token> tIterator = iTokens.iterator();
         while (tIterator.hasNext()) {
             Token tToken = tIterator.next();
-            System.out.println(tToken);
 
             switch (tToken.getType()) {
                 case INT:
@@ -343,15 +342,15 @@ public class Parser {
 
                         // Process all modifiers
                         Data tData = null;
-                        if (tModifier.equalsIgnoreCase("s")) {
+                        if (tModifier.equals("s")) {
                             tData = new DataString(tToken.getContent());
-                        } else if (tModifier.equalsIgnoreCase("i")) {
+                        } else if (tModifier.equals("i")) {
                             tData = new DataInt(Integer.parseInt(tToken.getContent()));
-                        } else if (tModifier.equalsIgnoreCase("f")) {
+                        } else if (tModifier.equals("f")) {
                             tData = new DataFloat(Double.parseDouble(tToken.getContent()));
-                        } else if (tModifier.equalsIgnoreCase("d")) {
+                        } else if (tModifier.equals("d")) {
                             tData = new DataDate(DataDate.parseDate(tToken.getContent()));
-                        } else if (tModifier.equalsIgnoreCase("d")) {
+                        } else if (tModifier.equals("d")) {
                             tData = new DataKey(tToken.getContent());
                         } else {
                             throw new FilterException(FilterException.Type.FILTER_FAILURE, "unknown quote modifier '" + tModifier + "'");

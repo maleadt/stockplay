@@ -27,7 +27,6 @@ import com.kapti.filter.graph.Node;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.regex.Pattern;
 
 /**
  *
@@ -40,9 +39,10 @@ public class DataDate extends Data {
 
     // DateTime parse patterns
     private static SimpleDateFormat tFormatISO8601_date = new SimpleDateFormat("yyyy-MM-dd");
-    private static SimpleDateFormat tFormatISO8601_full = new SimpleDateFormat("yyyy-MM-dd'T'HH:MM'Z'");
+    private static SimpleDateFormat tFormatISO8601_full = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm'Z'");
     static {
         tFormatISO8601_date.setLenient(false);
+        tFormatISO8601_full.setLenient(false);
     }
 
 
@@ -76,9 +76,9 @@ public class DataDate extends Data {
 
     @Override
     public final Object compile() throws FilterException {
-        DataKey tConverter = (DataKey) getConverter();
+        DataDate tConverter = (DataDate) getConverter();
 
-        return tConverter.process((String) mData);
+        return tConverter.process((Date) mData);
     }
 
     @Override
@@ -95,7 +95,7 @@ public class DataDate extends Data {
     // Interface
     //
 
-    public Object process(String a) throws FilterException {
+    public Object process(Date d) throws FilterException {
         throw new RuntimeException();
     }
 
