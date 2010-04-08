@@ -210,15 +210,14 @@ public class User {
                     oStruct.put(tField.name(), getEmail());
                     break;
                 case LASTNAME:
-                    oStruct.put(tField.name(), getLastname());
+                    if(getLastname() != null) oStruct.put(tField.name(), getLastname());
                     break;
                 case FIRSTNAME:
-                    oStruct.put(tField.name(), getFirstname());
+                    if(getFirstname() != null) oStruct.put(tField.name(), getFirstname());
                     break;
                 case REGDATE:
                     oStruct.put(tField.name(), getRegdate());
                     break;
-                    
                 case ADMIN:
                     oStruct.put(tField.name(), isAdmin());
                     break;
