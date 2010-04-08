@@ -299,7 +299,7 @@ public class User {
         }
 
         // Check needed keys
-        if (tStructMap.containsKey(Fields.NICKNAME) && tStructMap.contains(Fields.EMAIL) && tStructMap.containsKey(Fields.FIRSTNAME) && tStructMap.containsKey(Fields.LASTNAME) && tStructMap.containsKey(Fields.REGDATE)) {
+        if (tStructMap.containsKey(Fields.NICKNAME) && tStructMap.containsKey(Fields.EMAIL) && tStructMap.containsKey(Fields.FIRSTNAME) && tStructMap.containsKey(Fields.LASTNAME) && tStructMap.containsKey(Fields.REGDATE)) {
             User tUser = new User(
                     (String) iStruct.get(tStructMap.get(Fields.NICKNAME)),
                     (String) iStruct.get(tStructMap.get(Fields.EMAIL)),
