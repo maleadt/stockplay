@@ -86,6 +86,7 @@ public class UserHandler extends MethodClass {
             oVector.add(tUser.toStruct(
                     com.kapti.data.User.Fields.ID,
                     com.kapti.data.User.Fields.NICKNAME,
+                    com.kapti.data.User.Fields.EMAIL,
                     com.kapti.data.User.Fields.LASTNAME,
                     com.kapti.data.User.Fields.FIRSTNAME,
                     com.kapti.data.User.Fields.CASH,
@@ -112,6 +113,7 @@ public class UserHandler extends MethodClass {
             oVector.add(tUser.toStruct(
                     com.kapti.data.User.Fields.ID,
                     com.kapti.data.User.Fields.NICKNAME,
+                    com.kapti.data.User.Fields.EMAIL,
                     com.kapti.data.User.Fields.LASTNAME,
                     com.kapti.data.User.Fields.FIRSTNAME,
                     com.kapti.data.User.Fields.CASH,
@@ -157,6 +159,8 @@ public class UserHandler extends MethodClass {
         return 1;
     }
 
+    // TODO - Deze methode is enkel om het inloggen te testen, deze moet nog
+    // vervangen worden door een deftige manier van authenticeren.
     public boolean Validate(String nickname, String password) throws StockPlayException {
         GenericDAO<com.kapti.data.User, Integer> tUserDAO = getDAO().getUserDAO();
 
