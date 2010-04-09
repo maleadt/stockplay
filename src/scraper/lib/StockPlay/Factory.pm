@@ -22,6 +22,8 @@ push data to a remove StockPlay backend.
 use Moose;
 use RPC::XML qw/:types/;
 use RPC::XML::Client;
+use Compress::Zlib;
+use HTTP::Message;
 use StockPlay::Exchange;
 use StockPlay::Index;
 use StockPlay::Security;
@@ -88,7 +90,10 @@ sub _build_xmlrpc {
 	my $xmlrpc = new RPC::XML::Client(
 		$self->server,
 		error_handler	=> \&doError,
-		fault_handler	=> \&doFault
+		fault_handler	=> \&doFault,
+		useragent	=> [
+			default_header => [ 'Accept-Encoding' => scalar HTTP::Message::decodable() ]
+		]
 	) or die("could not connect to backend ($!)");
 	
 	return $xmlrpc;

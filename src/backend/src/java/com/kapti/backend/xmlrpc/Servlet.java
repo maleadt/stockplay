@@ -129,17 +129,6 @@ public class Servlet extends XmlRpcServlet {
     }
 
     /**
-     * Door deze methode te overschrijven kunnen we een eigen XmlRpcServer
-     * gebruiken.
-     */
-    @Override
-    protected XmlRpcServletServer newXmlRpcServer(ServletConfig iConfig) throws XmlRpcException {
-        //XmlRpcServletServer oServer = super.newXmlRpcServer(iConfig);
-        XmlRpcServletServer oServer = new ServletServer();  // iConfig seems unused in XmlRpcServlet.java
-        return oServer;
-    }
-
-    /**
      * Ophalen van uptime.
      * 
      * @return

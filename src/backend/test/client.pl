@@ -36,7 +36,7 @@ $return = $xmlrpc->send_request('System.Backend.Stats');
 print "* Backend stats\n", Dumper(\$return), "\n";
 
 # Database stats
-$return = $xmlrpc->send_request('System.Database.Statss');
+$return = $xmlrpc->send_request('System.Database.Stats');
 print "* Database stats\n", Dumper(\$return), "\n";
 
 

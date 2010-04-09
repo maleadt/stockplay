@@ -15,7 +15,7 @@ use warnings;
 
 # XML::RPC object
 my $xmlrpc = new RPC::XML::Client(
-	'http://be04.kapti.com:6800/backend/public',
+	'http://localhost:6800/backend/public',
 	error_handler	=> \&doError,
 	fault_handler	=> \&doFault
 ) or die("could not connect to backend ($!)");
