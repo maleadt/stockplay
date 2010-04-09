@@ -28,7 +28,7 @@ public class SecurityXMLTest {
     @BeforeClass
     public static void setUpClass() throws Exception {
         XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
-        config.setServerURL(new URL("http://localhost:8080/backend/public"));
+        config.setServerURL(new URL("http://localhost:6800/backend/public"));
         client = new XmlRpcClient();
 
         client.setConfig(config);

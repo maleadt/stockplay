@@ -37,7 +37,7 @@ public class UserHandlerTest {
 
         XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
         config.setEnabledForExtensions(true);
-        config.setServerURL(new URL("http://localhost:8080/backend/public"));
+        config.setServerURL(new URL("http://localhost:6800/backend/public"));
 
         client = new XmlRpcClient();
         

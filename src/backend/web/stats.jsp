@@ -51,7 +51,7 @@
         <%
             // Define XML-RPC client object
             org.apache.xmlrpc.client.XmlRpcClientConfigImpl tConfig = new org.apache.xmlrpc.client.XmlRpcClientConfigImpl();
-            tConfig.setServerURL(new java.net.URL("http://localhost:8080/backend/public"));
+            tConfig.setServerURL(new java.net.URL("http://localhost:6800/backend/public"));
             org.apache.xmlrpc.client.XmlRpcClient tClient = new org.apache.xmlrpc.client.XmlRpcClient();
             tClient.setConfig(tConfig);
         %>

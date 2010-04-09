@@ -5,7 +5,8 @@
 #
 
 # Packages
-use XML::RPC;
+use RPC::XML;
+use RPC::XML::Client;
 use Benchmark::Timer;
 
 # Write nicely
@@ -13,7 +14,11 @@ use strict;
 use warnings;
 
 # XML::RPC object
-my $xmlrpc = new XML::RPC('http://localhost:8080/backend/public') || die("could not connect to backend ($!)");
+my $xmlrpc = new RPC::XML::Client(
+	'http://be04.kapti.com:6800/backend/public',
+	error_handler	=> \&doError,
+	fault_handler	=> \&doFault
+) or die("could not connect to backend ($!)");
 
 
 #
@@ -32,6 +37,17 @@ test('Finance.Security.List', "exchange EQUALS 'BSE'");
 # Routines
 #
 
+sub doError {
+	die("XML-RPC request failed at transport level ($_)");
+}
+
+sub doFault {
+	my $fault = shift;
+	my $code = $fault->{faultCode}->value;
+	my $message = $fault->{faultString}->value;
+	die("XML-RPC request failed at XMLRPC level (code $code: $message)");
+}
+
 sub test {
 	my $method = shift;
 	print "* $method: ";
@@ -39,7 +55,7 @@ sub test {
 	my @output;
 	while($t->need_more_samples($method)) {
 		$t->start($method);
-		@output = $xmlrpc->call($method, @_);
+		@output = $xmlrpc->send_request($method, @_);
 		$t->stop($method);
 	}
 	print $t->result($method)*1000, " ms per request\n";

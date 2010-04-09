@@ -5,9 +5,7 @@
 
 package com.kapti.data;
 
-import com.kapti.data.User.Fields;
 import java.util.Date;
-import java.util.Hashtable;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -49,7 +47,7 @@ public class UserTest {
     public void testCheckPassword() {
         System.out.println("checkPassword");
         String password = "test";
-        User instance = new User("nick","last","first", null);
+        User instance = new User("nick", "nick@domain.be", "last", "first", new Date());
 
         instance.setPassword("test");
         boolean expResult = true;
