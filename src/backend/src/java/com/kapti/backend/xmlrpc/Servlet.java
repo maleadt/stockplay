@@ -28,13 +28,14 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Date;
 import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
 import org.apache.log4j.Logger;
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.server.AbstractReflectiveHandlerMapping.AuthenticationHandler;
 import org.apache.xmlrpc.server.PropertyHandlerMapping;
 import org.apache.xmlrpc.server.XmlRpcHandlerMapping;
+import org.apache.xmlrpc.server.XmlRpcServerConfigImpl;
 import org.apache.xmlrpc.webserver.XmlRpcServlet;
-import org.apache.xmlrpc.webserver.XmlRpcServletServer;
 
 /**
  * \brief XML-RPC servletimplementatie.
@@ -74,6 +75,15 @@ public class Servlet extends XmlRpcServlet {
     //
     // Methoden
     //
+    
+    @Override
+    public void init(ServletConfig pConfig) throws ServletException {
+        super.init(pConfig);
+        XmlRpcServerConfigImpl config = new XmlRpcServerConfigImpl();
+        config.setEnabledForExtensions(true);
+        getXmlRpcServletServer().setConfig(config);
+    }
+
 
     /**
      * Deze methode wordt gebruikt bij het configureren van de servlet server,

@@ -86,15 +86,20 @@ sub BUILD {
 
 sub _build_xmlrpc {
 	my ($self) = @_;
+
+	# Disable compression with
+	#$RPC::XML::Client::COMPRESSION_AVAILABLE = "";
 	
 	my $xmlrpc = new RPC::XML::Client(
 		$self->server,
 		error_handler	=> \&doError,
-		fault_handler	=> \&doFault,
-		useragent	=> [
-			default_header => [ 'Accept-Encoding' => scalar HTTP::Message::decodable() ]
-		]
+		fault_handler	=> \&doFault
 	) or die("could not connect to backend ($!)");
+
+	if ($xmlrpc->{__compress} eq "gzip") {
+		print "INFO: using gzip compression for requests and replies\n";
+		$xmlrpc->compress_requests(1);
+	}
 	
 	return $xmlrpc;
 }
