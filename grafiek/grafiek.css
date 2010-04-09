@@ -32,16 +32,23 @@
 	padding: 2px;
 }
 
+.legend table {
+	background: #fff;
+	border: #d8d8d8 1px solid;
+	padding-left: 1px;
+}
+
 .plot ul {
 	background: #fff;
 	list-style-type: none;
 	border: #d8d8d8 1px solid;
 	float: right;
 	position: relative;
-	padding: 0 6px;
+	padding: 0 0.4em;
 	top: -238px;
 	right: 12px;
 	display: none;
+	font-size: 1.0em;
 }
 
 .plot:hover ul {
@@ -49,26 +56,43 @@
 }
 
 .plot li {
-	margin-right: 1.4em;
+	margin-right: 0.8em;
 	background: no-repeat center left;
-	padding: 5px 0 5px 22px;
+	padding: 4px 0 4px 20px;
 	float: left;
 	font-size: 1.1em;
 }
 
-li.zoomOut {
-	background-image: url(magifier_zoom_out.png);
+.plot li.zoomOut {
+	background-image: url(magnifier_zoom_out.png);
 }
 
-li.pan {
+.plot li.last {
+	background-image: url(arrow_undo.png);
+}
+
+.plot li.zoomIn {
+	background-image: url(magnifier_zoom_in.png);
+}
+
+.plot li.selection {
+	background-image: url(plugin.png);
+}
+
+.plot li.add {
+	background-image: url(brick_add.png);
+}
+
+.plot li.pan {
+	background-image: url(tag.png);
 	display: none;
 }
 
-li.reset {
-	background-image: url(chart_line.png);
-	margin-right: 0;	
+.plot li.reset {
+	background-image: url(lightning.png);
+	margin-right: 0.1em;	
 }
 
-li {
+.plot li {
 	cursor: pointer;
 }
