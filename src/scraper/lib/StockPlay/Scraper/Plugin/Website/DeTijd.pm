@@ -169,6 +169,8 @@ sub addSecuritiesIndex {
 							return 0;
 						}
 					}
+					
+					# TODO: maybe scan for others?
 					print "ERROR: could not find requested security on exchange\n";
 				}
 				return 0;
@@ -220,7 +222,7 @@ sub addSecurities {
 				foreach my $child ($cell->content_list) {
 					if ($child->tag eq "a") {
 						$name = $child->as_text;
-						$name !~ s/[^[:ascii:]]//g;
+						$name =~ s/[^[:ascii:]]//g;
 					} elsif ($child->tag eq "form") {
 						$child->look_down(
 							'_tag', 'input',
@@ -252,18 +254,19 @@ sub addSecurities {
 									push(@items, $child->as_text);
 								}								
 							}
-							($isin, $symbol) = @items[1..2];
-							
-							# FIXME: sommige securities komen voor op de BEL20 maar niet op de BSE
-							if ($items[0]ne $exchange->name) {
-								print "ERROR: $name found, but not on exchange\n";
+														
+							# Check if the security exists on the exchange
+							if ($items[0] ne $exchange->name) {
+								print "ERROR: $name mention on ", $items[0], ", but exchange of origin is ", $exchange->name, "\n";
 								return 0;
-							}
+							}							
+							
+							($isin, $symbol) = @items[1..2];
 						}
 					);
 					$tree2->delete();
-					return unless (defined $isin and defined $symbol);
 					
+					return unless (defined $isin and defined $symbol);
 					push(@securities, new StockPlay::Security({
 						symbol		=> $symbol,
 						isin		=> $isin,

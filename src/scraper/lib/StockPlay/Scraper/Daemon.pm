@@ -189,7 +189,7 @@ sub run {
 		
 		# Push the changes to the server
 		print "- Saving changes\n";
-		$self->factory->updateBulk(@quotes);
+		$self->factory->createQuotes(@quotes);
 		
 		# Wait
 		if ($delay < 60) {
