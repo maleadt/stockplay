@@ -10,100 +10,112 @@ using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using System.Xml.Linq;
 
-/// <summary>
-/// Summary description for Quote
-/// </summary>
-public class Quote : IQuote
+namespace implADO
 {
-    private DateTime time;
-    private double price;
-    private double open; //Slotkoers van de vorige dag = 
 
-    //Verhandelde aandelen over bepaalde tijdsperiode
-    private int volume;
-
-    private double buy;
-    private double sell;
-
-    //Maximum en minimum van de dag
-    private double low;
-    private double high;
-
-
-    public Quote(DateTime time, double price, double open, int volume, double buy, double sell, double low, double high)
+    /// <summary>
+    /// Summary description for Quote
+    /// </summary>
+    public class Quote : IQuote
     {
-        this.time = time;
-        this.price = price;
-        this.open = open;
-        this.volume = volume;
-        this.buy = buy;
-        this.sell = sell;
-        this.low = low;
-        this.high = high;
-    }
+        private DateTime time;
+        private double price;
+        private double open; //Slotkoers van de vorige dag = 
 
-    public DateTime Time
-    {
-        get
+        //Verhandelde aandelen over bepaalde tijdsperiode
+        private int volume;
+
+        private double ask;
+        private double bid;
+
+        //Maximum en minimum van de dag
+        private double low;
+        private double high;
+
+
+        public Quote(DateTime time, double price, double open, int volume, double ask, double bid, double low, double high)
         {
-            return time;
-        }
-    }
-
-    public double Price
-    {
-        get
-        {
-            return price;
-        }
-    }
-
-    public double Open
-    {
-        get
-        {
-            return open;
+            this.time = time;
+            this.price = price;
+            this.open = open;
+            this.volume = volume;
+            this.ask = ask;
+            this.bid = bid;
+            this.low = low;
+            this.high = high;
         }
 
-    }
-
-    public int Volume
-    {
-        get
+        public double Change
         {
-            return volume;
+            get
+            {
+                return Math.Round((Price - Open) / Price * 100, 2);
+            }
         }
-    }
 
-    public double Buy
-    {
-        get
+        public DateTime Time
         {
-            return buy;
+            get
+            {
+                return time;
+            }
         }
-    }
 
-    public double Sell
-    {
-        get
+        public double Price
         {
-            return sell;
+            get
+            {
+                return price;
+            }
         }
-    }
 
-    public double Low
-    {
-        get
+        public double Open
         {
-            return low;
+            get
+            {
+                return open;
+            }
+
         }
-    }
 
-    public double High
-    {
-        get
+        public int Volume
         {
-            return high;
+            get
+            {
+                return volume;
+            }
+        }
+
+        public double Ask
+        {
+            get
+            {
+                return ask;
+            }
+        }
+
+        public double Bid
+        {
+            get
+            {
+                return bid;
+            }
+        }
+
+        public double Low
+        {
+            get
+            {
+                return low;
+            }
+        }
+
+        public double High
+        {
+            get
+            {
+                return high;
+            }
         }
     }
 }

@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-interface ISecurity
+public interface ISecurity
 {
-    Exchange Exchange { get; }
-    Quote GetLatestQuote();
-    Quote GetQuote(DateTime date);
+    IExchange Exchange { get; }
+    IQuote GetLatestQuote();
+    IQuote GetQuote(DateTime date);
+    List<IQuote> GetDailyQuotes(DateTime minDate, DateTime maxDate);
     string Isin { get; }
     string Name { get; }
     string Symbol { get; }
-    string Type { get; }
+    bool Visible { get; }
+    bool Suspended { get; }
 }

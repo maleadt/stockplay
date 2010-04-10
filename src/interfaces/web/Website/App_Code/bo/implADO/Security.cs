@@ -12,87 +12,118 @@ using System.Xml.Linq;
 using System.Collections.ObjectModel;
 using System.Collections.Generic;
 
-/// <summary>
-/// Summary description for Security
-/// </summary>
-public class Security : ISecurity
+namespace implADO
 {
-    private string isin;
-    private string symbol;
-    private string name;
-    private string type;
 
-    private Exchange exchange;
-
-
-	public Security(string isin, string symbol, string name, string type, Exchange exchange)
-	{
-        this.isin = isin;
-        this.symbol = symbol;
-        this.name = name;
-        this.type = type;
-        this.exchange = exchange;
-	}
-
-    public double GetChange()
+    /// <summary>
+    /// Summary description for Security
+    /// </summary>
+    public class Security : ISecurity
     {
-        DataAccess data = DataAccess.GetInstance();
-        Quote qLatest = data.GetLatestQuoteFromSecurity(symbol);
-        if (qLatest == null)
-            return 0;
+        private string isin;
+        private string symbol;
+        private string name;
 
-        return Math.Round((qLatest.Price - qLatest.Open) / qLatest.Price * 100, 2);
-    }
+        private bool visible;
+        private bool suspended;
 
-    public Quote GetLatestQuote()
-    {
-        DataAccess data = DataAccess.GetInstance();
-        return data.GetLatestQuoteFromSecurity(isin);
-    }
+        private IExchange exchange;
+        private IQuote latestQuote;
 
-    public Quote GetQuote(DateTime date)
-    {
-        DataAccess data = DataAccess.GetInstance();
-        return data.GetQuoteFromSecurity(isin, date);
-    }
-
-    public string Isin
-    {
-        get
+        public Security(string isin, string symbol, string name, bool visible, bool suspended, IExchange exchange)
         {
-            return isin;
+            this.isin = isin;
+            this.symbol = symbol;
+            this.name = name;
+
+            this.visible = visible;
+            this.suspended = suspended;
+
+            this.exchange = exchange;
         }
-    }
 
-    public string Symbol
-    {
-        get
+        public Security(string isin, string symbol, string name, bool visible, bool suspended, IExchange exchange, IQuote quote)
+            : this(isin, symbol, name, visible, suspended, exchange)
         {
-            return symbol;
+            this.latestQuote = quote;
         }
-    }
 
-    public string Name
-    {
-        get
+        public IQuote GetLatestQuote()
         {
-            return name;
+            if (latestQuote == null)
+            {
+                IDataAccess data = DataAccess.GetInstance();
+                latestQuote = data.GetLatestQuoteFromSecurity(isin);
+                return latestQuote;
+            }
+            else
+            {
+                return latestQuote;
+            }
         }
-    }
 
-    public string Type
-    {
-        get
+        //Haalt de quote die het dichtst bij date ligt (er is geen garantie dat deze quote op dezelfde dag is)
+        public IQuote GetQuote(DateTime date)
         {
-            return type;
+            IDataAccess data = DataAccess.GetInstance();
+            return data.GetQuoteFromSecurity(isin, date);
         }
-    }
 
-    public Exchange Exchange
-    {
-        get
+        //Geeft van iedere dag 1 quote tussen mindate en maxdate
+        public List<IQuote> GetDailyQuotes(DateTime minDate, DateTime maxDate)
         {
-            return exchange;
+            IDataAccess data = DataAccess.GetInstance();
+            return data.GetDailyQuotesFromSecurity(isin, minDate, maxDate);
+        }
+
+
+
+        public string Isin
+        {
+            get
+            {
+                return isin;
+            }
+        }
+
+        public string Symbol
+        {
+            get
+            {
+                return symbol;
+            }
+        }
+
+        public string Name
+        {
+            get
+            {
+                return name;
+            }
+        }
+
+        public IExchange Exchange
+        {
+            get
+            {
+                return exchange;
+            }
+        }
+
+        public bool Visible
+        {
+            get
+            {
+                return Visible;
+            }
+        }
+
+        public bool Suspended
+        {
+            get
+            {
+                return suspended;
+            }
         }
     }
 }

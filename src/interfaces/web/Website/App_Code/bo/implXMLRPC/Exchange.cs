@@ -9,8 +9,9 @@ using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using System.Xml.Linq;
+using CookComputing.XmlRpc;
 
-namespace implADO
+namespace implXMLRPC
 {
 
     /// <summary>
@@ -18,7 +19,6 @@ namespace implADO
     /// </summary>
     public class Exchange : IExchange
     {
-
         private string symbol;
         private string name;
         private string location;
@@ -28,6 +28,25 @@ namespace implADO
             this.symbol = symbol;
             this.name = name;
             this.location = location;
+        }
+
+        public Exchange(XmlRpcStruct exchange)
+        {
+            IDataAccess data = DataAccessFactory.GetDataAccess();
+
+            this.symbol = (string)exchange["SYMBOL"];
+            this.name = (string)exchange["NAME"];
+            this.location = (string)exchange["LOCATION"];
+        }
+
+        public XmlRpcStruct toStruct()
+        {
+            XmlRpcStruct exchange = new XmlRpcStruct();
+            exchange.Add("SYMBOl", symbol);
+            exchange.Add("NAME", name);
+            exchange.Add("LOCATION", location);
+
+            return exchange;
         }
 
         #region IExchange Members
@@ -44,7 +63,7 @@ namespace implADO
 
         public string Location
         {
-            get { return location; }
+            get { return location;  }
         }
 
         #endregion

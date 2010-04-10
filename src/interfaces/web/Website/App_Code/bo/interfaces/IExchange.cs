@@ -1,5 +1,5 @@
 ﻿using System;
-interface IExchange
+public interface IExchange
 {
     string Symbol { get; }
     string Name { get; }

@@ -11,6 +11,7 @@ using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using System.Xml.Linq;
 using System.Collections.Generic;
+using implADO;
 
 public partial class SecuritiesOverview : System.Web.UI.Page
 {
@@ -21,9 +22,15 @@ public partial class SecuritiesOverview : System.Web.UI.Page
 
         if (!IsPostBack)
         {
-            IDataAccess data = DataAccess.GetInstance();
+            IDataAccess data = DataAccessFactory.GetDataAccess();
 
-            DataTable securitiesTable = GenerateDataTable(data.GetSecuritiesList());
+            DataTable securitiesTable = null;
+
+            if (Request.Params["exchange"] != null)
+                securitiesTable = GenerateDataTable(data.GetSecuritiesFromExchange(Request.Params["exchange"]));
+            else
+                securitiesTable = GenerateDataTable(data.GetSecuritiesList());
+
             Session["securitiesView"] = securitiesTable.DefaultView;
         }
 
@@ -33,7 +40,7 @@ public partial class SecuritiesOverview : System.Web.UI.Page
         SecuritiesGridview.DataBind();
     }
 
-    private DataTable GenerateDataTable(List<Security> securities)
+    private DataTable GenerateDataTable(List<ISecurity> securities)
     {
         DataTable securitiesTable = new DataTable("Securities");
 
@@ -52,21 +59,27 @@ public partial class SecuritiesOverview : System.Web.UI.Page
         securitiesTable.Columns.Add("Date");
         securitiesTable.Columns["Date"].DataType = typeof(DateTime);
 
-        foreach (Security security in securities)
+        foreach (ISecurity security in securities)
         {
             DataRow row = securitiesTable.NewRow();
             row[0] = security.Isin;
             row[1] = security.Symbol;
             row[2] = security.Name;
             row[3] = security.Exchange.Name;
-            row[5] = security.GetChange();
 
-            Quote q = security.GetLatestQuote();
+            IQuote q = security.GetLatestQuote();
 
             if (q != null)
             {
-                row[4] = q.Buy;
+                row[4] = q.Price;
+                row[5] = q.Change;
                 row[6] = q.Time;
+            }
+            else
+            {
+                row[4] = 0;
+                row[5] = 0;
+                row[6] = DateTime.MinValue;
             }
 
             securitiesTable.Rows.Add(row);
@@ -96,6 +109,14 @@ public partial class SecuritiesOverview : System.Web.UI.Page
         return newSortDirection;
     }
 
+    private SortDirection InvertSort(SortDirection sortDirection)
+    {
+        if (sortDirection == SortDirection.Ascending)
+            return SortDirection.Descending;
+        else
+            return SortDirection.Ascending;
+    }
+
     protected void SecuritiesGridview_PageIndexChanging(object sender, GridViewPageEventArgs e)
     {
         SecuritiesGridview.PageIndex = e.NewPageIndex;
@@ -106,9 +127,16 @@ public partial class SecuritiesOverview : System.Web.UI.Page
     {
         DataView dataView = (DataView) Session["securitiesView"];
 
+        SortDirection sortDirection;
+        if (Session["sortDirection"] != null)
+            sortDirection = InvertSort((SortDirection)Session["sortDirection"]);
+        else
+            sortDirection = e.SortDirection;
+
         if (dataView != null)
         {
-            dataView.Sort = e.SortExpression + " " + ConvertSortDirectionToSql(e.SortDirection);
+            dataView.Sort = e.SortExpression + " " + ConvertSortDirectionToSql(sortDirection);
+            Session["sortDirection"] = sortDirection;
 
             SecuritiesGridview.DataSource = dataView;
             SecuritiesGridview.DataBind();
@@ -135,7 +163,7 @@ public partial class SecuritiesOverview : System.Web.UI.Page
                 e.Row.Cells[4].Text = e.Row.Cells[4].Text + "%";
             }
             else
-                e.Row.Cells[4].Text = " " + e.Row.Cells[4].Text + "%";
+                e.Row.Cells[4].Text = "&nbsp;" + e.Row.Cells[4].Text + "%";
         }
 
         if (e.Row.RowType == DataControlRowType.Header)

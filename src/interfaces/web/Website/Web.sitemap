@@ -2,11 +2,15 @@
 <siteMap xmlns="http://schemas.microsoft.com/AspNet/SiteMap-File-1.0">
     <siteMapNode>
       <siteMapNode url="Default.aspx" title="Home"  description="StockPlay homepage" />
-      <siteMapNode url="Overview.aspx" title="Overview"  description="Account overview">
+      <siteMapNode url="User/Overview.aspx" title="Overview"  description="Account overview">
         <siteMapNode url="User/Portfolio.aspx" title="Portfolio" description="Users portfolio" />
+        <siteMapNode url="User/OrdersOverview.aspx" title="Orders" description="View your currently active orders"/>
         <siteMapNode url="User/TransactionHistory.aspx" title="Transaction History" description="View a history of all your transactions" />
       </siteMapNode>
-      <siteMapNode url="SecuritiesOverview.aspx" title="Securities Overview" description="Overview of the available securities" />
-      <siteMapNode url="Ranking.aspx" title="Ranking" description="Ranking of all StockPlay users" />
-    </siteMapNode>
+      <siteMapNode url="SecuritiesOverview.aspx" title="Securities Overview" description="Overview of the available securities">
+        <siteMapNode url="SecuritiesOverview.aspx?exchange=BSE" title="Euronext Brussels" description="Securities on Euronext Brussels" />
+        <siteMapNode url="SecuritiesOverview.aspx?exchange=PA" title="Euronext Paris" description="Securities on Euronext Paris" />
+      </siteMapNode>
+        <siteMapNode url="Ranking.aspx" title="Ranking" description="Ranking of all StockPlay users" />
+      </siteMapNode>
 </siteMap>

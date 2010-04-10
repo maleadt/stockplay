@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" MasterPageFile="~/MasterPage.master" AutoEventWireup="true" CodeFile="SecurityDetail.aspx.cs" Inherits="SecurityDetail" Title="Untitled Page" %>
+﻿<%@ Page Language="C#" MasterPageFile="~/MasterPage.master" AutoEventWireup="true" CodeFile="SecurityDetail.aspx.cs" Inherits="SecurityDetail" Title="Security Detail" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
 </asp:Content>
@@ -6,6 +6,10 @@
     <h1 ID="Name" runat="server"></h1>
     <h2 ID="Value" runat="server"></h2>
     <h2 ID="Change" runat="server"></h2>
+    
+    <ul class="actions"> 
+        <asp:HyperLink ID="BuyHyperlink" runat="server"><li class="action buy">Buy this security</li></asp:HyperLink>
+    </ul> 
     
     <table class="table" id="general">
         <tr>

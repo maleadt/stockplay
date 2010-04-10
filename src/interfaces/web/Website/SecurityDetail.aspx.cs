@@ -11,17 +11,21 @@ using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using System.Xml.Linq;
 
+using System.Collections.Generic;
+using implADO;
+
 public partial class SecurityDetail : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
         if(Request.Params["param"] != null) {
-            IDataAccess data = DataAccess.GetInstance();
+            IDataAccess data = DataAccessFactory.GetDataAccess();
 
             try
             {
-                Security security = data.GetSecurityBySymbol(Request.Params["param"]);
+                ISecurity security = data.GetSecurityByIsin(Request.Params["param"]);
                 GeneratePage(security);
+                Page.Title = security.Name + " " + Page.Title;
             }
             catch (Exception ex)
             {
@@ -32,20 +36,27 @@ public partial class SecurityDetail : System.Web.UI.Page
             Response.Redirect("~/SecuritiesOverview.aspx");
     }
 
-    private void GeneratePage(Security security)
+    private void GeneratePage(ISecurity security)
     {
-        Quote latestQuote = security.GetLatestQuote();
+        IQuote latestQuote = security.GetLatestQuote();
+
+        BuyHyperlink.NavigateUrl = "~/User/CreateOrder.aspx?isin=" + security.Isin;
 
         //General
         Name.InnerText = security.Name;
-        if(latestQuote != null)
-            Value.InnerText = Convert.ToString(latestQuote.Price);
 
-        double quoteChange = security.GetChange();
+        double quoteChange = 0;
+
+        if (latestQuote != null)
+        {
+            Value.InnerText = Convert.ToString(latestQuote.Price);
+            quoteChange = security.GetLatestQuote().Change;
+        }
+
         Change.InnerText = (quoteChange>=0 ? "+" : "") + Convert.ToString(quoteChange) + "%";
-        if (quoteChange >= 0)
+        if (quoteChange > 0)
             Change.Attributes.Add("class", "pos");
-        else
+        else if (quoteChange < 0)
             Change.Attributes.Add("class", "neg");
         
         
@@ -75,21 +86,17 @@ public partial class SecurityDetail : System.Web.UI.Page
         historyTable.Columns.Add("Low");
         historyTable.Columns["Low"].DataType = typeof(Double);
 
-        for (int i = 0; i < 80; i++)
-        {
-            DateTime date = DateTime.Now.Subtract(new TimeSpan(i+1, 0, 0, 0));
-            Quote quote = security.GetQuote(date);
+        List<IQuote> quotes = security.GetDailyQuotes(DateTime.Now.Subtract(new TimeSpan(7, 0, 0, 0)), DateTime.Now);
 
+        foreach(IQuote quote in quotes)
+        {
             DataRow row = historyTable.NewRow();
-            if (quote != null && quote.Time.Day == date.Day) //We controleren ofdat er die dag wel een quote beschikbaar was
-            {
-                row[0] = quote.Time;
-                row[1] = Math.Round((latestQuote.Price - quote.Open) / latestQuote.Price * 100, 2);
-                row[2] = quote.Open;
-                row[3] = quote.High;
-                row[4] = quote.Low;
-                historyTable.Rows.Add(row);
-            }
+            row[0] = quote.Time;
+            row[1] = quote.Change;
+            row[2] = quote.Open;
+            row[3] = quote.High;
+            row[4] = quote.Low;
+            historyTable.Rows.Add(row);
         }
 
         HistoryGridView.DataSource = historyTable;

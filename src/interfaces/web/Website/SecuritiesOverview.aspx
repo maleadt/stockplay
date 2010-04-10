@@ -9,33 +9,21 @@
         onrowdatabound="SecuritiesGridview_RowDataBound" CellSpacing="-1" PageSize="20" >
         <Columns>
             <asp:BoundField DataField="Isin" />
-            <asp:HyperLinkField DataTextField="Symbol" DataNavigateUrlFields="Isin" SortExpression="Symbol"
-            DataNavigateUrlFormatString="SecurityDetail.aspx?param={0}" 
-                HeaderText="Symbol">
-                <ItemStyle CssClass="name" />
-            </asp:HyperLinkField>
-            <asp:BoundField DataField="Name" HeaderText="Name" SortExpression="Name">
+            <asp:BoundField DataField="Symbol" HeaderText="Symbol" SortExpression="symbol">
                 <ItemStyle CssClass="action" />
             </asp:BoundField>
+            <asp:HyperLinkField DataTextField="Name" DataNavigateUrlFields="Isin" SortExpression="Name"
+            DataNavigateUrlFormatString="SecurityDetail.aspx?param={0}" HeaderText="Name">
+                <ItemStyle CssClass="name" />
+            </asp:HyperLinkField>
             <asp:BoundField DataField="Exchange" HeaderText="Exchange" SortExpression="Exchange">
                 <ItemStyle CssClass="action" />
             </asp:BoundField>
             <asp:BoundField DataField="Change" HeaderText="Change" SortExpression="Change" HtmlEncode="false" DataFormatString="{0:0.00}" />
             <asp:BoundField DataField="Quote" HeaderText="Quote" SortExpression="Quote" HtmlEncode="false" DataFormatString="{0:0.00}" />
             <asp:BoundField DataField="Date" HeaderText="Date" SortExpression="Date" HtmlEncode="false" DataFormatString="{0:dd/MM, HH:MM:ss}" />
-            <asp:TemplateField HeaderText="Buy">
-                <ItemStyle CssClass="action" />
-                <ItemTemplate>
-                    <asp:Image ID="BuyImage" runat="server" ImageUrl="~/App_Themes/StockPlay/afbeeldingen/money_add.png" />
-                </ItemTemplate>
-            </asp:TemplateField>
-            <asp:TemplateField HeaderText="Sell">
-                <ItemStyle CssClass="action" />
-                <ItemTemplate>
-                    <asp:Image ID="SellImage" runat="server" ImageUrl="~/App_Themes/StockPlay/afbeeldingen/money_delete.png" />
-                </ItemTemplate>
-            </asp:TemplateField>
+            <asp:HyperLinkField HeaderText="Buy" DataNavigateUrlFields="Isin" DataNavigateUrlFormatString="~/User/CreateOrder.aspx?isin={0}"
+            Text="<img src='App_Themes/StockPlay/afbeeldingen/money_add.png' alt='Buy' border='0' />" />
         </Columns>
     </asp:GridView>
-    
 </asp:Content>
