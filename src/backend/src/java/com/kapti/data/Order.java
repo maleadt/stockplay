@@ -123,7 +123,7 @@ public class Order extends Instruction {
                     break;
                 case TYPE:
                     if (getType() != null)
-                        oStruct.put(tField.name(), getType());
+                        oStruct.put(tField.name(), getType().name());
                     break;
 
                 case STATUS:
