@@ -64,6 +64,14 @@
 	font-size: 1.0em;
 }
 
+.plot:hover div.subPlot {
+	top: -22px;
+}
+
+.plot:hover div.subPlot div.tickLabel {
+	margin-top: 22px;
+}
+
 .plot:hover ul {
 	display: inherit;
 }

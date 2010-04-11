@@ -6,13 +6,9 @@ $.extend(plot.prototype, {
 
 	init: function(container, from, to) {
 		this.containerName = '#'+container;
-		this.container = $(this.containerName+' div');
 		this.data = this.getData(from, to);
-		this.options = new Options();
-		this.draw();
-		this.setView(this.plot.getAxes().xaxis.min, this.plot.getAxes().xaxis.max); // dubbel tekenen vervangen door from en max functie
-		this.draw();
-		this._init();
+		this.plotListeners = [];
+		this._init(container, from, to);
 	},
 
 	getData: function(from, to) {
@@ -49,6 +45,16 @@ $.extend(plot.prototype, {
 		this.options.setXRange(from, to);
 		var range = this.getMinMax(from, to);
 		this.options.setYRange(range[0], range[1]);
+		var target;
+		for (t in this.plotListeners) {
+			target = this.plotListeners[t];
+			target.setView(from, to);
+			target.draw();
+		}
+    },
+
+    addPlotListener: function(target) {
+		this.plotListeners.push(target);
     }
 
 });
@@ -56,13 +62,29 @@ $.extend(plot.prototype, {
 $.extend(subPlot.prototype, {
 
 	_init: function(container, from, to) {
+		this.container = $(this.containerName);
+		this.options = new BarOptions();
+		this.draw();
+		this.setView(this.plot.getAxes().xaxis.min, this.plot.getAxes().xaxis.max); // dubbel tekenen vervangen door from en max functie
+		this.draw();
+	},
+
+	getDummyData: function(from, to) {
+		return [
+			{ label: "Beursverloop Tomtom", data: d1, color: 'lightblue', bars: { show: true }, id: 0 }
+		];
 	}
 
 });
 
 $.extend(primaryPlot.prototype, {
 
-	init: function(container, from, to) {
+	_init: function(container, from, to) {
+		this.container = $(this.containerName+' div');
+		this.options = new LineOptions();
+		this.draw();
+		this.setView(this.plot.getAxes().xaxis.min, this.plot.getAxes().xaxis.max); // dubbel tekenen vervangen door from en max functie
+		this.draw();
 		this.addEvents();
 		this.lastView = [this.plot.getAxes().xaxis.min, this.plot.getAxes().xaxis.max];
 		this.history = new Array();
@@ -154,7 +176,7 @@ $.extend(primaryPlot.prototype, {
 		$(this.containerName+' li.reset').addClass('disabled').bind('click', {me: this}, function(event) {
 			var me = event.data.me;
 			delete me.options;
-			me.options = new Options();
+			me.options = new LineOptions();
 			me.data.length = 1;
 			me.noLines = 1;
 			me.draw();
@@ -216,7 +238,7 @@ $.extend(true, PrimaryPlot, plot, primaryPlot);
 $.extend(true, SubPlot, plot, subPlot);
 
 $(function (){
-	new PrimaryPlot('plotTest', 2, 11);
-	new SubPlot('volumes', 2, 11);
-	//new PrimaryPlot('plotTwee', 2, 11);
+	var prim = new PrimaryPlot('plotTest', 2, 11);
+	var sec = new SubPlot('volumes', 2, 11);
+	prim.addPlotListener(sec);
 });
