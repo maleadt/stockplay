@@ -16,7 +16,7 @@
 
 .plot {
 	padding: 23px 14px 34px 22px;
-	background: url(plot.gif) no-repeat top left;
+	background: url(images/plot.gif) no-repeat top left;
 }
 
 .plot .draw {
@@ -63,34 +63,47 @@
 	font-size: 1.1em;
 }
 
+.plot li.disabled {
+	color: #b7bebe;
+	cursor: default;	
+}
+
 .plot li.zoomOut {
-	background-image: url(magnifier_zoom_out.png);
+	background-image: url(images/magnifier_zoom_out.png);
 }
 
 .plot li.last {
-	background-image: url(arrow_undo.png);
+	background-image: url(images/arrow_undo.png);
+}
+
+.plot li.last.disabled {
+	background-image: url(images/arrow_undo_disabled.png);
 }
 
 .plot li.zoomIn {
-	background-image: url(magnifier_zoom_in.png);
+	background-image: url(images/magnifier_zoom_in.png);
 }
 
 .plot li.selection {
-	background-image: url(plugin.png);
+	background-image: url(images/plugin.png);
 }
 
 .plot li.add {
-	background-image: url(brick_add.png);
+	background-image: url(images/brick_add.png);
 }
 
 .plot li.pan {
-	background-image: url(tag.png);
+	background-image: url(images/tag.png);
 	display: none;
 }
 
 .plot li.reset {
-	background-image: url(lightning.png);
+	background-image: url(images/lightning.png);
 	margin-right: 0.1em;	
+}
+
+.plot li.reset.disabled {
+	background-image: url(images/lightning_disabled.png);
 }
 
 .plot li {

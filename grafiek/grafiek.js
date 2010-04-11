@@ -30,7 +30,7 @@ $.extend(Flot.prototype, {
 		}
 
 		return [
-			{ label: "Beursverloop Tomtom", data: d, color: "lightblue" }
+			{ label: "Beursverloop Tomtom", data: d1, color: "lightblue" }
 		];
 	},
 	
@@ -41,44 +41,32 @@ $.extend(Flot.prototype, {
 	pushHistory: function() {
 		this.history.push(this.lastView);
 		this.lastView = [this.plot.getAxes().xaxis.min, this.plot.getAxes().xaxis.max];
+		$(this.containerName+' li.last, '+this.containerName+' li.reset').removeClass('disabled');
 	},
 	
-    getMax: function(from, to) {
-    	// ToDo min en max voor ALLE zichtbare lijnen berekenen
-    	var max;
-    	var data;
+    getMinMax: function(from, to) {
+    	var min, max, data;
 		for (line in this.data) {
 			data = this.data[line]['data'];
 			for(i=0;i<data.length;i++)
 		    	if (data[i][0] <= to && data[i][0] >= from) {
-		        	if (max === undefined)
+		        	if (max === undefined) {
 	    	    		max = data[i][1];
-	        		if (data[i][1] > max )
+	    	    		min = data[i][1];
+	    	    	}
+	        		if (data[i][1] > max)
 		    			max =  data[i][1]; // Zou het niet sneller zijn om enkel de index van het grooste element bij te houden?
+	        		if (data[i][1] < min)
+		    			min =  data[i][1];
 		    	}
 		}
-    	return max;
-    },
-
-    getMin: function(from, to) {
-    	// ToDo min en max voor ALLE zichtbare lijnen berekenen
-    	var min;
-		for (line in this.data) {
-			data = this.data[line]['data'];
-			for(i=0;i<this.data[0]['data'].length;i++)
-		    	if (this.data[0]['data'][i][0] <= to && this.data[0]['data'][i][0] >= from) {
-		        	if (min === undefined)
-		        		min = this.data[0]['data'][i][1];
-		        	if (this.data[0]['data'][i][1] < min )
-		        		min =  this.data[0]['data'][i][1];
-		       	}
-		}       	
-    	return min;
+    	return [min,max];
     },
 
     setView: function(from, to) {
 		this.options.setXRange(from, to);
-		this.options.setYRange(this.getMin(from, to), this.getMax(from, to));
+		var range = this.getMinMax(from, to);
+		this.options.setYRange(range[0], range[1]);
     },
     
     addEvents: function() {
@@ -136,7 +124,7 @@ $.extend(Flot.prototype, {
 			return false;
 		});
 
-		$(this.containerName+' li.reset').bind('click', {me: this}, function(event) {
+		$(this.containerName+' li.reset').addClass('disabled').bind('click', {me: this}, function(event) {
 			var me = event.data.me;
 			delete me.options;
 			me.options = new Options();
@@ -147,10 +135,11 @@ $.extend(Flot.prototype, {
 			me.history.length = 0;
 			var ranges = me.plot.getAxes().xaxis;
 			me.lastView = [ranges.min, ranges.max];
+			$(me.containerName+' li.last, '+me.containerName+' li.reset').addClass('disabled');
 			return false;
 		});
 
-		$(this.containerName+' li.last').bind('click', {me: this}, function(event) {
+		$(this.containerName+' li.last').addClass('disabled').bind('click', {me: this}, function(event) {
 			var me = event.data.me;
 	   		if (me.history.length == 0)
 	   			return false;
@@ -160,13 +149,13 @@ $.extend(Flot.prototype, {
 	   		if (me.history.length == 0) {
 				var ranges = me.plot.getAxes().xaxis;
 				me.lastView = [ranges.min, ranges.max];
+				$(me.containerName+' li.last').addClass('disabled');
 			}
 			return false;
 		});
     }
-    
-});
 
+});
 
 $(function (){
 	var flot1 = new Flot('#plotTest', 2, 11);
