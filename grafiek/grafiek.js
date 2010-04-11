@@ -15,6 +15,7 @@ $.extend(Flot.prototype, {
 		this.addEvents();
 		this.lastView = [this.plot.getAxes().xaxis.min, this.plot.getAxes().xaxis.max];
 		this.history = new Array();
+		this.noLines = 1;
 	},
 
 	getData: function(from, to) {
@@ -23,19 +24,39 @@ $.extend(Flot.prototype, {
 	
 	getDummyData: function(from, to) {
 		//alert("punten opvragen");
-		var d = [];
-		for (var i = 0; i <= 250; ++i) {
-			var x = from + i * (to - from) / 500;
-			d.push([x*10000000, (Math.sin(x+4)+2)*25]);
-		}
+		//var d = [];
+		//for (var i = 0; i <= 250; ++i) {
+		//	var x = from + i * (to - from) / 500;
+		//	d.push([x*10000000, (Math.sin(x+4)+2)*25]);
+		//}
 
 		return [
-			{ label: "Beursverloop Tomtom", data: d1, color: "lightblue" }
+			{ label: "Beursverloop Tomtom", data: d2, color: 'lightblue', lines: { fill: true }, id: 0 }
 		];
+	},
+
+	addLine: function(from, to, ref) {
+		this.data.push({label: "Beursverloop Ordina", data: d3, color: 'red', id: 1});
+		this.draw();
+		this.setView(this.plot.getAxes().xaxis.min, this.plot.getAxes().xaxis.max); // dubbel tekenen vervangen door from en max functie
+		this.draw();
 	},
 	
 	draw: function() {
 		this.plot = $.plot(this.container, this.data, this.options);
+		this.addTemporyEvents();
+	},
+
+	addTemporyEvents: function() {
+		$(this.containerName+' .legendLabel a').bind('click', {me: this}, function(event) {
+			var me = event.data.me;
+			var href = event.srcElement.href;
+			me.data.splice(href.substring(href.length-1),1);
+			me.draw();
+			$(me.containerName+' li.add').removeClass('disabled');
+			me.noLines--;
+			return false;
+		});
 	},
 
 	pushHistory: function() {
@@ -101,7 +122,6 @@ $.extend(Flot.prototype, {
 			$(me.containerName+' .selection').hide();
 			$(me.containerName+' .pan').show();
 			me.pushHistory();
-			return false;
 		});
 
 		$(this.containerName+' li.pan').bind('click', {me: this}, function(event) {
@@ -111,23 +131,22 @@ $.extend(Flot.prototype, {
 			$(me.containerName+' .pan').hide();
 			$(me.containerName+' .selection').show();
 			me.pushHistory();
-			return false;
 		});
 
 		$(this.containerName+' li.zoomOut').bind('click', {me: this}, function(event) {
 			event.data.me.plot.zoomOut();
-			return false;
 		});
 
 		$(this.containerName+' li.zoomIn').bind('click', {me: this}, function(event) {
 			event.data.me.plot.zoom();
-			return false;
 		});
 
 		$(this.containerName+' li.reset').addClass('disabled').bind('click', {me: this}, function(event) {
 			var me = event.data.me;
 			delete me.options;
 			me.options = new Options();
+			me.data.length = 1;
+			me.noLines = 1;
 			me.draw();
 			me.setView(me.plot.getAxes().xaxis.min, me.plot.getAxes().xaxis.max);
 			// dubbel tekenen vervangen door from en max functie
@@ -136,13 +155,13 @@ $.extend(Flot.prototype, {
 			var ranges = me.plot.getAxes().xaxis;
 			me.lastView = [ranges.min, ranges.max];
 			$(me.containerName+' li.last, '+me.containerName+' li.reset').addClass('disabled');
-			return false;
+			$(me.containerName+' li.add').removeClass('disabled');
 		});
 
 		$(this.containerName+' li.last').addClass('disabled').bind('click', {me: this}, function(event) {
 			var me = event.data.me;
 	   		if (me.history.length == 0)
-	   			return false;
+	   			return;
 	   		var range = me.history.pop();
 			me.setView(range[0], range[1]);
 			me.draw();
@@ -151,7 +170,25 @@ $.extend(Flot.prototype, {
 				me.lastView = [ranges.min, ranges.max];
 				$(me.containerName+' li.last').addClass('disabled');
 			}
-			return false;
+		});
+
+		$(this.containerName+' li.add').bind('click', {me: this}, function(event) {
+			var me = event.data.me;
+			if (me.noLines == 2)
+				return;
+			me.addLine(1,1,1);
+			me.noLines++;
+			if (me.noLines == 2)
+				$(me.containerName+' li.add').addClass('disabled');
+			$(me.containerName+' li.reset').removeClass('disabled');
+		});
+
+		$(this.containerName).bind('mouseover', {me: this}, function(event) {
+			$(event.data.me.containerName+' .legendLabel a').show();
+		});
+
+		$(this.containerName).bind('mouseout', {me: this}, function(event) {
+			$(event.data.me.containerName+' .legendLabel a').hide();
 		});
     }
 

@@ -38,6 +38,11 @@
 	padding-left: 1px;
 }
 
+.legendLabel a {
+	color: #f00202;
+	text-decoration: none;
+}
+
 .plot ul {
 	background: #fff;
 	list-style-type: none;
@@ -90,6 +95,10 @@
 
 .plot li.add {
 	background-image: url(images/brick_add.png);
+}
+
+.plot li.add.disabled {
+	background-image: url(images/brick_add_disabled.png);
 }
 
 .plot li.pan {
