@@ -13,17 +13,22 @@
 	<title>Grafieken test Stockplay</title>
 </head>
 <body>
-	<div id="plotTest" class="plot">
-		<div class="draw"></div>
-		<ul>
-			<li class="pan hand">Verplaats</li>
-			<li class="selection hand">Selectie</li>
-			<li class="last hand" onselectstart="return false">Vorige</li>
-			<li class="zoomIn hand" onselectstart="return false">Kleiner</li>
-			<li class="zoomOut hand" onselectstart="return false">Groter</li>
-			<li class="add hand">Toevoegen</li>
-			<li class="reset hand">Herstel</li>
-		</ul>
+	<div id="plotTestContainer" class="plot">
+		<div id="plotTest">
+			<div class="draw"></div>
+			<ul>
+				<li class="pan hand">Verplaats</li>
+				<li class="selection hand">Selectie</li>
+				<li class="last hand" onselectstart="return false">Vorige</li>
+				<li class="zoomIn hand" onselectstart="return false">Kleiner</li>
+				<li class="zoomOut hand" onselectstart="return false">Groter</li>
+				<li class="add hand">Toevoegen</li>
+				<li class="reset hand">Herstel</li>
+			</ul>
+		</div>
+		<div id="volumes">
+		</div>
 	</div>
+
 </body>
 </html>

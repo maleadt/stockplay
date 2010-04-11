@@ -1,70 +1,31 @@
-var Flot = function(container, from, to) {
-	this.init(container, from, to);
-}
+var primaryPlot = function() {};
+var subPlot = function() {};
+var plot = function() {};
 
-$.extend(Flot.prototype, {
+$.extend(plot.prototype, {
 
 	init: function(container, from, to) {
-		this.containerName = container;
-		this.container = $(container+' div');
+		this.containerName = '#'+container;
+		this.container = $(this.containerName+' div');
 		this.data = this.getData(from, to);
 		this.options = new Options();
 		this.draw();
 		this.setView(this.plot.getAxes().xaxis.min, this.plot.getAxes().xaxis.max); // dubbel tekenen vervangen door from en max functie
 		this.draw();
-		this.addEvents();
-		this.lastView = [this.plot.getAxes().xaxis.min, this.plot.getAxes().xaxis.max];
-		this.history = new Array();
-		this.noLines = 1;
+		this._init();
 	},
 
 	getData: function(from, to) {
 		return this.getDummyData(from, to);
 	},
-	
-	getDummyData: function(from, to) {
-		//alert("punten opvragen");
-		//var d = [];
-		//for (var i = 0; i <= 250; ++i) {
-		//	var x = from + i * (to - from) / 500;
-		//	d.push([x*10000000, (Math.sin(x+4)+2)*25]);
-		//}
 
-		return [
-			{ label: "Beursverloop Tomtom", data: d2, color: 'lightblue', lines: { fill: true }, id: 0 }
-		];
-	},
-
-	addLine: function(from, to, ref) {
-		this.data.push({label: "Beursverloop Ordina", data: d3, color: 'red', id: 1});
-		this.draw();
-		this.setView(this.plot.getAxes().xaxis.min, this.plot.getAxes().xaxis.max); // dubbel tekenen vervangen door from en max functie
-		this.draw();
-	},
-	
 	draw: function() {
 		this.plot = $.plot(this.container, this.data, this.options);
 		this.addTemporyEvents();
 	},
 
-	addTemporyEvents: function() {
-		$(this.containerName+' .legendLabel a').bind('click', {me: this}, function(event) {
-			var me = event.data.me;
-			var href = event.srcElement.href;
-			me.data.splice(href.substring(href.length-1),1);
-			me.draw();
-			$(me.containerName+' li.add').removeClass('disabled');
-			me.noLines--;
-			return false;
-		});
-	},
+	addTemporyEvents: function() {},
 
-	pushHistory: function() {
-		this.history.push(this.lastView);
-		this.lastView = [this.plot.getAxes().xaxis.min, this.plot.getAxes().xaxis.max];
-		$(this.containerName+' li.last, '+this.containerName+' li.reset').removeClass('disabled');
-	},
-	
     getMinMax: function(from, to) {
     	var min, max, data;
 		for (line in this.data) {
@@ -88,8 +49,57 @@ $.extend(Flot.prototype, {
 		this.options.setXRange(from, to);
 		var range = this.getMinMax(from, to);
 		this.options.setYRange(range[0], range[1]);
-    },
-    
+    }
+
+});
+
+$.extend(subPlot.prototype, {
+
+	_init: function(container, from, to) {
+	}
+
+});
+
+$.extend(primaryPlot.prototype, {
+
+	init: function(container, from, to) {
+		this.addEvents();
+		this.lastView = [this.plot.getAxes().xaxis.min, this.plot.getAxes().xaxis.max];
+		this.history = new Array();
+		this.noLines = 1;
+	},
+
+	getDummyData: function(from, to) {
+		return [
+			{ label: "Beursverloop Tomtom", data: d2, color: 'lightblue', lines: { fill: true }, id: 0 }
+		];
+	},
+
+	addLine: function(from, to, ref) {
+		this.data.push({label: "Beursverloop Ordina", data: d3, color: 'red', id: 1});
+		this.draw();
+		this.setView(this.plot.getAxes().xaxis.min, this.plot.getAxes().xaxis.max); // dubbel tekenen vervangen door from en max functie
+		this.draw();
+	},
+	
+	addTemporyEvents: function() {
+		$(this.containerName+' .legendLabel a').bind('click', {me: this}, function(event) {
+			var me = event.data.me;
+			var href = event.srcElement.href;
+			me.data.splice(href.substring(href.length-1),1);
+			me.draw();
+			$(me.containerName+' li.add').removeClass('disabled');
+			me.noLines--;
+			return false;
+		});
+	},
+
+	pushHistory: function() {
+		this.history.push(this.lastView);
+		this.lastView = [this.plot.getAxes().xaxis.min, this.plot.getAxes().xaxis.max];
+		$(this.containerName+' li.last, '+this.containerName+' li.reset').removeClass('disabled');
+	},
+	
     addEvents: function() {
     
 		this.container.bind('plotzoom', {me: this}, function (event, plot) {
@@ -194,6 +204,19 @@ $.extend(Flot.prototype, {
 
 });
 
+var PrimaryPlot = function(container, from, to) {
+	this.init(container, from, to);
+}
+
+var SubPlot = function(container, from, to) {
+	this.init(container, from, to);
+}
+
+$.extend(true, PrimaryPlot, plot, primaryPlot);
+$.extend(true, SubPlot, plot, subPlot);
+
 $(function (){
-	var flot1 = new Flot('#plotTest', 2, 11);
+	new PrimaryPlot('plotTest', 2, 11);
+	new SubPlot('volumes', 2, 11);
+	//new PrimaryPlot('plotTwee', 2, 11);
 });

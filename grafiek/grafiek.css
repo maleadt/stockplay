@@ -5,22 +5,30 @@
 	padding: 0;
 }
 
+#plotTestContainer {
+	width: 560px;
+}
+
+#plotTest div.draw {
+	height: 200px;
+}
+
+#volumes {
+	height: 50px;
+}
+
+#plotTwee {
+	width: 560px;
+}
+
 .plot {
 	font: 60% Arial, Verdana, sans-serif;
 	color: #5A5A5A;
 }
 
-#plotTest {
-	width: 560px;
-}
-
 .plot {
 	padding: 23px 14px 34px 22px;
 	background: url(images/plot.gif) no-repeat top left;
-}
-
-.plot .draw {
-	height: 250px;
 }
 
 .tickLabel {
@@ -50,7 +58,7 @@
 	float: right;
 	position: relative;
 	padding: 0 0.4em;
-	top: -238px;
+	top: -188px;
 	right: 12px;
 	display: none;
 	font-size: 1.0em;
