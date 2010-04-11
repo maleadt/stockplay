@@ -10,6 +10,7 @@ using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using System.Xml.Linq;
+using System.Net.Mail;
 
 public partial class Register : System.Web.UI.Page
 {
@@ -24,5 +25,18 @@ public partial class Register : System.Web.UI.Page
         user.Lastname =  ((TextBox) CreateUser1.CreateUserStep.ContentTemplateContainer.FindControl("txtLastname")).Text;
         user.Firstname =  ((TextBox) CreateUser1.CreateUserStep.ContentTemplateContainer.FindControl("txtFirstname")).Text;
         Membership.UpdateUser(user);
+
+        //Welkomemail versturen met logingegevens
+        MailMessage message = new MailMessage();
+
+        message.From = new MailAddress(ConfigurationManager.AppSettings["EMAIL_ADDRESS"], "Stockplay Team");
+        message.To.Add(new MailAddress(user.Email, user.Lastname + " " + user.Firstname));
+
+        message.Subject = "Your StockPlay account has been registered";
+        message.Body = "Dear " + user.Lastname + " " + user.Firstname + ",\nWelcome to StockPlay, your account is now registered!\nYou can use the "
+                        + "following information to log in to your account:\nNickname: " + user.UserName + "\nPassword: TODO\n\nGreetings,\nthe Stockplay team.";
+
+        SmtpClient client = new SmtpClient();
+        client.Send(message);
     }
 }
