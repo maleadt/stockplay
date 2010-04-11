@@ -11,9 +11,15 @@ import java.beans.PropertyChangeSupport;
  *
  * @author Thijs
  */
-public class Security {
+public class Security implements Cloneable {
 
-    public Security(String symbol, Exchange exchange, String name, boolean visible, boolean suspended) {
+    public static enum Fields {
+
+        ISIN, SYMBOL, NAME, EXCHANGE, VISIBLE, SUSPENDED
+    }
+
+    public Security(String isin, String symbol, Exchange exchange, String name, boolean visible, boolean suspended) {
+        this.ISIN = isin;
         this.symbol = symbol;
         this.exchange = exchange;
         this.name = name;
@@ -21,7 +27,8 @@ public class Security {
         this.suspended = suspended;
     }
 
-    public Security(String symbol, Exchange exchange) {
+    public Security(String isin, String symbol, Exchange exchange) {
+        this.ISIN = isin;
         this.symbol = symbol;
         this.exchange = exchange;
     }
@@ -37,18 +44,17 @@ public class Security {
     void setDirty(boolean dirty) {
         this.dirty = dirty;
     }
+        protected String ISIN;
 
+    /**
+     * Get the value of ISIN
+     *
+     * @return the value of ISIN
+     */
+    public String getISIN() {
+        return ISIN;
+    }
 
-//        protected String ISIN;
-//
-//    /**
-//     * Get the value of ISIN
-//     *
-//     * @return the value of ISIN
-//     */
-//    public String getISIN() {
-//        return ISIN;
-//    }
     protected String symbol;
 
     /**
@@ -69,6 +75,13 @@ public class Security {
     public Exchange getExchange() {
         return exchange;
     }
+
+    public void setExchange(Exchange exchange) {
+        this.exchange = exchange;
+    }
+
+
+
     protected String name;
     public static final String PROP_NAME = "name";
 
@@ -158,13 +171,17 @@ public class Security {
         dirty = true;
     }
 
-
     public enum SecurityType {
+
         Stock,
         Fund,
-        Tracker
-    }
+        Tracker;
 
+        @Override
+        public String toString() {
+            return super.toString();
+        }
+    }
     protected SecurityType type = SecurityType.Stock;
     public static final String PROP_TYPE = "type";
 
@@ -186,8 +203,60 @@ public class Security {
         SecurityType oldType = this.type;
         this.type = type;
         propertyChangeSupport.firePropertyChange(PROP_TYPE, oldType, type);
-        dirty=true;
+        dirty = true;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Security other = (Security) obj;
+        if ((this.ISIN == null) ? (other.ISIN != null) : !this.ISIN.equals(other.ISIN)) {
+            return false;
+        }
+        if ((this.symbol == null) ? (other.symbol != null) : !this.symbol.equals(other.symbol)) {
+            return false;
+        }
+        if (this.exchange != other.exchange && (this.exchange == null || !this.exchange.equals(other.exchange))) {
+            return false;
+        }
+        if ((this.name == null) ? (other.name != null) : !this.name.equals(other.name)) {
+            return false;
+        }
+        if (this.visible != other.visible) {
+            return false;
+        }
+        if (this.suspended != other.suspended) {
+            return false;
+        }
+        if (this.type != other.type && (this.type == null || !this.type.equals(other.type))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 41 * hash + (this.ISIN != null ? this.ISIN.hashCode() : 0);
+        hash = 41 * hash + (this.symbol != null ? this.symbol.hashCode() : 0);
+        hash = 41 * hash + (this.exchange != null ? this.exchange.hashCode() : 0);
+        hash = 41 * hash + (this.name != null ? this.name.hashCode() : 0);
+        hash = 41 * hash + (this.visible ? 1 : 0);
+        hash = 41 * hash + (this.suspended ? 1 : 0);
+        hash = 41 * hash + (this.type != null ? this.type.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 
 
+    
 }

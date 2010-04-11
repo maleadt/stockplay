@@ -4,12 +4,18 @@
  */
 package com.kapti.administration;
 
+import com.kapti.administration.bo.finance.Exchange;
+import com.kapti.administration.bo.finance.FinanceFactory;
+import com.kapti.exceptions.StockPlayException;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeListener;
+import java.util.Collection;
 import org.jdesktop.swingx.*;
 import org.jdesktop.swingx.JXLoginPane.Status;
 import org.jdesktop.swingx.JXTaskPane;
@@ -20,9 +26,9 @@ import org.jdesktop.swingx.auth.UserNameStore;
  *
  * @author Thijs
  */
-public class MainFrame extends JFrame implements ActionListener, PropertyChangeListener {
+public class MainFrame extends JFrame {
 
-    private JXTaskPane statusMenuPane, securitiesMenuPane, usersMenuPane;
+
     /**
      * Panel dat gebruikt wordt als ouder voor het main panel
      */
@@ -132,7 +138,7 @@ public class MainFrame extends JFrame implements ActionListener, PropertyChangeL
 
 
 
-        add(getMenu(), BorderLayout.WEST);
+        add(new Menu(this), BorderLayout.WEST);
 
         mainParentPanel.setLayout(new BorderLayout());
         add(mainParentPanel, BorderLayout.CENTER);
@@ -150,161 +156,11 @@ public class MainFrame extends JFrame implements ActionListener, PropertyChangeL
         mainParentPanel.repaint();
     }
 
-    private JXTaskPaneContainer getMenu() {
-        JXTaskPaneContainer menuContainer = new JXTaskPaneContainer();
-
-        /////////////////
-        // Status-menu //
-        /////////////////
-        statusMenuPane = new JXTaskPane();
-        statusMenuPane.setTitle("Status");
-        statusMenuPane.setIcon(createImageIcon("images/cog.png"));
-        statusMenuPane.addPropertyChangeListener("collapsed", this);
-
-        statusMenuPane.add(createMenuitem("Componenten", MenuitemAction.StatusOverview, "server", Font.BOLD));
-
-        statusMenuPane.add(createMenuitem("Scraper", MenuitemAction.StatusOverview, "world"));
-        statusMenuPane.add(createMenuitem("Database", MenuitemAction.StatusOverview, "database"));
-        statusMenuPane.add(createMenuitem("Webserver", MenuitemAction.StatusOverview, "server"));
-        statusMenuPane.add(createMenuitem("AI", MenuitemAction.StatusOverview, "ai"));
-
-        statusMenuPane.add(new Box.Filler(new Dimension(0, 20), new Dimension(0, 20), new Dimension(0, 30)));
-
-        statusMenuPane.add(createMenuitem("Status", MenuitemAction.StatusOverview, "chart_bar", Font.BOLD));
-        menuContainer.add(statusMenuPane);
-
-        /////////////////////////
-        // Effectenbeheer-menu //
-        /////////////////////////
-
-        securitiesMenuPane = new JXTaskPane();
-        securitiesMenuPane.setTitle("Effectenbeheer");
-        securitiesMenuPane.setIcon(createImageIcon("images/money.png"));
-        securitiesMenuPane.setCollapsed(true);
-        securitiesMenuPane.addPropertyChangeListener("collapsed", this);
-
-        securitiesMenuPane.add(createMenuitem("Beurzen", MenuitemAction.SecuritiesList, "money", Font.BOLD));
-
-        String[] exchanges = new String[]{"Euronext Brussel", "Euronext Amsterdam", "Euronext Paris", "NYSE", "Nasdaq"};
-        for (String exch : exchanges) {
-            securitiesMenuPane.add(createMenuitem(exch, MenuitemAction.SecuritiesList, "money_euro"));
-        }
-
-        securitiesMenuPane.add(new Box.Filler(new Dimension(0, 20), new Dimension(0, 20), new Dimension(0, 30)));
-        securitiesMenuPane.add(createMenuitem("Indexen", MenuitemAction.SecuritiesList, "money", Font.BOLD));
-
-        String[] indexes = new String[]{"Bel20", "AMS30", "CAC40", "Dow Jones"};
-        for (String index : indexes) {
-            securitiesMenuPane.add(createMenuitem(index, MenuitemAction.SecuritiesList, "money_dollar"));
-        }
-
-        menuContainer.add(securitiesMenuPane);
-
-        ///////////////////////////
-        // Gebruikersbeheer-menu //
-        ///////////////////////////
-
-        usersMenuPane = new JXTaskPane();
-        usersMenuPane.setTitle("Gebruikersbeheer");
-        usersMenuPane.setIcon(createImageIcon("images/user.png"));
-        usersMenuPane.setCollapsed(true);
-        usersMenuPane.addPropertyChangeListener("collapsed", this);
-
-        usersMenuPane.add(createMenuitem("Overzicht", MenuitemAction.UsersList, "folder_user", Font.BOLD));
-
-        usersMenuPane.add(new Box.Filler(new Dimension(0, 20), new Dimension(0, 20), new Dimension(0, 30)));
-        usersMenuPane.add(createMenuitem("Alfabetisch zoeken", MenuitemAction.UsersList, "folder_user", Font.BOLD));
-        usersMenuPane.add(createMenuitem("A-E", MenuitemAction.UsersList, "group"));
-        usersMenuPane.add(createMenuitem("F-J", MenuitemAction.UsersList, "group"));
-        usersMenuPane.add(createMenuitem("K-O", MenuitemAction.UsersList, "group"));
-        usersMenuPane.add(createMenuitem("P-S", MenuitemAction.UsersList, "group"));
-        usersMenuPane.add(createMenuitem("T-Z", MenuitemAction.UsersList, "group"));
-
-        usersMenuPane.add(new Box.Filler(new Dimension(0, 20), new Dimension(0, 20), new Dimension(0, 30)));
-        usersMenuPane.add(createMenuitem("Zoeken op registratiedatum", MenuitemAction.UsersList, "folder_user", Font.BOLD));
-        usersMenuPane.add(createMenuitem("Vandaag", MenuitemAction.UsersList, "group"));
-        usersMenuPane.add(createMenuitem("Afgelopen week", MenuitemAction.UsersList, "group"));
-        usersMenuPane.add(createMenuitem("Afgelopen maand", MenuitemAction.UsersList, "group"));
-        usersMenuPane.add(createMenuitem("Afgelopen jaar", MenuitemAction.UsersList, "group"));
-        menuContainer.add(usersMenuPane);
-
-
-
-
-        return menuContainer;
+    public JPanel getMainPanel() {
+        return mainParentPanel;
     }
 
-    public void propertyChange(PropertyChangeEvent evt) {
-        if (evt.getNewValue().equals(false)) {
-            if (evt.getSource().equals(statusMenuPane)) {
-                setMainPanel(StatusOverviewPanel.getInstance());
-            } else {
 
-                statusMenuPane.setCollapsed(true);
-            }
-            if (evt.getSource().equals(securitiesMenuPane)) {
-                setMainPanel(SecuritiesListPanel.getInstance());
-            } else {
-                securitiesMenuPane.setCollapsed(true);
-            }
-            if (!evt.getSource().equals(usersMenuPane)) {
-                usersMenuPane.setCollapsed(true);
-            }
-        }
-    }
 
-    private enum MenuitemAction {
-
-        StatusOverview,
-        SecuritiesList,
-        UsersList
-    };
-
-    private JComponent createMenuitem(String name, MenuitemAction action, String iconname) {
-        return createMenuitem(name, action, iconname, Font.PLAIN);
-    }
-
-    private JComponent createMenuitem(String name, MenuitemAction action, String iconname, int fontstyle) {
-
-        JXHyperlink link = new JXHyperlink();
-        link.setText(name);
-        link.setClickedColor(link.getUnclickedColor()); //voorkomen dat link van kleur verandert
-        if (fontstyle != Font.PLAIN) {
-            link.setFont(link.getFont().deriveFont(fontstyle));
-        }
-        link.setActionCommand(action.toString());
-        if (iconname != null) {
-            link.setIcon(createImageIcon("images/" + iconname + ".png"));
-        }
-        link.addActionListener(this);
-
-        return link;
-    }
-
-    public void actionPerformed(ActionEvent e) {
-
-        MenuitemAction action = MenuitemAction.valueOf(e.getActionCommand());
-        if (action.equals(MenuitemAction.StatusOverview)) {
-            setMainPanel(StatusOverviewPanel.getInstance());
-        } else if (action.equals(MenuitemAction.SecuritiesList)) {
-            setMainPanel(SecuritiesListPanel.getInstance());
-        } else if (action.equals(MenuitemAction.UsersList)) {
-            setMainPanel(null);
-        }
-    }
-
-    /**
-     * Geeft een ImageIcon terug als de link valide was, anders null
-     * @param path
-     * @return
-     */
-    protected ImageIcon createImageIcon(String path) {
-        java.net.URL imgURL = getClass().getResource(path);
-        if (imgURL != null) {
-            return new ImageIcon(imgURL);
-        } else {
-            System.err.println("Couldn't find file: " + path);
-            return null;
-        }
-    }
+ 
 }

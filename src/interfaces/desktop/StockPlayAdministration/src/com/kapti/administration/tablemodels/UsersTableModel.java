@@ -7,7 +7,7 @@ import javax.swing.table.AbstractTableModel;
  *
  * @author Dieter
  */
-public class GebruikersTableModel extends AbstractTableModel {
+public class UsersTableModel extends AbstractTableModel {
 
     private final static String[] kolomTitels = {"Gebruikersnaam", "Registratiedatum", "Laatste activiteit", "E-mail"};
     private final static Class[] kolomTypes = {String.class, Date.class, Date.class, String.class};

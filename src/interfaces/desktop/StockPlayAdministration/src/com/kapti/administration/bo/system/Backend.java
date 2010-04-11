@@ -6,14 +6,14 @@ package com.kapti.administration.bo.system;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Enumeration;
-import java.util.logging.Level;
 import java.util.Hashtable;
-import java.util.logging.Logger;
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
 import com.kapti.administration.bo.XmlRpcClientFactory;
 import com.kapti.exceptions.StockPlayException;
+import java.util.HashMap;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -21,6 +21,7 @@ import com.kapti.exceptions.StockPlayException;
  */
 public class Backend {
 
+    static Logger logger = Logger.getLogger(Backend.class);
     public Date latestStatsRequest = null;
     private int onlineUsers;
     private int processedRequests;
@@ -50,35 +51,37 @@ public class Backend {
             }
 
         } catch (XmlRpcException ex) {
-            Logger.getLogger(Backend.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error("Error while fetching backend status", ex);
             return BackendStatus.UNKNOWN;
         }
     }
 
-    private boolean updateStats() throws StockPlayException {
-        try {
-            XmlRpcClient client = XmlRpcClientFactory.getXmlRpcClient();
-            Object result = client.execute("System.Backend.Stats", new Object[]{});
+    private boolean updateStats() {
+        //enkel opvragen als statistieken ouder dan een seconde zijn
+        if (latestStatsRequest == null || Calendar.getInstance().getTime().getTime() - latestStatsRequest.getTime() > 1000) {
 
-            if (result instanceof Hashtable) {
-                Hashtable ht = (Hashtable) result;
+            try {
+                XmlRpcClient client = XmlRpcClientFactory.getXmlRpcClient();
+                Object result = client.execute("System.Backend.Stats", new Object[]{});
+
+                HashMap ht = (HashMap) result;
 
                 //users ophalen
-                Object users = ht.get("users");
-                if(users != null)
-                    onlineUsers = (Integer) users;
-                else
-                    throw new StockPlayException("");
+                onlineUsers = (Integer) ht.get("users");
                 processedRequests = (Integer) ht.get("req");
-                uptime = (Long) ht.get("uptime");
+                uptime = Long.parseLong((String) ht.get("uptime"));
 
+                latestStatsRequest = Calendar.getInstance().getTime();
                 return true;
-            } else
-                return false;
 
-        } catch (XmlRpcException ex) {
-            Logger.getLogger(Backend.class.getName()).log(Level.SEVERE, null, ex);
-            return false;
+            } catch (Exception ex) {
+                logger.error("Error while fetching statistics", ex);
+                return false;
+            }
+        } else {
+            return true;
+
+
         }
 
     }
@@ -88,11 +91,10 @@ public class Backend {
      * @return
      */
     public int getOnlineUsers() {
+        updateStats();
+        return onlineUsers;
 
-        //enkel opvragen als statistieken ouder dan een seconde zijn
-        if (latestStatsRequest == null || Calendar.getInstance().getTime().getTime() - latestStatsRequest.getTime() > 1000) {
-        }
-        return 0;
+
     }
 
     /**
@@ -100,7 +102,10 @@ public class Backend {
      * @return
      */
     public int getProcessedRequests() {
-        return 0;
+        updateStats();
+        return processedRequests;
+
+
     }
 
     /**
@@ -108,6 +113,8 @@ public class Backend {
      * @return
      */
     public long getUptime() {
-        return 0;
+        updateStats();
+        return uptime;
+
     }
 }

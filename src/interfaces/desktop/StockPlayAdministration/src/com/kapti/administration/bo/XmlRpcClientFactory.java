@@ -6,8 +6,7 @@ package com.kapti.administration.bo;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
 
@@ -17,18 +16,21 @@ import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
  */
 public class XmlRpcClientFactory {
 
+    static Logger logger = Logger.getLogger(XmlRpcClientFactory.class);
+
     public static XmlRpcClient getXmlRpcClient() {
         try {
             XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
-            config.setServerURL(new URL("http://127.0.0.1:8080/xmlrpc"));
+            config.setServerURL(new URL("http://localhost:8080/backend/public"));
             XmlRpcClient client = new XmlRpcClient();
-           
+
             client.setConfig(config);
 
 
             return client;
         } catch (MalformedURLException ex) {
-            Logger.getLogger(XmlRpcClientFactory.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error("Error while creating XML-RPC-client", ex);
+      
             return null;
         }
 

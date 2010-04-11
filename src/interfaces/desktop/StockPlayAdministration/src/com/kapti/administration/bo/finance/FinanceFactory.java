@@ -27,18 +27,20 @@ public class FinanceFactory {
         ArrayList<Security> result = new ArrayList<Security>();
         try {
             XmlRpcClient client = XmlRpcClientFactory.getXmlRpcClient();
-            Object[] securities = (Object[]) client.execute("Finance.Security.List", new Object[]{});
+            Object[] securities = (Object[]) client.execute("Finance.Security.List", new Object[]{new String()});
 
             for (Object sec : securities) {
                 if (sec instanceof HashMap) {
 
                     HashMap security = (HashMap) sec;
 
-                    Security res = new Security((String) security.get("ID"),
-                            getExchange((String) security.get("EXCHANGE")),
-                            (String) security.get("NAME"),
-                            (Boolean) security.get("VISIBLE"),
-                            (Boolean) security.get("SUSPENDED"));
+                    Security res = new Security(
+                            (String) security.get(Security.Fields.ISIN.toString()),
+                            (String) security.get(Security.Fields.SYMBOL.toString()),
+                            getExchange((String) security.get(Security.Fields.EXCHANGE.toString())),
+                            (String) security.get(Security.Fields.NAME.toString()),
+                            (Boolean) security.get(Security.Fields.VISIBLE.toString()),
+                            (Boolean) security.get(Security.Fields.SUSPENDED.toString()));
 
                     result.add(res);
                 }
@@ -59,18 +61,15 @@ public class FinanceFactory {
             Object[] obj = (Object[]) client.execute("Finance.Exchange.List", new Object[]{});
 
             for (Object exch : obj) {
-                if (exch instanceof HashMap) {
 
-                    HashMap hashObj = (HashMap) exch;
+                HashMap hashObj = (HashMap) exch;
 
-                    Exchange res = new Exchange( (String) hashObj.get("ID"),
-                            (String) hashObj.get("NAME"),
-                            (String) hashObj.get("LOCATION"));
+                Exchange res = new Exchange((String) hashObj.get(Exchange.Fields.SYMBOL.toString()),
+                        (String) hashObj.get(Exchange.Fields.NAME.toString()),
+                        (String) hashObj.get(Exchange.Fields.LOCATION.toString()));
 
-                    exchanges.put(res.getSymbol(), res);
-                } else {
-                    throw new ErrorException("Expected Hashtable, but got an " + exch.getClass());
-                }
+                exchanges.put(res.getSymbol(), res);
+
             }
         } catch (XmlRpcException ex) {
             throw new RequestError(ex);
@@ -91,7 +90,7 @@ public class FinanceFactory {
         return exchanges.get(symbol);
     }
 
-    public void makePersistent(Exchange exch) throws XmlRpcException {
+    public boolean makePersistent(Exchange exch) throws XmlRpcException {
         //enkel als er veranderingen zijn moeten ze worden opgeslagen!
         if (exch.isDirty()) {
             XmlRpcClient client = XmlRpcClientFactory.getXmlRpcClient();
@@ -107,13 +106,19 @@ public class FinanceFactory {
             values.put("LOCATION", exch.getLocation());
             v.add(values);
 
-            client.execute("Finance.Exchange.Modify", v);
-            exch.setDirty(false);
+            Integer result = (Integer) client.execute("Finance.Exchange.Modify", v);
+            if (result == 1) {
+                exch.setDirty(false);
+                return true;
+            }
+            return false;
+
         }
+        return true;
     }
 
     // </editor-fold>
-    public void makePersistent(Security security) throws XmlRpcException {
+    public boolean makePersistent(Security security) throws XmlRpcException {
         //enkel als er veranderingen zijn moeten ze worden opgeslagen!
         if (security.isDirty()) {
             XmlRpcClient client = XmlRpcClientFactory.getXmlRpcClient();
@@ -121,7 +126,7 @@ public class FinanceFactory {
             Vector v = new Vector();
 
             //we maken de filter aan zodat enkel dit object wordt gewijzigd
-            v.add("symbol EQUALS " + security.getSymbol() + " AND exchange EQUALS " + security.getExchange().getSymbol());
+            v.add("isin EQUALS '" + security.getISIN() + "'");
 
             //we voegen nu de argumenten aan het bericht toe
             Hashtable values = new Hashtable();
@@ -130,24 +135,29 @@ public class FinanceFactory {
             values.put("SUSPENDED", security.isSuspended());
             v.add(values);
 
-            client.execute("Finance.Security.Modify", v);
-            security.setDirty(false);
+            Integer result = (Integer) client.execute("Finance.Security.Modify", v);
+            if (result == 1) {
+                security.setDirty(false);
+                return true;
+            }
+            return false;
+
         }
+        return true;
     }
     private ArrayList<Security> dummies = null;
-
-    public Collection<Security> getSecurityDummies() {
-        if (dummies == null) {
-            dummies = new ArrayList<Security>();
-
-            dummies.add(new Security("ABI", new Exchange("BSE", "Euronext Brussels", "Brussel"), "AB Inbev", true, false));
-            dummies.add(new Security("ACKB", new Exchange("BSE", "Euronext Brussels", "Brussel"), "Ackermans&vHaar.", true, false));
-            dummies.add(new Security("BEFB", new Exchange("BSE", "Euronext Brussels", "Brussel"), "Befimmo", true, false));
-            dummies.add(new Security("BEKB", new Exchange("BSE", "Euronext Brussels", "Brussel"), "Bekaert", true, false));
-
-        }
-        return dummies;
-    }
+//    public Collection<Security> getSecurityDummies() {
+//        if (dummies == null) {
+//            dummies = new ArrayList<Security>();
+//
+//            dummies.add(new Security("ABI", new Exchange("BSE", "Euronext Brussels", "Brussel"), "AB Inbev", true, false));
+//            dummies.add(new Security("ACKB", new Exchange("BSE", "Euronext Brussels", "Brussel"), "Ackermans&vHaar.", true, false));
+//            dummies.add(new Security("BEFB", new Exchange("BSE", "Euronext Brussels", "Brussel"), "Befimmo", true, false));
+//            dummies.add(new Security("BEKB", new Exchange("BSE", "Euronext Brussels", "Brussel"), "Bekaert", true, false));
+//
+//        }
+//        return dummies;
+//    }
 
     /*
     public Quote getLatestQuote(Security security){

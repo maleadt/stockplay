@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.kapti.administration.bo.finance;
 
 import com.kapti.administration.bo.XmlRpcClientFactory;
@@ -19,6 +18,10 @@ import org.apache.xmlrpc.client.XmlRpcClient;
  */
 public class Exchange {
 
+    public static enum Fields {
+
+        SYMBOL, NAME, LOCATION
+    }
     /**
      * Deze variabele geeft aan of de waarden van het object werden gewijzigd
      */
@@ -30,16 +33,13 @@ public class Exchange {
         this.location = location;
     }
 
-
-    boolean isDirty(){
+    boolean isDirty() {
         return dirty;
     }
 
     void setDirty(boolean dirty) {
         this.dirty = dirty;
     }
-
-
     protected String symbol;
 
     /**
@@ -50,7 +50,6 @@ public class Exchange {
     public String getSymbol() {
         return symbol;
     }
-
     protected String name;
     public static final String PROP_NAME = "name";
 
@@ -117,4 +116,43 @@ public class Exchange {
         dirty = true;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Exchange other = (Exchange) obj;
+        if ((this.symbol == null) ? (other.symbol != null) : !this.symbol.equals(other.symbol)) {
+            return false;
+        }
+        if ((this.name == null) ? (other.name != null) : !this.name.equals(other.name)) {
+            return false;
+        }
+        if ((this.location == null) ? (other.location != null) : !this.location.equals(other.location)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 83 * hash + (this.symbol != null ? this.symbol.hashCode() : 0);
+        hash = 83 * hash + (this.name != null ? this.name.hashCode() : 0);
+        hash = 83 * hash + (this.location != null ? this.location.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public String toString() {
+        return name;
+    }
+
+
+
+
+    
 }
