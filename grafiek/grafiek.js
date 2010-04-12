@@ -33,7 +33,7 @@ $.extend(plot.prototype, {
 	    	    		min = data[i][1];
 	    	    	}
 	        		if (data[i][1] > max)
-		    			max =  data[i][1]; // Zou het niet sneller zijn om enkel de index van het grooste element bij te houden?
+		    			max =  data[i][1];
 	        		if (data[i][1] < min)
 		    			min =  data[i][1];
 		    	}
@@ -73,7 +73,19 @@ $.extend(subPlot.prototype, {
 		return [
 			{ label: "Beursverloop Tomtom", data: d1, color: 'lightblue', bars: { show: true }, id: 0 }
 		];
-	}
+	},
+
+    setView: function(from, to) {
+		this.options.setXRange(from, to);
+		var range = this.getMinMax(from, to);
+		this.options.setYRange(0, range[1]);
+		var target;
+		for (t in this.plotListeners) {
+			target = this.plotListeners[t];
+			target.setView(from, to);
+			target.draw();
+		}
+    }	
 
 });
 
