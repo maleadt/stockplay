@@ -45,6 +45,6 @@ public class RelationAndConverter extends RelationAnd {
 
     @Override
     public Object process(Condition a, Condition b) throws FilterException {
-        return (String)a.compile() + " AND " + (String)b.compile();
+        return "(" + (String)a.compile() + ") AND (" + (String)b.compile() + ")";
     }
 }

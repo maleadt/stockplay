@@ -28,6 +28,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import org.apache.log4j.Logger;
 
 public class QuoteDAO implements com.kapti.data.persistence.QuoteDAO {
 
@@ -38,9 +39,9 @@ public class QuoteDAO implements com.kapti.data.persistence.QuoteDAO {
     private static final String INSERT_QUOTE = "INSERT INTO quotes(isin, timestamp, price, volume, bid, ask, low, high, open) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String UPDATE_QUOTE = "UPDATE quotes SET price = ?, volume ?, bid = ?, ask = ?, low = ?, high = ?, open ? WHERE isin = ? AND timestamp = ?";
     private static final String DELETE_QUOTE = "DELETE FROM quotes WHERE isin = ? AND timestamp = ?";
-    private static final String SELECT_LATEST_QUOTE = "SELECT price, volume, bid, ask, low, high, open, timestamp FROM quotes WHERE isin = ? AND timestamp =(select max(timestamp) from quotes WHERE isin= ? )";
-    private static final String SELECT_LATEST_QUOTE_FILTER = "SELECT isin, max(price) price, max(volume) volume, max(bid) bid, max(ask) ask, max(low) low, max(high) high, max(open) open, max(timestamp) timestamp "
-            + "FROM quotes q WHERE FILTER and timestamp = (select max(timestamp) from quotes where isin = q.isin ) GROUP BY isin";
+    private static final String SELECT_LATEST_QUOTE = "SELECT price, volume, bid, ask, low, high, open, timestamp FROM quotes WHERE isin = ? AND timestamp =(select max(timestamp) from quotes WHERE isin = ? )";
+    private static final String SELECT_LATEST_QUOTE_FILTER =    "SELECT  ISIN, TIMESTAMP, PRICE, VOLUME, BID, ASK, LOW, HIGH, OPEN"
+                                                                + " FROM ( SELECT  QUOTES.*, MAX(TIMESTAMP) OVER (PARTITION BY ISIN) AS MAX_TIMESTAMP FROM QUOTES ) WHERE TIMESTAMP = MAX_TIMESTAMP AND ( $filter )";
     private static QuoteDAO instance = new QuoteDAO();
 
     public static QuoteDAO getInstance() {
@@ -62,13 +63,13 @@ public class QuoteDAO implements com.kapti.data.persistence.QuoteDAO {
                 rs = stmt.executeQuery();
                 if (rs.next()) {
                     Quote tQuote = new Quote(pk.getIsin(), pk.getTime());
-                    tQuote.setPrice(rs.getDouble(1));
-                    tQuote.setVolume(rs.getInt(2));
-                    tQuote.setBid(rs.getDouble(3));
-                    tQuote.setAsk(rs.getDouble(4));
-                    tQuote.setLow(rs.getDouble(5));
-                    tQuote.setHigh(rs.getDouble(6));
-                    tQuote.setOpen(rs.getDouble(7));
+                    tQuote.setPrice(rs.getDouble("price"));
+                    tQuote.setVolume(rs.getInt("volume"));
+                    tQuote.setBid(rs.getDouble("bid"));
+                    tQuote.setAsk(rs.getDouble("ask"));
+                    tQuote.setLow(rs.getDouble("low"));
+                    tQuote.setHigh(rs.getDouble("high"));
+                    tQuote.setOpen(rs.getDouble("open"));
                     return tQuote;
                 } else {
                     return null;//throw new NonexistentEntityException("There is no quote with isin '" + pk.getSecurity() + "' and timestamp '" + pk.getTime() + "'");
@@ -104,14 +105,14 @@ public class QuoteDAO implements com.kapti.data.persistence.QuoteDAO {
                 rs = stmt.executeQuery();
                 ArrayList<Quote> list = new ArrayList<Quote>();
                 while (rs.next()) {
-                    Quote tQuote = new Quote(rs.getString(1), rs.getDate(2));
-                    tQuote.setPrice(rs.getDouble(3));
-                    tQuote.setVolume(rs.getInt(4));
-                    tQuote.setBid(rs.getDouble(5));
-                    tQuote.setAsk(rs.getDouble(6));
-                    tQuote.setLow(rs.getDouble(7));
-                    tQuote.setHigh(rs.getDouble(8));
-                    tQuote.setOpen(rs.getDouble(9));
+                    Quote tQuote = new Quote(rs.getString("isin"), rs.getDate("time"));
+                    tQuote.setPrice(rs.getDouble("price"));
+                    tQuote.setVolume(rs.getInt("volume"));
+                    tQuote.setBid(rs.getDouble("bid"));
+                    tQuote.setAsk(rs.getDouble("ask"));
+                    tQuote.setLow(rs.getDouble("low"));
+                    tQuote.setHigh(rs.getDouble("high"));
+                    tQuote.setOpen(rs.getDouble("open"));
                     list.add(tQuote);
                 }
                 return list;
@@ -188,14 +189,14 @@ public class QuoteDAO implements com.kapti.data.persistence.QuoteDAO {
                 rs = stmt.executeQuery();
                 ArrayList<Quote> list = new ArrayList<Quote>();
                 while (rs.next()) {
-                    Quote tQuote = new Quote(rs.getString(1), rs.getDate(2));
-                    tQuote.setPrice(rs.getDouble(3));
-                    tQuote.setVolume(rs.getInt(4));
-                    tQuote.setBid(rs.getDouble(5));
-                    tQuote.setAsk(rs.getDouble(6));
-                    tQuote.setLow(rs.getDouble(7));
-                    tQuote.setHigh(rs.getDouble(8));
-                    tQuote.setOpen(rs.getDouble(9));
+                    Quote tQuote = new Quote(rs.getString("isin"), rs.getDate("time"));
+                    tQuote.setPrice(rs.getDouble("price"));
+                    tQuote.setVolume(rs.getInt("volume"));
+                    tQuote.setBid(rs.getDouble("bid"));
+                    tQuote.setAsk(rs.getDouble("ask"));
+                    tQuote.setLow(rs.getDouble("low"));
+                    tQuote.setHigh(rs.getDouble("high"));
+                    tQuote.setOpen(rs.getDouble("open"));
                     list.add(tQuote);
                 }
                 return list;
@@ -442,14 +443,14 @@ public class QuoteDAO implements com.kapti.data.persistence.QuoteDAO {
 
                 rs = stmt.executeQuery();
                 if (rs.next()) {
-                    Quote tQuote = new Quote(isin, rs.getDate(8));
-                    tQuote.setPrice(rs.getDouble(1));
-                    tQuote.setVolume(rs.getInt(2));
-                    tQuote.setBid(rs.getDouble(3));
-                    tQuote.setAsk(rs.getDouble(4));
-                    tQuote.setLow(rs.getDouble(5));
-                    tQuote.setHigh(rs.getDouble(6));
-                    tQuote.setOpen(rs.getDouble(7));
+                    Quote tQuote = new Quote(isin, rs.getDate("time"));
+                    tQuote.setPrice(rs.getDouble("price"));
+                    tQuote.setVolume(rs.getInt("volume"));
+                    tQuote.setBid(rs.getDouble("bid"));
+                    tQuote.setAsk(rs.getDouble("ask"));
+                    tQuote.setLow(rs.getDouble("low"));
+                    tQuote.setHigh(rs.getDouble("high"));
+                    tQuote.setOpen(rs.getDouble("open"));
                     return tQuote;
                 } else {
                     return null;
@@ -482,8 +483,7 @@ public class QuoteDAO implements com.kapti.data.persistence.QuoteDAO {
         try {
             try {
                 conn = OracleConnection.getConnection();
-                stmt = conn.prepareStatement(SELECT_LATEST_QUOTE_FILTER.replace("FILTER", (String) iFilter.compile()));
-
+                stmt = conn.prepareStatement(SELECT_LATEST_QUOTE_FILTER.replace("$filter", (String) iFilter.compile()));
 
                 rs = stmt.executeQuery();
 
