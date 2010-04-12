@@ -36,6 +36,7 @@ import org.apache.xmlrpc.server.PropertyHandlerMapping;
 import org.apache.xmlrpc.server.XmlRpcHandlerMapping;
 import org.apache.xmlrpc.server.XmlRpcServerConfigImpl;
 import org.apache.xmlrpc.webserver.XmlRpcServlet;
+import org.apache.xmlrpc.webserver.XmlRpcServletServer;
 
 /**
  * \brief XML-RPC servletimplementatie.
@@ -82,6 +83,17 @@ public class Servlet extends XmlRpcServlet {
         XmlRpcServerConfigImpl config = new XmlRpcServerConfigImpl();
         config.setEnabledForExtensions(true);
         getXmlRpcServletServer().setConfig(config);
+    }
+
+    /**
+     * Door deze methode te overschrijven kunnen we een eigen XmlRpcServer
+     * gebruiken.
+     */
+    @Override
+    protected XmlRpcServletServer newXmlRpcServer(ServletConfig iConfig) throws XmlRpcException {
+        // Configuratie wordt niet gebruikt?
+        XmlRpcServletServer oServer = new ServletServer();
+        return oServer;
     }
 
 
