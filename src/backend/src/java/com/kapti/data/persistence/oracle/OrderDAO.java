@@ -35,7 +35,7 @@ public class OrderDAO implements GenericDAO<Order, Integer> {
     private static final String SELECT_ORDER = "SELECT userid, isin, limit, amount, type, status, creationtime, expirationtime, executiontime FROM orders WHERE id = ?";
     private static final String SELECT_ORDERS_FILTER = "SELECT id, userid, isin, limit, amount, type, status, creationtime, expirationtime, executiontime FROM orders "
             + "WHERE id LIKE ? AND userid LIKE ? AND isin LIKE ? AND limit LIKE ? AND amount LIKE ? AND type LIKE ? AND status LIKE ? AND crationtime LIKE ? AND expirationtime LIKE ? AND executiontime LIKE ?";
-    private static final String SELECT_ORDERS = "SELECT id, userid, isin, limit, amount, type, status, creationtime, expirationtime, executiontime FROM orders";
+    private static final String SELECT_ORDERS = "SELECT id, userid, isin, limit, amount, type, status, creationtime, expirationtime, executiontime FROM orders WHERE ((status <> 'CANCELLED') or (status='CANCELLED' and  sysdate-creationtime < NUMTODSINTERVAL(7, 'day')))";
     private static final String INSERT_ORDER = "INSERT INTO orders(id, userid, isin, limit, amount, type, status, creationtime, expirationtime, executiontime) VALUES(orderid_seq.nextval, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String UPDATE_ORDER = "UPDATE orders SET userid = ?, isin = ?, limit = ?, amount = ?, type = ?, status = ?, creationtime = ?, expirationtime = ?, executiontime = ? WHERE id = ?";
     private static final String DELETE_ORDER = "DELETE FROM orders WHERE id = ?";
@@ -104,7 +104,7 @@ public class OrderDAO implements GenericDAO<Order, Integer> {
         try {
             try {
                 conn = OracleConnection.getConnection();
-                stmt = conn.prepareStatement(SELECT_ORDERS + " WHERE " + (String)iFilter.compile());
+                stmt = conn.prepareStatement(SELECT_ORDERS + " AND " + (String)iFilter.compile());
 
                 rs = stmt.executeQuery();
                 ArrayList<Order> list = new ArrayList<Order>();
