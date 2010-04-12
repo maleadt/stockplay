@@ -28,6 +28,7 @@ use StockPlay::Exchange;
 use StockPlay::Index;
 use StockPlay::Security;
 use StockPlay::Quote;
+use DateTime::Format::ISO8601;
 
 # Write nicely
 use strict;
@@ -125,6 +126,17 @@ sub buildExchanges {
 		push(@{$exchange->securities}, @securities);
 	}
 	
+	# Get all the latest quotes
+	foreach my $exchange (@exchanges) {
+		my @quotes = $self->getQuotes($exchange->securities);
+		foreach my $quote (@quotes) {
+			my $security = grep { $_->isin eq $quote->security } $exchange->securities;
+			if (defined $security) {
+				$security->quote($quote);
+			}
+		}
+	}
+	
 	return @exchanges;
 }
 
@@ -174,7 +186,7 @@ sub getIndexes {
 sub getSecurities {
 	my ($self, $exchange) = @_;
 	
-	# Request securities from server
+	# Request securities from the server
 	my @s_securities = @{$self->xmlrpc->send_request(
 		'Finance.Security.List',
 		"exchange EQUALS '" . $exchange->symbol . "'"
@@ -192,6 +204,40 @@ sub getSecurities {
 	}
 	
 	return @securities;	
+}
+
+sub getQuotes {
+	my ($self, @securities) = @_;
+	
+	# Build a filter
+	my @conditions = map { "isin EQUALS '" . $_->isin . "'" } @securities;
+	my $filter = shift @conditions;
+	map { $filter = "$_ OR ( $filter )" } @conditions;
+	
+	# Request quotes from the server
+	my @s_quotes = @{$self->xmlrpc->send_request(
+		'Finance.Security.LatestQuotes',
+		$filter
+	)->value};
+	
+	# Build StockPlay::Quote objects
+	my @quotes;
+	foreach my $s_quote (@s_quotes) {
+		my $quote = new StockPlay::Quote(
+			security	=> $s_quote->{ISIN},
+			time		=> DateTime::Format::ISO8601->parse_datetime($s_quote->{TIME}),
+			volume		=> $s_quote->{VOLUME},
+			price		=> $s_quote->{PRICE},
+			bid 		=> $s_quote->{BID},
+			ask		=> $s_quote->{ASK},
+			low		=> $s_quote->{LOW},
+			high		=> $s_quote->{HIGH},
+			open		=> $s_quote->{OPEN}
+		);
+		push(@quotes, $quote);
+	}
+	
+	return @quotes;
 }
 
 sub createQuotes {

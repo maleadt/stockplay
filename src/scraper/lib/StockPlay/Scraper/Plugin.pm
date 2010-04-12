@@ -110,6 +110,17 @@ sub clean {
 	return 1;
 }
 
+=pod
+
+=head2 C<$plugin->isOpen($exchange, $datetime)>
+
+This method which should be implemented by subclasses, is used to check whether
+a certain exchange is open.
+
+=cut
+
+requires 'isOpen';
+
 ################################################################################
 # Auxiliary
 #

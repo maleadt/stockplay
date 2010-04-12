@@ -70,7 +70,8 @@ has 'delay' => (
 
 has 'fetchtime' => (	# TODO: as private
 	is		=> 'rw',
-	isa		=> 'Int'
+	isa		=> 'Int',
+	default		=> 0
 );
 
 ################################################################################

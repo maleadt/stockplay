@@ -111,7 +111,17 @@ sub BUILD {
 				unless (grep { $_->isin eq $security->isin } @s_securities) {
 					$self->factory->createSecurity($exchange, $security);
 					push(@s_securities, $security);
-				}			
+				}	
+			}
+			
+			# Add the latest quotes
+			print "DEBUG: fetching quotes\n";
+			my @quotes = $self->factory->getQuotes(@{$exchange->securities});
+			foreach my $quote (@quotes) {
+				my $security = (grep { $_->isin eq $quote->security } @{$exchange->securities})[0];
+				if (defined $security) {
+					$security->quote($quote);
+				}				
 			}
 		}
 	}
@@ -130,6 +140,8 @@ sub run {
 			
 			# Check which plugins need to be updated
 			foreach my $exchange (@{$plugin->exchanges}) {
+				next unless $plugin->isOpen($exchange, DateTime->now());
+				
 				# Check if the delay has already passed
 				my @securities;
 				foreach my $security (@{$exchange->securities}) {
@@ -156,7 +168,7 @@ sub run {
 						next;
 					}
 					
-					if (not $security->has_quote or $security->quote->time != $quote->time) {
+					unless ($security->has_quote and DateTime->compare($security->quote->time, $quote->time) != 0) {
 						push (@quotes, $quote);
 						
 						# All quotes in a single quote fetch have the same delay time, also if some of

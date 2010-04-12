@@ -257,7 +257,7 @@ sub addSecurities {
 														
 							# Check if the security exists on the exchange
 							if ($items[0] ne $exchange->name) {
-								print "ERROR: $name mention on ", $items[0], ", but exchange of origin is ", $exchange->name, "\n";
+								print "ERROR: $name mentioned on ", $exchange->name, ", but exchange of origin is ", $items[0], "\n";
 								return 0;
 							}							
 							
@@ -347,6 +347,43 @@ sub getQuotes {
 	}
 	
 	return @quotes;
+}
+
+sub isOpen {
+	my ($self, $exchange, $datetime) = @_;
+	
+	if ($exchange->symbol eq "BSE") {
+		$datetime->set_time_zone($exchange->get("time_zone"));
+		
+		if ($datetime->day_of_week > 5) {
+			return 0;
+		}
+		
+		if ($datetime->hour < 9 || $datetime->hour > 18) {
+			return 0;
+		}
+		
+		return 1;
+	}
+	
+	elsif ($exchange->symbol eq "PA") {
+		$datetime->set_time_zone($exchange->get("time_zone"));
+		
+		if ($datetime->day_of_week > 5) {
+			return 0;
+		}
+		
+		if ($datetime->hour < 9 || $datetime->hour > 18) {
+			return 0;
+		}
+		
+		return 1;		
+	}
+	
+	else {
+		die("unknown exchange");
+	}
+	
 }
 
 
