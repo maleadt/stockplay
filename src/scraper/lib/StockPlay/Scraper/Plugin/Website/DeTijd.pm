@@ -121,7 +121,6 @@ sub addSecuritiesIndex {
 	my $page = 1;
 	while (1) {
 		# Fetch HTML
-		print "DEBUG: processing page $page\n";
 		my $res = $self->browser->get($url . "?p=$page") || die();
 
 		# Build a HTML tree
@@ -135,7 +134,7 @@ sub addSecuritiesIndex {
 				defined $_[0]->attr('class') && $_[0]->attr('class') =~ m{maintable};
 			}
 		);
-		die("Could not find main table") unless $table;
+		$self->logger->logdie("Could not find main table") unless $table;
 		
 		# Extract securities
 		$table->look_down(
@@ -162,7 +161,7 @@ sub addSecuritiesIndex {
 				}
 				
 				if (defined $site_id) {	
-					print "DEBUG: processing $name\n";
+					$self->logger->debug("processing $name");
 					foreach my $security (@{$exchange->securities}) {
 						if ($security->get('site_id') eq $site_id) {
 							push(@securities, $security);
@@ -171,7 +170,7 @@ sub addSecuritiesIndex {
 					}
 					
 					# TODO: maybe scan for others?
-					print "ERROR: could not find requested security on exchange\n";
+					$self->logger->logdie("could not find requested security on exchange");
 				}
 				return 0;
 			}
@@ -195,7 +194,6 @@ sub addSecurities {
 	my $page = 1;
 	while (1) {
 		# Fetch HTML
-		print "DEBUG: processing page $page\n";
 		my $res = $self->browser->get($url . "?p=$page") || die();
 
 		# Build a HTML tree
@@ -238,7 +236,7 @@ sub addSecurities {
 				
 				if (defined $site_id) {			
 					my ($symbol, $isin);
-					print "DEBUG: processing $name\n";
+					$self->logger->debug("processing $name");
 					my $res2 = $self->browser->get('http://www.tijd.be/beurzen/' . $site_id) || die();
 					my $tree2 = HTML::TreeBuilder->new();
 					$tree2->parse($res2->decoded_content);
@@ -257,7 +255,7 @@ sub addSecurities {
 														
 							# Check if the security exists on the exchange
 							if ($items[0] ne $exchange->name) {
-								print "ERROR: $name mentioned on ", $exchange->name, ", but exchange of origin is ", $items[0], "\n";
+								$self->logger->error("$name mentioned on " . $exchange->name . ", but exchange of origin is " . $items[0]);
 								return 0;
 							}							
 							
@@ -339,7 +337,8 @@ sub getQuotes {
 			$security->errors(0);
 		};
 		if ($@) {
-			print "ERROR: could not create a quote for ", $security->name, ": $@";
+			chomp $@;
+			$self->logger->warn("could not create a quote for " . $security->name . " ($@)");
 			$security->errors($security->errors + 1);
 			$security->wait($security->errors);
 		}

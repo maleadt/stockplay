@@ -30,6 +30,9 @@ use StockPlay::Security;
 use StockPlay::Quote;
 use DateTime::Format::ISO8601;
 
+# Roles
+with 'StockPlay::Logger';
+
 # Write nicely
 use strict;
 use warnings;
@@ -81,7 +84,8 @@ sub BUILD {
 		$self->xmlrpc->send_request('User.Hello', "perl_factory/0.1", 1);
 	};
 	if ($@) {
-		die("! Connection failed: $@");
+		chomp $@;
+		$self->logger->logdie("could not connect to backend ($@)");
 	}
 }
 
@@ -95,10 +99,10 @@ sub _build_xmlrpc {
 		$self->server,
 		error_handler	=> \&doError,
 		fault_handler	=> \&doFault
-	) or die("could not connect to backend ($!)");
+	) or $self->logger->logdie("could not connect to backend ($!)");
 
 	if ($xmlrpc->{__compress} eq "gzip") {
-		print "INFO: using gzip compression for requests and replies\n";
+		$self->logger->info("using Gzip-compression for requests and replies");
 		$xmlrpc->compress_requests(1);
 	}
 	
@@ -319,14 +323,16 @@ sub createSecurity {
 
 sub doError {
 	my $error = shift;
-	die("XML-RPC request failed at transport level ($error)\n");
+	chomp $error;
+	StockPlay::Logger->logger->logdie("XML-RPC request failed at transport level ($error)\n");
 }
 
 sub doFault {
 	my $fault = shift;
 	my $code = $fault->{faultCode}->value;
 	my $message = $fault->{faultString}->value;
-	die("XML-RPC request failed at XMLRPC level (code $code: $message)\n");
+	chomp $message;
+	StockPlay::Logger->logger->logdie("XML-RPC request failed at XMLRPC level (code $code: $message)\n");
 }
 
 # RPC::XML sends the invalid, but by-spec requested YYYY-MM-DD (...) format,

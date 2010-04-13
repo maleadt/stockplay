@@ -24,10 +24,11 @@ my $PLUGIN_MAX_AGE = 3600*24*7;
 # Main
 #
 
-print "* Loading scraper\n";
+my $logger = StockPlay::Logger->logger;
+$logger->info("bootstrapping scraper");
 
 # Plugin manager
-print "- Loading plugin manager\n";
+$logger->info("loading plugin maanger");
 my $pluginmanager = new StockPlay::Scraper::PluginManager;
 my @infohashes = $pluginmanager->get_group('StockPlay::Scraper::Plugin');
 
@@ -36,28 +37,28 @@ my $dumpfolder = $ENV{'HOME'} . '/dumps/';
 mkdir $dumpfolder unless (-d $dumpfolder);
 
 # Load plugins
-print "- Instantiating all plugins\n";
+$logger->info("instantiating all plugins");
 my @plugins;
 foreach my $infohash (@infohashes) {
-	print "  -> ", $infohash->{name}, "\n";
+	$logger->debug("processing " . $infohash->{name});
 	
 	# Manage a dump
 	my $plugin;
 	if (-f $dumpfolder . $infohash->{name} . '.dump') {
-		print "     loading from dump\n";
-		$plugin = retrieve($dumpfolder . $infohash->{name} . '.dump');
+		$logger->debug("loading from dump");
+		$plugin = retrieve($dumpfolder . $infohash->{name} . '.dump')
+			or $logger->logdie("could not load dump ($!)");
 		
 		if (time - $plugin->infohash->{time} > $PLUGIN_MAX_AGE) {
-			print "     loaded state out of date\n";			
+			$logger->debug("loaded dump out of date");			
 			$plugin = undef;
 		}
 	}
 	
 	# Instantiate a plugin, if neccesary
 	if (not defined $plugin) {
-		print "     instantiating\n";
+		$logger->debug("creating new dump");
 		$plugin = $pluginmanager->instantiate($infohash);
-		print "     dumping\n";
 		$plugin->clean();
 		store $plugin, $dumpfolder . $infohash->{name} . '.dump';
 	}
@@ -66,13 +67,13 @@ foreach my $infohash (@infohashes) {
 }
 
 # Load the factory
-print "- Loading factory\n";
+$logger->info("loading factory");
 my $factory = new StockPlay::Factory(
-	server	=> 'http://localhost:6800/backend/public',
+	server	=> 'http://be04.kapti.com:6800/backend/public',
 );
 
 # Load the daemon
-print "- Loading daemon\n";
+$logger->info("loading daemon");
 my $daemon = new StockPlay::Scraper::Daemon(
 	factory	=> $factory,
 	plugins	=> \@plugins

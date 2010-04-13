@@ -25,7 +25,10 @@ use StockPlay::Factory;
 use StockPlay::Exchange;
 use StockPlay::Index;
 use StockPlay::Security;
-use StockPlay::Quote;
+use StockPlay::Quote
+
+# Roles
+with 'StockPlay::Logger';
 
 # Write nicely
 use strict;
@@ -72,31 +75,30 @@ sub BUILD {
 	# Verify roles
 	for my $plugin (@{$self->plugins}) {
 		if (not $plugin->does('StockPlay::Scraper::Plugin')) {
-			die("passed plugin doesn't implement correct coles");
+			$self->logger->logdie("passed plugin doesn't implement correct coles");
 		}
 	}
 	
 	# Process all plugins
 	foreach my $plugin (@{$self->plugins}) {
-		print "DEBUG: checking database structure for plugin ", $plugin->infohash->{name}, "\n";
+		$self->logger->debug("checking database structure for plugin " . $plugin->infohash->{name});
 		
 		# Check exchanges
 		my @s_exchanges = $self->factory->getExchanges();
 		foreach my $exchange (@{$plugin->exchanges}) {
-			print "DEBUG: processing exchange ", $exchange->name, "\n";
+			$self->logger->debug("processing exchange " . $exchange->name);
 			
 			# Add the exchange
-			print "DEBUG: adding exchange ", $exchange->name, "\n";
+			$self->logger->debug("adding exchange " . $exchange->name);
 			unless (grep { $_->symbol eq $exchange->symbol } @s_exchanges) {
 				$self->factory->createExchange($exchange);
 				push(@s_exchanges, $exchange);
 			}
 			
 			# Add the indexes
-			print "DEBUG: processing indexes\n";
+			$self->logger->debug("processing indexes");
 			my @s_indexes = $self->factory->getIndexes($exchange);
 			foreach my $index (@{$exchange->indexes}) {
-				print "DEBUG: adding index ", $index->name, "\n";
 				unless (grep { $_->name eq $index->name } @s_indexes) {
 					$self->factory->createIndex($exchange, $index);
 					push(@s_indexes, $index);
@@ -104,10 +106,9 @@ sub BUILD {
 			}
 			
 			# Add the securities
-			print "DEBUG: processing securities\n";
+			$self->logger->debug("processing securities");
 			my @s_securities = $self->factory->getSecurities($exchange);
 			foreach my $security (@{$exchange->securities}) {
-				print "DEBUG: adding security ", $security->name, " (ISIN ", $security->isin, ")\n";
 				unless (grep { $_->isin eq $security->isin } @s_securities) {
 					$self->factory->createSecurity($exchange, $security);
 					push(@s_securities, $security);
@@ -115,7 +116,7 @@ sub BUILD {
 			}
 			
 			# Add the latest quotes
-			print "DEBUG: fetching quotes\n";
+			$self->logger->debug("fetching latest quotes");
 			my @quotes = $self->factory->getQuotes(@{$exchange->securities});
 			foreach my $quote (@quotes) {
 				my $security = (grep { $_->isin eq $quote->security } @{$exchange->securities})[0];
@@ -132,11 +133,10 @@ sub run {
 	
 	while (1) {
 		# Process all plugins
-		print "- Processing plugins\n";
 		my @quotes;
 		foreach my $plugin (@{$self->plugins}) {
 			my $pluginname = $plugin->infohash->{name};
-			print "  -> $pluginname\n";
+			$self->logger->debug("processing plugin $pluginname");
 			
 			# Check which plugins need to be updated
 			foreach my $exchange (@{$plugin->exchanges}) {
@@ -157,18 +157,18 @@ sub run {
 				}
 			
 				# Update them
-				print "     Fetching quotes for ", join(", ", map { $_->name } @securities ), "\n";
+				$self->logger->info("fetching " . scalar @securities . " quotes");
 				my @quotes_local = $plugin->getQuotes($exchange, @securities);
 				
 				# Save them (if no errors && updated)
 				foreach my $quote (@quotes_local) {
 					my $security = (grep { $_->isin eq $quote->security } @securities)[0];
 					if (not defined $security) {
-						print "ERROR: received not-requested quote for security ", $quote->security, "\n";
+						$self->logger->warn("received non-requested quote for security " . $quote->security);
 						next;
 					}
 					
-					unless ($security->has_quote and DateTime->compare($security->quote->time, $quote->time) != 0) {
+					if (not $security->has_quote or DateTime->compare($security->quote->time, $quote->time) != 0) {
 						push (@quotes, $quote);
 						
 						# All quotes in a single quote fetch have the same delay time, also if some of
@@ -191,7 +191,6 @@ sub run {
 		}
 			
 		# Check delays
-		print "- Checking delays\n";
 		my $delay = 60;
 		foreach my $quote (@quotes) {
 			if ($quote->delay - (time - $quote->fetchtime) < $delay) {
@@ -200,7 +199,7 @@ sub run {
 		}
 		
 		# Push the changes to the server
-		print "- Saving changes\n";
+		$self->logger->info("saving " . scalar @quotes . " quotes");
 		$self->factory->createQuotes(@quotes);
 		
 		# Wait
@@ -208,7 +207,7 @@ sub run {
 			$delay = 60;
 		}
 		$delay = int($delay);
-		print "  Waiting $delay seconds\n";
+		$self->logger->debug("sleeping $delay seconds");
 		sleep($delay);
 	}
 }

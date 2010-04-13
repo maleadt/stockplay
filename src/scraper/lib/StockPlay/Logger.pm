@@ -3,18 +3,18 @@
 #
 
 # Package definition
-package StockPlay::Scraper::Plugin;
+package StockPlay::Logger;
 
 =pod
 
 =head1 NAME
 
-StockPlay::Scraper::Plugin - StockPlay scraper base plugin
+StockPlay::Logger - StockPlay logger
 
 =head1 DESCRIPTION
 
-The C<StockPlay::Scraper::Plugin> package contains base functionality for all
-plugins.
+The C<StockPlay::Logger> package contains a base role for packages needing a
+logger.
 
 =head1 SYNPOSIS
 
@@ -22,13 +22,7 @@ plugins.
 
 # Packages
 use Moose::Role;
-use StockPlay::Exchange;
-use StockPlay::Index;
-use StockPlay::Security;
-use StockPlay::Quote;
-
-# Roles
-with 'StockPlay::Logger';
+use Log::Log4perl qw(get_logger);
 
 # Write nicely
 use strict;
@@ -51,27 +45,25 @@ so look there for more information.
 
 =cut
 
-has 'infohash' => (
-	is		=> 'ro',
-	isa		=> 'HashRef',
-	required	=> 1
-);
+BEGIN {
+	Log::Log4perl->init(\<<EOT);
+		log4perl.logger = DEBUG, screen, syslog
+		
+		# Syslog appender
+		log4perl.appender.syslog=Log::Dispatch::Syslog
+		log4perl.appender.syslog.Facility=user
+		log4perl.appender.syslog.ident=stockplay-scraper
+		log4perl.appender.syslog.layout=PatternLayout
+		log4perl.appender.syslog.layout.ConversionPattern=%c - %m%n
 
-=pod
 
-=head2 C<exchanges>
-
-This method returns an array containing all the exchanges the plugin can
-fetch.
-
-=cut
-
-has 'exchanges' => (
-	is		=> 'ro',
-	isa		=> 'ArrayRef[StockPlay::Exchange]',
-	builder		=> '_build_exchanges',
-	lazy		=> 1
-);
+		# Console appender
+		log4perl.appender.screen=Log::Log4perl::Appender::Screen
+		log4perl.appender.screen.layout=PatternLayout
+		log4perl.appender.screen.layout.ConversionPattern=%c - %m%n
+EOT
+	
+}
 
 
 ################################################################################
@@ -83,46 +75,14 @@ has 'exchanges' => (
 
 =cut
 
-sub BUILD {
+sub logger {
 	my ($self) = @_;
-	
-	# Build lazy-attributes
-	$self->exchanges;
+	if (ref $self) {
+		return get_logger(ref $self);
+	} else {
+		return get_logger((caller(0))[0] . " (static)");
+	}
 }
-
-=pod
-
-=head2 C<$plugin->getQuotes(@securities)>
-
-=cut
-
-requires 'getQuotes';
-
-=pod
-
-=head2 C<$plugin->clean()>
-
-This method prepares the object to be dumped. Subclasses can augment this
-method to remove certain attributes before performing a dump.
-
-=cut
-
-sub clean {
-	my ($self) = @_;
-	
-	return 1;
-}
-
-=pod
-
-=head2 C<$plugin->isOpen($exchange, $datetime)>
-
-This method which should be implemented by subclasses, is used to check whether
-a certain exchange is open.
-
-=cut
-
-requires 'isOpen';
 
 ################################################################################
 # Auxiliary

@@ -22,6 +22,9 @@ use Moose;
 use File::Find;
 use Carp;
 
+# Roles
+with 'StockPlay::Logger';
+
 # Write nicely
 use strict;
 use warnings;
@@ -62,7 +65,7 @@ sub _build_plugins {
 	
 	# Discover all plugins
 	my %plugins = discover('StockPlay::Scraper::Plugin')
-		or die("Error discovering logger plugins: $!");
+		or $self->logger->logdie("error discovering plugins: $!");
 	
 	# Process all plugins
 	my %plugins_usable;
@@ -76,7 +79,8 @@ sub _build_plugins {
 			$infohash{package} = $package;
 		};
 		if ($@) {
-			warn("Error loading plugin $package: $@");
+			chomp $@;
+			$self->logger->error("error loading plugin $package: $@");
 			next;
 		}
 		
@@ -89,13 +93,15 @@ sub _build_plugins {
 		my $status = do $file;
 		if (!$status) {
 			if ($@) {
-				warn("Error loading plugin $package: $@");
+				chomp $@;
+				$self->logger->error("error loading plugin $package ($@)");
 			}
 			elsif ($!) {
-				warn("Error loading plugin $package: $!");
+				chomp $!;
+				$self->logger->error("error loading plugin $package ($!)");
 			}
 			else {
-				warn("Error loading plugin $package: unknown failure");
+				$self->logger->error("error loading plugin $package (unknown failure)");
 			}
 			next;
 		}
@@ -128,8 +134,8 @@ sub get_plugin {
 		$_->{name} eq $name
 	} $self->get_group($base);
 	
-	croak("Given parameters matched multiple plugins") if (scalar @infohashes > 1);
-	croak("Given parameters didn't match any plugin") unless (scalar @infohashes);
+	$self->logger->logdie("given parameters matched multiple plugins") if (scalar @infohashes > 1);
+	$self->logger->logdie("given parameters didn't match any plugin") unless (scalar @infohashes);
 	
 	return $self->instantiate($infohashes[0], @params);
 }
@@ -203,7 +209,7 @@ sub discover {
 			last;
 		}
 	}
-	die("no inclusion directory matched plugin structure") unless defined $root;
+	StockPlay::Logger->logger->logdie("no inclusion directory matched plugin structure") unless defined $root;
 	
 	# Scan for Perl-modules
 	my %plugins;
@@ -243,7 +249,7 @@ sub parse {
 	my %info = (file => $file);
 	
 	# Open and read the file
-	open(my $read, '<', $file) or die("could not open potential plugin '$file' for parsing ($!)");
+	open(my $read, '<', $file) or StockPlay::Logger->logger->logdie("could not open potential plugin '$file' for parsing ($!)");
 	while (<$read>) {
 		if (m{^##\s*(.+?)\s*(=+)\s*(.*?)$}) {
 			my ($key, $value) = (lc($1), $3);
@@ -278,7 +284,7 @@ sub check_info {
 		not defined $hash{$_};
 	} @keys;
 	
-	die("missing plugin keys " . join(", ", @missing)) if (@missing);
+	StockPlay::Logger->logger->logdie("missing plugin keys " . join(", ", @missing)) if (@missing);
 	return 1;
 }
 
