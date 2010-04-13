@@ -69,9 +69,9 @@ public class OrderDAO implements GenericDAO<Order, Integer> {
                     o.setType(InstructionType.valueOf(rs.getString(5).toUpperCase()));
                     //status op 6
                     o.setStatus(OrderStatus.valueOf(rs.getString(6).toUpperCase()));
-                    o.setCreationTime(rs.getDate(7));
-                    o.setExpirationTime(rs.getDate(8));
-                    o.setExecutionTime(rs.getDate(9));
+                    o.setCreationTime(rs.getTimestamp(7));
+                    o.setExpirationTime(rs.getTimestamp(8));
+                    o.setExecutionTime(rs.getTimestamp(9));
 
 
                     return o;
@@ -116,9 +116,9 @@ public class OrderDAO implements GenericDAO<Order, Integer> {
                     o.setType(InstructionType.valueOf(rs.getString(6).toUpperCase()));
                     //status op 6
                     o.setStatus(OrderStatus.valueOf(rs.getString(7).toUpperCase()));
-                    o.setCreationTime(rs.getDate(8));
-                    o.setExpirationTime(rs.getDate(9));
-                    o.setExecutionTime(rs.getDate(10));
+                    o.setCreationTime(rs.getTimestamp(8));
+                    o.setExpirationTime(rs.getTimestamp(9));
+                    o.setExecutionTime(rs.getTimestamp(10));
 
                     list.add(o);
                 }
@@ -170,9 +170,9 @@ public class OrderDAO implements GenericDAO<Order, Integer> {
                     o.setType(InstructionType.valueOf(rs.getString(6).toUpperCase()));
                     //status op 6
                     o.setStatus(OrderStatus.valueOf(rs.getString(7).toUpperCase()));
-                    o.setCreationTime(rs.getDate(8));
-                    o.setExpirationTime(rs.getDate(9));
-                    o.setExecutionTime(rs.getDate(10));
+                    o.setCreationTime(rs.getTimestamp(8));
+                    o.setExpirationTime(rs.getTimestamp(9));
+                    o.setExecutionTime(rs.getTimestamp(10));
 
                     list.add(o);
 
@@ -213,9 +213,9 @@ public class OrderDAO implements GenericDAO<Order, Integer> {
                     o.setType(InstructionType.valueOf(rs.getString(6).toUpperCase()));
                     //status op 6
                     o.setStatus(OrderStatus.valueOf(rs.getString(7).toUpperCase()));
-                    o.setCreationTime(rs.getDate(8));
-                    o.setExpirationTime(rs.getDate(9));
-                    o.setExecutionTime(rs.getDate(10));
+                    o.setCreationTime(rs.getTimestamp(8));
+                    o.setExpirationTime(rs.getTimestamp(9));
+                    o.setExecutionTime(rs.getTimestamp(10));
 
                     list.add(o);
                 }

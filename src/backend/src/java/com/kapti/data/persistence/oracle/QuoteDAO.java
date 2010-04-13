@@ -105,7 +105,7 @@ public class QuoteDAO implements com.kapti.data.persistence.QuoteDAO {
                 rs = stmt.executeQuery();
                 ArrayList<Quote> list = new ArrayList<Quote>();
                 while (rs.next()) {
-                    Quote tQuote = new Quote(rs.getString("isin"), rs.getDate("time"));
+                    Quote tQuote = new Quote(rs.getString("isin"), rs.getTimestamp("time"));
                     tQuote.setPrice(rs.getDouble("price"));
                     tQuote.setVolume(rs.getInt("volume"));
                     tQuote.setBid(rs.getDouble("bid"));
@@ -189,7 +189,7 @@ public class QuoteDAO implements com.kapti.data.persistence.QuoteDAO {
                 rs = stmt.executeQuery();
                 ArrayList<Quote> list = new ArrayList<Quote>();
                 while (rs.next()) {
-                    Quote tQuote = new Quote(rs.getString("isin"), rs.getDate("time"));
+                    Quote tQuote = new Quote(rs.getString("isin"), rs.getTimestamp("time"));
                     tQuote.setPrice(rs.getDouble("price"));
                     tQuote.setVolume(rs.getInt("volume"));
                     tQuote.setBid(rs.getDouble("bid"));
@@ -228,7 +228,7 @@ public class QuoteDAO implements com.kapti.data.persistence.QuoteDAO {
                 rs = stmt.executeQuery();
                 ArrayList<Quote> list = new ArrayList<Quote>();
                 while (rs.next()) {
-                    Quote tQuote = new Quote(rs.getString(1), rs.getDate(2));
+                    Quote tQuote = new Quote(rs.getString(1), rs.getTimestamp(2));
                     tQuote.setPrice(rs.getDouble(3));
                     tQuote.setVolume(rs.getInt(4));
                     tQuote.setBid(rs.getDouble(5));
@@ -443,7 +443,7 @@ public class QuoteDAO implements com.kapti.data.persistence.QuoteDAO {
 
                 rs = stmt.executeQuery();
                 if (rs.next()) {
-                    Quote tQuote = new Quote(isin, rs.getDate("time"));
+                    Quote tQuote = new Quote(isin, rs.getTimestamp("time"));
                     tQuote.setPrice(rs.getDouble("price"));
                     tQuote.setVolume(rs.getInt("volume"));
                     tQuote.setBid(rs.getDouble("bid"));
@@ -489,7 +489,7 @@ public class QuoteDAO implements com.kapti.data.persistence.QuoteDAO {
 
                 ArrayList<Quote> result = new ArrayList<Quote>();
                 while (rs.next()) {
-                    Quote tQuote = new Quote(rs.getString("isin"), rs.getDate("timestamp"));
+                    Quote tQuote = new Quote(rs.getString("isin"), rs.getTimestamp("timestamp"));
                     tQuote.setPrice(rs.getDouble("price"));
                     tQuote.setVolume(rs.getInt("volume"));
                     tQuote.setBid(rs.getDouble("bid"));
