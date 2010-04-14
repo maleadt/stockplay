@@ -134,7 +134,7 @@ sub addSecuritiesIndex {
 				defined $_[0]->attr('class') && $_[0]->attr('class') =~ m{maintable};
 			}
 		);
-		$self->logger->logdie("Could not find main table") unless $table;
+		$self->logger->logdie("could not find main table") unless $table;
 		
 		# Extract securities
 		$table->look_down(
@@ -170,7 +170,7 @@ sub addSecuritiesIndex {
 					}
 					
 					# TODO: maybe scan for others?
-					$self->logger->logdie("could not find requested security on exchange");
+					$self->logger->warning("could not find requested security on exchange, you might want to check other exchanges");
 				}
 				return 0;
 			}
