@@ -61,8 +61,8 @@ public class SecurityDAOTest {
         Security security = new Security("BE0000000000", "TEST", "TESTSYMBL2");
         security.setName("Test");
         SecurityDAO instance = SecurityDAO.getInstance();
-        boolean expResult = true;
-        boolean result = instance.create(security);
+        int expResult = 1;
+        int result = instance.create(security);
         assertEquals(expResult, result);
 
     }

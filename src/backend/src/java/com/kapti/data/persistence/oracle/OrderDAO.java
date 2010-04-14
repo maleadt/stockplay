@@ -32,6 +32,7 @@ import java.util.Collection;
 
 public class OrderDAO implements GenericDAO<Order, Integer> {
 
+    private static final String SELECT_ORDER_LASTID = "select orderid_seq.currval from dual";
     private static final String SELECT_ORDER = "SELECT userid, isin, limit, amount, type, status, creationtime, expirationtime, executiontime FROM orders WHERE id = ?";
     private static final String SELECT_ORDERS_FILTER = "SELECT id, userid, isin, limit, amount, type, status, creationtime, expirationtime, executiontime FROM orders "
             + "WHERE id LIKE ? AND userid LIKE ? AND isin LIKE ? AND limit LIKE ? AND amount LIKE ? AND type LIKE ? AND status LIKE ? AND crationtime LIKE ? AND expirationtime LIKE ? AND executiontime LIKE ?";
@@ -140,60 +141,6 @@ public class OrderDAO implements GenericDAO<Order, Integer> {
 
     }
 
-    public Collection<Order> findByExample(Order example) throws StockPlayException {
-        Connection conn = null;
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        try {
-            try {
-                conn = OracleConnection.getConnection();
-                stmt = conn.prepareStatement(SELECT_ORDERS_FILTER);
-
-                stmt.setString(1, "%" + example.getId() + "%");
-                stmt.setString(2, "%" + example.getUser() + "%");
-                stmt.setString(3, "%" + example.getIsin() + "%");
-                stmt.setString(4, "%" + example.getPrice() + "%");
-                stmt.setString(5, "%" + example.getType() + "%");
-                stmt.setString(6, "%" + example.getStatus() + "%");
-                stmt.setString(7, "%" + example.getCreationTime() + "%");
-                stmt.setString(8, "%" + example.getExpirationTime() + "%");
-                stmt.setString(9, "%" + example.getExecutionTime() + "%");
-
-
-                rs = stmt.executeQuery();
-                ArrayList<Order> list = new ArrayList<Order>();
-                while (rs.next()) {
-                    Order o = new Order(rs.getInt(1), rs.getInt(2), rs.getString(3));
-                    o.setPrice(rs.getDouble(4));
-                    o.setAmount(rs.getInt(5));
-                    // type op 5
-                    o.setType(InstructionType.valueOf(rs.getString(6).toUpperCase()));
-                    //status op 6
-                    o.setStatus(OrderStatus.valueOf(rs.getString(7).toUpperCase()));
-                    o.setCreationTime(rs.getTimestamp(8));
-                    o.setExpirationTime(rs.getTimestamp(9));
-                    o.setExecutionTime(rs.getTimestamp(10));
-
-                    list.add(o);
-
-                }
-                return list;
-            } finally {
-                if (rs != null) {
-                    rs.close();
-                }
-                if (stmt != null) {
-                    stmt.close();
-                }
-                if (conn != null) {
-                    conn.close();
-                }
-            }
-        } catch (SQLException ex) {
-            throw new DBException(ex);
-        }
-    }
-
     public Collection<Order> findAll() throws StockPlayException {
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -242,9 +189,10 @@ public class OrderDAO implements GenericDAO<Order, Integer> {
      * @return 
      * @throws StockPlayException
      */
-    public boolean create(Order entity) throws StockPlayException {
+    public int create(Order entity) throws StockPlayException {
         Connection conn = null;
         PreparedStatement stmt = null;
+        PreparedStatement stmtID =null;
         ResultSet rs = null;
         try {
             try {
@@ -270,7 +218,18 @@ public class OrderDAO implements GenericDAO<Order, Integer> {
                     stmt.setNull(9, Types.TIMESTAMP);
                 }
 
-                return stmt.executeUpdate() == 1;
+                if(stmt.executeUpdate() == 1){
+                    stmtID = conn.prepareStatement(SELECT_ORDER_LASTID);
+
+                    rs = stmt.executeQuery();
+                    if(rs.next()){
+                        return rs.getInt(1);
+                    }else{
+                        return -1;
+                    }
+                }else{
+                    return -1;
+                }
 
 
             } finally {
@@ -279,6 +238,9 @@ public class OrderDAO implements GenericDAO<Order, Integer> {
                 }
                 if (stmt != null) {
                     stmt.close();
+                }
+                if(stmtID != null){
+                    stmtID.close();
                 }
                 if (conn != null) {
                     conn.close();

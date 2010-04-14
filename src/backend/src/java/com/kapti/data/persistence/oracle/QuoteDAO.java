@@ -133,90 +133,7 @@ public class QuoteDAO implements com.kapti.data.persistence.QuoteDAO {
 
     }
 
-    public Collection<Quote> findByExample(Quote example) throws StockPlayException {
-        Connection conn = null;
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        try {
-            try {
-                conn = OracleConnection.getConnection();
-                stmt = conn.prepareStatement(SELECT_QUOTE_FILTER);
-
-                stmt.setString(1, '%' + example.getIsin() + '%');
-                //stmt.setString(2, '%' + example.getTime().getTime() + '%');
-                if (example.getPrice() != 0.0) {
-                    stmt.setString(2, "%" + example.getPrice() + "%");
-                } else {
-                    stmt.setString(2, "%");
-                }
-
-                if (example.getVolume() != 0.0) {
-                    stmt.setString(3, "%" + example.getVolume() + "%");
-                } else {
-                    stmt.setString(3, "%");
-                }
-
-                if (example.getBid() != 0.0) {
-                    stmt.setString(4, "%" + example.getBid() + "%");
-                } else {
-                    stmt.setString(4, "%");
-                }
-
-                if (example.getAsk() != 0.0) {
-                    stmt.setString(5, "%" + example.getAsk() + "%");
-                } else {
-                    stmt.setString(5, "%");
-                }
-
-                if (example.getLow() != 0.0) {
-                    stmt.setString(6, "%" + example.getLow() + "%");
-                } else {
-                    stmt.setString(6, "%");
-                }
-
-                if (example.getHigh() != 0.0) {
-                    stmt.setString(7, "%" + example.getHigh() + "%");
-                } else {
-                    stmt.setString(7, "%");
-                }
-
-                if (example.getOpen() != 0.0) {
-                    stmt.setString(8, "%" + example.getHigh() + "%");
-                } else {
-                    stmt.setString(8, "%");
-                }
-
-                rs = stmt.executeQuery();
-                ArrayList<Quote> list = new ArrayList<Quote>();
-                while (rs.next()) {
-                    Quote tQuote = new Quote(rs.getString("isin"), rs.getTimestamp("time"));
-                    tQuote.setPrice(rs.getDouble("price"));
-                    tQuote.setVolume(rs.getInt("volume"));
-                    tQuote.setBid(rs.getDouble("bid"));
-                    tQuote.setAsk(rs.getDouble("ask"));
-                    tQuote.setLow(rs.getDouble("low"));
-                    tQuote.setHigh(rs.getDouble("high"));
-                    tQuote.setOpen(rs.getDouble("open"));
-                    list.add(tQuote);
-                }
-                return list;
-            } finally {
-                if (rs != null) {
-                    rs.close();
-                }
-                if (stmt != null) {
-                    stmt.close();
-                }
-                if (conn != null) {
-                    conn.close();
-                }
-            }
-        } catch (SQLException ex) {
-            throw new DBException(ex);
-        }
-    }
-
-    public Collection<Quote> findAll() throws StockPlayException {
+     public Collection<Quote> findAll() throws StockPlayException {
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -261,7 +178,7 @@ public class QuoteDAO implements com.kapti.data.persistence.QuoteDAO {
      * @return 
      * @throws StockPlayException
      */
-    public boolean create(Quote entity) throws StockPlayException {
+    public int create(Quote entity) throws StockPlayException {
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -280,7 +197,7 @@ public class QuoteDAO implements com.kapti.data.persistence.QuoteDAO {
                 stmt.setDouble(8, entity.getHigh());
                 stmt.setDouble(9, entity.getOpen());
 
-                return stmt.executeUpdate() == 1;
+                return stmt.executeUpdate();
 
 
             } finally {

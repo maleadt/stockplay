@@ -57,7 +57,7 @@ public class BackendHandler extends MethodClass {
         Hashtable<String, Object> oStats = new Hashtable<String, Object>();
         oStats.put("users", 5);
         oStats.put("req", ServletServer.getRequests());
-        oStats.put("uptime", Servlet.getUptime());
+        oStats.put("uptime", Long.toString(Servlet.getUptime()));
         return oStats;
     }
 }

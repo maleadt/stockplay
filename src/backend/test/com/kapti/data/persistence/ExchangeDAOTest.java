@@ -49,8 +49,8 @@ public class ExchangeDAOTest {
         entity.setName("Test exchange");
         entity.setLocation("Nowhere");
         ExchangeDAO instance = ExchangeDAO.getInstance();
-        boolean expResult = true;
-        boolean result = instance.create(entity);
+        int expResult = 1;
+        int result = instance.create(entity);
         assertEquals(expResult, result);
     }
 

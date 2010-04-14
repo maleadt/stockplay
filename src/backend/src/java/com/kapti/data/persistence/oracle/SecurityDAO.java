@@ -119,48 +119,6 @@ public class SecurityDAO implements com.kapti.data.persistence.SecurityDAO {
 
     }
 
-    public Collection<Security> findByExample(Security example) throws StockPlayException {
-        Connection conn = null;
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        try {
-            try {
-                conn = OracleConnection.getConnection();
-                stmt = conn.prepareStatement(SELECT_SECURITIES_FILTER);
-
-                stmt.setString(1, '%'+example.getIsin() +'%');
-                stmt.setString(2, '%' + example.getSymbol() + '%');
-                stmt.setString(3, '%' + example.getName() + '%');
-                stmt.setString(4, '%' + example.getExchange() + '%');
-                stmt.setBoolean(5, example.isVisible());
-                stmt.setBoolean(6, example.isSuspended());
-
-                rs = stmt.executeQuery();
-                ArrayList<Security> list = new ArrayList<Security>();
-                while (rs.next()) {
-                    Security tSecurity = new Security(rs.getString(1), rs.getString(2), rs.getString(4));
-                    tSecurity.setName(rs.getString(3));
-                    tSecurity.setVisible(rs.getBoolean(5));
-                    tSecurity.setSuspended(rs.getBoolean(6));
-                    list.add(tSecurity);
-                }
-                return list;
-            } finally {
-                if (rs != null) {
-                    rs.close();
-                }
-                if (stmt != null) {
-                    stmt.close();
-                }
-                if (conn != null) {
-                    conn.close();
-                }
-            }
-        } catch (SQLException ex) {
-            throw new DBException(ex);
-        }
-    }
-
     public Collection<Security> findAll() throws StockPlayException {
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -202,7 +160,7 @@ public class SecurityDAO implements com.kapti.data.persistence.SecurityDAO {
      * @return 
      * @throws StockPlayException
      */
-    public boolean create(Security security) throws StockPlayException {
+    public int create(Security security) throws StockPlayException {
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -218,7 +176,7 @@ public class SecurityDAO implements com.kapti.data.persistence.SecurityDAO {
                 }
                 stmt.setBoolean(5, security.isVisible());
                 stmt.setBoolean(6, security.isSuspended());
-                return stmt.executeUpdate() == 1;
+                return stmt.executeUpdate();
             } finally {
                 if (rs != null) {
                     rs.close();

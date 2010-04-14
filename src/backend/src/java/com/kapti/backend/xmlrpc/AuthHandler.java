@@ -58,6 +58,7 @@ public class AuthHandler implements AuthenticationHandler {
         String tUsername = config.getBasicUserName();
         String tPassword = config.getBasicPassword();
 
+        String tMethod = pRequest.getMethodName();
         // Verifieer ze
         return true;
     }

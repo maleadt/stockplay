@@ -155,7 +155,7 @@ public class Servlet extends XmlRpcServlet {
      * 
      * @return
      */
-    public static double getUptime() {
-        return (double)(((new Date()).getTime() - mDateStart.getTime())/1000.0);
+    public static long getUptime() {
+        return (long)(((new Date()).getTime() - mDateStart.getTime())/1000.0);
     }
 }

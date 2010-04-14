@@ -69,9 +69,8 @@ public class OrderHandler extends MethodClass {
         Order tOrder = Order.fromStruct(iDetails);
 
         tOrder.applyStruct(iDetails);
-        orDAO.create(tOrder);
+        return orDAO.create(tOrder);
 
-        return 1;
     }
     
     public int Cancel(String iFilter) throws StockPlayException {

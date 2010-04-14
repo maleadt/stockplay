@@ -74,9 +74,13 @@ public class User {
     //
     // Methods
     //
-    public void setPassword(String password) {
+    public void setEncryptedPassword(String password) {
 
         this.password = password;
+    }
+
+    public void setPassword(String password){
+        this.password = encryptPassword(password);
     }
 
     public String getPassword() {
@@ -107,7 +111,6 @@ public class User {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             digest.reset();
             digest.update(salt.getBytes());
-
             return byteArrayToHexString(digest.digest(password.getBytes()));
         } catch (IOException ex) {
             Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
@@ -253,7 +256,7 @@ public class User {
 
             switch (tField) {
                 case PASSWORD:
-                    setPassword(encryptPassword((String)tValue));
+                    setPassword((String)tValue);
                     break;
                 case EMAIL:
                     setEmail((String) tValue);

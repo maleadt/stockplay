@@ -49,7 +49,7 @@ public class UserTest {
         String password = "test";
         User instance = new User("nick", "nick@domain.be", "last", "first", new Date());
 
-        instance.setPassword("test");
+        instance.setEncryptedPassword("test");
         boolean expResult = true;
         boolean result = instance.checkPassword(password);
         assertEquals(expResult, result);

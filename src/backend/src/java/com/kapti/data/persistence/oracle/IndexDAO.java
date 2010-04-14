@@ -32,6 +32,7 @@ import java.util.Collection;
 
 public class IndexDAO implements GenericDAO<Index, Integer> {
 
+    private static final String SELECT_INDEX_LASTID = "select indexid_seq.currval from dual";
     private static final String SELECT_INDEX = "SELECT name, exchange FROM indexes WHERE id = ?";
     private static final String SELECT_INDEXES_FILTER = "SELECT id, name, exchange FROM indexes WHERE id LIKE ?";
     private static final String SELECT_INDEXES = "SELECT id, name, exchange FROM indexes";
@@ -116,43 +117,6 @@ public class IndexDAO implements GenericDAO<Index, Integer> {
 
     }
 
-    public Collection<Index> findByExample(Index example) throws StockPlayException {
-        Connection conn = null;
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        try {
-            try {
-                conn = OracleConnection.getConnection();
-                stmt = conn.prepareStatement(SELECT_INDEXES_FILTER);
-
-                stmt.setString(1, "%" + example.getId() + "%");
-                stmt.setString(2, '%' + example.getName() + '%');
-                stmt.setString(3, '%' + example.getExchange() + '%');
-
-
-                rs = stmt.executeQuery();
-                ArrayList<Index> list = new ArrayList<Index>();
-                while (rs.next()) {
-                    Index tIndex = new Index(rs.getInt(1), rs.getString(2), rs.getString(3));
-                    list.add(tIndex);
-               }
-                return list;
-            } finally {
-                if (rs != null) {
-                    rs.close();
-                }
-                if (stmt != null) {
-                    stmt.close();
-                }
-                if (conn != null) {
-                    conn.close();
-                }
-            }
-        } catch (SQLException ex) {
-            throw new DBException(ex);
-        }
-    }
-
     public Collection<Index> findAll() throws StockPlayException {
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -191,9 +155,10 @@ public class IndexDAO implements GenericDAO<Index, Integer> {
      * @return 
      * @throws StockPlayException
      */
-    public boolean create(Index entity) throws StockPlayException {
+    public int create(Index entity) throws StockPlayException {
         Connection conn = null;
         PreparedStatement stmt = null;
+        PreparedStatement stmtID = null;
         ResultSet rs = null;
         try {
             try {
@@ -203,7 +168,19 @@ public class IndexDAO implements GenericDAO<Index, Integer> {
                 stmt.setString(1, entity.getName());
                 stmt.setString(2, entity.getExchange());
 
-                return stmt.executeUpdate() == 1;
+                if(stmt.executeUpdate() == 1){
+
+                    stmtID = conn.prepareStatement(SELECT_INDEX_LASTID);
+
+                    rs = stmt.executeQuery();
+                    if(rs.next()){
+                        return rs.getInt(1);
+                    }else{
+                        return -1;
+                    }
+                }else{
+                    return -1;
+                }
 
 
             } finally {
@@ -212,6 +189,9 @@ public class IndexDAO implements GenericDAO<Index, Integer> {
                 }
                 if (stmt != null) {
                     stmt.close();
+                }
+                if(stmtID != null){
+                    stmtID.close();
                 }
                 if (conn != null) {
                     conn.close();

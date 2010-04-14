@@ -121,61 +121,6 @@ public class UserSecurityDAO implements GenericDAO<UserSecurity, UserSecurityPK>
         }
 
     }
-
-    /**
-     * Zoekt alle users waarvan de velden lijken op (zoals in: LIKE in SQL) de ingegeven gegevens uit het voorbeeld.
-     * vb. Als in het example User-object de nickname "A" is ingevuld, worden alle users waarin hoofdletter A voorkomt teruggegeven
-     * @param example
-     * @return Collection met User-objecten.
-     * @throws StockPlayException Deze exceptie wordt opgeworpen als er een probleem is met de databaseconnectie, of met de query.
-     */
-    public Collection<UserSecurity> findByExample(UserSecurity example) throws StockPlayException {
-        Connection conn = null;
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        try {
-            try {
-                conn = OracleConnection.getConnection();
-                stmt = conn.prepareStatement(SELECT_USERSECURITIES_FILTER);
-
-                if (example.getPk().getUser() != 0) {
-                    stmt.setString(1, "%" + example.getPk().getUser() + "%");
-                } else {
-                    stmt.setString(1, "%%");
-                }
-
-                stmt.setString(2, '%' + example.getPk().getIsin() + '%');
-
-                if (example.getAmount() != 0) {
-                    stmt.setString(3, "%" + example.getAmount() + "%");
-                } else {
-                    stmt.setString(3, "%%");
-                }
-
-                rs = stmt.executeQuery();
-                ArrayList<UserSecurity> list = new ArrayList<UserSecurity>();
-                while (rs.next()) {
-                    UserSecurity tSecurity = new UserSecurity(rs.getInt(1), rs.getString(2));
-                    tSecurity.setAmount(rs.getInt(3));
-                    list.add(tSecurity);
-                }
-                return list;
-            } finally {
-                if (rs != null) {
-                    rs.close();
-                }
-                if (stmt != null) {
-                    stmt.close();
-                }
-                if (conn != null) {
-                    conn.close();
-                }
-            }
-        } catch (SQLException ex) {
-            throw new DBException(ex);
-        }
-    }
-
     /**
      * Geeft alle gebruikers in het systeem terug.
      * @return
@@ -220,7 +165,7 @@ public class UserSecurityDAO implements GenericDAO<UserSecurity, UserSecurityPK>
      * @return True als het invoegen gelukt is
      * @throws StockPlayException
      */
-    public boolean create(UserSecurity entity) throws StockPlayException {
+    public int create(UserSecurity entity) throws StockPlayException {
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -233,7 +178,7 @@ public class UserSecurityDAO implements GenericDAO<UserSecurity, UserSecurityPK>
                 stmt.setString(2, entity.getPk().getIsin());
                 stmt.setInt(3, entity.getAmount());
 
-                return stmt.executeUpdate() == 1;
+                return stmt.executeUpdate();
             } finally {
                 if (rs != null) {
                     rs.close();

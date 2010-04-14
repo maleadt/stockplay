@@ -109,8 +109,7 @@ public class IndexHandler extends MethodClass {
         Index tIndex = Index.fromStruct(iDetails);
 
         tIndex.applyStruct(iDetails);
-        tIndexDAO.create(tIndex);
+        return tIndexDAO.create(tIndex);
 
-        return 1;
     }
 }

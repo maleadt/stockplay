@@ -67,9 +67,8 @@ public class UserHandler extends MethodClass {
         tUser.setStartamount(100000); //TODO hier berekenen van het startamount
         tUser.setCash(100000);
 
-        tUserDAO.create(tUser);
+        return tUserDAO.create(tUser);
 
-        return 1;
     }
 
     public Vector<Hashtable<String, Object>> Details(String iFilter) throws StockPlayException {

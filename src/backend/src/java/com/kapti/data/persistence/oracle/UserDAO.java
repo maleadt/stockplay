@@ -32,6 +32,8 @@ import java.util.Collection;
 
 public class UserDAO implements GenericDAO<User, Integer> {
 
+
+    private static final String SELECT_USER_LASTID = "select indexid_seq.currval from dual";
     private static final String SELECT_USER = "SELECT nickname, password, email, lastname, firstname, is_admin, regtime, rrn, points, startamount, cash FROM users WHERE id = ?";
     private static final String SELECT_USERS_FILTER = "SELECT id, nickname, email, lastname, firstname, is_admin, regtime, rrn, points, startamount, cash "
             + "FROM users WHERE id LIKE ? AND nickname LIKE ? AND email LIKE ? AND lastname LIKE ? AND firstname LIKE ? AND is_admin LIKE ? AND regtime LIKE ? AND rrn LIKE ? AND points LIKE ? AND startamount LIKE ? AND cash LIKE ?";
@@ -63,7 +65,7 @@ public class UserDAO implements GenericDAO<User, Integer> {
                 rs = stmt.executeQuery();
                 if (rs.next()) {
                     User tUser = new User(id, rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(5), rs.getDate(7));
-                    tUser.setPassword(rs.getString(2));
+                    tUser.setEncryptedPassword(rs.getString(2));
                     tUser.setAdmin(rs.getBoolean(6));
                     tUser.setRijksregisternummer(rs.getLong(8));
                     tUser.setPoints(rs.getInt(9));
@@ -104,7 +106,7 @@ public class UserDAO implements GenericDAO<User, Integer> {
                 ArrayList<User> list = new ArrayList<User>();
                 while (rs.next()) {
                     User tUser = new User(rs.getInt(1), rs.getString(2), rs.getString(4), rs.getString(5), rs.getString(6), rs.getDate(8));
-                    tUser.setPassword(rs.getString(3));
+                    tUser.setEncryptedPassword(rs.getString(3));
                     tUser.setAdmin(rs.getBoolean(7));
                     tUser.setRijksregisternummer(rs.getLong(9));
                     tUser.setPoints(rs.getInt(10));
@@ -128,89 +130,6 @@ public class UserDAO implements GenericDAO<User, Integer> {
             throw new DBException(ex);
         }
 
-    }
-
-    /**
-     * Zoekt alle users waarvan de velden lijken op (zoals in: LIKE in SQL) de ingegeven gegevens uit het voorbeeld.
-     * vb. Als in het example User-object de nickname "A" is ingevuld, worden alle users waarin hoofdletter A voorkomt teruggegeven
-     * @param example
-     * @return Collection met User-objecten.
-     * @throws StockPlayException Deze exceptie wordt opgeworpen als er een probleem is met de databaseconnectie, of met de query.
-     */
-    public Collection<User> findByExample(User example) throws StockPlayException {
-        Connection conn = null;
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        try {
-            try {
-                conn = OracleConnection.getConnection();
-                stmt = conn.prepareStatement(SELECT_USERS_FILTER);
-
-                if (example.getId() != 0) {
-                    stmt.setString(1, "%" + example.getId() + "%");
-                } else {
-                    stmt.setString(1, "%%");
-                }
-
-                stmt.setString(2, '%' + example.getNickname() + '%');
-                stmt.setString(3, '%' + example.getEmail() + '%');
-                stmt.setString(4, '%' + example.getLastname() + '%');
-                stmt.setString(5, '%' + example.getFirstname() + '%');
-                stmt.setBoolean(6, example.isAdmin());
-                //stmt.setTimestamp(6, new Timestamp(example.getRegdate().getTime()));
-                stmt.setString(7, "%%"); //regtime
-
-                if (example.getRijksregisternummer() != 0) {
-                    stmt.setString(8, "%" + example.getRijksregisternummer() + "%");
-                } else {
-                    stmt.setString(9, "%%");
-                }
-
-                if (example.getPoints() != 0) {
-                    stmt.setString(9, "%" + example.getPoints() + "%");
-                } else {
-                    stmt.setString(9, "%%");
-                }
-
-                if (example.getStartamount() != 0.0) {
-                    stmt.setString(10, "%" + example.getStartamount() + "%");
-                } else {
-                    stmt.setString(10, "%%");
-                }
-
-                if (example.getCash() != 0.0) {
-                    stmt.setString(11, "%" + example.getCash() + "%");
-                } else {
-                    stmt.setString(11, "%%");
-                }
-
-                rs = stmt.executeQuery();
-                ArrayList<User> list = new ArrayList<User>();
-                while (rs.next()) {
-                    User tUser = new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(5), rs.getString(6), rs.getDate(8));
-                    tUser.setPassword(rs.getString(4));
-                    tUser.setAdmin(rs.getBoolean(7));
-                    tUser.setRijksregisternummer(rs.getLong(9));
-                    tUser.setPoints(rs.getInt(10));
-                    tUser.setStartamount(rs.getDouble(11));
-                    tUser.setCash(rs.getDouble(12));
-                    list.add(tUser);
-                }
-                return list;
-            } finally {
-                if (rs != null) {
-                    rs.close();
-                }
-                if (stmt != null) {
-                    stmt.close();
-                }
-                if (conn != null) {
-                    conn.close();
-                }
-            }
-        } catch (SQLException ex) {
-            throw new DBException(ex);
-        }
     }
 
     /**
@@ -230,8 +149,8 @@ public class UserDAO implements GenericDAO<User, Integer> {
                 rs = stmt.executeQuery();
                 ArrayList<User> list = new ArrayList<User>();
                 while (rs.next()) {
-                    User tUser = new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(5), rs.getString(6), rs.getDate(8));
-                    tUser.setPassword(rs.getString(4));
+                    User tUser = new User(rs.getInt(1), rs.getString(2), rs.getString(4), rs.getString(5), rs.getString(6), rs.getDate(8));
+                    tUser.setEncryptedPassword(rs.getString(3));
                     tUser.setAdmin(rs.getBoolean(7));
                     tUser.setRijksregisternummer(rs.getLong(9));
                     tUser.setPoints(rs.getInt(10));
@@ -262,10 +181,11 @@ public class UserDAO implements GenericDAO<User, Integer> {
      * @return True als het invoegen gelukt is
      * @throws StockPlayException
      */
-    public boolean create(User entity) throws StockPlayException {
+    public int create(User entity) throws StockPlayException {
         Connection conn = null;
         PreparedStatement stmt = null;
-
+        PreparedStatement stmtID = null;
+        ResultSet rs = null;
         try {
             try {
                 conn = OracleConnection.getConnection();
@@ -284,13 +204,30 @@ public class UserDAO implements GenericDAO<User, Integer> {
                 stmt.setDouble(10, entity.getStartamount());
                 stmt.setDouble(11, entity.getCash());
 
-                return stmt.executeUpdate() == 1;
+               if(stmt.executeUpdate() == 1){
+
+                    stmtID = conn.prepareStatement(SELECT_USER_LASTID);
+
+                    rs = stmt.executeQuery();
+                    if(rs.next()){
+                        return rs.getInt(1);
+                    }else{
+                        return -1;
+                    }
+                }else{
+                    return -1;
+                }
 
 
             } finally {
-
+                if(rs!= null){
+                    rs.close();
+                }
                 if (stmt != null) {
                     stmt.close();
+                }
+                if(stmtID != null){
+                    stmtID.close();
                 }
                 if (conn != null) {
                     conn.close();

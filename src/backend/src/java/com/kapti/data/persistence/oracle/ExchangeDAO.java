@@ -117,41 +117,6 @@ public class ExchangeDAO implements GenericDAO<Exchange, String> {
         }
     }
 
-    public Collection<Exchange> findByExample(Exchange example) throws StockPlayException {
-        Connection conn = null;
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        try {
-            try {
-                conn = OracleConnection.getConnection();
-                stmt = conn.prepareStatement(SELECT_EXCHANGES_FILTER);
-
-                stmt.setString(1, '%' + example.getSymbol() + '%');
-                stmt.setString(2, '%' + example.getName() + '%');
-                stmt.setString(3, '%' + example.getLocation() + '%');
-
-                rs = stmt.executeQuery();
-                ArrayList<Exchange> list = new ArrayList<Exchange>();
-                while (rs.next()) {
-                    Exchange tExchange = new Exchange(rs.getString(1));
-                    tExchange.setName(rs.getString(2));
-                    tExchange.setLocation(rs.getString(3));
-                    list.add(tExchange);
-                }
-                return list;
-            } finally {
-                if (rs != null)
-                    rs.close();
-                if (stmt != null)
-                    stmt.close();
-                if (conn != null)
-                    conn.close();
-            }
-        } catch (SQLException ex) {
-            throw new DBException(ex);
-        }
-    }
-
     public Collection<Exchange> findAll() throws StockPlayException {
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -183,7 +148,7 @@ public class ExchangeDAO implements GenericDAO<Exchange, String> {
         }
     }
 
-    public boolean create(Exchange entity) throws StockPlayException {
+    public int create(Exchange entity) throws StockPlayException {
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -196,7 +161,7 @@ public class ExchangeDAO implements GenericDAO<Exchange, String> {
                 stmt.setString(2, entity.getName());
                 stmt.setString(3, entity.getLocation());
 
-                return stmt.executeUpdate() == 1;
+                return stmt.executeUpdate();
 
             } finally {
                 if (rs != null) {

@@ -32,6 +32,8 @@ import java.util.Collection;
 
 public class TransactionDAO implements GenericDAO<Transaction, Integer> {
 
+
+    private static final String SELECT_TRANSACTION_LASTID = "select transactionid_seq.currval from dual";
     private static final String SELECT_TRANSACTION = "SELECT userid, timestamp, isin, type, amount, price FROM transactions WHERE id = ?";
     private static final String SELECT_TRANSACTIONS_FILTER = "SELECT id, userid, timestamp, isin, type, amount, price FROM transactions "
             + "WHERE id LIKE ? AND userid LIKE ? AND timestamp LIKE ? AND isin LIKE ? AND type LIKE ? AND amount LIKE ? AND price LIKE ?";
@@ -127,56 +129,7 @@ public class TransactionDAO implements GenericDAO<Transaction, Integer> {
 
     }
 
-    public Collection<Transaction> findByExample(Transaction example) throws StockPlayException {
-        Connection conn = null;
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        try {
-            try {
-                conn = OracleConnection.getConnection();
-                stmt = conn.prepareStatement(SELECT_TRANSACTIONS_FILTER);
-
-                stmt.setString(1, "%" + example.getId() + "%");
-                stmt.setString(2, "%" + example.getUser() + "%");
-                stmt.setString(3, "%" + example.getTime() + "%");
-                stmt.setString(4, "%" + example.getIsin() + "%");
-                stmt.setString(5, "%" + example.getType() + "%");
-                stmt.setString(6, "%" + example.getAmount() + "%");
-                stmt.setString(7, "%" + example.getPrice() + "%");
-
-                rs = stmt.executeQuery();
-                ArrayList<Transaction> list = new ArrayList<Transaction>();
-                while (rs.next()) {
-
-                    Transaction t = new Transaction(rs.getInt(1), rs.getInt(2), rs.getString(4));
-                    t.setUser(rs.getInt(2));
-                    t.setTime(new Date(rs.getTimestamp(3).getTime()));
-                    t.setIsin(rs.getString(4));
-                    t.setType(InstructionType.valueOf(rs.getString(5).toUpperCase()));
-                    t.setAmount(rs.getInt(6));
-                    t.setPrice(rs.getDouble(7));
-
-                    list.add(t);
-
-                }
-                return list;
-            } finally {
-                if (rs != null) {
-                    rs.close();
-                }
-                if (stmt != null) {
-                    stmt.close();
-                }
-                if (conn != null) {
-                    conn.close();
-                }
-            }
-        } catch (SQLException ex) {
-            throw new DBException(ex);
-        }
-    }
-
-    public Collection<Transaction> findAll() throws StockPlayException {
+     public Collection<Transaction> findAll() throws StockPlayException {
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -221,9 +174,10 @@ public class TransactionDAO implements GenericDAO<Transaction, Integer> {
      * @return 
      * @throws StockPlayException
      */
-    public boolean create(Transaction entity) throws StockPlayException {
+    public int create(Transaction entity) throws StockPlayException {
         Connection conn = null;
         PreparedStatement stmt = null;
+        PreparedStatement stmtID = null;
         ResultSet rs = null;
         try {
             try {
@@ -237,7 +191,19 @@ public class TransactionDAO implements GenericDAO<Transaction, Integer> {
                 stmt.setInt(5, entity.getAmount());
                 stmt.setDouble(6, entity.getPrice());
 
-                return stmt.executeUpdate() == 1;
+               if(stmt.executeUpdate() == 1){
+
+                    stmtID = conn.prepareStatement(SELECT_TRANSACTION_LASTID);
+
+                    rs = stmt.executeQuery();
+                    if(rs.next()){
+                        return rs.getInt(1);
+                    }else{
+                        return -1;
+                    }
+                }else{
+                    return -1;
+                }
 
 
             } finally {
@@ -246,6 +212,9 @@ public class TransactionDAO implements GenericDAO<Transaction, Integer> {
                 }
                 if (stmt != null) {
                     stmt.close();
+                }
+                if(stmtID != null){
+                    stmtID.close();
                 }
                 if (conn != null) {
                     conn.close();
