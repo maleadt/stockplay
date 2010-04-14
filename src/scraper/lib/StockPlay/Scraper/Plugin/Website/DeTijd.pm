@@ -170,7 +170,7 @@ sub addSecuritiesIndex {
 					}
 					
 					# TODO: maybe scan for others?
-					$self->logger->warning("could not find requested security on exchange, you might want to check other exchanges");
+					$self->logger->warn("could not find requested security on exchange, you might want to check other exchanges");
 				}
 				return 0;
 			}
