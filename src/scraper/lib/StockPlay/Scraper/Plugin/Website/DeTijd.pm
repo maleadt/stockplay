@@ -341,8 +341,7 @@ sub getQuotes {
 			$self->logger->warn("could not create a quote for " . $security->name . " ($@)");
 			$security->errors($security->errors + 1);
 			$security->wait($security->errors);
-		}
-		
+		}		
 	}
 	
 	return @quotes;

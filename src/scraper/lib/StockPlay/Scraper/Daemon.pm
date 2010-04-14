@@ -145,12 +145,12 @@ sub run {
 				# Check if the delay has already passed
 				my @securities;
 				foreach my $security (@{$exchange->securities}) {
-					# Don't update securities which error'd before					
+					# Don't update securities which error'd before			
 					if ($security->wait != 0) {
 						$security->wait($security->wait-1);
 						next;
 					}
-					
+
 					if (not $security->has_quote or (time-$security->quote->fetchtime) > $security->quote->delay) {
 						push(@securities, $security);
 					}
@@ -175,7 +175,7 @@ sub run {
 						# those aren't updated nearly that frequently. That's why we don't juse replace
 						# the delay with the new one, but divide it in half. Consistently, when a  quote
 						# didn't seem to be updated, the delay time is doubled.
-						if ($security->has_quote) {
+						if ($security->has_quote && $security->quote->fetchtime != 0) {
 							my $olddelay = (time-$security->quote->fetchtime);
 							if ($olddelay/2 > $quote->delay) {
 								$quote->delay($olddelay/1.5);
