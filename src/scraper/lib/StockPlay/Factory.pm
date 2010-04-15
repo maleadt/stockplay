@@ -322,12 +322,16 @@ sub createSecurity {
 =cut
 
 sub doError {
+	die(@_) unless (defined $^S && $^S == 0);
+	
 	my $error = shift;
 	chomp $error;
 	StockPlay::Logger->logger->logdie("XML-RPC request failed at transport level ($error)\n");
 }
 
 sub doFault {
+	die(@_) unless (defined $^S && $^S == 0);
+	
 	my $fault = shift;
 	my $code = $fault->{faultCode}->value;
 	my $message = $fault->{faultString}->value;

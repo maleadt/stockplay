@@ -24,8 +24,27 @@ my $PLUGIN_MAX_AGE = 3600*24*7;
 # Main
 #
 
+# Get a logger
 my $logger = StockPlay::Logger->logger;
 $logger->info("bootstrapping scraper");
+
+# Configure last-resort error loggers
+$SIG{__DIE__} = sub {
+	die(@_) unless (defined $^S && $^S == 0);
+	die(@_) if ((caller(2))[3] =~ m{Log::Log4perl::Logger::logdie});
+	
+	my $error = shift;
+	chomp $error;
+	$logger->logdie("received DIE signal: $error\n");
+};
+$SIG{__WARN__} = sub {
+	die(@_) unless (defined $^S && $^S == 0);
+	die(@_) if ((caller(2))[3] =~ m{Log::Log4perl::Logger::logwarn});
+	
+	my $warning = shift;
+	chomp $warning;
+	$logger->logwarn("received WARN signal: $warning\n");
+};
 
 # Plugin manager
 $logger->info("loading plugin maanger");
@@ -69,7 +88,7 @@ foreach my $infohash (@infohashes) {
 # Load the factory
 $logger->info("loading factory");
 my $factory = new StockPlay::Factory(
-	server	=> 'http://be04.kapti.com:6800/backend/public',
+	server	=> 'http://localhost:6800/backend/public',
 );
 
 # Load the daemon
