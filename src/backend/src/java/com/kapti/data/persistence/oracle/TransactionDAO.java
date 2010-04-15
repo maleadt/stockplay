@@ -182,6 +182,7 @@ public class TransactionDAO implements GenericDAO<Transaction, Integer> {
         try {
             try {
                 conn = OracleConnection.getConnection();
+                conn.setAutoCommit(false);
                 stmt = conn.prepareStatement(INSERT_TRANSACTION);
 
                 stmt.setInt(1, entity.getUser());
@@ -197,6 +198,9 @@ public class TransactionDAO implements GenericDAO<Transaction, Integer> {
 
                     rs = stmt.executeQuery();
                     if(rs.next()){
+                        conn.commit();
+                        conn.setAutoCommit(true);
+
                         return rs.getInt(1);
                     }else{
                         return -1;

@@ -163,6 +163,7 @@ public class IndexDAO implements GenericDAO<Index, Integer> {
         try {
             try {
                 conn = OracleConnection.getConnection();
+                conn.setAutoCommit(false);
                 stmt = conn.prepareStatement(INSERT_INDEX);
 
                 stmt.setString(1, entity.getName());
@@ -172,8 +173,10 @@ public class IndexDAO implements GenericDAO<Index, Integer> {
 
                     stmtID = conn.prepareStatement(SELECT_INDEX_LASTID);
 
-                    rs = stmt.executeQuery();
+                    rs = stmtID.executeQuery();
                     if(rs.next()){
+                        conn.commit();
+                        conn.setAutoCommit(true);
                         return rs.getInt(1);
                     }else{
                         return -1;

@@ -39,8 +39,36 @@ public class User {
     //
 
     public static enum Fields {
-        ID, NICKNAME, PASSWORD, EMAIL, LASTNAME, FIRSTNAME, REGDATE, ADMIN, POINTS, STARTAMOUNT, CASH, RRN
+        ID, NICKNAME, PASSWORD, EMAIL, LASTNAME, FIRSTNAME, REGDATE, ROLE, POINTS, STARTAMOUNT, CASH, RRN
     }
+
+
+    public enum Role {
+        USER(0),
+        ADMIN(1),
+        SCRAPER(2),
+        AI(3);
+        
+        int id;
+        private Role(int id){
+            this.id = id;
+        }
+
+        public static Role fromId(int id){
+            for(Role r: Role.values()){
+                if(r.id == id)
+                    return r;
+            }
+            return null;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        
+    }
+
     private int id = -1;
     private String nickname = "";
     private String password = "";
@@ -48,7 +76,7 @@ public class User {
     private String lastname = "";
     private String firstname = "";
     private Date regdate = null;
-    private boolean admin = false;  // TODO: via rechten!
+    private Role role = Role.USER; 
     private int points = 0;
     private double startamount = 0;
     private double cash = 0;
@@ -137,12 +165,12 @@ public class User {
         return firstname;
     }
 
-    public boolean isAdmin() {
-        return admin;
+    public Role getRole() {
+        return role;
     }
 
-    public void setAdmin(boolean admin) {
-        this.admin = admin;
+    public void setRole(Role role) {
+        this.role=role;
     }
 
     public String getLastname() {
@@ -221,8 +249,8 @@ public class User {
                 case REGDATE:
                     oStruct.put(tField.name(), getRegdate());
                     break;
-                case ADMIN:
-                    oStruct.put(tField.name(), isAdmin());
+                case ROLE:
+                    oStruct.put(tField.name(), getRole().getId());
                     break;
                 case POINTS:
                     oStruct.put(tField.name(), getPoints());
@@ -261,8 +289,8 @@ public class User {
                 case EMAIL:
                     setEmail((String) tValue);
                     break;
-                case ADMIN:
-                    setAdmin((Boolean)tValue);
+                case ROLE:
+                    setRole(Role.fromId((Integer)tValue));
                     break;
                 case POINTS:
                     setPoints((Integer)tValue);

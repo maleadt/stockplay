@@ -25,7 +25,7 @@ public class UserHandlerTest {
 
     public static enum Fields {
 
-        ID, NICKNAME, PASSWORD, LASTNAME, FIRSTNAME, REGDATE, ADMIN, POINTS, STARTAMOUNT, CASH, RRN
+        ID, NICKNAME, PASSWORD, LASTNAME, FIRSTNAME, REGDATE, ROLE, POINTS, STARTAMOUNT, CASH, RRN, EMAIL
     }
 
     public UserHandlerTest() {
@@ -62,25 +62,25 @@ public class UserHandlerTest {
 
 
         Hashtable<String, Object> hash = new Hashtable<String, Object>();
-
-        hash.put(Fields.NICKNAME.toString(), "TESTUser");
+        hash.put(Fields.EMAIL.toString(), "test@blaat.com");
+        hash.put(Fields.NICKNAME.toString(), "TESTUser2");
         hash.put(Fields.PASSWORD.toString(), "TESTPass");
         hash.put(Fields.LASTNAME.toString(), "TestLast");
         hash.put(Fields.FIRSTNAME.toString(), "TestFirst");
-        hash.put(Fields.ADMIN.toString(), true);
-        hash.put(Fields.RRN.toString(), "89020112345");
+        hash.put(Fields.ROLE.toString(), 1);
+        hash.put(Fields.RRN.toString(), "89020112355");
 
         Object result = client.execute("User.Create", new Object[]{hash});
 
         Assert.assertTrue(result instanceof Integer);
-        Assert.assertEquals((Integer) result, new Integer(1));
+        Assert.assertTrue((Integer) result > 0);
 
 
     }
 
     @Test
     public void findUser() throws XmlRpcException {
-        Object[] result = (Object[]) client.execute("User.List", new Object[]{"nickname EQUALS 'TESTUser'"});
+        Object[] result = (Object[]) client.execute("User.List", new Object[]{"nickname EQUALS 'TESTUser2'"});
 
         Assert.assertEquals("Geen gebruikers met aangemaakte nickname gevonden", 1, result.length);
 
@@ -90,7 +90,7 @@ public class UserHandlerTest {
 
         Assert.assertEquals("TestLast", hash.get(Fields.LASTNAME.toString()));
         Assert.assertEquals("TestFirst", hash.get(Fields.FIRSTNAME.toString()));
-        Assert.assertEquals(true, hash.get(Fields.ADMIN.toString()));
+        Assert.assertEquals(1, hash.get(Fields.ROLE.toString()));
         System.out.println("Cash: " + hash.get(Fields.CASH.toString()));
 
 
@@ -100,7 +100,7 @@ public class UserHandlerTest {
     public void deleteUser() throws XmlRpcException {
 
 
-        Object result = (Object) client.execute("User.Remove", new Object[]{"nickname EQUALS 'TESTUser'"});
+        Object result = (Object) client.execute("User.Remove", new Object[]{"nickname EQUALS 'TESTUser2'"});
         Assert.assertEquals(1, result);
 
     }

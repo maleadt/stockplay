@@ -33,7 +33,7 @@ import java.util.Collection;
 public class UserDAO implements GenericDAO<User, Integer> {
 
 
-    private static final String SELECT_USER_LASTID = "select indexid_seq.currval from dual";
+    private static final String SELECT_USER_LASTID = "select userid_seq.currval from dual";
     private static final String SELECT_USER = "SELECT nickname, password, email, lastname, firstname, is_admin, regtime, rrn, points, startamount, cash FROM users WHERE id = ?";
     private static final String SELECT_USERS_FILTER = "SELECT id, nickname, email, lastname, firstname, is_admin, regtime, rrn, points, startamount, cash "
             + "FROM users WHERE id LIKE ? AND nickname LIKE ? AND email LIKE ? AND lastname LIKE ? AND firstname LIKE ? AND is_admin LIKE ? AND regtime LIKE ? AND rrn LIKE ? AND points LIKE ? AND startamount LIKE ? AND cash LIKE ?";
@@ -66,7 +66,7 @@ public class UserDAO implements GenericDAO<User, Integer> {
                 if (rs.next()) {
                     User tUser = new User(id, rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(5), rs.getDate(7));
                     tUser.setEncryptedPassword(rs.getString(2));
-                    tUser.setAdmin(rs.getBoolean(6));
+                    tUser.setRole(User.Role.fromId(rs.getInt(6)));
                     tUser.setRijksregisternummer(rs.getLong(8));
                     tUser.setPoints(rs.getInt(9));
                     tUser.setStartamount(rs.getDouble(10));
@@ -107,7 +107,7 @@ public class UserDAO implements GenericDAO<User, Integer> {
                 while (rs.next()) {
                     User tUser = new User(rs.getInt(1), rs.getString(2), rs.getString(4), rs.getString(5), rs.getString(6), rs.getDate(8));
                     tUser.setEncryptedPassword(rs.getString(3));
-                    tUser.setAdmin(rs.getBoolean(7));
+                    tUser.setRole(User.Role.fromId(rs.getInt(7)));
                     tUser.setRijksregisternummer(rs.getLong(9));
                     tUser.setPoints(rs.getInt(10));
                     tUser.setStartamount(rs.getDouble(11));
@@ -151,7 +151,7 @@ public class UserDAO implements GenericDAO<User, Integer> {
                 while (rs.next()) {
                     User tUser = new User(rs.getInt(1), rs.getString(2), rs.getString(4), rs.getString(5), rs.getString(6), rs.getDate(8));
                     tUser.setEncryptedPassword(rs.getString(3));
-                    tUser.setAdmin(rs.getBoolean(7));
+                    tUser.setRole(User.Role.fromId(rs.getInt(7)));
                     tUser.setRijksregisternummer(rs.getLong(9));
                     tUser.setPoints(rs.getInt(10));
                     tUser.setStartamount(rs.getDouble(11));
@@ -189,6 +189,7 @@ public class UserDAO implements GenericDAO<User, Integer> {
         try {
             try {
                 conn = OracleConnection.getConnection();
+                conn.setAutoCommit(false);
                 stmt = conn.prepareStatement(INSERT_USER);
 
                 //stmt.setInt(1, entity.getId()); dit wordt automatisch gegenereerd door de database
@@ -197,20 +198,25 @@ public class UserDAO implements GenericDAO<User, Integer> {
                 stmt.setString(3, entity.getEmail());
                 stmt.setString(4, entity.getLastname());
                 stmt.setString(5, entity.getFirstname());
-                stmt.setBoolean(6, entity.isAdmin());
+                stmt.setInt(6, entity.getRole().getId());
                 stmt.setTimestamp(7, new Timestamp(entity.getRegdate().getTime()));
                 stmt.setLong(8, entity.getRijksregisternummer());
                 stmt.setInt(9, entity.getPoints());
                 stmt.setDouble(10, entity.getStartamount());
                 stmt.setDouble(11, entity.getCash());
 
+
+
                if(stmt.executeUpdate() == 1){
 
                     stmtID = conn.prepareStatement(SELECT_USER_LASTID);
 
-                    rs = stmt.executeQuery();
+                    rs = stmtID.executeQuery();
                     if(rs.next()){
+                        conn.commit();
+                        conn.setAutoCommit(true);
                         return rs.getInt(1);
+
                     }else{
                         return -1;
                     }
@@ -259,7 +265,7 @@ public class UserDAO implements GenericDAO<User, Integer> {
                 stmt.setString(3, entity.getEmail());
                 stmt.setString(4, entity.getLastname());
                 stmt.setString(5, entity.getFirstname());
-                stmt.setBoolean(6, entity.isAdmin());
+                stmt.setInt(6, entity.getRole().getId());
                 stmt.setTimestamp(7, new Timestamp(entity.getRegdate().getTime()));
                 stmt.setLong(8, entity.getRijksregisternummer());
                 stmt.setInt(9, entity.getPoints());

@@ -87,7 +87,7 @@ public class FinanceBackendTest {
 
     @Test
     public void getSecurityTest() throws Exception {
-        Object[] securities = (Object[]) client.execute("Finance.Security.List", new Object[]{"symbol EQUALS 'AMZN'"});
+        Object[] securities = (Object[]) client.execute("Finance.Security.List", new Object[]{"symbol EQUALS 'GSZ'"});
 
         Assert.assertTrue(securities.length == 1);
 
