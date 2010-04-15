@@ -134,7 +134,7 @@ sub addSecuritiesIndex {
 				defined $_[0]->attr('class') && $_[0]->attr('class') =~ m{maintable};
 			}
 		);
-		$self->logger->logdie("could not find main table") unless $table;
+		die("could not find main table") unless $table;
 		
 		# Extract securities
 		$table->look_down(

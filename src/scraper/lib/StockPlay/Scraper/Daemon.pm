@@ -70,61 +70,72 @@ has 'factory' => (
 =cut
 
 sub BUILD {
-	my ($self) = @_;;
+	my ($self) = @_;
 	
-	# Verify roles
-	for my $plugin (@{$self->plugins}) {
-		if (not $plugin->does('StockPlay::Scraper::Plugin')) {
-			$self->logger->logdie("passed plugin doesn't implement correct coles");
+	# Process all plugins
+	$self->logger->info("preparing database");
+	for (my $i = 0; $i < @{$self->plugins}; $i++) {
+		my $plugin = $self->plugins->[$i];
+		$self->logger->info("setting-up plugin " . $plugin->infohash->{name});		
+		eval {
+			# Check roles	
+			if (not $plugin->does('StockPlay::Scraper::Plugin')) {
+				die("passed plugin doesn't implement correct coles");
+			}
+			
+			# Check exchanges
+			my @s_exchanges = $self->factory->getExchanges();
+			die("no exchanges provided") unless @s_exchanges;
+			foreach my $exchange (@{$plugin->exchanges}) {
+				$self->logger->debug("processing exchange " . $exchange->name);
+				
+				# Add the exchange
+				$self->logger->debug("adding exchange " . $exchange->name);
+				unless (grep { $_->symbol eq $exchange->symbol } @s_exchanges) {
+					$self->factory->createExchange($exchange);
+					push(@s_exchanges, $exchange);
+				}
+				
+				# Add the indexes
+				$self->logger->debug("processing indexes");
+				my @s_indexes = $self->factory->getIndexes($exchange);
+				foreach my $index (@{$exchange->indexes}) {
+					unless (grep { $_->name eq $index->name } @s_indexes) {
+						$self->factory->createIndex($exchange, $index);
+						push(@s_indexes, $index);
+					}				
+				}
+				
+				# Add the securities
+				$self->logger->debug("processing securities");
+				my @s_securities = $self->factory->getSecurities($exchange);
+				foreach my $security (@{$exchange->securities}) {
+					unless (grep { $_->isin eq $security->isin } @s_securities) {
+						$self->factory->createSecurity($exchange, $security);
+						push(@s_securities, $security);
+					}	
+				}
+				
+				# Add the latest quotes
+				$self->logger->debug("fetching latest quotes");
+				my @quotes = $self->factory->getQuotes(@{$exchange->securities});
+				foreach my $quote (@quotes) {
+					my $security = (grep { $_->isin eq $quote->security } @{$exchange->securities})[0];
+					if (defined $security) {
+						$security->quote($quote);
+					}				
+				}
+			}
+		};		
+		if ($@) {
+			chomp $@;
+			$self->logger->error("plugin set-up failed ($@)");
+			delete @{$self->plugins}[$i];
 		}
 	}
 	
-	# Process all plugins
-	foreach my $plugin (@{$self->plugins}) {
-		$self->logger->debug("checking database structure for plugin " . $plugin->infohash->{name});
-		
-		# Check exchanges
-		my @s_exchanges = $self->factory->getExchanges();
-		foreach my $exchange (@{$plugin->exchanges}) {
-			$self->logger->debug("processing exchange " . $exchange->name);
-			
-			# Add the exchange
-			$self->logger->debug("adding exchange " . $exchange->name);
-			unless (grep { $_->symbol eq $exchange->symbol } @s_exchanges) {
-				$self->factory->createExchange($exchange);
-				push(@s_exchanges, $exchange);
-			}
-			
-			# Add the indexes
-			$self->logger->debug("processing indexes");
-			my @s_indexes = $self->factory->getIndexes($exchange);
-			foreach my $index (@{$exchange->indexes}) {
-				unless (grep { $_->name eq $index->name } @s_indexes) {
-					$self->factory->createIndex($exchange, $index);
-					push(@s_indexes, $index);
-				}				
-			}
-			
-			# Add the securities
-			$self->logger->debug("processing securities");
-			my @s_securities = $self->factory->getSecurities($exchange);
-			foreach my $security (@{$exchange->securities}) {
-				unless (grep { $_->isin eq $security->isin } @s_securities) {
-					$self->factory->createSecurity($exchange, $security);
-					push(@s_securities, $security);
-				}	
-			}
-			
-			# Add the latest quotes
-			$self->logger->debug("fetching latest quotes");
-			my @quotes = $self->factory->getQuotes(@{$exchange->securities});
-			foreach my $quote (@quotes) {
-				my $security = (grep { $_->isin eq $quote->security } @{$exchange->securities})[0];
-				if (defined $security) {
-					$security->quote($quote);
-				}				
-			}
-		}
+	unless (@{$self->plugins}) {
+		die("no plugins managed to set-up correctly");
 	}
 }
 
@@ -157,7 +168,7 @@ sub run {
 				}
 			
 				# Update them
-				$self->logger->info("fetching " . scalar @securities . " quotes");
+				$self->logger->info("fetching " . scalar @securities . " quotes from " . $exchange->name . " (plugin " . $plugin->infohash->{name} . ")");
 				my @quotes_local = $plugin->getQuotes($exchange, @securities);
 				
 				# Save them (if no errors && updated)

@@ -47,7 +47,7 @@ so look there for more information.
 
 BEGIN {
 	Log::Log4perl->init(\<<EOT);
-		log4perl.logger = DEBUG, screen, syslog
+		log4perl.logger = DEBUG, screen
 		
 		# Syslog appender
 		log4perl.appender.syslog=Log::Dispatch::Syslog
@@ -75,13 +75,16 @@ EOT
 
 =cut
 
-sub logger {
-	my ($self) = @_;
+sub logger {	
+	# Logger for role implementors
+	my $self = shift;
 	if (ref $self) {
 		return get_logger(ref $self);
-	} else {
-		return get_logger((caller(0))[0] . " (static)");
 	}
+	
+	# Specific logger request
+	my $package = shift || (caller(0))[0];
+	return get_logger($package);
 }
 
 ################################################################################

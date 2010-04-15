@@ -35,7 +35,7 @@ $SIG{__DIE__} = sub {
 	
 	my $error = shift;
 	chomp $error;
-	$logger->logdie("received DIE signal: $error\n");
+	StockPlay::Logger->logger((caller(0))[0])->logexit($error);
 };
 $SIG{__WARN__} = sub {
 	die(@_) unless (defined $^S && $^S == 0);
@@ -43,11 +43,11 @@ $SIG{__WARN__} = sub {
 	
 	my $warning = shift;
 	chomp $warning;
-	$logger->logwarn("received WARN signal: $warning\n");
+	StockPlay::Logger->logger((caller(0))[0])->warn($warning);
 };
 
 # Plugin manager
-$logger->info("loading plugin maanger");
+$logger->info("loading plugin manager");
 my $pluginmanager = new StockPlay::Scraper::PluginManager;
 my @infohashes = $pluginmanager->get_group('StockPlay::Scraper::Plugin');
 
@@ -56,6 +56,8 @@ my $dumpfolder = $ENV{'HOME'} . '/dumps/';
 mkdir $dumpfolder unless (-d $dumpfolder);
 
 # Load plugins
+# TODO: this code should move to the PluginManager, or at least be executed
+#       within an eval block
 $logger->info("instantiating all plugins");
 my @plugins;
 foreach my $infohash (@infohashes) {
@@ -88,7 +90,7 @@ foreach my $infohash (@infohashes) {
 # Load the factory
 $logger->info("loading factory");
 my $factory = new StockPlay::Factory(
-	server	=> 'http://localhost:6800/backend/public',
+	server	=> 'http://be04.kapti.com:6800/backend/public',
 );
 
 # Load the daemon

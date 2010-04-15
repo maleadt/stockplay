@@ -85,7 +85,7 @@ sub BUILD {
 	};
 	if ($@) {
 		chomp $@;
-		$self->logger->logdie("could not connect to backend ($@)");
+		die("could not connect to backend ($@)\n");
 	}
 }
 
@@ -99,7 +99,7 @@ sub _build_xmlrpc {
 		$self->server,
 		error_handler	=> \&doError,
 		fault_handler	=> \&doFault
-	) or $self->logger->logdie("could not connect to backend ($!)");
+	) or die("could not connect to backend ($!)");
 
 	if ($xmlrpc->{__compress} eq "gzip") {
 		$self->logger->info("using Gzip-compression for requests and replies");
@@ -322,21 +322,23 @@ sub createSecurity {
 =cut
 
 sub doError {
-	die(@_) unless (defined $^S && $^S == 0);
+	# Don't add bloat when happening in eval cause
+	die($_[0]."\n") unless (defined $^S && $^S == 0);
 	
 	my $error = shift;
 	chomp $error;
-	StockPlay::Logger->logger->logdie("XML-RPC request failed at transport level ($error)\n");
+	die("XML-RPC request failed at transport level ($error)\n");
 }
 
 sub doFault {
-	die(@_) unless (defined $^S && $^S == 0);
+	# Don't add bloat when happening in eval cause
+	die($_[0]."\n") unless (defined $^S && $^S == 0);
 	
 	my $fault = shift;
 	my $code = $fault->{faultCode}->value;
 	my $message = $fault->{faultString}->value;
 	chomp $message;
-	StockPlay::Logger->logger->logdie("XML-RPC request failed at XMLRPC level (code $code: $message)\n");
+	die("XML-RPC request failed at XMLRPC level (code $code: $message)\n");
 }
 
 # RPC::XML sends the invalid, but by-spec requested YYYY-MM-DD (...) format,
