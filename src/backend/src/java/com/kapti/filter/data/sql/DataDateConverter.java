@@ -35,7 +35,7 @@ public class DataDateConverter extends DataDate {
     // Member data
     //
 
-    private final String mFormat = "YYYY-MM-DD HH:MI:SS";
+    private final String mFormat = "YYYY-MM-DD HH24:MI:SS";
     private final SimpleDateFormat mFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 

@@ -51,7 +51,7 @@ foreach my $exchange (@exchanges) {
 	foreach my $security (@{$exchange->securities}) {
 		# Fetch historic data
 		print "DEBUG: Processing " . $security->name, " (ISIN " . $security->isin . ")\n";
-		my ($d1, $d2) = (UnixDate("2 year ago", "%d\/%m\/%Y"), UnixDate("yesterday", "%d\/%m\/%Y"));
+		my ($d1, $d2) = (UnixDate("2 year ago", "%d\/%m\/%Y"), UnixDate("1 day ago", "%d\/%m\/%Y"));
 		my $isin = $security->isin;
 		my $mep = $markets{$exchange->symbol};
 		my $content = get("http://www.euronext.com/tools/datacentre/dataCentreDownloadExcell.jcsv?cha=2593&lan=EN&fileFormat=txt&separator=.&dateFormat=dd/MM/yy&isinCode=$isin&selectedMep=$mep&indexCompo=&opening=on&high=on&low=on&closing=on&volume=on&dateFrom=$d1&dateTo=$d2&typeDownload=2");

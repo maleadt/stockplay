@@ -21,6 +21,7 @@
  */
 package com.kapti.backend.xmlrpc;
 
+import com.kapti.exceptions.InternalException;
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.XmlRpcRequest;
 import org.apache.xmlrpc.webserver.XmlRpcServletServer;
@@ -72,7 +73,7 @@ public class ServletServer extends XmlRpcServletServer {
                     throw new InvocationException(InvocationException.Type.NOT_FOUND,iException.getCause());
                 
                 // No exception subtype matched, throw an internal failure
-                throw new RuntimeException(iException.getCause());
+                throw new InternalException(InternalException.Type.INTERNAL_FAILURE, "unknown failure", iException.getCause());
             } else {
                 mLogger.error(iException.getMessage() + iException.getCause());
                 throw iException;

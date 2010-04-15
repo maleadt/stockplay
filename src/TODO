@@ -10,21 +10,11 @@ kan geabstraheerd worden in de bovenliggende abstracte klassen.
 *) Controle van keys in filter
 
 Het zou mooi zijn om de doorgegeven filters te controleren zodat slecht een
-vaste (gedocumenteerde) selectie er kan in voorkomen.
+vaste (gedocumenteerde) selectie er kan in voorkomen. Eventueel translatielaag
+toevoegen om joins te ondersteunen
 
 
-*) Verhinderen dat RuntimeExcepties bij de gebruiker terechtkomen (nullpointers
-ook).
-
-
-
-BusinessObjects
----------------
-
-
-*) Corrigeren van autorisatie
-
-isAdmin -> hasRight oid.
+*) Duplicate code bij excepties
 
 
 

@@ -13,7 +13,7 @@ use strict;
 use warnings;
 
 # XML::RPC object
-my $xmlrpc = new XML::RPC('http://localhost:8009/backend/public') || die("could not connect to backend ($!)");
+my $xmlrpc = new XML::RPC('http://localhost:6800/backend/public') || die("could not connect to backend ($!)");
 
 
 #

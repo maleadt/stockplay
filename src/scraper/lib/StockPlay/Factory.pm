@@ -132,7 +132,7 @@ sub buildExchanges {
 	
 	# Get all the latest quotes
 	foreach my $exchange (@exchanges) {
-		my @quotes = $self->getQuotes($exchange->securities);
+		my @quotes = $self->getLatestQuotes($exchange->securities);
 		foreach my $quote (@quotes) {
 			my $security = grep { $_->isin eq $quote->security } $exchange->securities;
 			if (defined $security) {
@@ -210,7 +210,7 @@ sub getSecurities {
 	return @securities;	
 }
 
-sub getQuotes {
+sub getLatestQuotes {
 	my ($self, @securities) = @_;
 	
 	# Build a filter
@@ -221,6 +221,45 @@ sub getQuotes {
 	# Request quotes from the server
 	my @s_quotes = @{$self->xmlrpc->send_request(
 		'Finance.Security.LatestQuotes',
+		$filter
+	)->value};
+	
+	# Build StockPlay::Quote objects
+	my @quotes;
+	foreach my $s_quote (@s_quotes) {
+		my $quote = new StockPlay::Quote(
+			security	=> $s_quote->{ISIN},
+			time		=> DateTime::Format::ISO8601->parse_datetime($s_quote->{TIME}),
+			volume		=> $s_quote->{VOLUME},
+			price		=> $s_quote->{PRICE},
+			bid 		=> $s_quote->{BID},
+			ask		=> $s_quote->{ASK},
+			low		=> $s_quote->{LOW},
+			high		=> $s_quote->{HIGH},
+			open		=> $s_quote->{OPEN}
+		);
+		push(@quotes, $quote);
+	}
+	
+	return @quotes;
+}
+
+sub getQuotes {
+	my ($self, $start, $end, $security) = @_;
+	
+	# Get appropriate dates
+	$start->set_time_zone("UTC");
+	$end->set_time_zone("UTC");
+	my $start_string = $start->strftime('%Y-%m-%dT%H:%MZ');
+	my $end_string = $end->strftime('%Y-%m-%dT%H:%MZ');
+	
+	# Build a filter
+	my $isin = $security->isin;
+	my $filter = "((timestamp GREATERTHANOREQUAL '" . $start_string . "'d) AND (timestamp LESSTHAN '" . $end_string . "'d)) AND (isin EQUALS '" . $isin . "'s)";
+	
+	# Request quotes from the server
+	my @s_quotes = @{$self->xmlrpc->send_request(
+		'Finance.Security.Quotes',
 		$filter
 	)->value};
 	

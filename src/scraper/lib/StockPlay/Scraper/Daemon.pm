@@ -118,7 +118,7 @@ sub BUILD {
 				
 				# Add the latest quotes
 				$self->logger->debug("fetching latest quotes");
-				my @quotes = $self->factory->getQuotes(@{$exchange->securities});
+				my @quotes = $self->factory->getLatestQuotes(@{$exchange->securities});
 				foreach my $quote (@quotes) {
 					my $security = (grep { $_->isin eq $quote->security } @{$exchange->securities})[0];
 					if (defined $security) {
@@ -169,7 +169,7 @@ sub run {
 			
 				# Update them
 				$self->logger->info("fetching " . scalar @securities . " quotes from " . $exchange->name . " (plugin " . $plugin->infohash->{name} . ")");
-				my @quotes_local = $plugin->getQuotes($exchange, @securities);
+				my @quotes_local = $plugin->getLatestQuotes($exchange, @securities);
 				
 				# Save them (if no errors && updated)
 				foreach my $quote (@quotes_local) {

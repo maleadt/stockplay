@@ -1,0 +1,164 @@
+#!/usr/bin/env perl
+
+################################################################################
+# Configuration
+#
+
+# XXX: library location
+use lib '../lib';
+
+# Packages
+use Date::Manip;
+use DateTime::Format::DateManip;
+use StockPlay::Factory;
+use StockPlay::Exchange;
+use StockPlay::Index;
+use StockPlay::Security;
+use Chart::Clicker;
+use Chart::Clicker::Axis::DateTime;
+use Chart::Clicker::Data::Series;
+use Chart::Clicker::Data::DataSet;
+use Chart::Clicker::Renderer::Point;
+
+
+# Write nicely
+use warnings;
+use strict;
+
+# Constants
+my $PLUGIN_MAX_AGE = 3600*24*7;
+
+
+################################################################################
+# Main
+#
+
+#
+# Setup
+#
+
+# Load the factory
+print "- Setting up factory\n";
+my $factory = new StockPlay::Factory(
+	server	=> 'http://localhost:6800/backend/public',
+);
+my $choice;
+
+#
+# Exchanges
+#
+
+# Load the exchanges
+print "- Fetching exchanges\n";
+my @exchanges = $factory->getExchanges();
+
+# Show them
+print "- Available exchanges:\n";
+for (my $i = 0; $i < @exchanges; $i++) {
+	print "\t$i) ", $exchanges[$i]->name, "\n";
+}
+$choice = undef;
+while (not defined $choice or $choice < 0 or $choice > $#exchanges) {
+	print "? Exchange: ";
+	$choice = <STDIN>;
+	chomp $choice;
+}
+my $exchange = $exchanges[$choice];
+
+
+#
+# Securities
+#
+
+# Load the securities
+print "- Fetching securities\n";
+my @securities = $factory->getSecurities($exchange);
+
+# Show them
+print "- Available securities:\n";
+for (my $i = 0; $i < @securities; $i++) {
+	print "\t$i) ", $securities[$i]->name, "\n";
+}
+$choice = undef;
+while (not defined $choice or $choice < 0 or $choice > $#securities) {
+	print "? Security: ";
+	$choice = <STDIN>;
+	chomp $choice;
+}
+my $security = $securities[$choice];
+
+
+#
+# Quotes
+#
+
+# Load the quotes
+print "- Fetching quotes\n";
+
+# Get date range
+my ($dm1, $dm2) = (ParseDate("1 day ago"), ParseDate("now"));
+my ($dt1, $dt2) = (DateTime::Format::DateManip->parse_datetime($dm1), DateTime::Format::DateManip->parse_datetime($dm2));
+
+# Load the quotes
+my @quotes = $factory->getQuotes($dt1, $dt2, $security);
+print "- Loaded ", scalar @quotes, " quotes\n";
+
+
+#
+# Generate chart
+#
+
+# Sort quotes
+@quotes = sort { DateTime->compare($a->time, $b->time) } @quotes;
+
+# Create the dataset
+my $series = Chart::Clicker::Data::Series->new(
+    keys      => [ map { $_->time->epoch() } @quotes ],
+    values    => [ map { $_->price } @quotes ],
+);
+my $ds = Chart::Clicker::Data::DataSet->new(
+	series => [ $series ]
+);
+
+# Create a graph
+my $cc = Chart::Clicker->new;
+my $ctx = $cc->get_context('default');
+$ctx->domain_axis(Chart::Clicker::Axis::DateTime->new(position => 'bottom', orientation     => 'horizontal'));
+$cc->add_to_datasets($ds);
+
+# Write the graph
+$cc->write_output($security->name . '.png');
+
+
+exit(0);
+
+################################################################################
+# Routines
+#
+
+__END__
+
+################################################################################
+# Documentation
+#
+
+=pod
+
+=head1 NAME
+
+stockplay-scraper - Scraper component of StockPlay
+
+=head1 SYNOPSIS
+
+=head1 COPYRIGHT
+
+Copyright 2010 The StockPlay development team as listed in the AUTHORS file.
+
+This software is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public Licence (GPL) as published by the
+Free Software Foundation (FSF).
+
+The full text of the license can be found in the
+LICENSE file included with this module.
+
+=cut
