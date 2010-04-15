@@ -60,7 +60,7 @@
         <% java.util.HashMap<String, Object> tStatsBackend = (java.util.HashMap<String, Object>)(tClient.execute("System.Backend.Stats", new Object[]{})); %>
         <p>
             <b>Requests served</b>: <%=tStatsBackend.get("req")%>.<br />
-            <b>Uptime</b>: <%=seconds2readable(((Double)tStatsBackend.get("uptime")).longValue())%>.<br />
+            <b>Uptime</b>: <%=seconds2readable(Long.parseLong((String)tStatsBackend.get("uptime")))%>.<br />
             <b>Users logged in</b>: <i>not implemented</i>.<br />
         </p>
 
@@ -68,7 +68,7 @@
         <% java.util.HashMap<String, Object> tStatsDatabase = (java.util.HashMap<String, Object>)(tClient.execute("System.Database.Stats", new Object[]{})); %>
         <p>
             <b>Transaction rate</b>: <%=tStatsDatabase.get("rate")%> transactions per minute.<br />
-            <b>Uptime</b>: <%=seconds2readable(((Double)tStatsDatabase.get("uptime")).longValue())%>.<br />
+            <b>Uptime</b>: <%=seconds2readable(Long.parseLong((String)tStatsDatabase.get("uptime")))%>.<br />
         </p>
 
         <h2>Scraper</h2>

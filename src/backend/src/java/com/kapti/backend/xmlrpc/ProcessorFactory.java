@@ -67,7 +67,7 @@ public class ProcessorFactory extends RequestSpecificProcessorFactoryFactory {
      */
     @Override
     protected Object getRequestProcessor(Class iClass, XmlRpcRequest iRequest) throws XmlRpcException {
-        mLogger.info("getting processor for method " + iRequest.getMethodName());
+        mLogger.debug("getting processor for method " + iRequest.getMethodName());
         MethodClass proc = (MethodClass) super.getRequestProcessor(iClass, iRequest);
         proc.init(mDAO);
         return proc;

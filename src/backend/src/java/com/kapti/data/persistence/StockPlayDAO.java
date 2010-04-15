@@ -37,6 +37,6 @@ public interface StockPlayDAO {
     public GenericDAO<IndexSecurity, IndexSecurity> getIndexSecurityDAO();
     public GenericDAO<UserSecurity, UserSecurity.UserSecurityPK> getUserSecurityDAO();
 
-    public double getUptime() throws StockPlayException;
+    public long getUptime() throws StockPlayException;
     public double getRate() throws StockPlayException;
 }

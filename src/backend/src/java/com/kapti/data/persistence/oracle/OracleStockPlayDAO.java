@@ -81,7 +81,7 @@ public class OracleStockPlayDAO implements StockPlayDAO {
         return UserSecurityDAO.getInstance();
     }
 
-    public double getUptime() throws StockPlayException {
+    public long getUptime() throws StockPlayException {
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -93,7 +93,7 @@ public class OracleStockPlayDAO implements StockPlayDAO {
                 rs = stmt.executeQuery();
                 if (rs.next()) {
                     long tUptime = rs.getLong(1);
-                    return (double)tUptime;
+                    return tUptime;
                 } else {
                     throw new ServiceException(ServiceException.Type.SERVICE_UNAVAILABLE);
                 }
