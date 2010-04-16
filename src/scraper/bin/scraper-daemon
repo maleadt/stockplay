@@ -27,7 +27,7 @@ $logger->info("bootstrapping scraper");
 # Configure last-resort error loggers
 $SIG{__DIE__} = sub {
 	die(@_) unless (defined $^S && $^S == 0);
-	die(@_) if ((caller(2))[3] =~ m{Log::Log4perl::Logger::logdie});
+	die(@_) if (defined caller(2) && (caller(2))[3] =~ m{Log::Log4perl::Logger::logdie});
 	
 	my $error = shift;
 	chomp $error;
@@ -35,7 +35,7 @@ $SIG{__DIE__} = sub {
 };
 $SIG{__WARN__} = sub {
 	die(@_) unless (defined $^S && $^S == 0);
-	die(@_) if ((caller(2))[3] =~ m{Log::Log4perl::Logger::logwarn});
+	die(@_) if (defined caller(2) && (caller(2))[3] =~ m{Log::Log4perl::Logger::logwarn});
 	
 	my $warning = shift;
 	chomp $warning;

@@ -280,7 +280,7 @@ sub run {
 			$self->factory->createQuotes(@quotes);
 		};
 		if ($@) {
-			$self->error("saving quotes failed ($@)");
+			$self->logger->error("saving quotes failed ($@)");
 		}
 		
 		# Wait
