@@ -17,9 +17,8 @@ toevoegen om joins te ondersteunen
 *) Duplicate code bij excepties
 
 
-
 Filter
 ------
 
-*) Alternatieve regels voor condities (=, <, >, <=, >=, =~)
+*) Deprecated WORD operators wegwerken (na demo)
 
