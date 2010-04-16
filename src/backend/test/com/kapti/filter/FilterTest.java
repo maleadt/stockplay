@@ -73,7 +73,7 @@ public class FilterTest {
 
     @Test
     public void infix_to_postfix() throws Exception {
-        TokenType[] tTokenTypes = {TokenType.WORD, TokenType.FLOAT, TokenType.WORD, TokenType.WORD, TokenType.INT, TokenType.WORD, TokenType.WORD};
+        TokenType[] tTokenTypes = {TokenType.WORD, TokenType.FLOAT, TokenType.OPERATOR_STRICTGREATER, TokenType.WORD, TokenType.INT, TokenType.OPERATOR_EQUALS, TokenType.OPERATOR_AND};
         String[] tTokenValues = {"foo", "1.2", "GREATERTHAN", "answer", "42", "EQUALS", "AND"};
 
         List<Token> tTokens = mParser.tokenize("foo GREATERTHAN 1.2 AND answer EQUALS 42");

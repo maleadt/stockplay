@@ -46,13 +46,7 @@ import com.kapti.filter.relation.RelationOr;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
-import java.util.Stack;
-import java.util.Vector;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
@@ -72,12 +66,13 @@ public class Parser {
         INT, FLOAT,
         WORD, QUOTE,
         LEFT_PARENTHESIS, RIGHT_PARENTHESIS, COMMA,
+        OPERATOR_EQUALS, OPERATOR_NOTEQUALS, OPERATOR_LESS, OPERATOR_GREATER, OPERATOR_STRICTLESS, OPERATOR_STRICTGREATER, OPERATOR_LIKE, OPERATOR_NOTLIKE, OPERATOR_AND, OPERATOR_OR,
         WHITESPACE
     }
 
     private List<Rule<TokenType>> mTokenRules;
-    private List<Rule<Class>> mOperatorRules;
-    private List<Rule<Class>> mFunctionRules;
+    private Map<TokenType, Class> mOperatorMap;
+    //private Map<TokenType, Class> mFunctionMap;
     private static Parser instance = new Parser();
 
 
@@ -88,39 +83,46 @@ public class Parser {
     private Parser() {
         mLogger.info("instantiating Parser");
 
-        // Create token ruleset
+        // Create token ruleset (lower items have higher priority)
         mTokenRules = new ArrayList<Rule<TokenType>>();
-        mTokenRules.add(new Rule(TokenType.INT, "-?[0-9]+"));
-        mTokenRules.add(new Rule(TokenType.FLOAT, "-?[0-9.]+"));
-        mTokenRules.add(new Rule(TokenType.WORD, "[A-Za-z_]+"));
-        mTokenRules.add(new Rule(TokenType.QUOTE, "'([^\']*+)'([sdifk]?)"));
+        mTokenRules.add(new Rule(TokenType.WHITESPACE, "\\s+"));
         mTokenRules.add(new Rule(TokenType.LEFT_PARENTHESIS, "\\("));
         mTokenRules.add(new Rule(TokenType.RIGHT_PARENTHESIS, "\\)"));
         mTokenRules.add(new Rule(TokenType.COMMA, ","));
-        mTokenRules.add(new Rule(TokenType.WHITESPACE, "\\s+"));
-
-        // Create operator ruleset
-        mOperatorRules = new ArrayList<Rule<Class>>();
-        mOperatorRules.add(new Rule(ConditionEquals.class, "^EQUALS$"));
-        mOperatorRules.add(new Rule(ConditionGreaterThan.class, "^GREATERTHAN$"));
-        mOperatorRules.add(new Rule(ConditionGreaterThanOrEqual.class, "^GREATERTHANOREQUAL$"));
-        mOperatorRules.add(new Rule(ConditionLessThan.class, "^LESSTHAN$"));
-        mOperatorRules.add(new Rule(ConditionLessThanOrEqual.class, "^LESSTHANOREQUAL$"));
-        mOperatorRules.add(new Rule(ConditionNot.class, "^NOT"));
-        mOperatorRules.add(new Rule(ConditionLike.class, "^LIKE"));
-        mOperatorRules.add(new Rule(ConditionNotLike.class, "^NOTLIKE"));
-        mOperatorRules.add(new Rule(RelationAnd.class, "^AND$"));
-        mOperatorRules.add(new Rule(RelationOr.class, "^OR$"));
-
-        // Create function ruleset
-        mFunctionRules = new ArrayList<Rule<Class>>();
+        mTokenRules.add(new Rule(TokenType.WORD, "[A-Za-z_]+"));
+        mTokenRules.add(new Rule(TokenType.QUOTE, "'([^\']*+)'([sdifk]?)"));
+        mTokenRules.add(new Rule(TokenType.FLOAT, "-?[0-9.]+"));
+        mTokenRules.add(new Rule(TokenType.INT, "-?[0-9]+"));
+        mTokenRules.add(new Rule(TokenType.OPERATOR_EQUALS, "(==|EQUALS)"));
+        mTokenRules.add(new Rule(TokenType.OPERATOR_NOTEQUALS, "(!=|NOT)"));
+        mTokenRules.add(new Rule(TokenType.OPERATOR_LESS, "(<=|LESSTHANOREQUAL)"));
+        mTokenRules.add(new Rule(TokenType.OPERATOR_GREATER, "(>=|GREATERTHANOREQUAL)"));
+        mTokenRules.add(new Rule(TokenType.OPERATOR_STRICTLESS, "(<|LESSTHAN)"));
+        mTokenRules.add(new Rule(TokenType.OPERATOR_STRICTGREATER, "(>|GREATERTHAN)"));
+        mTokenRules.add(new Rule(TokenType.OPERATOR_LIKE, "(=~|LIKE)"));
+        mTokenRules.add(new Rule(TokenType.OPERATOR_NOTLIKE, "(!~|NOTLIKE)"));
+        mTokenRules.add(new Rule(TokenType.OPERATOR_AND, "(&&|AND)"));
+        mTokenRules.add(new Rule(TokenType.OPERATOR_OR, "(\\|\\||OR)"));
+        
+        // Create operator translation map
+        mOperatorMap = new HashMap<TokenType, Class>();
+        mOperatorMap.put(TokenType.OPERATOR_EQUALS, ConditionEquals.class);
+        mOperatorMap.put(TokenType.OPERATOR_NOTEQUALS, ConditionNot.class);
+        mOperatorMap.put(TokenType.OPERATOR_STRICTLESS, ConditionLessThan.class);
+        mOperatorMap.put(TokenType.OPERATOR_LESS, ConditionLessThanOrEqual.class);
+        mOperatorMap.put(TokenType.OPERATOR_STRICTGREATER, ConditionGreaterThan.class);
+        mOperatorMap.put(TokenType.OPERATOR_GREATER, ConditionGreaterThanOrEqual.class);
+        mOperatorMap.put(TokenType.OPERATOR_LIKE, ConditionLike.class);
+        mOperatorMap.put(TokenType.OPERATOR_NOTLIKE, ConditionNotLike.class);
+        mOperatorMap.put(TokenType.OPERATOR_AND, RelationAnd.class);    // TODO: relation in operator ruleset?
+        mOperatorMap.put(TokenType.OPERATOR_OR, RelationOr.class);
     }
 
     public static Parser getInstance() {
         return instance;
     }
 
-    
+
     //
     // Methods
     //
@@ -132,7 +134,7 @@ public class Parser {
         // Lexical analysis
         List<Token> tInfix = tokenize(iSource);
         Queue<Token> tPostfix = infix_to_postfix(tInfix);
-        
+
         // Syntactic analysis
         Filter oFilter = interprete(tPostfix);
 
@@ -166,7 +168,7 @@ public class Parser {
                     if (tGroups > 0) {
                         tContentGroup = 1;
                     }
-                    String tContent = tContent = iSource.substring(tMatcher.start(tContentGroup), tMatcher.end(tContentGroup));
+                    String tContent = iSource.substring(tMatcher.start(tContentGroup), tMatcher.end(tContentGroup));
 
                     // Construct and save the token (minding eventual extra groups)
                     List<String> tExtra = new ArrayList<String>();
@@ -178,7 +180,7 @@ public class Parser {
                     if (tExtra.size() == 0)
                         tExtra = null;
                     tToken = new Token(tRule.getType(), tMatcher.start(), tMatcher.end(), tContent, tExtra);
-                    
+
                     tMatches.add(tToken);
                 }
             }
@@ -186,7 +188,7 @@ public class Parser {
             // Pick the longest match
             Token tTokenLongest = null;
             for (Token tToken : tMatches) {
-                if (tTokenLongest == null || tToken.getLength() > tTokenLongest.getLength()) {
+                if (tTokenLongest == null || tToken.getLength() >= tTokenLongest.getLength()) {
                     tTokenLongest = tToken;
                 }
             }
@@ -220,7 +222,7 @@ public class Parser {
                 case COMMA:
                     if (tStack.isEmpty())
                         throw new FilterException(FilterException.Type.FILTER_FAILURE, "misplaced comma or mismatched parenthesis");
-                    
+
                     while (tStack.peek().getType() != TokenType.LEFT_PARENTHESIS) {
                         tQueue.add(tStack.pop());
                         if (tStack.isEmpty())
@@ -228,42 +230,40 @@ public class Parser {
                     }
                     break;
 
-                case WORD:
-                    // Token is a function
-                    if (getFunction(tToken) != null) {
-                        tStack.push(tToken);
-                    }
+                case OPERATOR_EQUALS:
+                case OPERATOR_NOTEQUALS:
+                case OPERATOR_LESS:
+                case OPERATOR_GREATER:
+                case OPERATOR_STRICTLESS:
+                case OPERATOR_STRICTGREATER:
+                case OPERATOR_LIKE:
+                case OPERATOR_NOTLIKE:
+                case OPERATOR_AND:
+                case OPERATOR_OR:
+                    while (!tStack.isEmpty() && isOperator(tStack.peek())) {
+                        Token tToken2 = tStack.peek();
 
-                    // Token is an operator (condition or relation)
-                    else if (getOperator(tToken) != null) {
-                        Class tOperator1 = getOperator(tToken);
-                        while (!tStack.isEmpty() && tStack.peek().getType() == TokenType.WORD && getOperator(tStack.peek()) != null) {
-                            Class tOperator2 = getOperator(tStack.peek());
-                            System.out.println("Operator 1: " + tOperator1);
-                            System.out.println("Operator 2: " + tOperator2);
-
-                            // Precedence of Relation < precedence of Condition
-                            if (tOperator1.getSuperclass() == Relation.class && tOperator2.getSuperclass() == Condition.class) {
-                                tQueue.add(tStack.pop());
-                            }
-                            else if (tOperator1.getSuperclass() == Condition.class && tOperator2.getSuperclass() == Relation.class) {
-                                break;
-                            }
-
-                            // Asume left-precedence for equal conditions
-                            else if (tOperator1.getSuperclass() == Relation.class && tOperator1 == tOperator2) {
-                                break;
-                            }
-                            else
-                                throw new FilterException(FilterException.Type.FILTER_FAILURE, "I cannot make up the operator-precedence here, please use brackets");
+                        // Precedence of Relation < precedence of Condition
+                        if (isRelation(tToken) && isCondition(tToken2)) {
+                            tQueue.add(tStack.pop());
                         }
-                        tStack.push(tToken);
-                    }
+                        else if (isCondition(tToken) && isRelation(tToken2)) {
+                            break;
+                        }
 
-                    // Token is a key
-                    else {
-                        tQueue.add(tToken);
+                        // Assume left-precedence for equal conditions
+                        else if (isRelation(tToken) && isRelation(tToken2) && tToken.getType() == tToken2.getType()) {
+                            break;
+                        }
+                        else
+                            throw new FilterException(FilterException.Type.FILTER_FAILURE, "I cannot make up the operator-precedence here, please use brackets");
                     }
+                    tStack.push(tToken);
+                    break;
+
+                case WORD:
+                    // Token is a key
+                    tQueue.add(tToken);
                     break;
 
                 case LEFT_PARENTHESIS:
@@ -279,39 +279,49 @@ public class Parser {
                         if (tStack.isEmpty())
                             throw new FilterException(FilterException.Type.FILTER_FAILURE, "mismatched parenthesis");
                     }
-                    
+
                     tStack.pop();
 
-                    if (!tStack.isEmpty() && tStack.peek().getType() == TokenType.WORD && getFunction(tStack.peek()) != null) {
-                        tQueue.add(tStack.pop());
-                    }
-                    
+                    //if (!tStack.isEmpty() && isFunction(tStack.peek()) {
+                    //    tQueue.add(tStack.pop());
+                    //}
+
                 case WHITESPACE:
                     break;
-                    
+
                 default: {
                     throw new FilterException(FilterException.Type.FILTER_FAILURE, "unknown token " + tToken);
                 }
             }
         }
-        
+
         while (!tStack.isEmpty()) {
             Token tToken = tStack.pop();
-            
+
             switch (tToken.getType()) {
                 case LEFT_PARENTHESIS:
                 case RIGHT_PARENTHESIS:
                     throw new FilterException(FilterException.Type.FILTER_FAILURE, "mismatched parenthesis");
 
                 case WORD:
+                case OPERATOR_EQUALS:
+                case OPERATOR_NOTEQUALS:
+                case OPERATOR_LESS:
+                case OPERATOR_GREATER:
+                case OPERATOR_STRICTLESS:
+                case OPERATOR_STRICTGREATER:
+                case OPERATOR_LIKE:
+                case OPERATOR_NOTLIKE:
+                case OPERATOR_AND:
+                case OPERATOR_OR:
                     tQueue.add(tToken);
                     break;
-                    
+
                 default:
                     throw new FilterException(FilterException.Type.FILTER_FAILURE, "mismatched token " + tToken);
             }
         }
-        
+
         return tQueue;
     }
 
@@ -331,7 +341,7 @@ public class Parser {
                 case INT:
                     tStack.push(new DataInt(Integer.parseInt(tToken.getContent())));
                     break;
-                    
+
                 case FLOAT:
                     tStack.push(new DataFloat(Double.parseDouble(tToken.getContent())));
                     break;
@@ -364,71 +374,75 @@ public class Parser {
                         }
                         tStack.push(tData);
                     }
-                    
+
+                    break;
+                
+                case OPERATOR_EQUALS:
+                case OPERATOR_NOTEQUALS:
+                case OPERATOR_LESS:
+                case OPERATOR_GREATER:
+                case OPERATOR_STRICTLESS:
+                case OPERATOR_STRICTGREATER:
+                case OPERATOR_LIKE:
+                case OPERATOR_NOTLIKE:
+                case OPERATOR_AND:
+                case OPERATOR_OR:
+                    // Pick the class
+                    Class tClass = mOperatorMap.get(tToken.getType());
+
+                    // Fetch parameter signature
+                    Method[] tMethods = tClass.getMethods();
+                    Method tSignatureMethod = null;
+                    for (Method tMethod : tMethods)
+                        if (Modifier.isStatic(tMethod.getModifiers()) && tMethod.getName().compareTo("getSignature") == 0)
+                            tSignatureMethod = tMethod;
+                    if (tSignatureMethod == null)
+                        throw new FilterException(FilterException.Type.FILTER_FAILURE, "could not get parameter signature of class due to missing definition");
+                    Class[] tParameterSignature;
+                    try {
+                        Object tReturn = tSignatureMethod.invoke(null);
+                        tParameterSignature = (Class[]) tReturn;
+                    }
+                    catch (Exception e) {
+                        throw new FilterException(FilterException.Type.FILTER_FAILURE, "could not get parameter signature of class", e.getCause());
+                    }
+
+                    // Handle parameters
+                    int tParameterCount = tParameterSignature.length;
+                    if (tStack.size() < tParameterCount)
+                        throw new FilterException(FilterException.Type.FILTER_FAILURE, "parameter mismatch, I expected " + tParameterCount + " of them but only got " + tStack.size());
+                    Vector<Convertable> tParameters = new Vector<Convertable>();
+                    tParameters.setSize(tParameterCount);
+                    for (int i = tParameterCount-1; i >= 0; i--) { // mind the reversion of the argument order
+                        Convertable tParameter = tStack.pop();
+                        Class tExpected = tParameterSignature[i];
+                        if (!(tExpected.isInstance(tParameter)))
+                            throw new FilterException(FilterException.Type.FILTER_FAILURE, "parameter mismatch, I expected a " + tExpected + " but got a " + tParameter.getClass());
+                        tParameters.set(i, tParameter);
+                    }
+
+                    // Instantiate the object
+                    Condition tCondition = null;
+                    Object tObject = null;
+                    try {
+                        Constructor tConstructor = tClass.getConstructor(List.class);
+                        tObject = tConstructor.newInstance(tParameters);
+                    }
+                    catch (Exception e) {
+                        throw new FilterException(FilterException.Type.FILTER_FAILURE, "error instantiating operator", e.getCause());
+                    }
+                    if (!(tObject instanceof Condition))
+                        throw new FilterException(FilterException.Type.FILTER_FAILURE, "attempt to instantiate non condition-typed operator (check the ruleset)");
+                    tCondition = (Condition) tObject;
+
+                    // Push the result
+                    tStack.push(tCondition);
                     break;
 
                 case WORD:
-                    Class tOperator = getOperator(tToken);
-                    Class tFunction = getFunction(tToken);
-                    if (tOperator != null || tFunction != null) {
-                        // Pick the class
-                        Class tClass = tOperator;
-                        if (tClass == null)
-                            tClass = tFunction;
-
-                        // Fetch parameter signature
-                        Method[] tMethods = tClass.getMethods();
-                        Method tSignatureMethod = null;
-                        for (Method tMethod : tMethods)
-                            if (Modifier.isStatic(tMethod.getModifiers()) && tMethod.getName().compareTo("getSignature") == 0)
-                                tSignatureMethod = tMethod;
-                        if (tSignatureMethod == null)
-                            throw new FilterException(FilterException.Type.FILTER_FAILURE, "could not get parameter signature of class due to missing definition");
-                        Class[] tParameterSignature;
-                        try {
-                            Object tReturn = tSignatureMethod.invoke(null);
-                            tParameterSignature = (Class[]) tReturn;
-                        }
-                        catch (Exception e) {
-                            throw new FilterException(FilterException.Type.FILTER_FAILURE, "could not get parameter signature of class", e.getCause());
-                        }
-
-                        // Handle parameters
-                        int tParameterCount = tParameterSignature.length;
-                        if (tStack.size() < tParameterCount)
-                            throw new FilterException(FilterException.Type.FILTER_FAILURE, "parameter mismatch, I expected " + tParameterCount + " of them but only got " + tStack.size());
-                        Vector<Convertable> tParameters = new Vector<Convertable>();
-                        tParameters.setSize(tParameterCount);
-                        for (int i = tParameterCount-1; i >= 0; i--) { // mind the reversion of the argument order
-                            Convertable tParameter = tStack.pop();
-                            Class tExpected = tParameterSignature[i];
-                            if (!(tExpected.isInstance(tParameter)))
-                                throw new FilterException(FilterException.Type.FILTER_FAILURE, "parameter mismatch, I expected a " + tExpected + " but got a " + tParameter.getClass());
-                            tParameters.set(i, tParameter);
-                        }
-
-                        // Instantiate the object
-                        Condition tCondition = null;
-                        Object tObject = null;
-                        try {
-                            Constructor tConstructor = tClass.getConstructor(List.class);
-                            tObject = tConstructor.newInstance(tParameters);
-                        }
-                        catch (Exception e) {
-                            throw new FilterException(FilterException.Type.FILTER_FAILURE, "error instantiating operator", e.getCause());
-                        }
-                        if (!(tObject instanceof Condition))
-                            throw new FilterException(FilterException.Type.FILTER_FAILURE, "attempt to instantiate non condition-typed operator (check the ruleset)");
-                        tCondition = (Condition) tObject;
-
-                        // Push the result
-                        tStack.push(tCondition);
-                    }
-                    else {
-                        tStack.push(new DataKey(tToken.getContent()));
-                    }
+                    tStack.push(new DataKey(tToken.getContent()));
                     break;
-                
+
                 default:
                     throw new FilterException(FilterException.Type.FILTER_FAILURE, "unknown token " + tToken);
             }
@@ -451,31 +465,50 @@ public class Parser {
     // Auxiliary
     //
 
-    private Class getOperator(Token iToken) {
-        // Create a new matcher container
-        Matcher tMatcher = Pattern.compile("dummy").matcher(iToken.getContent());
-        tMatcher.useTransparentBounds(true).useAnchoringBounds(false);
+    private boolean isOperator(Token iToken) {
+        switch (iToken.getType()) {
+            case OPERATOR_EQUALS:
+            case OPERATOR_NOTEQUALS:
+            case OPERATOR_LESS:
+            case OPERATOR_GREATER:
+            case OPERATOR_STRICTLESS:
+            case OPERATOR_STRICTGREATER:
+            case OPERATOR_LIKE:
+            case OPERATOR_NOTLIKE:
+            case OPERATOR_AND:
+            case OPERATOR_OR:
+                return true;
 
-        // Check all rules
-        for (Rule<Class> tRule : mOperatorRules) {
-            if (tMatcher.usePattern(tRule.getPattern()).lookingAt()) {
-                return tRule.getType();
-            }
+            default:
+                return false;
         }
-        return null;
     }
 
-    private Class getFunction(Token iToken) {
-        // Create a new matcher container
-        Matcher tMatcher = Pattern.compile("dummy").matcher(iToken.getContent());
-        tMatcher.useTransparentBounds(true).useAnchoringBounds(false);
+    private boolean isCondition(Token iToken) {
+        switch (iToken.getType()) {
+            case OPERATOR_EQUALS:
+            case OPERATOR_NOTEQUALS:
+            case OPERATOR_LESS:
+            case OPERATOR_GREATER:
+            case OPERATOR_STRICTLESS:
+            case OPERATOR_STRICTGREATER:
+            case OPERATOR_LIKE:
+            case OPERATOR_NOTLIKE:
+                return true;
 
-        // Check all rules
-        for (Rule<Class> tRule : mFunctionRules) {
-            if (tMatcher.usePattern(tRule.getPattern()).lookingAt()) {
-                return tRule.getType();
-            }
+            default:
+                return false;
         }
-        return null;
+    }
+
+    private boolean isRelation(Token iToken) {
+        switch (iToken.getType()) {
+            case OPERATOR_AND:
+            case OPERATOR_OR:
+                return true;
+
+            default:
+                return false;
+        }
     }
 }
