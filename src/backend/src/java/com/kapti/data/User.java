@@ -58,13 +58,17 @@ public class User {
     //
     // Construction
     //
-    public User(int id, String nickname, String email, String lastname, String firstname, Date regdate) {
+//    public User(int id, String nickname, String email, String lastname, String firstname, Date regdate) {
+//        this.id = id;
+//        this.nickname = nickname;
+//        this.email = email;
+//        this.lastname = lastname;
+//        this.firstname = firstname;
+//        this.regdate = regdate;
+//    }
+
+    public User (int id){
         this.id = id;
-        this.nickname = nickname;
-        this.email = email;
-        this.lastname = lastname;
-        this.firstname = firstname;
-        this.regdate = regdate;
     }
 
     //
@@ -188,6 +192,24 @@ public class User {
         this.rrn = rrn;
     }
 
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public void setRegdate(Date regdate) {
+        this.regdate = regdate;
+    }
+
+
+
     /**
      * Geeft het User-object in een generiek hashtable-object terug, zodat het geserialiseerd kan worden voor XML-RPC
      * @param iFields De velden die moeten worden opgenomen in de struct (Opmerking: een paswoord kan niet worden opgevraagd!)
@@ -252,6 +274,15 @@ public class User {
 
 
             switch (tField) {
+                case FIRSTNAME:
+                    setFirstname((String) tValue);
+                    break;
+                case LASTNAME:
+                    setLastname((String) tValue);
+                    break;
+                case NICKNAME:
+                    setNickname((String) tValue);
+                    break;
                 case PASSWORD:
                     setPassword((String) tValue);
                     break;
@@ -261,15 +292,6 @@ public class User {
                 case ROLE:
                     setRole((Integer) tValue);
                     break;
-                case POINTS:
-                    setPoints((Integer) tValue);
-                    break;
-                case STARTAMOUNT:
-                    setStartamount((Double) tValue);
-                    break;
-                case CASH:
-                    setCash((Double) tValue);
-                    break;
                 case RRN:
                     if (tValue instanceof String) {
                         setRijksregisternummer(Long.parseLong((String) tValue));
@@ -277,7 +299,10 @@ public class User {
                         setRijksregisternummer(((Integer) tValue).longValue());
                     }
                     break;
-
+                case STARTAMOUNT:
+                case POINTS:
+                case CASH:
+                case REGDATE:
                 default:
                     throw new InvocationException(InvocationException.Type.READ_ONLY_KEY, "requested key '" + tKey + "' cannot be modified");
             }
@@ -298,20 +323,20 @@ public class User {
         }
 
         // Check needed keys
-        if (tStructMap.containsKey(Fields.ID) && tStructMap.containsKey(Fields.NICKNAME) && tStructMap.containsKey(Fields.EMAIL) && tStructMap.containsKey(Fields.FIRSTNAME) && tStructMap.containsKey(Fields.LASTNAME) && tStructMap.containsKey(Fields.REGDATE)) {
+        if (tStructMap.containsKey(Fields.ID)){// && tStructMap.containsKey(Fields.NICKNAME) && tStructMap.containsKey(Fields.EMAIL) && tStructMap.containsKey(Fields.FIRSTNAME) && tStructMap.containsKey(Fields.LASTNAME) && tStructMap.containsKey(Fields.REGDATE)) {
             User tUser = new User(
-                    (Integer) iStruct.get(tStructMap.get(Fields.ID)),
-                    (String) iStruct.get(tStructMap.get(Fields.NICKNAME)),
-                    (String) iStruct.get(tStructMap.get(Fields.EMAIL)),
-                    (String) iStruct.get(tStructMap.get(Fields.LASTNAME)),
-                    (String) iStruct.get(tStructMap.get(Fields.FIRSTNAME)),
-                    (Date) iStruct.get(tStructMap.get(Fields.REGDATE)));
+                    (Integer) iStruct.get(tStructMap.get(Fields.ID)));
+//                    (String) iStruct.get(tStructMap.get(Fields.NICKNAME)),
+//                    (String) iStruct.get(tStructMap.get(Fields.EMAIL)),
+//                    (String) iStruct.get(tStructMap.get(Fields.LASTNAME)),
+//                    (String) iStruct.get(tStructMap.get(Fields.FIRSTNAME)),
+//                    (Date) iStruct.get(tStructMap.get(Fields.REGDATE)));
             iStruct.remove(tStructMap.get(Fields.ID));
-            iStruct.remove(tStructMap.get(Fields.NICKNAME));
-            iStruct.remove(tStructMap.get(Fields.EMAIL));
-            iStruct.remove(tStructMap.get(Fields.LASTNAME));
-            iStruct.remove(tStructMap.get(Fields.FIRSTNAME));
-            iStruct.remove(tStructMap.get(Fields.REGDATE));
+//            iStruct.remove(tStructMap.get(Fields.NICKNAME));
+//            iStruct.remove(tStructMap.get(Fields.EMAIL));
+//            iStruct.remove(tStructMap.get(Fields.LASTNAME));
+//            iStruct.remove(tStructMap.get(Fields.FIRSTNAME));
+//            iStruct.remove(tStructMap.get(Fields.REGDATE));
             return tUser;
         } else {
             throw new ServiceException(ServiceException.Type.NOT_ENOUGH_INFORMATION);

@@ -47,7 +47,7 @@ public class UserTest {
     public void testCheckPassword() {
         System.out.println("checkPassword");
         String password = "test";
-        User instance = new User(-1,"nick", "nick@domain.be", "last", "first", new Date());
+        User instance = new User(-1);
 
         instance.setPassword("test");
         boolean expResult = true;

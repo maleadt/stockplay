@@ -39,8 +39,13 @@ public class PointsTransactionDAOTest {
         time = Calendar.getInstance().getTime();
         uDAO = UserDAO.getInstance();
 
-        User u = new User(-1, "TESTPoints", "t@t.com", "az", "be", time);
+        User u = new User(-1);
+        u.setNickname("TESTPoints");
+        u.setEmail("t@t.com");
+        u.setFirstname("az");
+        u.setLastname("be");
         u.setPassword("test");
+        u.setRegdate(Calendar.getInstance().getTime());
         userid = uDAO.create(u);
 
         System.out.println("Created user " + userid);

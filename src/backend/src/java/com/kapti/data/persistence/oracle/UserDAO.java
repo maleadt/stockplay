@@ -64,9 +64,14 @@ public class UserDAO implements GenericDAO<User, Integer> {
 
                 rs = stmt.executeQuery();
                 if (rs.next()) {
-                    User tUser = new User(id, rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(5), rs.getDate(7));
+                    User tUser = new User(id); //, rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(5), rs.getDate(7));
+                    tUser.setNickname(rs.getString(1));
                     tUser.setEncryptedPassword(rs.getString(2));
+                    tUser.setEmail(rs.getString(3));
+                    tUser.setLastname(rs.getString(4));
+                    tUser.setFirstname(rs.getString(5));
                     tUser.setRole(rs.getInt(6));
+                    tUser.setRegdate(rs.getDate(7));
                     tUser.setRijksregisternummer(rs.getLong(8));
                     tUser.setPoints(rs.getInt(9));
                     tUser.setStartamount(rs.getDouble(10));
@@ -105,9 +110,14 @@ public class UserDAO implements GenericDAO<User, Integer> {
                 rs = stmt.executeQuery();
                 ArrayList<User> list = new ArrayList<User>();
                 while (rs.next()) {
-                    User tUser = new User(rs.getInt(1), rs.getString(2), rs.getString(4), rs.getString(5), rs.getString(6), rs.getDate(8));
+                    User tUser = new User(rs.getInt(1));//, rs.getString(2), rs.getString(4), rs.getString(5), rs.getString(6), rs.getDate(8));
+                    tUser.setNickname(rs.getString(2));
                     tUser.setEncryptedPassword(rs.getString(3));
+                    tUser.setEmail(rs.getString(4));
+                    tUser.setLastname(rs.getString(5));
+                    tUser.setFirstname(rs.getString(6));
                     tUser.setRole(rs.getInt(7));
+                    tUser.setRegdate(rs.getDate(8));
                     tUser.setRijksregisternummer(rs.getLong(9));
                     tUser.setPoints(rs.getInt(10));
                     tUser.setStartamount(rs.getDouble(11));
@@ -149,9 +159,14 @@ public class UserDAO implements GenericDAO<User, Integer> {
                 rs = stmt.executeQuery();
                 ArrayList<User> list = new ArrayList<User>();
                 while (rs.next()) {
-                    User tUser = new User(rs.getInt(1), rs.getString(2), rs.getString(4), rs.getString(5), rs.getString(6), rs.getDate(8));
+                    User tUser = new User(rs.getInt(1));//, rs.getString(2), rs.getString(4), rs.getString(5), rs.getString(6), rs.getDate(8));
+                    tUser.setNickname(rs.getString(2));
                     tUser.setEncryptedPassword(rs.getString(3));
+                    tUser.setEmail(rs.getString(4));
+                    tUser.setLastname(rs.getString(5));
+                    tUser.setFirstname(rs.getString(6));
                     tUser.setRole(rs.getInt(7));
+                    tUser.setRegdate(rs.getDate(8));
                     tUser.setRijksregisternummer(rs.getLong(9));
                     tUser.setPoints(rs.getInt(10));
                     tUser.setStartamount(rs.getDouble(11));
