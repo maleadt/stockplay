@@ -1,0 +1,245 @@
+#!/usr/bin/env perl
+
+################################################################################
+# Configuration
+#
+
+# XXX: library location
+use lib '../lib';
+
+# Packages
+use Date::Manip;
+use DateTime::Format::DateManip;
+use StockPlay::Factory;
+use StockPlay::Exchange;
+use StockPlay::Index;
+use StockPlay::Security;
+use AI::FANN qw(:all);
+use List::Util qw(max min);
+
+# Write nicely
+use warnings;
+use strict;
+
+# Constants
+my $exchange_symbol = "BSE";
+my $security_isin = "BE0003755692";
+
+
+################################################################################
+# Main
+#
+
+#
+# Setup
+#
+
+print "* Setup\n";
+
+# Load the factory
+print "- Setting up factory\n";
+my $factory = new StockPlay::Factory(
+	server	=> 'http://be04.kapti.com:6800/backend/public',
+);
+
+# Create a new network with 1 layer, 5 inputs, and 1 output.
+# INPUTS:
+# - Closing course of current day
+# OUTPUTS:
+# - Closing course of of next day
+# - Volume
+# - High price
+# - Low price
+# - Day is monday
+# - Day is tuesday
+# - Day is wednesday
+# - Day is thursday
+# - Day is friday
+print "- Creating neural network\n";
+my $ann = AI::FANN->new_standard(9, 12, 1);
+
+# Configure neural network
+$ann->hidden_activation_function(FANN_LINEAR);
+$ann->output_activation_function(FANN_LINEAR);
+
+
+
+#
+# Data
+#
+
+print "* Building training data\n";
+
+# Get the security
+my $exchange = (grep { $_->symbol eq $exchange_symbol } $factory->getExchanges())[0] or die();
+my $security = (grep { $_->isin eq $security_isin } $factory->getSecurities($exchange))[0] or die();
+
+# Get date range
+my ($dm1, $dm2) = (ParseDate("2 year ago"), ParseDate("yesterday"));
+my ($dt1, $dt2) = (DateTime::Format::DateManip->parse_datetime($dm1), DateTime::Format::DateManip->parse_datetime($dm2));
+
+# Load the quotes
+my @quotes = $factory->getQuotes($dt1, $dt2, $security);
+print "- Loaded ", scalar @quotes, " quotes\n";
+@quotes = sort { DateTime->compare($a->time, $b->time) } @quotes;
+
+# Truncate the resolution to 1 per day
+my @quotes_truncated;
+my $quote_previous;
+foreach my $quote (@quotes) {
+	# New quote
+	if (not defined $quote_previous) {
+		$quote_previous = $quote;
+	}
+	
+	# Quote at same day
+	elsif ($quote->time->year == $quote_previous->time->year
+			&& $quote->time->month == $quote_previous->time->month
+			&& $quote->time->day == $quote_previous->time->day) {
+		# Prefer most recent quote
+		if (DateTime->compare($quote_previous->time, $quote->time) == -1) {
+			$quote_previous = $quote;
+		}
+	}
+	
+	# Other day
+	else {
+		push @quotes_truncated, $quote_previous;
+		$quote_previous = $quote;
+	}
+}
+print "- Truncated resolution, " . scalar @quotes_truncated . " quotes remaining\n";
+
+# Build a set of training data
+print "- Building training data\n";
+my (@input, @output);
+for (my $i = 0; $i < @quotes-2; $i++) {
+	my $quote = $quotes[$i];
+	
+	# Generate inputs
+	my $i_closing = $quotes[$i+1]->open;
+	my $i_volume = $quote->volume;
+	my $i_high = $quote->high;
+	my $i_low = $quote->low;
+	my $i_monday = $quote->time->dow == 1 ? 1 : 0;
+	my $i_tuesday = $quote->time->dow == 2 ? 1 : 0;
+	my $i_wednesday = $quote->time->dow == 3 ? 1 : 0;
+	my $i_thursday = $quote->time->dow == 4 ? 1 : 0;
+	my $i_friday = $quote->time->dow == 5 ? 1 : 0;
+	push(@input, [$i_closing, $i_volume, $i_high, $i_low, $i_monday, $i_tuesday, $i_wednesday, $i_thursday, $i_friday]);
+	
+	# Generate outputs
+	my $o_closing = $quotes[$i+2]->open;
+	push(@output, [$o_closing]);
+}
+
+# Scale input data
+my ($i_closing_min, $i_closing_max) = scale(\@input, 0);
+my ($i_volume_min, $i_volume_max) = scale(\@input, 1);
+my ($i_high_min, $i_high_max) = scale(\@input, 2);
+my ($i_low_min, $i_low_max) = scale(\@input, 3);
+
+# Scale output data
+my ($o_closing_min, $o_closing_max) = scale(\@output, 0);
+
+# Merge input and output data
+my @data;
+for (my $i = 0; $i < @input; $i++) {
+	push(@data, $input[$i], $output[$i]);
+}
+
+# Split into learn and test part
+my $amount = int((scalar @data) * 0.90);
+$amount++ unless ($amount%2 == 1);
+
+my @data_learn = @data[0 .. $amount];
+my @data_test  = @data[-(scalar @data - $amount) .. 0];
+
+
+#
+# Learn
+#
+
+print "* Learning on " . (scalar @data_learn)/2 . " samples\n";
+my $train = AI::FANN::TrainData->new(@data_learn);
+$train->scale_input(-1, 1);
+$train->scale_output(-1, 1);
+$ann->train_on_data(
+	$train,
+	500000,	# Amount of epochs
+	1000,	# Epochs between information prints
+	0.001	# Desired rate of error
+);
+
+#
+# Test
+#
+
+print "* Testing on " . (scalar @data_test)/2 . " samples\n";
+$ann->reset_MSE;
+for (my $i = 0; $i < scalar @data_test; $i += 2) {
+	my ($input, $output) = ($data[$i], $data[$i+1]);
+	
+	my $real_output = $ann->test($input, $output);
+	print "~ Got ", descale_value($real_output->[0], $o_closing_min, $o_closing_max), " while I expected ", descale_value($output->[0], $o_closing_min, $o_closing_max), "\n";
+}
+print "- MSE on testset: " . $ann->MSE . "\n";
+
+exit(0);
+
+################################################################################
+# Routines
+#
+
+sub scale {
+	my ($arrayref, $index) = @_;
+	
+	my $max = max map { $_->[$index] } @$arrayref;
+	my $min = min map  { $_->[$index] } @$arrayref;
+	for (my $i = 0; $i < @$arrayref; $i++) {
+		$arrayref->[$i]->[$index] = 2 * ($arrayref->[$i]->[$index] - $min) / ($max - $min) - 1;
+	}
+	
+	return ($min, $max);
+}
+
+sub descale {
+	my ($arrayref, $index, $min, $max) = @_;
+	
+	for (my $i = 0; $i < @$arrayref; $i++) {
+		$arrayref->[$i]->[$index] = ($max - $min) * ($arrayref->[$i]->[$index] + 1) / 2 + $min;
+	}
+}
+
+sub descale_value {
+	my ($value, $min, $max) = @_;
+	
+	return ($max - $min) * ($value + 1) / 2 + $min;
+}
+
+__END__
+
+################################################################################
+# Documentation
+#
+
+=pod
+
+=head1 NAME
+
+stockplay-ai-neural - Neural-network based AI component
+
+=head1 SYNOPSIS
+
+=head1 COPYRIGHT
+
+Copyright 2010 The StockPlay development team as listed in the AUTHORS file.
+
+This software is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public Licence (GPL) as published by the
+Free Software Foundation (FSF).
+
+The full text of the license can be found in the
+LICENSE file included with this module.
+
+=cut
