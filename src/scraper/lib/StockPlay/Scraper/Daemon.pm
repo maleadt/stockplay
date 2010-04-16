@@ -204,7 +204,7 @@ sub run {
 	
 	while (1) {
 		# Process all plugins
-		my @quotes;
+		my (@quotes, @securities);
 		foreach my $plugin (@{$self->plugins}) {
 			my $pluginname = $plugin->infohash->{name};
 			$self->logger->info("processing plugin $pluginname");
@@ -214,7 +214,7 @@ sub run {
 					next unless $plugin->isOpen($exchange, DateTime->now());
 					
 					# Check if the delay has already passed
-					my @securities;
+					my @securities_local;
 					foreach my $security (@{$exchange->securities}) {
 						# Don't update securities which error'd before			
 						if ($security->wait != 0) {
@@ -223,17 +223,17 @@ sub run {
 						}
 
 						if (not $security->has_quote or (time-$security->quote->fetchtime) > $security->quote->delay) {
-							push(@securities, $security);
+							push(@securities_local, $security);
 						}
 					}
 				
 					# Update them
-					$self->logger->debug("fetching " . scalar @securities . " quotes from " . $exchange->name . " (plugin " . $plugin->infohash->{name} . ")");
-					my @quotes_local = $plugin->getLatestQuotes($exchange, @securities);
+					$self->logger->debug("fetching " . scalar @securities_local . " quotes from " . $exchange->name . " (plugin " . $plugin->infohash->{name} . ")");
+					my @quotes_local = $plugin->getLatestQuotes($exchange, @securities_local);
 								
 					# Save them (if no errors && updated)
 					foreach my $quote (@quotes_local) {
-						my $security = (grep { $_->isin eq $quote->security } @securities)[0];
+						my $security = (grep { $_->isin eq $quote->security } @securities_local)[0];
 						if (not defined $security) {
 							$self->logger->warn("received non-requested quote for security " . $quote->security);
 							next;
@@ -241,6 +241,7 @@ sub run {
 						
 						if (not $security->has_quote or DateTime->compare($security->quote->time, $quote->time) != 0) {
 							push (@quotes, $quote);
+							push(@securities, $security);
 							
 							# All quotes in a single quote fetch have the same delay time, also if some of
 							# those aren't updated nearly that frequently. That's why we don't juse replace
@@ -252,7 +253,6 @@ sub run {
 									$quote->delay($olddelay/1.5);
 								}
 							}
-							$security->quote($quote);
 						} else {
 							# Doubling of the delay (see big comment block above)
 							if ($security->quote->fetchtime != 0) {
@@ -267,20 +267,23 @@ sub run {
 				$self->logger->error("plugin processing failed ($@)");
 			}
 		}
-			
-		# Check delays
-		my $delay = 60;
-		foreach my $quote (@quotes) {
-			if ($quote->delay - (time - $quote->fetchtime) < $delay) {
-				$delay = $quote->delay - (time - $quote->fetchtime);
-			}
-		}
 		
 		# Push the changes to the server
+		my $delay = $MINDELAY;
 		$self->logger->info("sending quotes to backend");
 		$self->logger->debug("saving " . scalar @quotes . " quotes");
 		eval {
 			$self->factory->createQuotes(@quotes);
+			
+			# Now save the quotes locally and calculate an optimal delay
+			foreach my $quote (@quotes) {
+				if ($quote->delay - (time - $quote->fetchtime) < $delay) {
+					$delay = $quote->delay - (time - $quote->fetchtime);
+				}
+				
+				my $security = (grep { $_->isin eq $quote->security } @securities)[0];
+				$security->quote($quote);
+			}
 		};
 		if ($@) {
 			chomp $@;

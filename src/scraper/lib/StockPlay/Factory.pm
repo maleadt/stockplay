@@ -172,7 +172,7 @@ sub getIndexes {
 	# Request indexes from server
 	my @s_indexes = @{$self->xmlrpc->send_request(
 		'Finance.Index.List',
-		"exchange EQUALS '" . $exchange->symbol . "'"
+		"exchange == '" . $exchange->symbol . "'"
 	)->value};
 	
 	# Build StockPlay::Index objects
@@ -193,7 +193,7 @@ sub getSecurities {
 	# Request securities from the server
 	my @s_securities = @{$self->xmlrpc->send_request(
 		'Finance.Security.List',
-		"exchange EQUALS '" . $exchange->symbol . "'"
+		"exchange == '" . $exchange->symbol . "'"
 	)->value};
 	
 	# Build StockPlay::Security objects
@@ -216,7 +216,7 @@ sub getLatestQuotes {
 	# Build a filter
 	my @conditions = map { "isin EQUALS '" . $_->isin . "'" } @securities;
 	my $filter = shift @conditions;
-	map { $filter = "$_ OR ( $filter )" } @conditions;
+	map { $filter = "$_ || $filter" } @conditions;
 	
 	# Request quotes from the server
 	my @s_quotes = @{$self->xmlrpc->send_request(
@@ -255,7 +255,7 @@ sub getQuotes {
 	
 	# Build a filter
 	my $isin = $security->isin;
-	my $filter = "((timestamp GREATERTHANOREQUAL '" . $start_string . "'d) AND (timestamp LESSTHAN '" . $end_string . "'d)) AND (isin EQUALS '" . $isin . "'s)";
+	my $filter = "timestamp >= '" . $start_string . "'d && timestamp < '" . $end_string . "'d && isin == '" . $isin . "'s";
 	
 	# Request quotes from the server
 	my @s_quotes = @{$self->xmlrpc->send_request(
