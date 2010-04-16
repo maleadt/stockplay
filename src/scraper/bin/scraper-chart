@@ -113,8 +113,9 @@ print "- Loaded ", scalar @quotes, " quotes\n";
 
 # Create the dataset
 my $series = Chart::Clicker::Data::Series->new(
-    keys      => [ map { $_->time->epoch() } @quotes ],
-    values    => [ map { $_->price } @quotes ],
+    keys	=> [ map { $_->time->epoch() } @quotes ],
+    values	=> [ map { $_->price } @quotes ],
+    name	=> $security->name
 );
 my $ds = Chart::Clicker::Data::DataSet->new(
 	series => [ $series ]
@@ -123,7 +124,12 @@ my $ds = Chart::Clicker::Data::DataSet->new(
 # Create a graph
 my $cc = Chart::Clicker->new;
 my $ctx = $cc->get_context('default');
-$ctx->domain_axis(Chart::Clicker::Axis::DateTime->new(position => 'bottom', orientation     => 'horizontal'));
+$ctx->domain_axis(
+	Chart::Clicker::Axis::DateTime->new(
+		position	=> 'bottom',
+		orientation	=> 'horizontal'
+	)
+);
 $cc->add_to_datasets($ds);
 
 # Write the graph

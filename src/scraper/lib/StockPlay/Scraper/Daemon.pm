@@ -270,24 +270,26 @@ sub run {
 		
 		# Push the changes to the server
 		my $delay = $MINDELAY;
-		$self->logger->info("sending quotes to backend");
-		$self->logger->debug("saving " . scalar @quotes . " quotes");
-		eval {
-			$self->factory->createQuotes(@quotes);
-			
-			# Now save the quotes locally and calculate an optimal delay
-			foreach my $quote (@quotes) {
-				if ($quote->delay - (time - $quote->fetchtime) < $delay) {
-					$delay = $quote->delay - (time - $quote->fetchtime);
-				}
+		if (@quotes) {
+			$self->logger->info("sending quotes to backend");
+			$self->logger->debug("saving " . scalar @quotes . " quotes");
+			eval {
+				$self->factory->createQuotes(@quotes);
 				
-				my $security = (grep { $_->isin eq $quote->security } @securities)[0];
-				$security->quote($quote);
+				# Now save the quotes locally and calculate an optimal delay
+				foreach my $quote (@quotes) {
+					if ($quote->delay - (time - $quote->fetchtime) < $delay) {
+						$delay = $quote->delay - (time - $quote->fetchtime);
+					}
+					
+					my $security = (grep { $_->isin eq $quote->security } @securities)[0];
+					$security->quote($quote);
+				}
+			};
+			if ($@) {
+				chomp $@;
+				$self->logger->error("saving quotes failed ($@)");
 			}
-		};
-		if ($@) {
-			chomp $@;
-			$self->logger->error("saving quotes failed ($@)");
 		}
 		
 		# Wait
