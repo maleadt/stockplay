@@ -71,7 +71,7 @@ public class ConditionNotLike extends Condition {
     public Node addNode(Graph iGraph) {
         // Self
         Node tNodeSelf = super.addNode(iGraph);
-        tNodeSelf.setAttribute("label", "NOT LIKE");
+        tNodeSelf.setAttribute("label", "not like");
 
         // Children
         Node tNodeLeft = getData(0).addNode(iGraph);

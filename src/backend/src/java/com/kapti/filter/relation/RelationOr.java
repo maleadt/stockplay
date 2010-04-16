@@ -62,7 +62,7 @@ public class RelationOr extends Relation {
     public Node addNode(Graph iGraph) {
         // Self
         Node tNodeSelf = super.addNode(iGraph);
-        tNodeSelf.setAttribute("label", "OR");
+        tNodeSelf.setAttribute("label", "or");
 
         // Children
         Node tNodeLeft = getCondition(0).addNode(iGraph);

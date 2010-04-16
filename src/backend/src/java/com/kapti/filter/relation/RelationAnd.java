@@ -62,7 +62,7 @@ public class RelationAnd extends Relation {
     public Node addNode(Graph iGraph) {
         // Self
         Node tNodeSelf = super.addNode(iGraph);
-        tNodeSelf.setAttribute("label", "AND");
+        tNodeSelf.setAttribute("label", "and");
 
         // Children
         Node tNodeLeft = getCondition(0).addNode(iGraph);

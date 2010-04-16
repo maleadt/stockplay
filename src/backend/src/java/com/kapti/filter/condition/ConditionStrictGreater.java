@@ -1,6 +1,6 @@
 /*
- * ConditionLessThanOrEqual.java
- * StockPlay - Kleiner dan of gelijk aan conditie.
+ * ConditionGreaterThan.java
+ * StockPlay - Groter dan conditie.
  *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
@@ -32,25 +32,24 @@ import com.kapti.filter.graph.Node;
 import java.util.List;
 
 /**
- * Een kleiner dan of gelijk aan conditie. Deze conditie heeft twee parameters nodig, waarbij
+ * Een groter dan controle. Deze conditie heeft twee parameters nodig, waarbij
  * de eerste een string moet zijn (die de key die moet gecontroleerd worden
  * vastlegt.
  */
 
-public class ConditionLessThanOrEqual extends Condition {
-    
+public class ConditionStrictGreater extends Condition {
     //
     // Constructie
     //
 
-    public ConditionLessThanOrEqual(List<Convertable> iParameters) {
+    public ConditionStrictGreater(List<Convertable> iParameters) {
         super(iParameters);
     }
 
-    public ConditionLessThanOrEqual(ConditionLessThanOrEqual iObject) {
+    public ConditionStrictGreater(ConditionStrictGreater iObject) {
         super(iObject);
     }
-    
+
 
     //
     // Methods
@@ -62,7 +61,7 @@ public class ConditionLessThanOrEqual extends Condition {
 
     @Override
     public final Object compile() throws FilterException {
-        ConditionLessThanOrEqual tConverter = (ConditionLessThanOrEqual) getConverter();
+        ConditionStrictGreater tConverter = (ConditionStrictGreater) getConverter();
 
         return tConverter.process((DataKey)getData(0), getData(1));
     }
@@ -71,7 +70,7 @@ public class ConditionLessThanOrEqual extends Condition {
     public Node addNode(Graph iGraph) {
         // Self
         Node tNodeSelf = super.addNode(iGraph);
-        tNodeSelf.setAttribute("label", "LESS THAN OR EQUAL");
+        tNodeSelf.setAttribute("label", "strict greater");
 
         // Children
         Node tNodeLeft = getData(0).addNode(iGraph);

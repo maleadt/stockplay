@@ -71,7 +71,7 @@ public class ConditionLike extends Condition {
     public Node addNode(Graph iGraph) {
         // Self
         Node tNodeSelf = super.addNode(iGraph);
-        tNodeSelf.setAttribute("label", "LIKE");
+        tNodeSelf.setAttribute("label", "like");
 
         // Children
         Node tNodeLeft = getData(0).addNode(iGraph);

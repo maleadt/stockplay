@@ -1,6 +1,6 @@
 /*
- * ConditionLikeConverter.java
- * StockPlay - SQL converter voor een gelijkheids-conditie.
+ * ConditionGreaterThanConverter.java
+ * StockPlay - SQL converter voor een groter dan conditie.
  *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
@@ -22,17 +22,17 @@
 package com.kapti.filter.condition.sql;
 
 import com.kapti.exceptions.FilterException;
-import com.kapti.filter.condition.ConditionNot;
+import com.kapti.filter.condition.ConditionStrictGreater;
 import com.kapti.filter.data.Data;
 import com.kapti.filter.data.DataKey;
 
-public class ConditionNotConverter extends ConditionNot {
+public class ConditionStrictGreaterConverter extends ConditionStrictGreater {
 
     //
     // Construction
     //
 
-    public ConditionNotConverter(ConditionNot iObject) {
+    public ConditionStrictGreaterConverter(ConditionStrictGreater iObject) {
         super(iObject);
     }
 
@@ -42,6 +42,6 @@ public class ConditionNotConverter extends ConditionNot {
 
     @Override
     public Object process(DataKey a, Data b) throws FilterException {
-        return (String)a.compile() + " != " + (String)b.compile();
+        return (String)a.compile() + " > " + (String)b.compile();
     }
 }

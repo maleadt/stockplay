@@ -1,6 +1,6 @@
 /*
- * ConditionNot.java
- * StockPlay - Verschillend van conditie.
+ * ConditionLessThanOrEqual.java
+ * StockPlay - Kleiner dan conditie.
  *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
@@ -32,24 +32,25 @@ import com.kapti.filter.graph.Node;
 import java.util.List;
 
 /**
- * Een verschillend van conditie. Deze conditie heeft twee parameters nodig, waarbij
+ * Een kleiner dan conditie. Deze conditie heeft twee parameters nodig, waarbij
  * de eerste een string moet zijn (die de key die moet gecontroleerd worden
  * vastlegt.
  */
 
-public class ConditionNot extends Condition {
+public class ConditionStrictLess extends Condition {
+    
     //
     // Constructie
     //
 
-    public ConditionNot(List<Convertable> iParameters) {
+    public ConditionStrictLess(List<Convertable> iParameters) {
         super(iParameters);
     }
 
-    public ConditionNot(ConditionNot iObject) {
+    public ConditionStrictLess(ConditionStrictLess iObject) {
         super(iObject);
     }
-    
+
 
     //
     // Methods
@@ -61,7 +62,7 @@ public class ConditionNot extends Condition {
 
     @Override
     public final Object compile() throws FilterException {
-        ConditionNot tConverter = (ConditionNot) getConverter();
+        ConditionStrictLess tConverter = (ConditionStrictLess) getConverter();
 
         return tConverter.process((DataKey)getData(0), getData(1));
     }
@@ -70,7 +71,7 @@ public class ConditionNot extends Condition {
     public Node addNode(Graph iGraph) {
         // Self
         Node tNodeSelf = super.addNode(iGraph);
-        tNodeSelf.setAttribute("label", "NOT");
+        tNodeSelf.setAttribute("label", "strict less");
 
         // Children
         Node tNodeLeft = getData(0).addNode(iGraph);

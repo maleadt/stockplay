@@ -1,6 +1,6 @@
 /*
- * ConditionLessThanOrEqualConverter.java
- * StockPlay - SQL converter voor een kleiner dan of gelijk aan conditie.
+ * ConditionGreaterThanOrEqualConverter.java
+ * StockPlay - SQL converter voor een groter dan of gelijk aan conditie.
  *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
@@ -22,17 +22,17 @@
 package com.kapti.filter.condition.sql;
 
 import com.kapti.exceptions.FilterException;
-import com.kapti.filter.condition.ConditionLessThanOrEqual;
+import com.kapti.filter.condition.ConditionGreater;
 import com.kapti.filter.data.Data;
 import com.kapti.filter.data.DataKey;
 
-public class ConditionLessThanOrEqualConverter extends ConditionLessThanOrEqual {
+public class ConditionGreaterConverter extends ConditionGreater {
 
     //
     // Construction
     //
 
-    public ConditionLessThanOrEqualConverter(ConditionLessThanOrEqual iObject) {
+    public ConditionGreaterConverter(ConditionGreater iObject) {
         super(iObject);
     }
 
@@ -42,6 +42,6 @@ public class ConditionLessThanOrEqualConverter extends ConditionLessThanOrEqual 
 
     @Override
     public Object process(DataKey a, Data b) throws FilterException {
-        return (String)a.compile() + " <= " + (String)b.compile();
+        return (String)a.compile() + " >= " + (String)b.compile();
     }
 }
