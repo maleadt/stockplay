@@ -239,6 +239,8 @@ public class Parser {
                         Class tOperator1 = getOperator(tToken);
                         while (!tStack.isEmpty() && tStack.peek().getType() == TokenType.WORD && getOperator(tStack.peek()) != null) {
                             Class tOperator2 = getOperator(tStack.peek());
+                            System.out.println("Operator 1: " + tOperator1);
+                            System.out.println("Operator 2: " + tOperator2);
 
                             // Precedence of Relation < precedence of Condition
                             if (tOperator1.getSuperclass() == Relation.class && tOperator2.getSuperclass() == Condition.class) {
@@ -247,8 +249,13 @@ public class Parser {
                             else if (tOperator1.getSuperclass() == Condition.class && tOperator2.getSuperclass() == Relation.class) {
                                 break;
                             }
+
+                            // Asume left-precedence for equal conditions
+                            else if (tOperator1.getSuperclass() == Relation.class && tOperator1 == tOperator2) {
+                                break;
+                            }
                             else
-                                throw new FilterException(FilterException.Type.FILTER_FAILURE, "precedence between equally-typed operators has not been defined (e.g. use brackets!)");
+                                throw new FilterException(FilterException.Type.FILTER_FAILURE, "I cannot make up the operator-precedence here, please use brackets");
                         }
                         tStack.push(tToken);
                     }
