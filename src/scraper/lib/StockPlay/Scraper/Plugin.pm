@@ -96,7 +96,6 @@ sub BUILD {
 
 =cut
 
-requires 'getQuotes';
 requires 'getLatestQuotes';
 
 =pod

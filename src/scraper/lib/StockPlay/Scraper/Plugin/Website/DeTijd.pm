@@ -287,7 +287,7 @@ sub addSecurities {
 	push(@{$exchange->securities}, @securities);
 }
 
-sub getQuotes {
+sub getLatestQuotes {
 	my ($self, $exchange, @securities) = @_;
 	
 	# Query-parameters invullen

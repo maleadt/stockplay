@@ -8,16 +8,12 @@
 use lib '../lib';
 
 # Packages
-use Storable;
 use StockPlay::Scraper::PluginManager;
 use StockPlay::Scraper::Daemon;
 
 # Write nicely
 use warnings;
 use strict;
-
-# Constants
-my $PLUGIN_MAX_AGE = 3600*24*7;
 
 
 ################################################################################
@@ -46,47 +42,6 @@ $SIG{__WARN__} = sub {
 	StockPlay::Logger->logger((caller(0))[0])->warn($warning);
 };
 
-# Plugin manager
-$logger->info("loading plugin manager");
-my $pluginmanager = new StockPlay::Scraper::PluginManager;
-my @infohashes = $pluginmanager->get_group('StockPlay::Scraper::Plugin');
-
-# Check homefolder
-my $dumpfolder = $ENV{'HOME'} . '/dumps/';
-mkdir $dumpfolder unless (-d $dumpfolder);
-
-# Load plugins
-# TODO: this code should move to the PluginManager, or at least be executed
-#       within an eval block
-$logger->info("instantiating all plugins");
-my @plugins;
-foreach my $infohash (@infohashes) {
-	$logger->debug("processing " . $infohash->{name});
-	
-	# Manage a dump
-	my $plugin;
-	if (-f $dumpfolder . $infohash->{name} . '.dump') {
-		$logger->debug("loading from dump");
-		$plugin = retrieve($dumpfolder . $infohash->{name} . '.dump')
-			or $logger->logdie("could not load dump ($!)");
-		
-		if (time - $plugin->infohash->{time} > $PLUGIN_MAX_AGE) {
-			$logger->debug("loaded dump out of date");			
-			$plugin = undef;
-		}
-	}
-	
-	# Instantiate a plugin, if neccesary
-	if (not defined $plugin) {
-		$logger->debug("creating new dump");
-		$plugin = $pluginmanager->instantiate($infohash);
-		$plugin->clean();
-		store $plugin, $dumpfolder . $infohash->{name} . '.dump';
-	}
-	
-	push(@plugins, $plugin);
-}
-
 # Load the factory
 $logger->info("loading factory");
 my $factory = new StockPlay::Factory(
@@ -96,8 +51,7 @@ my $factory = new StockPlay::Factory(
 # Load the daemon
 $logger->info("loading daemon");
 my $daemon = new StockPlay::Scraper::Daemon(
-	factory	=> $factory,
-	plugins	=> \@plugins
+	factory	=> $factory
 );
 $daemon->run();
 

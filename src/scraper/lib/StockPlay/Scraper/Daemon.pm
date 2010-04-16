@@ -21,6 +21,7 @@ XML-RPC backend.
 
 # Packages
 use Moose;
+use Storable;
 use StockPlay::Factory;
 use StockPlay::Exchange;
 use StockPlay::Index;
@@ -33,6 +34,10 @@ with 'StockPlay::Logger';
 # Write nicely
 use strict;
 use warnings;
+
+# Constants
+my $PLUGIN_MAX_AGE = 3600*24*7;
+my $MINDELAY = 60;
 
 
 ################################################################################
@@ -50,13 +55,20 @@ use warnings;
 has 'plugins' => (
 	is		=> 'ro',
 	isa		=> 'ArrayRef',
-	required	=> 1
+	lazy		=> 1,
+	builder		=> '_build_plugins'
 );
 
 has 'factory' => (
 	is		=> 'ro',
 	isa		=> 'StockPlay::Factory',
 	required	=> 1
+);
+
+has 'pluginmanager' => (
+	is		=> 'ro',
+	isa		=> 'StockPlay::Scraper::PluginManager',
+	builder		=> '_build_pluginmanager'
 );
 
 
@@ -72,12 +84,57 @@ has 'factory' => (
 sub BUILD {
 	my ($self) = @_;
 	
-	# Process all plugins
-	$self->logger->info("preparing database");
-	for (my $i = 0; $i < @{$self->plugins}; $i++) {
-		my $plugin = $self->plugins->[$i];
-		$self->logger->info("setting-up plugin " . $plugin->infohash->{name});		
-		eval {
+	# Build lazy attributes which depend on passed values
+	$self->plugins;
+}
+
+sub _build_pluginmanager {
+	my ($self) = @_;
+	
+	# Plugin manager
+	$self->logger->debug("loading plugin manager");
+	my $pluginmanager = new StockPlay::Scraper::PluginManager;
+	
+	return $pluginmanager;
+}
+
+sub _build_plugins {
+	my ($self) = @_;	
+	$self->logger->info("loading all plugins");
+	
+	# Get infohashes	
+	my @infohashes = $self->pluginmanager->get_group('StockPlay::Scraper::Plugin');
+
+	# Check homefolder
+	my $dumpfolder = $ENV{'HOME'} . '/dumps/';
+	mkdir $dumpfolder unless (-d $dumpfolder);
+
+	# Load plugins
+	my @plugins;
+	foreach my $infohash (@infohashes) {
+		$self->logger->info("loading plugin " . $infohash->{name});
+		eval {		
+			# Manage a dump
+			my $plugin;
+			if (-f $dumpfolder . $infohash->{name} . '.dump') {
+				$self->logger->debug("loading from dump");
+				$plugin = retrieve($dumpfolder . $infohash->{name} . '.dump')
+					or $logger->logdie("could not load dump ($!)");
+				
+				if (time - $plugin->infohash->{time} > $PLUGIN_MAX_AGE) {
+					$self->logger->debug("loaded dump out of date");			
+					$plugin = undef;
+				}
+			}
+			
+			# Instantiate a plugin, if neccesary
+			if (not defined $plugin) {
+				$self->logger->debug("creating new dump");
+				$plugin = $self->pluginmanager->instantiate($infohash);
+				$plugin->clean();
+				store $plugin, $dumpfolder . $infohash->{name} . '.dump';
+			}
+			
 			# Check roles	
 			if (not $plugin->does('StockPlay::Scraper::Plugin')) {
 				die("passed plugin doesn't implement correct coles");
@@ -126,17 +183,20 @@ sub BUILD {
 					}				
 				}
 			}
-		};		
+			
+			push(@plugins, $plugin);
+		};
 		if ($@) {
 			chomp $@;
-			$self->logger->error("plugin set-up failed ($@)");
-			delete @{$self->plugins}[$i];
+			$self->logger->error("failed to load plugin ($@)");
 		}
 	}
 	
-	unless (@{$self->plugins}) {
-		die("no plugins managed to set-up correctly");
+	unless (@plugins) {
+		die("no plugins managed to load correctly");
 	}
+	
+	return \@plugins;
 }
 
 sub run {
@@ -147,57 +207,61 @@ sub run {
 		my @quotes;
 		foreach my $plugin (@{$self->plugins}) {
 			my $pluginname = $plugin->infohash->{name};
-			$self->logger->debug("processing plugin $pluginname");
-			
-			# Check which plugins need to be updated
-			foreach my $exchange (@{$plugin->exchanges}) {
-				next unless $plugin->isOpen($exchange, DateTime->now());
-				
-				# Check if the delay has already passed
-				my @securities;
-				foreach my $security (@{$exchange->securities}) {
-					# Don't update securities which error'd before			
-					if ($security->wait != 0) {
-						$security->wait($security->wait-1);
-						next;
-					}
-
-					if (not $security->has_quote or (time-$security->quote->fetchtime) > $security->quote->delay) {
-						push(@securities, $security);
-					}
-				}
-			
-				# Update them
-				$self->logger->info("fetching " . scalar @securities . " quotes from " . $exchange->name . " (plugin " . $plugin->infohash->{name} . ")");
-				my @quotes_local = $plugin->getLatestQuotes($exchange, @securities);
-				
-				# Save them (if no errors && updated)
-				foreach my $quote (@quotes_local) {
-					my $security = (grep { $_->isin eq $quote->security } @securities)[0];
-					if (not defined $security) {
-						$self->logger->warn("received non-requested quote for security " . $quote->security);
-						next;
-					}
+			$self->logger->info("processing plugin $pluginname");
+			eval {			
+				# Check all exchanges separately
+				foreach my $exchange (@{$plugin->exchanges}) {
+					next unless $plugin->isOpen($exchange, DateTime->now());
 					
-					if (not $security->has_quote or DateTime->compare($security->quote->time, $quote->time) != 0) {
-						push (@quotes, $quote);
-						
-						# All quotes in a single quote fetch have the same delay time, also if some of
-						# those aren't updated nearly that frequently. That's why we don't juse replace
-						# the delay with the new one, but divide it in half. Consistently, when a  quote
-						# didn't seem to be updated, the delay time is doubled.
-						if ($security->has_quote && $security->quote->fetchtime != 0) {
-							my $olddelay = (time-$security->quote->fetchtime);
-							if ($olddelay/2 > $quote->delay) {
-								$quote->delay($olddelay/1.5);
-							}
+					# Check if the delay has already passed
+					my @securities;
+					foreach my $security (@{$exchange->securities}) {
+						# Don't update securities which error'd before			
+						if ($security->wait != 0) {
+							$security->wait($security->wait-1);
+							next;
 						}
-						$security->quote($quote);
-					} else {
-						# Doubling of the delay (see big comment block above)
-						$security->quote->delay((time-$security->quote->fetchtime) * 2);
+
+						if (not $security->has_quote or (time-$security->quote->fetchtime) > $security->quote->delay) {
+							push(@securities, $security);
+						}
+					}
+				
+					# Update them
+					$self->logger->debug("fetching " . scalar @securities . " quotes from " . $exchange->name . " (plugin " . $plugin->infohash->{name} . ")");
+					my @quotes_local = $plugin->getLatestQuotes($exchange, @securities);
+								
+					# Save them (if no errors && updated)
+					foreach my $quote (@quotes_local) {
+						my $security = (grep { $_->isin eq $quote->security } @securities)[0];
+						if (not defined $security) {
+							$self->logger->warn("received non-requested quote for security " . $quote->security);
+							next;
+						}
+						
+						if (not $security->has_quote or DateTime->compare($security->quote->time, $quote->time) != 0) {
+							push (@quotes, $quote);
+							
+							# All quotes in a single quote fetch have the same delay time, also if some of
+							# those aren't updated nearly that frequently. That's why we don't juse replace
+							# the delay with the new one, but divide it in half. Consistently, when a  quote
+							# didn't seem to be updated, the delay time is doubled.
+							if ($security->has_quote && $security->quote->fetchtime != 0) {
+								my $olddelay = (time-$security->quote->fetchtime);
+								if ($olddelay/2 > $quote->delay) {
+									$quote->delay($olddelay/1.5);
+								}
+							}
+							$security->quote($quote);
+						} else {
+							# Doubling of the delay (see big comment block above)
+							$security->quote->delay((time-$security->quote->fetchtime) * 2);
+						}
 					}
 				}
+			};
+			if ($@) {
+				$self->logger->error("plugin processing failed ($@)");
 			}
 		}
 			
@@ -210,12 +274,18 @@ sub run {
 		}
 		
 		# Push the changes to the server
-		$self->logger->info("saving " . scalar @quotes . " quotes");
-		$self->factory->createQuotes(@quotes);
+		$self->logger->info("sending quotes to backend");
+		$self->logger->debug("saving " . scalar @quotes . " quotes");
+		eval {
+			$self->factory->createQuotes(@quotes);
+		};
+		if ($@) {
+			$self->error("saving quotes failed ($@)");
+		}
 		
 		# Wait
-		if ($delay < 60) {
-			$delay = 60;
+		if ($delay < $MINDELAY) {
+			$delay = $MINDELAY;
 		}
 		$delay = int($delay);
 		$self->logger->debug("sleeping $delay seconds");
