@@ -39,9 +39,9 @@ public class User {
     //
 
     public static enum Fields {
+
         ID, NICKNAME, PASSWORD, EMAIL, LASTNAME, FIRSTNAME, REGDATE, ROLE, POINTS, STARTAMOUNT, CASH, RRN
     }
-
     private int id = -1;
     private String nickname = "";
     private String password = "";
@@ -58,18 +58,13 @@ public class User {
     //
     // Construction
     //
-
-    public User(String nickname, String email, String lastname, String firstname, Date regdate) {
+    public User(int id, String nickname, String email, String lastname, String firstname, Date regdate) {
+        this.id = id;
         this.nickname = nickname;
         this.email = email;
         this.lastname = lastname;
         this.firstname = firstname;
         this.regdate = regdate;
-    }
-
-    public User(int id, String nickname, String email, String lastname, String firstname, Date regdate) {
-        this(nickname, email, lastname, firstname, regdate);
-        this.id = id;
     }
 
     //
@@ -80,7 +75,7 @@ public class User {
         this.password = password;
     }
 
-    public void setPassword(String password){
+    public void setPassword(String password) {
         this.password = encryptPassword(password);
     }
 
@@ -88,18 +83,17 @@ public class User {
         return password;
     }
 
-      private static String byteArrayToHexString(byte[] b){
-     StringBuffer sb = new StringBuffer(b.length * 2);
-     for (int i = 0; i < b.length; i++){
-       int v = b[i] & 0xff;
-       if (v < 16) {
-         sb.append('0');
-       }
-       sb.append(Integer.toHexString(v));
-     }
-     return sb.toString().toUpperCase();
-  }
-
+    private static String byteArrayToHexString(byte[] b) {
+        StringBuffer sb = new StringBuffer(b.length * 2);
+        for (int i = 0; i < b.length; i++) {
+            int v = b[i] & 0xff;
+            if (v < 16) {
+                sb.append('0');
+            }
+            sb.append(Integer.toHexString(v));
+        }
+        return sb.toString().toUpperCase();
+    }
 
     private String encryptPassword(String password) {
         try {
@@ -143,7 +137,7 @@ public class User {
     }
 
     public void setRole(int role) {
-        this.role=role;
+        this.role = role;
     }
 
     public String getLastname() {
@@ -214,10 +208,14 @@ public class User {
                     oStruct.put(tField.name(), getEmail());
                     break;
                 case LASTNAME:
-                    if(getLastname() != null) oStruct.put(tField.name(), getLastname());
+                    if (getLastname() != null) {
+                        oStruct.put(tField.name(), getLastname());
+                    }
                     break;
                 case FIRSTNAME:
-                    if(getFirstname() != null) oStruct.put(tField.name(), getFirstname());
+                    if (getFirstname() != null) {
+                        oStruct.put(tField.name(), getFirstname());
+                    }
                     break;
                 case REGDATE:
                     oStruct.put(tField.name(), getRegdate());
@@ -242,43 +240,42 @@ public class User {
         return oStruct;
     }
 
-    
     public void applyStruct(Hashtable<String, Object> iStruct) throws StockPlayException {
         for (String tKey : iStruct.keySet()) {
             Object tValue = iStruct.get(tKey);
             Fields tField = null;
             try {
                 tField = Fields.valueOf(tKey.toUpperCase());
-            }
-            catch (IllegalArgumentException e) {
+            } catch (IllegalArgumentException e) {
                 throw new InvocationException(InvocationException.Type.KEY_DOES_NOT_EXIST, "requested key '" + tKey + "' does not exist");
             }
 
 
             switch (tField) {
                 case PASSWORD:
-                    setPassword((String)tValue);
+                    setPassword((String) tValue);
                     break;
                 case EMAIL:
                     setEmail((String) tValue);
                     break;
                 case ROLE:
-                    setRole((Integer)tValue);
+                    setRole((Integer) tValue);
                     break;
                 case POINTS:
-                    setPoints((Integer)tValue);
+                    setPoints((Integer) tValue);
                     break;
                 case STARTAMOUNT:
-                    setStartamount((Double)tValue);
+                    setStartamount((Double) tValue);
                     break;
                 case CASH:
-                    setCash((Double)tValue);
+                    setCash((Double) tValue);
                     break;
                 case RRN:
-                    if(tValue instanceof String)
-                        setRijksregisternummer(Long.parseLong((String)tValue));
-                    else
-                        setRijksregisternummer(((Integer)tValue).longValue());
+                    if (tValue instanceof String) {
+                        setRijksregisternummer(Long.parseLong((String) tValue));
+                    } else {
+                        setRijksregisternummer(((Integer) tValue).longValue());
+                    }
                     break;
 
                 default:
@@ -294,29 +291,30 @@ public class User {
             Fields tField = null;
             try {
                 tField = Fields.valueOf(tKey.toUpperCase());
-            }
-            catch (IllegalArgumentException e) {
+            } catch (IllegalArgumentException e) {
                 throw new InvocationException(InvocationException.Type.KEY_DOES_NOT_EXIST, "requested key '" + tKey + "' does not exist");
             }
             tStructMap.put(tField, tKey);
         }
 
         // Check needed keys
-        if (tStructMap.containsKey(Fields.NICKNAME) && tStructMap.containsKey(Fields.EMAIL) && tStructMap.containsKey(Fields.FIRSTNAME) && tStructMap.containsKey(Fields.LASTNAME) && tStructMap.containsKey(Fields.REGDATE)) {
+        if (tStructMap.containsKey(Fields.ID) && tStructMap.containsKey(Fields.NICKNAME) && tStructMap.containsKey(Fields.EMAIL) && tStructMap.containsKey(Fields.FIRSTNAME) && tStructMap.containsKey(Fields.LASTNAME) && tStructMap.containsKey(Fields.REGDATE)) {
             User tUser = new User(
+                    (Integer) iStruct.get(tStructMap.get(Fields.ID)),
                     (String) iStruct.get(tStructMap.get(Fields.NICKNAME)),
                     (String) iStruct.get(tStructMap.get(Fields.EMAIL)),
                     (String) iStruct.get(tStructMap.get(Fields.LASTNAME)),
                     (String) iStruct.get(tStructMap.get(Fields.FIRSTNAME)),
-                    (Date) iStruct.get(tStructMap.get(Fields.REGDATE))
-                    );
+                    (Date) iStruct.get(tStructMap.get(Fields.REGDATE)));
+            iStruct.remove(tStructMap.get(Fields.ID));
             iStruct.remove(tStructMap.get(Fields.NICKNAME));
             iStruct.remove(tStructMap.get(Fields.EMAIL));
             iStruct.remove(tStructMap.get(Fields.LASTNAME));
             iStruct.remove(tStructMap.get(Fields.FIRSTNAME));
             iStruct.remove(tStructMap.get(Fields.REGDATE));
             return tUser;
-        } else
+        } else {
             throw new ServiceException(ServiceException.Type.NOT_ENOUGH_INFORMATION);
+        }
     }
 }

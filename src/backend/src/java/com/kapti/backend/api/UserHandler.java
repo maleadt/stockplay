@@ -21,6 +21,7 @@
  */
 package com.kapti.backend.api;
 
+import com.kapti.backend.helpers.DateHelper;
 import com.kapti.data.User;
 import com.kapti.data.persistence.GenericDAO;
 import com.kapti.exceptions.InvocationException;
@@ -29,7 +30,6 @@ import com.kapti.filter.Filter;
 import com.kapti.filter.parsing.Parser;
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.GregorianCalendar;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.TimeZone;
@@ -61,7 +61,7 @@ public class UserHandler extends MethodClass {
         GenericDAO<com.kapti.data.User, Integer> tUserDAO = getDAO().getUserDAO();
 
         // Instantiate a new user
-        iDetails.put(User.Fields.REGDATE.name(), convertCalendar(Calendar.getInstance(), TimeZone.getTimeZone("GMT")).getTime());
+        iDetails.put(User.Fields.REGDATE.name(), DateHelper.convertCalendar(Calendar.getInstance(), TimeZone.getTimeZone("GMT")).getTime());
         User tUser = User.fromStruct(iDetails);
         tUser.applyStruct(iDetails);
         tUser.setStartamount(100000); //TODO hier berekenen van het startamount
@@ -173,18 +173,5 @@ public class UserHandler extends MethodClass {
         return user.checkPassword(password);
     }
 
-    /**
-     * Adapt calendar to client time zone.
-     * @param calendar - adapting calendar
-     * @param timeZone - client time zone
-     * @return adapt calendar to client time zone
-     */
-    public static Calendar convertCalendar(final Calendar calendar, final TimeZone timeZone) {
-        Calendar ret = new GregorianCalendar(timeZone);
-        ret.setTimeInMillis(calendar.getTimeInMillis()
-                + timeZone.getOffset(calendar.getTimeInMillis())
-                - TimeZone.getDefault().getOffset(calendar.getTimeInMillis()));
-        ret.getTime();
-        return ret;
-    }
+
 }

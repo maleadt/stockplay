@@ -26,6 +26,8 @@ import com.kapti.data.Exchange;
 import com.kapti.data.Index;
 import com.kapti.data.IndexSecurity;
 import com.kapti.data.Order;
+import com.kapti.data.PointsTransaction;
+import com.kapti.data.PointsTransaction.PointsTransactionPK;
 import com.kapti.data.Transaction;
 import com.kapti.data.User;
 import com.kapti.data.UserSecurity;
@@ -143,6 +145,10 @@ public class OracleStockPlayDAO implements StockPlayDAO {
         } catch (SQLException ex) {
             throw new DBException(ex);
         }
+    }
+
+    public GenericDAO<PointsTransaction, PointsTransactionPK> getPointsTransactionDAO() {
+        return PointsTransactionDAO.getInstance();
     }
 
 }
