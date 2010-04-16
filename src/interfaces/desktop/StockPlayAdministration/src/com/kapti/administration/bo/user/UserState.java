@@ -3,21 +3,22 @@
  * and open the template in the editor.
  */
 
-package com.kapti.administration;
+package com.kapti.administration.bo.user;
 
+import com.kapti.administration.bo.finance.*;
 import com.kapti.administration.bo.finance.Security;
 
 /**
  *
  * @author Thijs
  */
-public class SecurityState {
+public class UserState {
 
-    private Security security;
+    private User user;
     private int rowNumber;
 
-    public SecurityState(int rowNumber, Security security) {
-        this.security = security;
+    public UserState(int rowNumber, User user) {
+        this.user = user;
         this.rowNumber = rowNumber;
     }
 
@@ -25,8 +26,8 @@ public class SecurityState {
         return rowNumber;
     }
 
-    public Security getSecurity() {
-        return security;
+    public User getUser() {
+        return user;
     }
 
     

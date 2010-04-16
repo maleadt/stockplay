@@ -6,7 +6,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Collection;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableModel;
 
 /**
  *
@@ -16,7 +15,7 @@ public class SecuritiesTableModel extends AbstractTableModel {
 
     private final static String[] columnTitles = {"ISIN", "Symbool", "Beurs", "Naam", "Type", "Zichtbaar", "Geschorst"};
     private final static Class[] columnTypes = {String.class, String.class, String.class, String.class, String.class, Boolean.class, Boolean.class};
-    private final static boolean[] editableColumns = new boolean[]{false, false, false, true, true, true, true};
+    private final static boolean[] editableColumns = new boolean[]{false, false, true, true, true, true, true};
     //Andere opmaak van datums kan bekommen worden met een "SimpleDateFormat" toe te passen
     //maar geen enkel formaat dat ik ingeef wordt ooit geaccepteerd...
     Security[] securities = new Security[]{};
@@ -43,6 +42,7 @@ public class SecuritiesTableModel extends AbstractTableModel {
         }
 
         public void propertyChange(PropertyChangeEvent evt) {
+
             model.fireTableRowsUpdated(index, index);
         }
     }

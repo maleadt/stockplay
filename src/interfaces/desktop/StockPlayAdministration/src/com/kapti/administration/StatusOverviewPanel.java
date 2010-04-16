@@ -14,6 +14,8 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -26,18 +28,25 @@ import org.jdesktop.swingx.JXTitledSeparator;
  *
  * @author Thijs
  */
-public class StatusOverviewPanel extends JPanel implements ActionListener {
+public class StatusOverviewPanel extends JPanel implements ActionListener, ComponentListener {
 
     private static StatusOverviewPanel instance = new StatusOverviewPanel();
 
     public static StatusOverviewPanel getInstance() {
         return instance;
     }
-    JLabel uptimeLabel;
-    JLabel loggedInUsersLabel;
-    JLabel processedRequestsLabel;
+    private StatusObject databaseStatus = new StatusObject("Database", "System.Database.Status");
+    private JLabel uptimeLabel;
+    private JLabel loggedInUsersLabel;
+    private JLabel processedRequestsLabel;
+    private Timer updateTimer;
+    private StatusObject scraperStatus = new StatusObject("Scraper", "System.Scraper.Status");
+    private StatusObject backendStatus = new StatusObject("Backend", "System.Backend.Status");
 
     private StatusOverviewPanel() {
+        this.addComponentListener(this);
+
+
 
         this.setLayout(new GridBagLayout());
         setBorder(BorderFactory.createEmptyBorder(20, 30, 20, 30));
@@ -46,6 +55,7 @@ public class StatusOverviewPanel extends JPanel implements ActionListener {
         titel.setFont(titel.getFont().deriveFont(Font.BOLD, 30));
 
         GridBagConstraints c = new GridBagConstraints();
+        c.anchor = GridBagConstraints.FIRST_LINE_START;
         c.fill = GridBagConstraints.BOTH;
         c.gridwidth = 10;
         c.ipady = 25;
@@ -61,17 +71,12 @@ public class StatusOverviewPanel extends JPanel implements ActionListener {
         add(componentsLabel, c);
 
         //We maken hier de componenten-start-stop-dingen aan
-//        createStatusItem(new StatusObject("Scraper"), 3);
-//        createStatusItem(new StatusObject("Backend"), 4);
-//        createStatusItem(new StatusObject("Database"), 5);
-//        createStatusItem(new StatusObject("Webserver"), 6);
-//        createStatusItem(new StatusObject("AI"), 7);
 
-        StatusView scraperView = new StatusView(this, 3, new StatusObject("Scraper", "System.Scraper.Status"));
-        StatusView backendView = new StatusView(this,4, new StatusObject("Backend", "System.Backend.Status"));
-        StatusView Database = new StatusView(this, 5, new StatusObject("Database", "System.Database.Status"));
+        StatusView scraperView = new StatusView(this, 3, scraperStatus);
+        StatusView backendView = new StatusView(this, 4, backendStatus);
+        StatusView Database = new StatusView(this, 5, databaseStatus);
         //StatusView Webserver = new StatusView(this, 6, new StatusObject("Webserver", "System.Scraper.Status"));
-        
+
 
         JXTitledSeparator statsLabel = new JXTitledSeparator("Statistieken");
         statsLabel.setFont(statsLabel.getFont().deriveFont(Font.BOLD, 20));
@@ -121,64 +126,10 @@ public class StatusOverviewPanel extends JPanel implements ActionListener {
 
 
         //we starten nu een timer die elke seconde statistieken ophaalt
-        Timer timer = new Timer(1000, this);
-        timer.start();
+        updateTimer = new Timer(1000, this);
+        updateTimer.start();
 
     }
-
-//    private void createStatusItem(StatusObject statObj, int row) {
-//        GridBagConstraints cStatus = new GridBagConstraints();
-//        cStatus.ipadx = 10;
-//        cStatus.gridy = row;
-//
-//        cStatus.fill = GridBagConstraints.HORIZONTAL;
-//        JLabel nameLabel = new JLabel(statObj.getName());
-//        cStatus.gridx = 1;
-//
-//        add(nameLabel, cStatus);
-//
-//        JLabel statusLabel = new JLabel("", JLabel.LEFT);
-//        statusLabel.setPreferredSize(new Dimension(150, 10));
-//        if (statObj.getStatus() == StatusObject.Status.STARTED) {
-//            statusLabel.setText("Gestart");
-//            statusLabel.setForeground(Color.GREEN);
-//        } else if (statObj.getStatus() == StatusObject.Status.STOPPED) {
-//            statusLabel.setText("Gestopt");
-//            statusLabel.setForeground(Color.RED);
-//        } else if (statObj.getStatus() == StatusObject.Status.STARTING) {
-//            statusLabel.setText("Bezig met starten...");
-//            statusLabel.setForeground(Color.ORANGE);
-//        } else if (statObj.getStatus() == StatusObject.Status.STOPPING) {
-//            statusLabel.setText("Bezig met stoppen...");
-//            statusLabel.setForeground(Color.ORANGE);
-//        } else if (statObj.getStatus() == StatusObject.Status.ERROR) {
-//            statusLabel.setText("FOUT");
-//            statusLabel.setForeground(Color.RED);
-//        } else { //(statObj.getStatus() == StatusObject.Status.UNKNOWN) {
-//            statusLabel.setText("Status onbekend");
-//            statusLabel.setForeground(Color.ORANGE);
-//        }
-//        cStatus.gridx = 2;
-//        add(statusLabel, cStatus);
-//
-//        cStatus.insets = new Insets(5, 10, 5, 10);
-//
-//        JButton startButton = new JButton("Start");
-//        startButton.setEnabled(false);
-//        cStatus.gridx = 3;
-//        add(startButton, cStatus);
-//
-//        JButton stopButton = new JButton("Stop");
-//        stopButton.setEnabled(false);
-//        cStatus.gridx = 4;
-//        add(stopButton, cStatus);
-//
-//        JButton restartButton = new JButton("Herstarten");
-//        restartButton.setEnabled(false);
-//        cStatus.gridx = 5;
-//        add(restartButton, cStatus);
-//
-//    }
 
     /**
      * Wordt opgeroepen bij het tikken van de timer voor het updaten van de statistieken
@@ -201,6 +152,32 @@ public class StatusOverviewPanel extends JPanel implements ActionListener {
 
 
         uptimeLabel.setText(days + " dagen, " + hours + " uren, " + minutes + " minuten en " + seconds + " seconden");
+    }
+
+    public void componentResized(ComponentEvent e) {
+    }
+
+    public void componentMoved(ComponentEvent e) {
+    }
+
+    public void componentShown(ComponentEvent e) {
+        if (updateTimer != null) {
+            updateTimer.start();
+
+            backendStatus.fetchUpdates(true);
+            scraperStatus.fetchUpdates(true);
+            databaseStatus.fetchUpdates(true);
+        }
+    }
+
+    public void componentHidden(ComponentEvent e) {
+        if (updateTimer != null) {
+            updateTimer.stop();
+
+            backendStatus.fetchUpdates(false);
+            scraperStatus.fetchUpdates(false);
+            databaseStatus.fetchUpdates(false);
+        }
     }
 
     private class StatusView implements ActionListener {
@@ -258,7 +235,7 @@ public class StatusOverviewPanel extends JPanel implements ActionListener {
 
             //we zorgen ervoor dat er periodiek geupdated wordt
             statObj.addActionListener(this);
-            statObj.fetchUpdates(true);
+            //statObj.fetchUpdates(true);
             updateView();
         }
 

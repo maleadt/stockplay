@@ -6,6 +6,7 @@ package com.kapti.administration.bo;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ResourceBundle;
 import org.apache.log4j.Logger;
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
@@ -20,11 +21,20 @@ public class XmlRpcClientFactory {
 
     public static XmlRpcClient getXmlRpcClient() {
         try {
+
+            ResourceBundle settings = ResourceBundle.getBundle("com/kapti/administration/settings");
+
             XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
-            config.setServerURL(new URL("http://localhost:8080/backend/public"));
+            config.setServerURL(new URL(settings.getString("server")));
+            config.setGzipCompressing(settings.getString("gzip").equals("1"));
+            config.setGzipRequesting(settings.getString("gzip").equals("1"));
+            config.setEnabledForExtensions(true);
+
+
             XmlRpcClient client = new XmlRpcClient();
 
             client.setConfig(config);
+
 
 
             return client;

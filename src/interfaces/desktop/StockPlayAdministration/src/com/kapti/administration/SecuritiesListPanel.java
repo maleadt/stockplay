@@ -4,28 +4,36 @@
  */
 package com.kapti.administration;
 
+import com.kapti.administration.bo.finance.SecurityState;
 import com.kapti.administration.bo.finance.Exchange;
 import com.kapti.administration.bo.finance.FinanceFactory;
 import com.kapti.administration.bo.finance.Security;
 import com.kapti.administration.tablemodels.SecuritiesTableModel;
 import com.kapti.exceptions.StockPlayException;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.Shape;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.util.Collection;
 import java.util.Stack;
 import java.util.concurrent.ExecutionException;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.*;
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.xmlrpc.XmlRpcException;
+import org.jdesktop.jxlayer.JXLayer;
+import org.jdesktop.jxlayer.plaf.effect.AbstractLayerEffect;
 import org.jdesktop.swingx.JXErrorPane;
 
 import org.jdesktop.swingx.JXTable;
 import org.jdesktop.swingx.decorator.HighlighterFactory;
+
+import org.jdesktop.jxlayer.plaf.ext.LockableUI;
 import org.jdesktop.swingx.error.ErrorInfo;
 
 /**
@@ -38,6 +46,10 @@ public class SecuritiesListPanel extends JPanel implements TableModelListener, L
     private FinanceFactory finFactory = new FinanceFactory();
     private static SecuritiesListPanel instance = new SecuritiesListPanel();
     private JLabel selectedLabel = new JLabel();
+
+    private LockableUI lockUI = null;
+    private JXLayer<JComponent> busyLayer = null;
+
     private JXTable securitiesTable = null;
     private SecuritiesTableModel securitiesTableModel = null;
     private JButton showSecurity = new JButton("Toon effect");
@@ -107,13 +119,17 @@ public class SecuritiesListPanel extends JPanel implements TableModelListener, L
 
         exchangeColumn.setCellEditor(new DefaultCellEditor(exchangesComboBox));
 
-
-        //securitiesTable.getColumn(5).setCellEditor(new DefaultCellEditor(new JCheckBox()));
-        //securitiesTable.getColumn(6).setCellEditor(new DefaultCellEditor(new JCheckBox()));
-
         JScrollPane securitiesTableScrollPane = new JScrollPane(securitiesTable);
-        add(securitiesTableScrollPane, BorderLayout.CENTER);
 
+        //we voegen de tabel toe aan de busylayer, zodat deze kan blokkeren tijdens het inladen
+        lockUI = new LockableUI();
+
+
+        busyLayer = new JXLayer<JComponent>(securitiesTableScrollPane, lockUI);
+        busyLayer.setUI(lockUI);
+        add(busyLayer, BorderLayout.CENTER);
+        
+        lockUI.setLocked(true);
         //de onderste balk
 
 
@@ -227,6 +243,7 @@ public class SecuritiesListPanel extends JPanel implements TableModelListener, L
                     securitiesTableModel.setSecurities(get());
 
                     securitiesTableModel.fireTableDataChanged();
+                    lockUI.setLocked(false);
 
                 } catch (InterruptedException ex) {
                     JXErrorPane.showDialog(new Exception("An error occured while fetching the securities: the thread got interrupted", ex));

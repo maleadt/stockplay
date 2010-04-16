@@ -120,9 +120,6 @@ public class Menu extends JXTaskPaneContainer implements PropertyChangeListener 
         usersMenuPane.add(createMenuitem("Afgelopen maand", new ShowUsersListActionListener(), "group"));
         usersMenuPane.add(createMenuitem("Afgelopen jaar", new ShowUsersListActionListener(), "group"));
         add(usersMenuPane);
-
-
-
     }
 
     public void propertyChange(PropertyChangeEvent evt) {
@@ -138,7 +135,9 @@ public class Menu extends JXTaskPaneContainer implements PropertyChangeListener 
             } else {
                 securitiesMenuPane.setCollapsed(true);
             }
-            if (!evt.getSource().equals(usersMenuPane)) {
+            if (evt.getSource().equals(usersMenuPane)) {
+                mainframe.setMainPanel(UsersListPanel.getInstance());
+            }else {
                 usersMenuPane.setCollapsed(true);
             }
         }
@@ -165,17 +164,6 @@ public class Menu extends JXTaskPaneContainer implements PropertyChangeListener 
         return link;
     }
 
-    /* public void actionPerformed(ActionEvent e) {
-
-    MenuitemAction action = MenuitemAction.valueOf(e.getActionCommand());
-    if (action.equals(MenuitemAction.StatusOverview)) {
-    setMainPanel(StatusOverviewPanel.getInstance());
-    } else if (action.equals(MenuitemAction.SecuritiesList)) {
-    setMainPanel(SecuritiesListPanel.getInstance());
-    } else if (action.equals(MenuitemAction.UsersList)) {
-    setMainPanel(null);
-    }
-    }*/
     /**
      * Geeft een ImageIcon terug als de link valide was, anders null
      * @param path
@@ -231,10 +219,10 @@ public class Menu extends JXTaskPaneContainer implements PropertyChangeListener 
             this.regex = regex;
         }
 
-
-
         public void actionPerformed(ActionEvent e) {
-            mainframe.setMainPanel(null);
+            if (!(mainframe.getMainPanel() instanceof UsersListPanel)) {
+                mainframe.setMainPanel(UsersListPanel.getInstance());
+            }
         }
     }
 }
