@@ -47,7 +47,7 @@ so look there for more information.
 
 BEGIN {
 	Log::Log4perl->init(\<<EOT);
-		log4perl.logger = DEBUG, screen
+		log4perl.logger = DEBUG, screen, syslog
 		
 		# Syslog appender
 		log4perl.appender.syslog=Log::Dispatch::Syslog
