@@ -261,6 +261,7 @@ sub run {
 				}
 			};
 			if ($@) {
+				chomp $@;
 				$self->logger->error("plugin processing failed ($@)");
 			}
 		}
@@ -280,6 +281,7 @@ sub run {
 			$self->factory->createQuotes(@quotes);
 		};
 		if ($@) {
+			chomp $@;
 			$self->logger->error("saving quotes failed ($@)");
 		}
 		
