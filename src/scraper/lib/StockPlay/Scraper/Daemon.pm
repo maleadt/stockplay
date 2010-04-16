@@ -255,7 +255,9 @@ sub run {
 							$security->quote($quote);
 						} else {
 							# Doubling of the delay (see big comment block above)
-							$security->quote->delay((time-$security->quote->fetchtime) * 2);
+							if ($security->quote->fetchtime != 0) {
+								$security->quote->delay((time-$security->quote->fetchtime) * 2);
+							}
 						}
 					}
 				}
