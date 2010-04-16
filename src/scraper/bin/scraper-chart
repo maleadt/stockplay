@@ -96,7 +96,7 @@ my $security = $securities[$choice];
 print "- Fetching quotes\n";
 
 # Get date range
-my ($dm1, $dm2) = (ParseDate("1 day ago"), ParseDate("now"));
+my ($dm1, $dm2) = (ParseDate("today"), ParseDate("now"));
 my ($dt1, $dt2) = (DateTime::Format::DateManip->parse_datetime($dm1), DateTime::Format::DateManip->parse_datetime($dm2));
 
 # Load the quotes
