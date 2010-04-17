@@ -33,26 +33,23 @@ public class Index {
     //
 
     public static enum Fields {
-        ID, NAME, EXCHANGE
+        ISIN, NAME, EXCHANGE, SYMBOL
     }
     
-    private int id;
     private String name;
     private String exchange;
+    private String isin;
+    private String symbol;
 
 
     //
     // Construction
     //
 
-    public Index(String name, String exchange) {
-        this.name = name;
+    public Index(String isin, String symbol, String exchange) {
+        this.isin = isin;
+        this.symbol = symbol;
         this.exchange = exchange;
-    }
-
-    public Index(int id, String name, String exchange) {
-        this(name, exchange);
-        this.id = id;
     }
 
 
@@ -68,16 +65,27 @@ public class Index {
         return name;
     }
 
-    public int getId() {
-        return id;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getIsin() {
+        return isin;
+    }
+
+    public String getSymbol() {
+        return symbol;
     }
 
     public Hashtable<String, Object> toStruct(Fields... iFields) {
         Hashtable<String, Object> oStruct = new Hashtable<String, Object>();
         for (Fields tField : iFields) {
             switch (tField) {
-                case ID:
-                    oStruct.put(tField.name(), getId());
+                case ISIN:
+                    oStruct.put(tField.name(), getIsin());
+                    break;
+                case SYMBOL:
+                    oStruct.put(tField.name(), getSymbol());
                     break;
                 case NAME:
                     oStruct.put(tField.name(), getName());
@@ -102,6 +110,9 @@ public class Index {
             }
 
             switch (tField) {
+                case NAME:
+                    setName((String)tValue);
+                    break;
                 default:
                     throw new InvocationException(InvocationException.Type.NON_EXISTING_ENTITY, "requested key '" + tKey + "' cannot be modified");
             }
@@ -123,12 +134,14 @@ public class Index {
         }
 
         // Check needed keys
-        if (tStructMap.containsKey(Fields.NAME) && tStructMap.containsKey(Fields.EXCHANGE)) {
+        if (tStructMap.containsKey(Fields.ISIN) && tStructMap.containsKey(Fields.SYMBOL) && tStructMap.containsKey(Fields.EXCHANGE)) {
             Index tIndex = new Index(
-                    (String)iStruct.get(tStructMap.get(Fields.NAME)),
+                    (String)iStruct.get(tStructMap.get(Fields.ISIN)),
+                    (String)iStruct.get(tStructMap.get(Fields.SYMBOL)),
                     (String)iStruct.get(tStructMap.get(Fields.EXCHANGE))
                 );
-            iStruct.remove(tStructMap.get(Fields.NAME));
+            iStruct.remove(tStructMap.get(Fields.ISIN));
+            iStruct.remove(tStructMap.get(Fields.SYMBOL));
             iStruct.remove(tStructMap.get(Fields.EXCHANGE));
             return tIndex;
         } else {

@@ -32,7 +32,6 @@ import java.util.Collection;
 public class SecurityDAO implements com.kapti.data.persistence.SecurityDAO {
 
     private static final String SELECT_SECURITY = "SELECT symbol, name, exchange, visible, suspended FROM securities WHERE isin = ?";
-    private static final String SELECT_SECURITIES_FILTER = "SELECT isin, symbol, name, exchange, visible, suspended FROM securities WHERE isin LIKE ? AND symbol LIKE ? AND name LIKE ? AND exchange LIKE ? AND visible LIKE ? AND suspended LIKE ?";
     private static final String SELECT_SECURITIES = "SELECT isin, symbol, name, exchange, visible, suspended FROM securities";
     private static final String INSERT_SECURITY = "INSERT INTO securities(isin, symbol, name, exchange, visible, suspended) VALUES(?, ?, ?, ?, ?, ?)";
     private static final String UPDATE_SECURITY = "UPDATE securities SET symbol = ?, exchange = ?, name = ?, visible = ?, suspended = ? WHERE isin = ?";

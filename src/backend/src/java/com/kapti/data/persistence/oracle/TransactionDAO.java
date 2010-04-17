@@ -35,8 +35,6 @@ public class TransactionDAO implements GenericDAO<Transaction, Integer> {
 
     private static final String SELECT_TRANSACTION_LASTID = "select transactionid_seq.currval from dual";
     private static final String SELECT_TRANSACTION = "SELECT userid, timest, isin, type, amount, price FROM transactions WHERE id = ?";
-    private static final String SELECT_TRANSACTIONS_FILTER = "SELECT id, userid, timest, isin, type, amount, price FROM transactions "
-            + "WHERE id LIKE ? AND userid LIKE ? AND timest LIKE ? AND isin LIKE ? AND type LIKE ? AND amount LIKE ? AND price LIKE ?";
     private static final String SELECT_TRANSACTIONS = "SELECT id, userid, timest, isin, type, amount, price FROM transactions";
     private static final String INSERT_TRANSACTION = "INSERT INTO transactions(id, userid, timest, isin, type, amount, price) VALUES(transactionid_seq.nextval, ?, ?, ?, ?, ?, ?)";
     private static final String UPDATE_TRANSACTION = "UPDATE transactions SET userid = ?, timest = ?, isin = ?, type = ?, amount = ?, price = ? WHERE id = ?";

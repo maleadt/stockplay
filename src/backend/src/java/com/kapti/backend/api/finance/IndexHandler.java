@@ -46,26 +46,25 @@ public class IndexHandler extends MethodClass {
 
     public Vector<Hashtable<String, Object>> List() throws StockPlayException {
         // Get DAO reference
-        GenericDAO<com.kapti.data.Index, Integer> exDAO = getDAO().getIndexDAO();
+        GenericDAO<com.kapti.data.Index, String> exDAO = getDAO().getIndexDAO();
 
         // Fetch and convert all exchanges
         Collection<com.kapti.data.Index> tExchanges = exDAO.findAll();
         Vector<Hashtable<String, Object>> oVector = new Vector<Hashtable<String, Object>>();
         for (com.kapti.data.Index tExchange : tExchanges) {
             oVector.add(tExchange.toStruct(
-                    com.kapti.data.Index.Fields.ID,
+                    com.kapti.data.Index.Fields.ISIN,
                     com.kapti.data.Index.Fields.NAME,
+                    com.kapti.data.Index.Fields.SYMBOL,
                     com.kapti.data.Index.Fields.EXCHANGE));
         }
 
         return oVector;
     }
-
-
-
+    
     public Vector<Hashtable<String, Object>> List(String iFilter) throws StockPlayException {
         // Get DAO reference
-        GenericDAO<com.kapti.data.Index, Integer> exDAO = getDAO().getIndexDAO();
+        GenericDAO<com.kapti.data.Index, String> exDAO = getDAO().getIndexDAO();
 
         Parser parser = Parser.getInstance();
         Filter filter = parser.parse(iFilter);
@@ -75,7 +74,8 @@ public class IndexHandler extends MethodClass {
         Vector<Hashtable<String, Object>> oVector = new Vector<Hashtable<String, Object>>();
         for (com.kapti.data.Index tExchange : tExchanges) {
             oVector.add(tExchange.toStruct(
-                    com.kapti.data.Index.Fields.ID,
+                    com.kapti.data.Index.Fields.ISIN,
+                    com.kapti.data.Index.Fields.SYMBOL,
                     com.kapti.data.Index.Fields.NAME,
                     com.kapti.data.Index.Fields.EXCHANGE));
         }
@@ -85,14 +85,12 @@ public class IndexHandler extends MethodClass {
 
     public int Modify(String iFilter, Hashtable<String, Object> iDetails) throws StockPlayException {
         // Get DAO reference
-        GenericDAO<com.kapti.data.Index, Integer> tIndexDAO = getDAO().getIndexDAO();
+        GenericDAO<com.kapti.data.Index, String> tIndexDAO = getDAO().getIndexDAO();
 
         // Get the Indexs we need to modify
         Collection<com.kapti.data.Index> tIndexs = tIndexDAO.findAll();
 
         // Now apply the new properties
-        // TODO: controleren of de struct geen ID field bevat, deze kan _enkel_
-        //       gebruikt worden om een initiële Exchange aa nte maken (Create)
         for (com.kapti.data.Index tIndex : tIndexs) {
             tIndex.applyStruct(iDetails);
             tIndexDAO.update(tIndex);
@@ -103,7 +101,7 @@ public class IndexHandler extends MethodClass {
 
     public int Create(Hashtable<String, Object> iDetails) throws StockPlayException {
         // Get DAO reference
-        GenericDAO<com.kapti.data.Index, Integer> tIndexDAO = getDAO().getIndexDAO();
+        GenericDAO<com.kapti.data.Index, String> tIndexDAO = getDAO().getIndexDAO();
 
         // Instantiate a new index
         Index tIndex = Index.fromStruct(iDetails);
@@ -112,4 +110,18 @@ public class IndexHandler extends MethodClass {
         return tIndexDAO.create(tIndex);
 
     }
+
+    /*
+     * TODO: een IndexSecurity klasse, die aan de gebruiker IndexSecurities
+     * teruggeeft (cfr de Portfolio bij UserSecurities).
+     *
+     * Mogelijkheden
+     * 1) XML-RPC geeft IndexSecurities terug, client doet dan nieuwe request
+     * voor effectieve securities
+     *
+     * 2) Backend gaat automatisch de securities teruggeven. Minder requests,
+     * maar minder flexibel (wat normaal 1 filter is moet nu opgesplitst worden
+     * in verschillende functies, zoals ListSecurities(filter die index select)
+     * en ListIndexes(filter die securities select).
+     */
 }

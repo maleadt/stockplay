@@ -33,20 +33,20 @@ public class IndexSecurity {
     //
 
     public static enum Fields {
-        ISIN, INDEX
+        INDEX_ISIN, SECURITY_ISIN
     }
     
-    private int index;
-    private String isin;
+    private String index_isin;
+    private String security_isin;
 
 
     //
     // Construction
     //
 
-    public IndexSecurity(int index, String isin) {
-        this.index = index;
-        this.isin = isin;
+    public IndexSecurity(String index_isin, String security_isin) {
+        this.index_isin = index_isin;
+        this.security_isin = security_isin;
     }
 
 
@@ -54,27 +54,23 @@ public class IndexSecurity {
     // Methods
     //
 
-    public int getIndex() {
-        return index;
+    public String getIndexIsin() {
+        return index_isin;
     }
 
-    public String getIsin() {
-        return isin;
-    }
-
-    public void setIndex(int iIndex) {
-        index = iIndex;
+    public String getSecurityIsin() {
+        return security_isin;
     }
 
     public Hashtable<String, Object> toStruct(Fields... iFields) {
         Hashtable<String, Object> oStruct = new Hashtable<String, Object>();
         for (Fields tField : iFields) {
             switch (tField) {
-                case ISIN:
-                    oStruct.put(tField.name(), getIsin());
+                case INDEX_ISIN:
+                    oStruct.put(tField.name(), getIndexIsin());
                     break;
-                case INDEX:
-                    oStruct.put(tField.name(), getIndex());
+                case SECURITY_ISIN:
+                    oStruct.put(tField.name(), getSecurityIsin());
                     break;
             }
         }
@@ -100,10 +96,10 @@ public class IndexSecurity {
         }
 
         // Check needed keys
-        if (tStructMap.containsKey(Fields.ISIN) && tStructMap.containsKey(Fields.INDEX)) {
-            IndexSecurity tIndexSecurity = new IndexSecurity((Integer)iStruct.get(tStructMap.get(Fields.INDEX)), (String)iStruct.get(tStructMap.get(Fields.ISIN)));
-            iStruct.remove(tStructMap.get(Fields.ISIN));
-            iStruct.remove(tStructMap.get(Fields.INDEX));
+        if (tStructMap.containsKey(Fields.INDEX_ISIN) && tStructMap.containsKey(Fields.SECURITY_ISIN)) {
+            IndexSecurity tIndexSecurity = new IndexSecurity((String)iStruct.get(tStructMap.get(Fields.INDEX_ISIN)), (String)iStruct.get(tStructMap.get(Fields.SECURITY_ISIN)));
+            iStruct.remove(tStructMap.get(Fields.INDEX_ISIN));
+            iStruct.remove(tStructMap.get(Fields.SECURITY_ISIN));
             return tIndexSecurity;
         } else
             throw new ServiceException(ServiceException.Type.NOT_ENOUGH_INFORMATION);

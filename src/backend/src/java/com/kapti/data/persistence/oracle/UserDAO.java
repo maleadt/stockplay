@@ -35,8 +35,6 @@ public class UserDAO implements GenericDAO<User, Integer> {
 
     private static final String SELECT_USER_LASTID = "select userid_seq.currval from dual";
     private static final String SELECT_USER = "SELECT nickname, password, email, lastname, firstname, is_admin, regtime, rrn, points, startamount, cash FROM users WHERE id = ?";
-    private static final String SELECT_USERS_FILTER = "SELECT id, nickname, email, lastname, firstname, is_admin, regtime, rrn, points, startamount, cash "
-            + "FROM users WHERE id LIKE ? AND nickname LIKE ? AND email LIKE ? AND lastname LIKE ? AND firstname LIKE ? AND is_admin LIKE ? AND regtime LIKE ? AND rrn LIKE ? AND points LIKE ? AND startamount LIKE ? AND cash LIKE ?";
     private static final String SELECT_USERS = "SELECT id, nickname, password, email, lastname, firstname, is_admin, regtime, rrn, points, startamount, cash FROM users";
     private static final String INSERT_USER = "INSERT INTO users(id, nickname, password, email, lastname, firstname, is_admin, regtime, rrn, points, startamount, cash) "
             + "VALUES(userid_seq.nextval, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -64,7 +62,7 @@ public class UserDAO implements GenericDAO<User, Integer> {
 
                 rs = stmt.executeQuery();
                 if (rs.next()) {
-                    User tUser = new User(id); //, rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(5), rs.getDate(7));
+                    User tUser = new User(id);
                     tUser.setNickname(rs.getString(1));
                     tUser.setEncryptedPassword(rs.getString(2));
                     tUser.setEmail(rs.getString(3));
@@ -110,7 +108,7 @@ public class UserDAO implements GenericDAO<User, Integer> {
                 rs = stmt.executeQuery();
                 ArrayList<User> list = new ArrayList<User>();
                 while (rs.next()) {
-                    User tUser = new User(rs.getInt(1));//, rs.getString(2), rs.getString(4), rs.getString(5), rs.getString(6), rs.getDate(8));
+                    User tUser = new User(rs.getInt(1));
                     tUser.setNickname(rs.getString(2));
                     tUser.setEncryptedPassword(rs.getString(3));
                     tUser.setEmail(rs.getString(4));
@@ -159,7 +157,7 @@ public class UserDAO implements GenericDAO<User, Integer> {
                 rs = stmt.executeQuery();
                 ArrayList<User> list = new ArrayList<User>();
                 while (rs.next()) {
-                    User tUser = new User(rs.getInt(1));//, rs.getString(2), rs.getString(4), rs.getString(5), rs.getString(6), rs.getDate(8));
+                    User tUser = new User(rs.getInt(1));
                     tUser.setNickname(rs.getString(2));
                     tUser.setEncryptedPassword(rs.getString(3));
                     tUser.setEmail(rs.getString(4));

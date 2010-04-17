@@ -63,7 +63,7 @@ public class OracleStockPlayDAO implements StockPlayDAO {
         return UserDAO.getInstance();
     }
 
-    public GenericDAO<Index, Integer> getIndexDAO() {
+    public GenericDAO<Index, String> getIndexDAO() {
         return IndexDAO.getInstance();
     }
 

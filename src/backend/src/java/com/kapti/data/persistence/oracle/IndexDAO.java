@@ -30,15 +30,13 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class IndexDAO implements GenericDAO<Index, Integer> {
-
-    private static final String SELECT_INDEX_LASTID = "select indexid_seq.currval from dual";
-    private static final String SELECT_INDEX = "SELECT name, exchange FROM indexes WHERE id = ?";
-    private static final String SELECT_INDEXES_FILTER = "SELECT id, name, exchange FROM indexes WHERE id LIKE ?";
-    private static final String SELECT_INDEXES = "SELECT id, name, exchange FROM indexes";
-    private static final String INSERT_INDEX = "INSERT INTO indexes(id, name, exchange) VALUES(indexid_seq.nextval, ?, ?)";
-    private static final String UPDATE_INDEX = "UPDATE indexes SET name = ?, exchange = ? WHERE id = ?";
-    private static final String DELETE_INDEX = "DELETE FROM indexes WHERE id = ?";
+public class IndexDAO implements GenericDAO<Index, String> {
+    
+    private static final String SELECT_INDEX = "SELECT name, exchange, symbol FROM indexes WHERE isin = ?";
+    private static final String SELECT_INDEXES = "SELECT name, exchange, isin, symbol FROM indexes";
+    private static final String INSERT_INDEX = "INSERT INTO indexes(name, exchange, isin, symbol) VALUES(?, ?, ?, ?)";
+    private static final String UPDATE_INDEX = "UPDATE indexes SET name = ?, exchange = ?, symbol = ? WHERE isin = ?";
+    private static final String DELETE_INDEX = "DELETE FROM indexes WHERE isin = ?";
 
     private static IndexDAO instance = new IndexDAO();
 
@@ -48,7 +46,7 @@ public class IndexDAO implements GenericDAO<Index, Integer> {
         return instance;
     }
 
-    public Index findById(Integer id) throws StockPlayException {
+    public Index findById(String isin) throws StockPlayException {
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -57,14 +55,15 @@ public class IndexDAO implements GenericDAO<Index, Integer> {
                 conn = OracleConnection.getConnection();
                 stmt = conn.prepareStatement(SELECT_INDEX);
 
-                stmt.setInt(1, id);
+                stmt.setString(1, isin);
 
                 rs = stmt.executeQuery();
                 if (rs.next()) {
-                    Index tIndex = new Index(id, rs.getString(1), rs.getString(2));
+                    Index tIndex = new Index(isin, rs.getString("symbol"), rs.getString("exchange"));
+                    tIndex.setName(rs.getString("name"));
                     return tIndex;
                 } else {
-                    throw new InvocationException(InvocationException.Type.NON_EXISTING_ENTITY, "There is no index with id '" + id + "'");
+                    throw new InvocationException(InvocationException.Type.NON_EXISTING_ENTITY, "There is no index with isin '" + isin + "'");
                 }
             } finally {
                 if (rs != null) {
@@ -96,7 +95,8 @@ public class IndexDAO implements GenericDAO<Index, Integer> {
                 rs = stmt.executeQuery();
                 ArrayList<Index> list = new ArrayList<Index>();
                 while (rs.next()) {
-                    Index tIndex = new Index(rs.getInt(1), rs.getString(2), rs.getString(3));
+                    Index tIndex = new Index(rs.getString("isin"), rs.getString("symbol"), rs.getString("exchange"));
+                    tIndex.setName(rs.getString("name"));
                     list.add(tIndex);
                }
                 return list;
@@ -129,7 +129,8 @@ public class IndexDAO implements GenericDAO<Index, Integer> {
                 rs = stmt.executeQuery();
                 ArrayList<Index> list = new ArrayList<Index>();
                 while (rs.next()) {
-                    Index tIndex = new Index(rs.getInt(1), rs.getString(2), rs.getString(3));
+                    Index tIndex = new Index(rs.getString("isin"), rs.getString("symbol"), rs.getString("exchange"));
+                    tIndex.setName(rs.getString("name"));
                     list.add(tIndex);
                }
                 return list;
@@ -163,29 +164,12 @@ public class IndexDAO implements GenericDAO<Index, Integer> {
         try {
             try {
                 conn = OracleConnection.getConnection();
-                conn.setAutoCommit(false);
                 stmt = conn.prepareStatement(INSERT_INDEX);
 
                 stmt.setString(1, entity.getName());
                 stmt.setString(2, entity.getExchange());
 
-                if(stmt.executeUpdate() == 1){
-
-                    stmtID = conn.prepareStatement(SELECT_INDEX_LASTID);
-
-                    rs = stmtID.executeQuery();
-                    if(rs.next()){
-                        conn.commit();
-                        conn.setAutoCommit(true);
-                        return rs.getInt(1);
-                    }else{
-                        return -1;
-                    }
-                }else{
-                    return -1;
-                }
-
-
+                return stmt.executeUpdate();
             } finally {
                 if (rs != null) {
                     rs.close();
@@ -220,9 +204,10 @@ public class IndexDAO implements GenericDAO<Index, Integer> {
                 conn = OracleConnection.getConnection();
                 stmt = conn.prepareStatement(UPDATE_INDEX);
 
-                stmt.setInt(3, entity.getId());
                 stmt.setString(1, entity.getName());
                 stmt.setString(2, entity.getExchange());
+                stmt.setString(3, entity.getSymbol());
+                stmt.setString(4, entity.getIsin());
 
                 return stmt.executeUpdate() == 1;
 
@@ -258,7 +243,7 @@ public class IndexDAO implements GenericDAO<Index, Integer> {
                 conn = OracleConnection.getConnection();
                 stmt = conn.prepareStatement(DELETE_INDEX);
 
-                stmt.setInt(1, entity.getId());
+                stmt.setString(1, entity.getIsin());
 
                 return stmt.executeUpdate() == 1;
 

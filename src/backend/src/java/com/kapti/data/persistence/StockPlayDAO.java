@@ -28,7 +28,7 @@ import com.kapti.exceptions.StockPlayException;
 public interface StockPlayDAO {
 
     public GenericDAO<Exchange, String> getExchangeDAO();
-    public GenericDAO<Index, Integer> getIndexDAO();
+    public GenericDAO<Index, String> getIndexDAO();
     public GenericDAO<Order, Integer> getOrderDAO();
     public QuoteDAO getQuoteDAO();
     public SecurityDAO getSecurityDAO();

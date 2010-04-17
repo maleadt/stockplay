@@ -32,7 +32,6 @@ import java.util.Collection;
 
 public class ExchangeDAO implements GenericDAO<Exchange, String> {
     private static final String SELECT_EXCHANGE = "SELECT name, location FROM exchanges WHERE symbol = ?";
-    private static final String SELECT_EXCHANGES_FILTER = "SELECT symbol, name, location FROM exchanges WHERE symbol LIKE ? AND name LIKE ? AND location LIKE ?";
     private static final String SELECT_EXCHANGES = "SELECT symbol, name, location FROM exchanges";
     private static final String INSERT_EXCHANGE = "INSERT INTO exchanges(symbol, name, location) VALUES(?, ?, ?)";
     private static final String UPDATE_EXCHANGE = "UPDATE exchanges SET name = ?, location = ? WHERE symbol = ?";

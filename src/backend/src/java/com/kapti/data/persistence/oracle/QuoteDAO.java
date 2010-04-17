@@ -33,8 +33,6 @@ import org.apache.log4j.Logger;
 public class QuoteDAO implements com.kapti.data.persistence.QuoteDAO {
 
     private static final String SELECT_QUOTE = "SELECT price, volume, bid, ask, low, high, open FROM quotes WHERE isin = ? AND timestamp = ?";
-    private static final String SELECT_QUOTE_FILTER = "SELECT isin, timestamp, price, volume, bid, ask, low, high, open FROM quotes "
-            + "WHERE isin LIKE ? AND price LIKE ? AND volume LIKE ? AND bid LIKE ? AND ask LIKE ? AND low LIKE ? AND high LIKE ? AND open LIKE ?";
     private static final String SELECT_QUOTES = "SELECT isin, timestamp, price, volume, bid, ask, low, high, open FROM quotes";
     private static final String INSERT_QUOTE = "INSERT INTO quotes(isin, timestamp, price, volume, bid, ask, low, high, open) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String UPDATE_QUOTE = "UPDATE quotes SET price = ?, volume ?, bid = ?, ask = ?, low = ?, high = ?, open ? WHERE isin = ? AND timestamp = ?";

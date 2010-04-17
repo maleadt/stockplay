@@ -62,5 +62,4 @@ public final class SubsystemException extends StockPlayException {
     public SubsystemException(Type iType, String message, Throwable cause) {
         super(iType.getCode(), iType.getMessage() + ": " + message, cause);
     }
-
 }

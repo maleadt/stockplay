@@ -32,12 +32,10 @@ import java.util.Collection;
 
 public class IndexSecurityDAO implements GenericDAO<IndexSecurity, IndexSecurity> {
 
-    private static final String SELECT_USERSECURITY = "SELECT null FROM indexsecurities WHERE indexid = ? AND isin = ?";
-    private static final String SELECT_USERSECURITIES_FILTER = "SELECT indexid, isin FROM indexsecurities WHERE indexid LIKE ? AND isin LIKE ?";
-    private static final String SELECT_USERSECURITIES = "SELECT indexid, isin FROM indexsecurities";
-    private static final String INSERT_USERSECURITY = "INSERT INTO indexsecurties(indexid, isin) VALUES(?, ?, ?)";
-    private static final String UPDATE_USERSECURITY = "UPDATE indexsecurities SET null WHERE indexid = ? AND isin = ?";
-    private static final String DELETE_USERSECURITY = "DELETE FROM indexsecurities WHERE indexid = ? AND isin = ?";
+    private static final String SELECT_INDEXSECURITY = "SELECT null FROM index_securities WHERE index_isin = ? AND security_isin = ?";
+    private static final String SELECT_INDEXSECURITIES = "SELECT index_isin, security_isin FROM index_securities";
+    private static final String INSERT_INDEXSECURITY = "INSERT INTO index_securties(index_isin, security_isin) VALUES(?, ?)";
+    private static final String DELETE_INDEXSECURITY = "DELETE FROM index_securities WHERE index_isin = ? AND security_isin = ?";
     private static IndexSecurityDAO instance = new IndexSecurityDAO();
 
     private IndexSecurityDAO() {
@@ -56,15 +54,15 @@ public class IndexSecurityDAO implements GenericDAO<IndexSecurity, IndexSecurity
         try {
             try {
                 conn = OracleConnection.getConnection();
-                stmt = conn.prepareStatement(SELECT_USERSECURITY);
+                stmt = conn.prepareStatement(SELECT_INDEXSECURITY);
 
-                stmt.setInt(1, pk.getIndex());
-                stmt.setString(2, pk.getIsin());
+                stmt.setString(1, pk.getIndexIsin());
+                stmt.setString(2, pk.getSecurityIsin());
 
                 rs = stmt.executeQuery();
                 if (rs.next()) {
 
-                    return new IndexSecurity(pk.getIndex(), pk.getIsin());
+                    return new IndexSecurity(pk.getIndexIsin(), pk.getSecurityIsin());
                 } else {
                     return null;
                 }
@@ -93,12 +91,12 @@ public class IndexSecurityDAO implements GenericDAO<IndexSecurity, IndexSecurity
         try {
             try {
                 conn = OracleConnection.getConnection();
-                stmt = conn.prepareStatement(SELECT_USERSECURITIES + " WHERE " + (String)iFilter.compile());
+                stmt = conn.prepareStatement(SELECT_INDEXSECURITIES + " WHERE " + (String)iFilter.compile());
 
                 rs = stmt.executeQuery();
                 ArrayList<IndexSecurity> list = new ArrayList<IndexSecurity>();
                 while (rs.next()) {
-                    list.add(new IndexSecurity(rs.getInt(1), rs.getString(2)));
+                    list.add(new IndexSecurity(rs.getString("index_isin"), rs.getString("security_isin")));
                 }
                 return list;
             } finally {
@@ -129,12 +127,12 @@ public class IndexSecurityDAO implements GenericDAO<IndexSecurity, IndexSecurity
         try {
             try {
                 conn = OracleConnection.getConnection();
-                stmt = conn.prepareStatement(SELECT_USERSECURITIES);
+                stmt = conn.prepareStatement(SELECT_INDEXSECURITIES);
 
                 rs = stmt.executeQuery();
                 ArrayList<IndexSecurity> list = new ArrayList<IndexSecurity>();
                 while (rs.next()) {
-                    list.add(new IndexSecurity(rs.getInt(1), rs.getString(2)));
+                    list.add(new IndexSecurity(rs.getString("index_isin"), rs.getString("security_isin")));
                 }
                 return list;
             } finally {
@@ -166,10 +164,10 @@ public class IndexSecurityDAO implements GenericDAO<IndexSecurity, IndexSecurity
         try {
             try {
                 conn = OracleConnection.getConnection();
-                stmt = conn.prepareStatement(INSERT_USERSECURITY);
+                stmt = conn.prepareStatement(INSERT_INDEXSECURITY);
 
-                stmt.setInt(1, entity.getIndex());
-                stmt.setString(2, entity.getIsin());
+                stmt.setString(1, entity.getIndexIsin());
+                stmt.setString(2, entity.getSecurityIsin());
 
 
                 return stmt.executeUpdate();
@@ -244,10 +242,10 @@ public class IndexSecurityDAO implements GenericDAO<IndexSecurity, IndexSecurity
         try {
             try {
                 conn = OracleConnection.getConnection();
-                stmt = conn.prepareStatement(DELETE_USERSECURITY);
+                stmt = conn.prepareStatement(DELETE_INDEXSECURITY);
 
-                stmt.setInt(1, entity.getIndex());
-                stmt.setString(2, entity.getIsin());
+                stmt.setString(1, entity.getIndexIsin());
+                stmt.setString(2, entity.getSecurityIsin());
 
 
                 return stmt.executeUpdate() == 1;

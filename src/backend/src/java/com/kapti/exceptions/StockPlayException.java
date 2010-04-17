@@ -26,8 +26,8 @@ import org.apache.xmlrpc.XmlRpcException;
 
 public class StockPlayException extends XmlRpcException {
 
-    private final int mCode;
-    private final String mMessage;
+    protected final int mCode;
+    protected final String mMessage;
 
     public StockPlayException(int iCode, String message) {
         super(iCode, message);
