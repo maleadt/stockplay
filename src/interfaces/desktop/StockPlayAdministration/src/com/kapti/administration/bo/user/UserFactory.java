@@ -9,9 +9,8 @@ import com.kapti.exceptions.RequestError;
 import com.kapti.exceptions.StockPlayException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Hashtable;
+import java.util.Iterator;
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
 
@@ -48,6 +47,18 @@ public class UserFactory {
         } catch (XmlRpcException ex) {
             throw new RequestError(ex);
         }
+    }
+
+    public User getUserById(int id) throws StockPlayException{
+        Collection<User> users = getUsersByFilter("id == '"+ id +"'");
+        Iterator<User> it = users.iterator();
+
+        if(it.hasNext())
+            return it.next();
+        else
+            return null;
+
+
     }
 
     public boolean verifyLogin(String nickname, String password) throws StockPlayException {

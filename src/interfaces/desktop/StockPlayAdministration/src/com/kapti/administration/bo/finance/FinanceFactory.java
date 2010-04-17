@@ -5,13 +5,12 @@
 package com.kapti.administration.bo.finance;
 
 import com.kapti.administration.bo.XmlRpcClientFactory;
-import com.kapti.exceptions.ErrorException;
 import com.kapti.exceptions.RequestError;
 import com.kapti.exceptions.StockPlayException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.Vector;
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
@@ -33,10 +32,15 @@ public class FinanceFactory {
 
     public Collection<Security> getAllSecurities() throws StockPlayException {
 
+        return getSecurityByFilter("");
+    }
+
+    public Collection<Security> getSecurityByFilter(String filter) throws StockPlayException {
+
         ArrayList<Security> result = new ArrayList<Security>();
         try {
             XmlRpcClient client = XmlRpcClientFactory.getXmlRpcClient();
-            Object[] securities = (Object[]) client.execute("Finance.Security.List", new Object[]{new String()});
+            Object[] securities = (Object[]) client.execute("Finance.Security.List", new Object[]{filter});
 
             for (Object sec : securities) {
                 result.add(Security.fromStruct((HashMap) sec));
@@ -45,6 +49,17 @@ public class FinanceFactory {
 
         } catch (XmlRpcException ex) {
             throw new RequestError(ex);
+        }
+    }
+
+    public Security getSecurityById(String isin) throws StockPlayException {
+        Collection<Security> users = getSecurityByFilter("isin == '" + isin + "'");
+        Iterator<Security> it = users.iterator();
+
+        if (it.hasNext()) {
+            return it.next();
+        } else {
+            return null;
         }
     }
     // <editor-fold>
@@ -87,7 +102,7 @@ public class FinanceFactory {
             Vector v = new Vector();
 
             //we maken de filter aan zodat enkel dit object wordt gewijzigd
-            v.add("id EQUALS " + exch.getSymbol());
+            v.add("id EQUALS '" + exch.getSymbol()+"'");
 
             //we voegen nu de argumenten aan het bericht toe
             v.add(exch.toStruct());
@@ -115,7 +130,7 @@ public class FinanceFactory {
             v.add("isin EQUALS '" + security.getISIN() + "'");
 
             //we voegen nu de argumenten aan het bericht toe
-           
+
             v.add(security.toStruct());
 
             Integer result = (Integer) client.execute("Finance.Security.Modify", v);
