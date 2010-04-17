@@ -36,8 +36,7 @@ public class IndexSecurity {
         INDEX_ISIN, SECURITY_ISIN
     }
     
-    private String index_isin;
-    private String security_isin;
+    private IndexSecurityPK pk;
 
 
     //
@@ -45,8 +44,7 @@ public class IndexSecurity {
     //
 
     public IndexSecurity(String index_isin, String security_isin) {
-        this.index_isin = index_isin;
-        this.security_isin = security_isin;
+        this.pk = new IndexSecurityPK(index_isin, security_isin);
     }
 
 
@@ -54,12 +52,8 @@ public class IndexSecurity {
     // Methods
     //
 
-    public String getIndexIsin() {
-        return index_isin;
-    }
-
-    public String getSecurityIsin() {
-        return security_isin;
+    public IndexSecurityPK getPk() {
+        return pk;
     }
 
     public Hashtable<String, Object> toStruct(Fields... iFields) {
@@ -67,10 +61,10 @@ public class IndexSecurity {
         for (Fields tField : iFields) {
             switch (tField) {
                 case INDEX_ISIN:
-                    oStruct.put(tField.name(), getIndexIsin());
+                    oStruct.put(tField.name(), getPk().getIndexIsin());
                     break;
                 case SECURITY_ISIN:
-                    oStruct.put(tField.name(), getSecurityIsin());
+                    oStruct.put(tField.name(), getPk().getSecurityIsin());
                     break;
             }
         }
@@ -103,5 +97,28 @@ public class IndexSecurity {
             return tIndexSecurity;
         } else
             throw new ServiceException(ServiceException.Type.NOT_ENOUGH_INFORMATION);
+    }
+
+
+    //
+    // Subclasses
+    //
+
+    public class IndexSecurityPK {
+        private String index_isin;
+        private String security_isin;
+
+        public IndexSecurityPK(String index_isin, String security_isin) {
+            this.index_isin = index_isin;
+            this.security_isin = security_isin;
+        }
+
+        public String getIndexIsin() {
+            return index_isin;
+        }
+
+        public String getSecurityIsin() {
+            return security_isin;
+        }
     }
 }

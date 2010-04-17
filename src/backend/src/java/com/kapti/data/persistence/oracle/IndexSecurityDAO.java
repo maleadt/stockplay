@@ -24,13 +24,14 @@ package com.kapti.data.persistence.oracle;
 
 import com.kapti.exceptions.*;
 import com.kapti.data.*;
+import com.kapti.data.IndexSecurity.IndexSecurityPK;
 import com.kapti.data.persistence.GenericDAO;
 import com.kapti.filter.Filter;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class IndexSecurityDAO implements GenericDAO<IndexSecurity, IndexSecurity> {
+public class IndexSecurityDAO implements GenericDAO<IndexSecurity, IndexSecurityPK> {
 
     private static final String SELECT_INDEXSECURITY = "SELECT null FROM index_securities WHERE index_isin = ? AND security_isin = ?";
     private static final String SELECT_INDEXSECURITIES = "SELECT index_isin, security_isin FROM index_securities";
@@ -45,7 +46,7 @@ public class IndexSecurityDAO implements GenericDAO<IndexSecurity, IndexSecurity
         return instance;
     }
 
-    public IndexSecurity findById(IndexSecurity pk) throws StockPlayException {
+    public IndexSecurity findById(IndexSecurityPK pk) throws StockPlayException {
 
 
         Connection conn = null;
@@ -166,8 +167,8 @@ public class IndexSecurityDAO implements GenericDAO<IndexSecurity, IndexSecurity
                 conn = OracleConnection.getConnection();
                 stmt = conn.prepareStatement(INSERT_INDEXSECURITY);
 
-                stmt.setString(1, entity.getIndexIsin());
-                stmt.setString(2, entity.getSecurityIsin());
+                stmt.setString(1, entity.getPk().getIndexIsin());
+                stmt.setString(2, entity.getPk().getSecurityIsin());
 
 
                 return stmt.executeUpdate();
@@ -244,8 +245,8 @@ public class IndexSecurityDAO implements GenericDAO<IndexSecurity, IndexSecurity
                 conn = OracleConnection.getConnection();
                 stmt = conn.prepareStatement(DELETE_INDEXSECURITY);
 
-                stmt.setString(1, entity.getIndexIsin());
-                stmt.setString(2, entity.getSecurityIsin());
+                stmt.setString(1, entity.getPk().getIndexIsin());
+                stmt.setString(2, entity.getPk().getSecurityIsin());
 
 
                 return stmt.executeUpdate() == 1;

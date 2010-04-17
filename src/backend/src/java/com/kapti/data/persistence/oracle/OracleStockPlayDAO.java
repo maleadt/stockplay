@@ -25,6 +25,7 @@ package com.kapti.data.persistence.oracle;
 import com.kapti.data.Exchange;
 import com.kapti.data.Index;
 import com.kapti.data.IndexSecurity;
+import com.kapti.data.IndexSecurity.IndexSecurityPK;
 import com.kapti.data.Order;
 import com.kapti.data.PointsTransaction;
 import com.kapti.data.PointsTransaction.PointsTransactionPK;
@@ -75,7 +76,7 @@ public class OracleStockPlayDAO implements StockPlayDAO {
        return TransactionDAO.getInstance();
     }
 
-    public GenericDAO<IndexSecurity, IndexSecurity> getIndexSecurityDAO() {
+    public GenericDAO<IndexSecurity, IndexSecurityPK> getIndexSecurityDAO() {
         return IndexSecurityDAO.getInstance();
     }
 

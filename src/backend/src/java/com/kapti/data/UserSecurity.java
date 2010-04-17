@@ -23,6 +23,7 @@
 package com.kapti.data;
 
 import com.kapti.exceptions.InvocationException;
+import com.kapti.exceptions.ServiceException;
 import com.kapti.exceptions.StockPlayException;
 import java.util.Hashtable;
 
@@ -83,6 +84,30 @@ public class UserSecurity {
         return oStruct;
     }
 
+    public static UserSecurity fromStruct(Hashtable<String, Object> iStruct) throws StockPlayException {
+        // Create case mapping
+        Hashtable<Fields, String> tStructMap = new Hashtable<Fields, String>();
+        for (String tKey : iStruct.keySet()) {
+            Fields tField = null;
+            try {
+                tField = Fields.valueOf(tKey.toUpperCase());
+            }
+            catch (IllegalArgumentException e) {
+                throw new InvocationException(InvocationException.Type.NON_EXISTING_ENTITY, "requested key '" + tKey + "' does not exist");
+            }
+            tStructMap.put(tField, tKey);
+        }
+
+        // Check needed keys
+        if (tStructMap.containsKey(Fields.USER) && tStructMap.containsKey(Fields.ISIN)) {
+            UserSecurity tUserSecurity = new UserSecurity((Integer)iStruct.get(tStructMap.get(Fields.USER)), (String)iStruct.get(tStructMap.get(Fields.ISIN)));
+            iStruct.remove(tStructMap.get(Fields.USER));
+            iStruct.remove(tStructMap.get(Fields.ISIN));
+            return tUserSecurity;
+        } else
+            throw new ServiceException(ServiceException.Type.NOT_ENOUGH_INFORMATION);
+    }
+
     public void applyStruct(Hashtable<String, Object> iStruct) throws StockPlayException {
         for (String tKey : iStruct.keySet()) {
             Object tValue = iStruct.get(tKey);
@@ -113,20 +138,13 @@ public class UserSecurity {
         private int user;
         private String isin;
 
-        public String getSymbol() {
-            return isin;
-        }
-
-        public int getUser() {
-            return user;
-        }
-
         public UserSecurityPK(int user, String symbol) {
             this.user = user;
             this.isin = symbol;
         }
 
-        public UserSecurityPK() {
+        public int getUser() {
+            return user;
         }
 
         public String getIsin() {

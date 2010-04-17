@@ -41,23 +41,58 @@ import java.util.Vector;
  * op conforme wijze terug te sturen.
  */
 public class PortfolioHandler extends MethodClass {
-    public Vector<Hashtable<String, Object>> List(String iFilter) throws StockPlayException {
-        // Get DAO reference
-        GenericDAO<com.kapti.data.UserSecurity, UserSecurityPK> tPortfolioDAO = getDAO().getUserSecurityDAO();
+    //
+    // Methodes
+    //
 
-        Parser parser = Parser.getInstance();
-        Filter filter = parser.parse(iFilter);
-        
+    
+    public Vector<Hashtable<String, Object>> List() throws StockPlayException {
+        // Get DAO reference
+        GenericDAO<com.kapti.data.UserSecurity, UserSecurityPK> tUserSecurityDAO = getDAO().getUserSecurityDAO();
+
         // Fetch and convert all Indexs
-        Collection<UserSecurity> tSecurities = tPortfolioDAO.findByFilter(filter);
+        Collection<UserSecurity> tUserSecurities = tUserSecurityDAO.findAll();
         Vector<Hashtable<String, Object>> oVector = new Vector<Hashtable<String, Object>>();
-        for (com.kapti.data.UserSecurity tSecurity : tSecurities) {
-            oVector.add(tSecurity.toStruct(
+        for (com.kapti.data.UserSecurity tUserSecurity : tUserSecurities) {
+            oVector.add(tUserSecurity.toStruct(
                     com.kapti.data.UserSecurity.Fields.AMOUNT,
                     com.kapti.data.UserSecurity.Fields.ISIN,
                     com.kapti.data.UserSecurity.Fields.USER));
         }
 
         return oVector;
+    }
+
+    public Vector<Hashtable<String, Object>> List(String iFilter) throws StockPlayException {
+        // Get DAO reference
+        GenericDAO<com.kapti.data.UserSecurity, UserSecurityPK> tUserSecurityDAO = getDAO().getUserSecurityDAO();
+
+        Parser parser = Parser.getInstance();
+        Filter filter = parser.parse(iFilter);
+        
+        // Fetch and convert all Indexs
+        Collection<UserSecurity> tUserSecurities = tUserSecurityDAO.findByFilter(filter);
+        Vector<Hashtable<String, Object>> oVector = new Vector<Hashtable<String, Object>>();
+        for (com.kapti.data.UserSecurity tUserSecurity : tUserSecurities) {
+            oVector.add(tUserSecurity.toStruct(
+                    com.kapti.data.UserSecurity.Fields.AMOUNT,
+                    com.kapti.data.UserSecurity.Fields.ISIN,
+                    com.kapti.data.UserSecurity.Fields.USER));
+        }
+
+        return oVector;
+    }
+
+    public int Create(Hashtable<String, Object> iDetails) throws StockPlayException {
+        // Get DAO reference
+        GenericDAO<com.kapti.data.UserSecurity, UserSecurityPK> tUserSecurityDAO = getDAO().getUserSecurityDAO();
+
+        // Instantiate a new exchange
+        UserSecurity tUserSecurity = UserSecurity.fromStruct(iDetails);
+
+        tUserSecurity.applyStruct(iDetails);
+        tUserSecurityDAO.create(tUserSecurity);
+
+        return 1;
     }
 }
