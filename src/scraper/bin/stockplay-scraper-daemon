@@ -44,9 +44,7 @@ $SIG{__WARN__} = sub {
 
 # Load the factory
 $logger->info("loading factory");
-my $factory = new StockPlay::Factory(
-	server	=> 'http://be04.kapti.com:6800/backend/public',
-);
+my $factory = new StockPlay::Factory();
 
 # Load the daemon
 $logger->info("loading daemon");

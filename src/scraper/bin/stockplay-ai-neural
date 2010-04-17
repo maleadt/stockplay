@@ -38,9 +38,7 @@ print "* Setup\n";
 
 # Load the factory
 print "- Setting up factory\n";
-my $factory = new StockPlay::Factory(
-	server	=> 'http://be04.kapti.com:6800/backend/public',
-);
+my $factory = new StockPlay::Factory();
 
 # Create a new network with 1 layer, 5 inputs, and 1 output.
 # INPUTS:

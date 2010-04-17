@@ -48,13 +48,13 @@ has 'symbol' => (
 );
 
 has 'name' => (
-	is		=> 'ro',
+	is		=> 'rw',
 	isa		=> 'Str',
-	predicate	=> 'has_description'
+	predicate	=> 'has_name'
 );
 
 has 'location' => (
-	is		=> 'ro',
+	is		=> 'rw',
 	isa		=> 'Str',
 	predicate	=> 'has_location'
 );

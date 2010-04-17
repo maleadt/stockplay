@@ -39,9 +39,7 @@ my $PLUGIN_MAX_AGE = 3600*24*7;
 
 # Load the factory
 print "- Setting up factory\n";
-my $factory = new StockPlay::Factory(
-	server	=> 'http://be04.kapti.com:6800/backend/public',
-);
+my $factory = new StockPlay::Factory();
 my $choice;
 
 #

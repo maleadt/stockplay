@@ -55,9 +55,11 @@ has 'symbol' => (
 );
 
 has 'name' => (
-	is		=> 'ro',
-	isa		=> 'Str'
+	is		=> 'rw',
+	isa		=> 'Str',
+	predicate	=> 'has_name'
 );
+
 
 has 'quote' => (
 	is		=> 'rw',

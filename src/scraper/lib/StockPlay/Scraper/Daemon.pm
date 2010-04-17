@@ -141,6 +141,7 @@ sub _build_plugins {
 			}
 			
 			# Check exchanges
+			# TODO: veel duplicate code, misschien beter buildExchanges met selector?
 			my @s_exchanges = $self->factory->getExchanges();
 			die("no exchanges provided") unless @s_exchanges;
 			foreach my $exchange (@{$plugin->exchanges}) {
@@ -153,16 +154,6 @@ sub _build_plugins {
 					push(@s_exchanges, $exchange);
 				}
 				
-				# Add the indexes
-				$self->logger->debug("processing indexes");
-				my @s_indexes = $self->factory->getIndexes($exchange);
-				foreach my $index (@{$exchange->indexes}) {
-					unless (grep { $_->name eq $index->name } @s_indexes) {
-						$self->factory->createIndex($exchange, $index);
-						push(@s_indexes, $index);
-					}				
-				}
-				
 				# Add the securities
 				$self->logger->debug("processing securities");
 				my @s_securities = $self->factory->getSecurities($exchange);
@@ -171,6 +162,25 @@ sub _build_plugins {
 						$self->factory->createSecurity($exchange, $security);
 						push(@s_securities, $security);
 					}	
+				}
+				
+				# Add the indexes
+				$self->logger->debug("processing indexes");
+				my @s_indexes = $self->factory->getIndexes($exchange);
+				foreach my $index (@{$exchange->indexes}) {
+					unless (grep { $_->name eq $index->name } @s_indexes) {
+						$self->factory->createIndex($exchange, $index);
+						push(@s_indexes, $index);
+					}
+					
+					# Add the securities on the index
+					my @s_indexsecurities = $self->factory->getIndexSecurities($exchange, $index);
+					foreach my $security (@{$index->securities}) {
+						unless (grep { $_->isin eq $security->isin } @s_indexsecurities) {
+							$self->factory->createIndexSecurity($index, $security);
+							push(@s_indexsecurities, $security);
+						}
+					}
 				}
 				
 				# Add the latest quotes
