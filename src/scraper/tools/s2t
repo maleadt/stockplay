@@ -1,0 +1,117 @@
+#!/usr/bin/perl -w
+use strict;
+use Data::Dump qw(dump);
+use Storable qw(lock_retrieve lock_store);
+my %usage;
+ 
+(my $script_name = $0) =~ s#.*/##;  # $0 = full path to script
+my $file = $ARGV[0] || &usage($script_name);
+ 
+s2t($file) if $script_name eq 's2t';
+ts($file) if $script_name eq 'ts';
+ 
+### Subs ###
+ 
+sub s2t { # s2t (Storable 2 Text) expects a file created by Storable::lock_store.
+    my $file = shift;
+    my $data_struct = lock_retrieve($file) or die "Can't open $file: $!";
+    my $data = dump($data_struct);
+    open(FH, ">$file.txt");                     # Create new file by appending '.txt' to the original filename.
+    print FH "use Storable qw(lock_store);\n";  # Make it easy to update original file created by Storable::lock_store.
+    print FH '$x =';
+    print FH "$data";
+    print FH ";\n";
+    print FH "lock_store (\$x, \'$file\');\n";
+    close FH;
+    exit;
+};
+ 
+sub ts { # ts (Touch Storable) creates a file with Storable::lock_store that contains an EMPTY hash reference.
+    my $file = shift;
+    my $x = {};
+    lock_store $x, $file or die "Can't create $file: $!";
+    exit;
+};
+ 
+sub usage  {
+my $script_name = shift;
+my %s;
+$s{s2t} = <<END;
+ 
+Opens a file created by Storable::lock_store and dumps the data structure to an
+ascii file for viewing/editing.
+ 
+Usage: $script_name [file]
+ 
+END
+ 
+$s{ts} = <<END;
+ 
+Creates a file with Storable::lock_store that contains an EMPTY hash reference.
+ 
+Usage: $script_name [file]
+ 
+END
+ 
+print (exists $s{$script_name} ? $s{$script_name} : "You must rename this script to either s2t or ts.\n"); 
+exit;
+}
+ 
+
+=pod
+=head1 NAME
+    s2t or ts (One is symlinked to the other.)
+ 
+=head1 SYNOPSIS
+ 
+s2t [file] B<or> ts  [file]
+ 
+=head1 DESCRIPTION
+ 
+A command-line script to work with Perl data structures created by Storable.pm
+ 
+This file should be called B<s2t> and a file called B<ts> should be symlinked
+to it like so:
+ 
+    ln -s s2t ts
+ 
+The script consists of two subroutines, one of which is called depending on the
+scriptname.
+ 
+=head1 s2t (Storable 2 Text)
+ 
+Opens a file created by Storable::lock_store and dumps the data structure to an
+ascii file for viewing/editing.  The extension '.txt' is appended to the end of
+the new file to indicate that it's editable. (Storable.pm creates binary files
+which load quickly, but aren't editable.)
+ 
+When you've finished editing the .txt file, you should run it through perl to
+re-create the original Storable file.  There are a couple of different ways to
+do this:
+ 
+=over 4
+ 
+=item * B<From Vi>
+ 
+ :%!perl
+ 
+=item * B<From the command line>
+ 
+ perl foobar.txt
+ 
+=back
+ 
+=head1 ts (Touch Storable)
+ 
+    Creates a file with Storable::lock_store that contains an EMPTY hash reference.
+ 
+    Some scripts try to open files created by Storable::lock_store. This creates those files in the right format.
+ 
+=head1 AUTHOR
+ 
+Kingsley Gordon -  E<lt>kingman@ncf.caE<gt>
+ 
+ last modified: Thu Aug 8 2002
+ 
+=cut
+
