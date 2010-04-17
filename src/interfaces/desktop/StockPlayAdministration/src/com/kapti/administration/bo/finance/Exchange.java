@@ -4,13 +4,9 @@
  */
 package com.kapti.administration.bo.finance;
 
-import com.kapti.administration.bo.XmlRpcClientFactory;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.util.Hashtable;
-import java.util.Vector;
-import org.apache.xmlrpc.XmlRpcException;
-import org.apache.xmlrpc.client.XmlRpcClient;
+import java.util.HashMap;
 
 /**
  *
@@ -151,8 +147,19 @@ public class Exchange {
         return name;
     }
 
+    public static Exchange fromStruct(HashMap h) {
+        return new Exchange((String) h.get(Exchange.Fields.SYMBOL.toString()),
+                (String) h.get(Exchange.Fields.NAME.toString()),
+                (String) h.get(Exchange.Fields.LOCATION.toString()));
+    }
 
 
+    public HashMap toStruct(){
+        HashMap h = new HashMap();
+        h.put(Fields.SYMBOL.toString(), getSymbol());
+        h.put(Fields.NAME.toString(), getName());
+        h.put(Fields.LOCATION.toString(), getLocation());
+        return h;
 
-    
+    }
 }

@@ -6,8 +6,8 @@ package com.kapti.administration.bo.user;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.ResourceBundle;
 
 /**
@@ -344,7 +344,6 @@ public class User implements Cloneable {
     public Object clone() throws CloneNotSupportedException {
         return super.clone();
     }
-
     protected String password;
     public static final String PROP_PASSWORD = "password";
 
@@ -374,5 +373,42 @@ public class User implements Cloneable {
 
     public void setStartamount(Double startamount) {
         this.startamount = startamount;
+    }
+
+    public static User fromStruct(HashMap h) {
+
+        User u = new User((Integer) h.get(Fields.ID.toString()));
+        u.setNickname((String) h.get(User.Fields.NICKNAME.toString()));
+        u.setEmail((String) h.get(User.Fields.EMAIL.toString()));
+        u.setLastname((String) h.get(User.Fields.LASTNAME.toString()));
+        u.setFirstname((String) h.get(User.Fields.FIRSTNAME.toString()));
+        u.setRegdate((Date) h.get(User.Fields.REGDATE.toString()));
+        u.setRole((User.Role) User.Role.fromId((Integer) h.get((User.Fields.ROLE.toString()))));
+        u.setPoints((Integer) h.get(User.Fields.POINTS.toString()));
+        u.setStartamount((Double) h.get(User.Fields.STARTAMOUNT.toString()));
+        u.setCash((Double) h.get(User.Fields.CASH.toString()));
+        u.setRijksregisternummer(Long.parseLong((String) h.get(User.Fields.RRN.toString())));
+
+        return u;
+    }
+
+    public HashMap toStruct() {
+        HashMap h = new HashMap();
+        h.put(User.Fields.ID.toString(), getId());
+        h.put(User.Fields.NICKNAME.toString(), getNickname());
+        h.put(User.Fields.LASTNAME.toString(), getLastname());
+        h.put(User.Fields.FIRSTNAME.toString(), getFirstname());
+        h.put(User.Fields.EMAIL.toString(), getEmail());
+        h.put(User.Fields.ROLE.toString(), getRole().getId());
+        if (getRijksregisternummer() != null) {
+            h.put(User.Fields.RRN.toString(), getRijksregisternummer().toString());
+        }
+        if (getPassword() != null) {
+            h.put(User.Fields.PASSWORD.toString(), getPassword());
+        }
+
+        return h;
+
+
     }
 }

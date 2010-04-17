@@ -27,7 +27,7 @@ public class UserFactoryTest {
 
     @BeforeClass
     public static void setUpClass() throws Exception {
-        instance = new UserFactory();
+        instance = UserFactory.getInstance();
         user = instance.createUser();
         user.setNickname("UserFactoryTestUser");
         user.setPassword("password");

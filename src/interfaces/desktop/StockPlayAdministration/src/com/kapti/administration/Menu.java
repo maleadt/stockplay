@@ -30,7 +30,7 @@ public class Menu extends JXTaskPaneContainer implements PropertyChangeListener 
 
     private MainFrame mainframe;
     private JXTaskPane statusMenuPane, securitiesMenuPane, usersMenuPane;
-    private FinanceFactory financeFactory = new FinanceFactory();
+    private FinanceFactory financeFactory = FinanceFactory.getInstance();
 
     public Menu(MainFrame mainframe) {
 
@@ -86,7 +86,8 @@ public class Menu extends JXTaskPaneContainer implements PropertyChangeListener 
         securitiesMenuPane.add(new Box.Filler(new Dimension(0, 20), new Dimension(0, 20), new Dimension(0, 30)));
         securitiesMenuPane.add(createMenuitem("Indexen", new ShowSecuritiesListActionListener(), "money", Font.BOLD));
 
-        String[] indexes = new String[]{"Bel20", "AMS30", "CAC40", "Dow Jones"};
+        //TODO Indexen ophalen
+        String[] indexes = new String[]{};//;{"Bel20", "AMS30", "CAC40", "Dow Jones"};
         for (String index : indexes) {
             securitiesMenuPane.add(createMenuitem(index, new ShowSecuritiesListActionListener(), "money_dollar"));
         }
@@ -107,18 +108,18 @@ public class Menu extends JXTaskPaneContainer implements PropertyChangeListener 
 
         usersMenuPane.add(new Box.Filler(new Dimension(0, 20), new Dimension(0, 20), new Dimension(0, 30)));
         usersMenuPane.add(createMenuitem("Alfabetisch zoeken", new ShowUsersListActionListener(), "folder_user", Font.BOLD));
-        usersMenuPane.add(createMenuitem("A-E", new ShowUsersListActionListener(), "group"));
-        usersMenuPane.add(createMenuitem("F-J", new ShowUsersListActionListener(), "group"));
-        usersMenuPane.add(createMenuitem("K-O", new ShowUsersListActionListener(), "group"));
-        usersMenuPane.add(createMenuitem("P-S", new ShowUsersListActionListener(), "group"));
-        usersMenuPane.add(createMenuitem("T-Z", new ShowUsersListActionListener(), "group"));
+        usersMenuPane.add(createMenuitem("A-E", new ShowUsersListActionListener("^[A-Ea-e].*"), "group"));
+        usersMenuPane.add(createMenuitem("F-J", new ShowUsersListActionListener("^[F-Jf-j].*"), "group"));
+        usersMenuPane.add(createMenuitem("K-O", new ShowUsersListActionListener("^[K-Ok-o].*"), "group"));
+        usersMenuPane.add(createMenuitem("P-S", new ShowUsersListActionListener("^[P-Sp-s].*"), "group"));
+        usersMenuPane.add(createMenuitem("T-Z", new ShowUsersListActionListener("^[T-Zt-z].*"), "group"));
 
         usersMenuPane.add(new Box.Filler(new Dimension(0, 20), new Dimension(0, 20), new Dimension(0, 30)));
         usersMenuPane.add(createMenuitem("Zoeken op registratiedatum", new ShowUsersListActionListener(), "folder_user", Font.BOLD));
-        usersMenuPane.add(createMenuitem("Vandaag", new ShowUsersListActionListener(), "group"));
-        usersMenuPane.add(createMenuitem("Afgelopen week", new ShowUsersListActionListener(), "group"));
-        usersMenuPane.add(createMenuitem("Afgelopen maand", new ShowUsersListActionListener(), "group"));
-        usersMenuPane.add(createMenuitem("Afgelopen jaar", new ShowUsersListActionListener(), "group"));
+        usersMenuPane.add(createMenuitem("Vandaag", new ShowUsersListActionListener(1000*60*60*24), "group"));
+        usersMenuPane.add(createMenuitem("Afgelopen week", new ShowUsersListActionListener(1000*60*60*24*7), "group"));
+        usersMenuPane.add(createMenuitem("Afgelopen maand", new ShowUsersListActionListener(1000*60*60*24*31), "group"));
+        usersMenuPane.add(createMenuitem("Afgelopen jaar", new ShowUsersListActionListener(1000*60*60*24*365), "group"));
         add(usersMenuPane);
     }
 
@@ -209,7 +210,8 @@ public class Menu extends JXTaskPaneContainer implements PropertyChangeListener 
 
     private class ShowUsersListActionListener implements ActionListener {
 
-        private String regex = "";
+        private String regex = null;
+        private Long period = null;
 
         public ShowUsersListActionListener() {
         }
@@ -219,9 +221,20 @@ public class Menu extends JXTaskPaneContainer implements PropertyChangeListener 
             this.regex = regex;
         }
 
+        public ShowUsersListActionListener(long period){
+            this.period = period;
+        }
+
         public void actionPerformed(ActionEvent e) {
             if (!(mainframe.getMainPanel() instanceof UsersListPanel)) {
                 mainframe.setMainPanel(UsersListPanel.getInstance());
+
+                if(regex != null)
+                    UsersListPanel.getInstance().setFilter(regex);
+                else if(period != null)
+                    UsersListPanel.getInstance().setFilter(period);
+                else
+                    UsersListPanel.getInstance().removeFilter();
             }
         }
     }

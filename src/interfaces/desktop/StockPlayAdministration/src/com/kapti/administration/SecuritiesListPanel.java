@@ -11,13 +11,9 @@ import com.kapti.administration.bo.finance.Security;
 import com.kapti.administration.tablemodels.SecuritiesTableModel;
 import com.kapti.exceptions.StockPlayException;
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Font;
-import java.awt.Graphics2D;
-import java.awt.Shape;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
 import java.util.Collection;
 import java.util.Stack;
 import java.util.concurrent.ExecutionException;
@@ -27,7 +23,6 @@ import javax.swing.table.*;
 import org.apache.log4j.Logger;
 import org.apache.xmlrpc.XmlRpcException;
 import org.jdesktop.jxlayer.JXLayer;
-import org.jdesktop.jxlayer.plaf.effect.AbstractLayerEffect;
 import org.jdesktop.swingx.JXErrorPane;
 
 import org.jdesktop.swingx.JXTable;
@@ -43,7 +38,7 @@ import org.jdesktop.swingx.error.ErrorInfo;
 public class SecuritiesListPanel extends JPanel implements TableModelListener, ListSelectionListener {
 
     private static Logger logger = Logger.getLogger(SecuritiesListPanel.class);
-    private FinanceFactory finFactory = new FinanceFactory();
+    private FinanceFactory finFactory = FinanceFactory.getInstance();
     private static SecuritiesListPanel instance = new SecuritiesListPanel();
     private JLabel selectedLabel = new JLabel();
 
@@ -234,7 +229,7 @@ public class SecuritiesListPanel extends JPanel implements TableModelListener, L
 
             @Override
             protected Collection<Security> doInBackground() throws Exception {
-                return new FinanceFactory().getAllSecurities();
+                return FinanceFactory.getInstance().getAllSecurities();
             }
 
             @Override

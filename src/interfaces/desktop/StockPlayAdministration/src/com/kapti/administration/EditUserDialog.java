@@ -45,7 +45,9 @@ public class EditUserDialog extends JDialog implements ActionListener {
     private static Logger logger = Logger.getLogger(EditUserDialog.class);
     private static final String SAVE_ACTION = "SAVE";
     private static final String CANCEL_ACTION = "CANCEL";
-    private UserFactory userFactory = new UserFactory();
+    private UserFactory userFactory = UserFactory.getInstance();
+
+    private String title;
     private User user;
     private JTextField nicknameField;
     private boolean passwordEdited = false;
@@ -70,15 +72,16 @@ public class EditUserDialog extends JDialog implements ActionListener {
     private ValueChange<Integer> pointsChange = new ValueChange<Integer>(0);
     private ValueChange<Double> cashChange = new ValueChange<Double>(0.0);
 
-    public EditUserDialog(Frame owner, User user, boolean mustChangePassword) {
+    public EditUserDialog(Frame owner, User user, String title, boolean mustChangePassword) {
         super(owner);
         this.user = user;
+        this.title = title;
         this.passwordEdited = mustChangePassword;
         createDialog();
     }
 
-    public EditUserDialog(Frame owner, User user) {
-        this(owner, user, false);
+    public EditUserDialog(Frame owner, User user, String title) {
+        this(owner, user, title, false);
     }
 
     public EditUserDialog(User user) {
@@ -102,7 +105,7 @@ public class EditUserDialog extends JDialog implements ActionListener {
         cTitel.gridx = 0;
         cTitel.gridy = 0;
         cTitel.anchor = GridBagConstraints.LINE_START;
-        JLabel titel = new JLabel("Details voor gebruiker " + user.getId());
+        JLabel titel = new JLabel(title);
         titel.setFont(titel.getFont().deriveFont(Font.BOLD, 20));
 
         add(titel, cTitel);

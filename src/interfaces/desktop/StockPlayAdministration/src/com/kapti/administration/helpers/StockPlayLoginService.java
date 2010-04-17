@@ -20,11 +20,11 @@ public class StockPlayLoginService extends LoginService {
 
     @Override
     public boolean authenticate(String name, char[] password, String server) throws Exception {
-        UserFactory uf = new UserFactory();
-        if(uf.verifyLogin(name, new String(password))){
+
+        if(UserFactory.getInstance().verifyLogin(name, new String(password))){
 
             //we bekijken of de gebruiker genoeg rechten heeft
-            Collection<User> users = uf.getUsersByFilter("nickname EQUALS '" + name + "'");
+            Collection<User> users = UserFactory.getInstance().getUsersByFilter("nickname EQUALS '" + name + "'");
             Iterator<User> it = users.iterator();
 
             if(it.hasNext()){

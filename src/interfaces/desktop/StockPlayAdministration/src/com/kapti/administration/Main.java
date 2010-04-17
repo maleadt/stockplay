@@ -5,6 +5,8 @@
 package com.kapti.administration;
 
 import com.kapti.administration.helpers.StockPlayLoginService;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import javax.swing.SwingUtilities;
 import org.jdesktop.swingx.JXLoginPane;
 import org.jdesktop.swingx.JXLoginPane.Status;
@@ -24,7 +26,7 @@ public class Main {
 
             public void run() {
 
-                MainFrame.getInstance().setVisible(true);
+                //MainFrame.getInstance().setVisible(true);
 
                 //eerst een loginscherm
                 JXLoginPane loginPane = new JXLoginPane();
@@ -38,10 +40,18 @@ public class Main {
                 loginFrame.setTitle("StockPlay login");
                 loginFrame.setVisible(true);
 
-                if (loginFrame.getStatus() == Status.SUCCEEDED) {
-                    MainFrame frame = MainFrame.getInstance();
-                    frame.setVisible(true);
-                }
+                loginFrame.addWindowListener(new WindowAdapter() {
+
+                    @Override
+                    public void windowClosed(WindowEvent e) {
+                        if (((JXLoginPane.JXLoginFrame)e.getSource()).getStatus() == Status.SUCCEEDED) {
+                            MainFrame frame = MainFrame.getInstance();
+                            frame.setVisible(true);
+                        }
+                    }
+                });
+
+
             }
         });
 

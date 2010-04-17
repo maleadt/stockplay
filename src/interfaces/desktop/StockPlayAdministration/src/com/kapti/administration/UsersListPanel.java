@@ -13,13 +13,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowStateListener;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
+import java.util.regex.Pattern;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.TableColumn;
+import javax.swing.table.TableModel;
 import org.apache.log4j.Logger;
 import org.apache.xmlrpc.XmlRpcException;
 import org.jdesktop.swingx.JXErrorPane;
@@ -34,16 +36,18 @@ import org.jdesktop.swingx.error.ErrorInfo;
  */
 public class UsersListPanel extends JPanel implements TableModelListener, ListSelectionListener, ActionListener {
 
+    private static final String REFRESH_ACTION = "REFRESH";
     private static final String EDIT_USER_ACTION = "EDIT_USER";
     private static final String CREATE_USER_ACTION = "CREATE_USER";
     private static final String DELETE_USER_ACTION = "DELETE_USER";
     private static Logger logger = Logger.getLogger(UsersListPanel.class);
-    private UserFactory usersFactory = new UserFactory();
+    private UserFactory usersFactory = UserFactory.getInstance();
     private static UsersListPanel instance = new UsersListPanel();
     private JLabel selectedLabel = new JLabel();
     private final ResourceBundle translations = ResourceBundle.getBundle("com/kapti/administration/translations");
     private JXTable usersTable = null;
     private UsersTableModel usersTableModel = null;
+    private JButton refreshButton = new JButton(translations.getString("REFRESH"));
     private JButton createUser = new JButton(translations.getString("CREATE_USER"));
     private JButton editUser = new JButton(translations.getString("EDIT_USER"));
     private JButton deleteUser = new JButton(translations.getString("DELETE_USER"));
@@ -69,6 +73,7 @@ public class UsersListPanel extends JPanel implements TableModelListener, ListSe
         usersTable.setShowGrid(false, false);
         usersTable.setHighlighters(HighlighterFactory.createAlternateStriping());
         usersTable.setAutoCreateRowSorter(true);
+        usersTable.setAutoResizeMode(JXTable.AUTO_RESIZE_OFF);
         usersTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         usersTable.getSelectionModel().addListSelectionListener(this);
 
@@ -84,6 +89,7 @@ public class UsersListPanel extends JPanel implements TableModelListener, ListSe
 
 
         JScrollPane usersTableScrollPane = new JScrollPane(usersTable);
+        usersTableScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         add(usersTableScrollPane, BorderLayout.CENTER);
 
         //de onderste balk
@@ -92,6 +98,9 @@ public class UsersListPanel extends JPanel implements TableModelListener, ListSe
         add(new UsersListActionPanel(), BorderLayout.SOUTH);
 
         //we stellen de acties in
+
+        refreshButton.setActionCommand(REFRESH_ACTION);
+        refreshButton.addActionListener(this);
 
         createUser.setActionCommand(CREATE_USER_ACTION);
         createUser.addActionListener(this);
@@ -105,11 +114,16 @@ public class UsersListPanel extends JPanel implements TableModelListener, ListSe
         deleteUser.addActionListener(this);
 
         //we laden hier onze gegevens in
+        fetchUsersTable();
+
+    }
+
+    private void fetchUsersTable() {
         SwingWorker<Collection<User>, Void> worker = new SwingWorker<Collection<User>, Void>() {
 
             @Override
             protected Collection<User> doInBackground() throws Exception {
-                return new UserFactory().getAllUsers();
+                return UserFactory.getInstance().getAllUsers();
             }
 
             @Override
@@ -128,16 +142,71 @@ public class UsersListPanel extends JPanel implements TableModelListener, ListSe
         };
 
         worker.execute();
+    }
 
+    public void setFilter(String nicknameFilter) {
+        usersTable.setRowFilter(new NicknameRowFilter(nicknameFilter));
+
+    }
+
+    void removeFilter() {
+        usersTable.setRowFilter(null);
+    }
+
+    private class NicknameRowFilter extends javax.swing.RowFilter<TableModel, Integer> {
+
+        private Pattern nicknameFilterPattern;
+
+        public NicknameRowFilter(String nicknameFilter) {
+            nicknameFilterPattern = Pattern.compile(nicknameFilter);
+
+
+        }
+
+        @Override
+        public boolean include(Entry<? extends TableModel, ? extends Integer> entry) {
+            UsersTableModel model = (UsersTableModel) entry.getModel();
+
+            User u = model.getUserAt(entry.getIdentifier());
+
+            return nicknameFilterPattern.matcher(u.getNickname()).matches();
+        }
+    }
+
+    public void setFilter(long period) {
+        usersTable.setRowFilter(new RegTimeRowFilter(period));
+    }
+
+    private class RegTimeRowFilter extends javax.swing.RowFilter<TableModel, Integer> {
+
+        private long period;
+
+        public RegTimeRowFilter(long period) {
+            this.period = period;
+
+
+        }
+
+        @Override
+        public boolean include(Entry<? extends TableModel, ? extends Integer> entry) {
+            UsersTableModel model = (UsersTableModel) entry.getModel();
+
+            User u = model.getUserAt(entry.getIdentifier());
+
+            return Calendar.getInstance().getTime().getTime() - u.getRegdate().getTime() <= period;
+        }
     }
 
     public void actionPerformed(ActionEvent e) {
 
-        if (e.getActionCommand().equals(CREATE_USER_ACTION)) {
+        if (e.getActionCommand().equals(REFRESH_ACTION)) {
+            fetchUsersTable();
+
+        } else if (e.getActionCommand().equals(CREATE_USER_ACTION)) {
 
             User newUser = usersFactory.createUser();
 
-            EditUserDialog editDialog = new EditUserDialog((JFrame) this.getTopLevelAncestor(), newUser, true);
+            EditUserDialog editDialog = new EditUserDialog((JFrame) this.getTopLevelAncestor(), newUser, translations.getString("NEW_USER_TITLE"), true);
 
 
             editDialog.setVisible(true);
@@ -161,7 +230,7 @@ public class UsersListPanel extends JPanel implements TableModelListener, ListSe
         } else if (e.getActionCommand().equals(EDIT_USER_ACTION)) {
             for (int rownr : usersTable.getSelectedRows()) {
 
-                EditUserDialog editFrame = new EditUserDialog((JFrame) this.getTopLevelAncestor(), usersTableModel.getUserAt(rownr));
+                EditUserDialog editFrame = new EditUserDialog((JFrame) this.getTopLevelAncestor(), usersTableModel.getUserAt(rownr), String.format(translations.getString("EDIT_USER_TITLE"), usersTableModel.getUserAt(rownr).getId()));
                 editFrame.setVisible(true);
 
                 usersTableModel.setUserAt(rownr, editFrame.getUser());
@@ -236,6 +305,7 @@ public class UsersListPanel extends JPanel implements TableModelListener, ListSe
             setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
             setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
 
+            add(refreshButton);
             add(Box.createHorizontalGlue());
             add(createUser);
             add(editUser);

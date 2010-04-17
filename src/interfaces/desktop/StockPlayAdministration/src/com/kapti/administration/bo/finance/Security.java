@@ -4,14 +4,19 @@
  */
 package com.kapti.administration.bo.finance;
 
+import com.kapti.exceptions.StockPlayException;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.HashMap;
+import org.apache.log4j.Logger;
 
 /**
  *
  * @author Thijs
  */
 public class Security implements Cloneable {
+
+    private static Logger logger = Logger.getLogger(Security.class);
 
     public static enum Fields {
 
@@ -44,7 +49,7 @@ public class Security implements Cloneable {
     void setDirty(boolean dirty) {
         this.dirty = dirty;
     }
-        protected String ISIN;
+    protected String ISIN;
 
     /**
      * Get the value of ISIN
@@ -54,7 +59,6 @@ public class Security implements Cloneable {
     public String getISIN() {
         return ISIN;
     }
-
     protected String symbol;
 
     /**
@@ -79,9 +83,6 @@ public class Security implements Cloneable {
     public void setExchange(Exchange exchange) {
         this.exchange = exchange;
     }
-
-
-
     protected String name;
     public static final String PROP_NAME = "name";
 
@@ -257,6 +258,34 @@ public class Security implements Cloneable {
         return super.clone();
     }
 
+    public static Security fromStruct(HashMap h) {
+        Exchange exch = null;
+        try {
+            exch = FinanceFactory.getInstance().getExchange((String)h.get(Fields.EXCHANGE.toString()));
+        }catch(StockPlayException ex){
+            logger.error(ex);
+        }
 
-    
+        return new Security(
+                (String) h.get(Security.Fields.ISIN.toString()),
+                (String) h.get(Security.Fields.SYMBOL.toString()),
+                exch,
+                (String) h.get(Security.Fields.NAME.toString()),
+                (Boolean) h.get(Security.Fields.VISIBLE.toString()),
+                (Boolean) h.get(Security.Fields.SUSPENDED.toString()));
+    }
+
+    public HashMap toStruct(){
+
+        HashMap h = new HashMap();
+        h.put(Fields.ISIN.toString(), getISIN());
+        h.put(Fields.EXCHANGE.toString(), getExchange().getSymbol());
+        h.put(Fields.NAME.toString(), getName());
+        h.put(Fields.SYMBOL.toString(), getSymbol());
+        h.put(Fields.SUSPENDED.toString(), isSuspended());
+        h.put(Fields.VISIBLE.toString(), isVisible());
+        return h;
+
+
+    }
 }

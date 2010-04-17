@@ -44,7 +44,7 @@ public class FinanceFactoryTest {
     @Test
     public void testGetAllSecurities() throws Exception {
         System.out.println("getAllSecurities");
-        FinanceFactory instance = new FinanceFactory();
+        FinanceFactory instance = FinanceFactory.getInstance();
         Collection expResult = null;
         Collection result = instance.getAllSecurities();
         assertTrue(!result.isEmpty());
@@ -57,7 +57,7 @@ public class FinanceFactoryTest {
     @Test
     public void testGetAllExchanges() throws Exception {
         System.out.println("getAllExchanges");
-        FinanceFactory instance = new FinanceFactory();
+        FinanceFactory instance = FinanceFactory.getInstance();
         Collection result = instance.getAllExchanges();
         assertTrue(!result.isEmpty());
 
@@ -70,7 +70,7 @@ public class FinanceFactoryTest {
     public void testGetExchange() throws Exception {
         System.out.println("getExchange");
         String symbol = "BSE";
-        FinanceFactory instance = new FinanceFactory();
+        FinanceFactory instance = FinanceFactory.getInstance();
         Exchange result = instance.getExchange(symbol);
         assertEquals("Euronext Brussels", result.getName());
     }
@@ -82,7 +82,7 @@ public class FinanceFactoryTest {
 //    public void testMakePersistent_Exchange() throws Exception {
 //        System.out.println("makePersistent");
 //        Exchange exch = null;
-//        FinanceFactory instance = new FinanceFactory();
+//        FinanceFactory instance = FinanceFactory.getInstance();
 //        instance.makePersistent(exch);
 //        // TODO review the generated test code and remove the default call to fail.
 //        fail("The test case is a prototype.");
@@ -95,7 +95,7 @@ public class FinanceFactoryTest {
 //    public void testMakePersistent_Security() throws Exception {
 //        System.out.println("makePersistent");
 //        Security security = null;
-//        FinanceFactory instance = new FinanceFactory();
+//        FinanceFactory instance = FinanceFactory.getInstance();
 //        instance.makePersistent(security);
 //        // TODO review the generated test code and remove the default call to fail.
 //        fail("The test case is a prototype.");

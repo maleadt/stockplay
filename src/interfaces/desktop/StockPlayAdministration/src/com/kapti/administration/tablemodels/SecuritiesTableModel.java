@@ -5,6 +5,7 @@ import com.kapti.administration.bo.finance.Security;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Collection;
+import java.util.ResourceBundle;
 import javax.swing.table.AbstractTableModel;
 
 /**
@@ -13,7 +14,8 @@ import javax.swing.table.AbstractTableModel;
  */
 public class SecuritiesTableModel extends AbstractTableModel {
 
-    private final static String[] columnTitles = {"ISIN", "Symbool", "Beurs", "Naam", "Type", "Zichtbaar", "Geschorst"};
+    private static final ResourceBundle translations = ResourceBundle.getBundle("com/kapti/administration/translations");
+    private final static String[] columnTitles = {translations.getString("ISIN_COLUMN"), translations.getString("SYMBOL_COLUMN"), translations.getString("EXCHANGE_COLUMN"), translations.getString("NAME_COLUMN"), translations.getString("SECURITY_COLUMN"), translations.getString("VISIBLE_COLUMN"), translations.getString("GESCHORST")};
     private final static Class[] columnTypes = {String.class, String.class, String.class, String.class, String.class, Boolean.class, Boolean.class};
     private final static boolean[] editableColumns = new boolean[]{false, false, true, true, true, true, true};
     //Andere opmaak van datums kan bekommen worden met een "SimpleDateFormat" toe te passen

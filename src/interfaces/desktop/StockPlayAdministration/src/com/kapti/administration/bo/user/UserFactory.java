@@ -21,6 +21,13 @@ import org.apache.xmlrpc.client.XmlRpcClient;
  */
 public class UserFactory {
 
+    private static  UserFactory  instance = new UserFactory();
+
+    public static UserFactory getInstance() {
+        return instance;
+    }
+    private UserFactory() {}
+
     public Collection<User> getAllUsers() throws StockPlayException {
         return getUsersByFilter("");
     }
@@ -33,25 +40,8 @@ public class UserFactory {
             Object[] users = (Object[]) client.execute("User.List", new Object[]{filter});
 
             for (Object obj : users) {
-                if (obj instanceof HashMap) {
+                result.add(User.fromStruct((HashMap) obj));
 
-                    HashMap user = (HashMap) obj;
-
-                    User res = new User(
-                            (Integer) user.get(User.Fields.ID.toString()),
-                            (String) user.get(User.Fields.NICKNAME.toString()),
-                            (String) user.get(User.Fields.EMAIL.toString()),
-                            (String) user.get(User.Fields.LASTNAME.toString()),
-                            (String) user.get(User.Fields.FIRSTNAME.toString()),
-                            (Date) user.get(User.Fields.REGDATE.toString()),
-                            (User.Role) User.Role.fromId((Integer) user.get((User.Fields.ROLE.toString()))),
-                            (Integer) user.get(User.Fields.POINTS.toString()),
-                            (Double) user.get(User.Fields.STARTAMOUNT.toString()),
-                            (Double) user.get(User.Fields.CASH.toString()),
-                            Long.parseLong((String) user.get(User.Fields.RRN.toString())));
-
-                    result.add(res);
-                }
             }
             return result;
 
@@ -90,21 +80,7 @@ public class UserFactory {
      */
     public boolean makePersistent(User user) throws XmlRpcException {
         XmlRpcClient client = XmlRpcClientFactory.getXmlRpcClient();
-
-        Hashtable<String, Object> h = new Hashtable<String, Object>();
-        h.put(User.Fields.ID.toString(), user.getId());
-        h.put(User.Fields.NICKNAME.toString(), user.getNickname());
-        h.put(User.Fields.LASTNAME.toString(), user.getLastname());
-        h.put(User.Fields.FIRSTNAME.toString(), user.getFirstname());
-        h.put(User.Fields.EMAIL.toString(), user.getEmail());
-        h.put(User.Fields.ROLE.toString(), user.getRole().getId());
-        if (user.getRijksregisternummer() != null) {
-            h.put(User.Fields.RRN.toString(), user.getRijksregisternummer().toString());
-        }
-        if (user.getPassword() != null) {
-            h.put(User.Fields.PASSWORD.toString(), user.getPassword());
-        }
-
+        HashMap h = user.toStruct();
 
         if (user.getId() > 0) {
             h.remove(User.Fields.ID.toString());

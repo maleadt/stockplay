@@ -1,10 +1,9 @@
 package com.kapti.administration.tablemodels;
 
 import com.kapti.administration.bo.user.User;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.Collection;
 import java.util.Date;
+import java.util.ResourceBundle;
 import java.util.Vector;
 import javax.swing.table.AbstractTableModel;
 
@@ -14,17 +13,19 @@ import javax.swing.table.AbstractTableModel;
  */
 public class UsersTableModel extends AbstractTableModel {
 
-    private final static String[] columnTitles = {"Id", "Nickname", "E-mailadres", "Achternaam", "Voornaam", "Rol", "Registratiedatum", "Punten", "Cash", "Startbedrag", "Rijksregisternummer"};
+    private static final ResourceBundle translations = ResourceBundle.getBundle("com/kapti/administration/translations");
+    private final static String[] columnTitles = {translations.getString("ID_COLUMN"), translations.getString("NICKNAME_COLUMN"), translations.getString("EMAIL_COLUMN"), translations.getString("LASTNAME_COLUMN"), translations.getString("FIRSTNAME_COLUMN"), translations.getString("ROLE_COLUMN"), translations.getString("REGDATE_COLUMN"), translations.getString("POINTS_COLUMN"), translations.getString("CASH_COLUMN"), translations.getString("STARTAMOUNT_COLUMN"), translations.getString("SSN_COLUMN")};
     private final static Class[] columnTypes = {Integer.class, String.class, String.class, String.class, String.class, String.class, Date.class, Integer.class, Double.class, Double.class, Long.class};
     private final static boolean[] editableColumns = new boolean[]{false, true, true, true, true, true, false, false, false, false, true};
-    //Andere opmaak van datums kan bekomen worden met een "SimpleDateFormat" toe te passen
-    //maar geen enkel formaat dat ik ingeef wordt ooit geaccepteerd...
+
+
     Vector<User> users = new Vector<User>();
 
     public UsersTableModel() {
     }
 
     public void setUsers(Collection<User> users) {
+        this.users.clear();
         this.users.addAll(users);
     }
 
