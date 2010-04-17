@@ -63,6 +63,7 @@ foreach my $exchange (@exchanges) {
 			if (@fields == 6) {
 				my ($date, $open, $high, $low, $close, $volume) =  @fields;
 				next unless $date =~ m{^[\d\/]+$};
+				$volume = 0 if ($volume eq "-");
 				
 				my $quote = new StockPlay::Quote (
 					security	=> $isin,
