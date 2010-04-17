@@ -34,10 +34,10 @@ public class TransactionDAO implements GenericDAO<Transaction, Integer> {
 
 
     private static final String SELECT_TRANSACTION_LASTID = "select transactionid_seq.currval from dual";
-    private static final String SELECT_TRANSACTION = "SELECT userid, timest, isin, type, amount, price FROM transactions WHERE id = ?";
-    private static final String SELECT_TRANSACTIONS = "SELECT id, userid, timest, isin, type, amount, price FROM transactions";
-    private static final String INSERT_TRANSACTION = "INSERT INTO transactions(id, userid, timest, isin, type, amount, price) VALUES(transactionid_seq.nextval, ?, ?, ?, ?, ?, ?)";
-    private static final String UPDATE_TRANSACTION = "UPDATE transactions SET userid = ?, timest = ?, isin = ?, type = ?, amount = ?, price = ? WHERE id = ?";
+    private static final String SELECT_TRANSACTION = "SELECT userid, timest, isin, type, amount, price, comments FROM transactions WHERE id = ?";
+    private static final String SELECT_TRANSACTIONS = "SELECT id, userid, timest, isin, type, amount, price, comments FROM transactions";
+    private static final String INSERT_TRANSACTION = "INSERT INTO transactions(id, userid, timest, isin, type, amount, price, comments) VALUES(transactionid_seq.nextval, ?, ?, ?, ?, ?, ?,?)";
+    private static final String UPDATE_TRANSACTION = "UPDATE transactions SET userid = ?, timest = ?, isin = ?, type = ?, amount = ?, price = ?, comments = ? WHERE id = ?";
     private static final String DELETE_TRANSACTION = "DELETE FROM transactions WHERE id = ?";
     private static TransactionDAO instance = new TransactionDAO();
 
@@ -66,6 +66,7 @@ public class TransactionDAO implements GenericDAO<Transaction, Integer> {
                     t.setType(InstructionType.valueOf(rs.getString(4).toUpperCase()));
                     t.setAmount(rs.getInt(5));
                     t.setPrice(rs.getDouble(6));
+                    t.setComments(rs.getString(7));
                     return t;
 
                 } else {
@@ -106,6 +107,7 @@ public class TransactionDAO implements GenericDAO<Transaction, Integer> {
                     t.setType(InstructionType.valueOf(rs.getString(5).toUpperCase()));
                     t.setAmount(rs.getInt(6));
                     t.setPrice(rs.getDouble(7));
+                    t.setComments(rs.getString(8));
 
                     list.add(t);
                 }
@@ -146,7 +148,7 @@ public class TransactionDAO implements GenericDAO<Transaction, Integer> {
                     t.setType(InstructionType.valueOf(rs.getString(5).toUpperCase()));
                     t.setAmount(rs.getInt(6));
                     t.setPrice(rs.getDouble(7));
-
+                    t.setComments(rs.getString(8));
                     list.add(t);
                 }
                 return list;
@@ -189,6 +191,7 @@ public class TransactionDAO implements GenericDAO<Transaction, Integer> {
                 stmt.setString(4, entity.getType().toString());
                 stmt.setInt(5, entity.getAmount());
                 stmt.setDouble(6, entity.getPrice());
+                stmt.setString(7, entity.getComments());
 
                if(stmt.executeUpdate() == 1){
 
@@ -242,14 +245,14 @@ public class TransactionDAO implements GenericDAO<Transaction, Integer> {
                 conn = OracleConnection.getConnection();
                 stmt = conn.prepareStatement(UPDATE_TRANSACTION);
 
-                stmt.setInt(7, entity.getId());
+                stmt.setInt(8, entity.getId());
                 stmt.setInt(1, entity.getUser());
                 stmt.setTimestamp(2, new Timestamp(entity.getTime().getTime()));
                 stmt.setString(3, entity.getIsin());
                 stmt.setString(4, entity.getType().toString());
                 stmt.setInt(5, entity.getAmount());
                 stmt.setDouble(6, entity.getPrice());
-
+                stmt.setString(7, entity.getComments());
                 return stmt.executeUpdate() == 1;
 
 

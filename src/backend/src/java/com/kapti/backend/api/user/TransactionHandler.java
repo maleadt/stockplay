@@ -23,13 +23,16 @@
 package com.kapti.backend.api.user;
 
 import com.kapti.backend.api.MethodClass;
+import com.kapti.backend.helpers.DateHelper;
 import com.kapti.data.Transaction;
 import com.kapti.data.persistence.GenericDAO;
 import com.kapti.exceptions.StockPlayException;
 import com.kapti.filter.Filter;
 import com.kapti.filter.parsing.Parser;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Hashtable;
+import java.util.TimeZone;
 import java.util.Vector;
 /**
  * \brief   Handler van de User.Transaction subklasse.
@@ -62,5 +65,50 @@ public class TransactionHandler extends MethodClass {
         }
 
         return oVector;        
+    }
+    
+        public int Create(Hashtable<String, Object> iDetails) throws StockPlayException {
+        // Get DAO reference
+        GenericDAO<com.kapti.data.Transaction, Integer> tTransactionDAO = getDAO().getTransactionDAO();
+
+        // Instantiate a new user
+        Transaction tTransaction = Transaction.fromStruct(iDetails);
+        tTransaction.applyStruct(iDetails);
+        tTransaction.setTime(DateHelper.convertCalendar(Calendar.getInstance(), TimeZone.getTimeZone("GMT")).getTime());
+
+        return tTransactionDAO.create(tTransaction);
+
+    }
+
+       public int Modify(String iFilter, Hashtable<String, Object> iDetails) throws StockPlayException {
+        // Get DAO reference
+        GenericDAO<com.kapti.data.Transaction, Integer> tTransactionDAO = getDAO().getTransactionDAO();
+
+        Parser parser = Parser.getInstance();
+        Filter filter = parser.parse(iFilter);
+
+        // Now apply the new properties
+        // TODO: controleren of de struct geen ID field bevat, deze kan _enkel_
+        //       gebruikt worden om een initiële Exchange aa nte maken (Create)
+        for (com.kapti.data.Transaction tTransaction : tTransactionDAO.findByFilter(filter)) {
+            tTransaction.applyStruct(iDetails);
+            tTransactionDAO.update(tTransaction);
+        }
+
+        return 1;
+    }
+
+    public int Remove(String iFilter) throws StockPlayException {
+        // Get DAO reference
+        GenericDAO<com.kapti.data.Transaction, Integer> tTransactionDAO = getDAO().getTransactionDAO();
+
+        Parser parser = Parser.getInstance();
+        Filter filter = parser.parse(iFilter);
+
+      for (com.kapti.data.Transaction tTransaction : tTransactionDAO.findByFilter(filter)) {
+            tTransactionDAO.delete(tTransaction);
+        }
+
+        return 1;
     }
 }

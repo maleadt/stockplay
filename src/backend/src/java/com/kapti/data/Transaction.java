@@ -35,11 +35,11 @@ public class Transaction extends Instruction {
 
     public static enum Fields {
         ID, USER, ISIN, AMOUNT, PRICE, TYPE,    // Instruction.Fields
-        TIME
+        TIME, COMMENTS
     }
     
     private Date time;
-
+    private String comments;
 
     //
     // Construction
@@ -65,6 +65,16 @@ public class Transaction extends Instruction {
     public void setTime(Date time) {
         this.time = time;
     }
+
+    public String getComments() {
+        return comments;
+    }
+
+    public void setComments(String comments) {
+        this.comments = comments;
+    }
+
+    
 
     public Hashtable<String, Object> toStruct(Fields... iFields) {
         Hashtable<String, Object> oStruct = new Hashtable<String, Object>();
