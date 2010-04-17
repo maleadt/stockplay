@@ -54,12 +54,12 @@ public final class InternalException extends StockPlayException {
         }
     }
 
-    public InternalException(Type iType, String message) {
-        super(iType.getCode(), iType.getMessage() + ": " + message);
+    public InternalException(Type iType) {
+        super(iType.getCode(), iType.getMessage());
     }
 
-    public InternalException(Type iType, String message, Throwable cause) {
-        super(iType.getCode(), iType.getMessage() + ": " + message, cause);
+    public InternalException(Type iType, Throwable cause) {
+        super(iType.getCode(), iType.getMessage(), cause);
     }
 
 }

@@ -73,7 +73,7 @@ public class ServletServer extends XmlRpcServletServer {
                     throw new InvocationException(InvocationException.Type.NOT_FOUND,iException.getCause());
                 
                 // No exception subtype matched, throw an internal failure
-                throw new InternalException(InternalException.Type.INTERNAL_FAILURE, "unknown failure", iException.getCause());
+                throw new InternalException(InternalException.Type.INTERNAL_FAILURE, iException.getCause());
             } else {
                 mLogger.error(iException.getMessage() + iException.getCause());
                 throw iException;

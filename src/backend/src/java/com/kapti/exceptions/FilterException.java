@@ -29,7 +29,8 @@ public final class FilterException extends StockPlayException {
         // Beschikbare foutmeldingen
         //
 
-        FILTER_FAILURE(31, "Filter Failure");
+        FILTER_FAILURE(31, "Filter Failure"),
+        DEBUG_FAILURE(32, "Debug Failure");
 
         private final int mCode;
         private final String mMessage;

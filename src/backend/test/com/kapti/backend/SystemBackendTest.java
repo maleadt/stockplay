@@ -79,7 +79,7 @@ public class SystemBackendTest {
             }
 
         } else {
-            throw new InternalException(InternalException.Type.INTERNAL_FAILURE, "Expected Hashtable, but got an " + obj.getClass());
+            throw new Exception("Expected Hashtable, but got an " + obj.getClass());
         }
     }
 }

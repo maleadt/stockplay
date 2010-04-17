@@ -35,7 +35,7 @@ public class IndexSecurityDAO implements GenericDAO<IndexSecurity, IndexSecurity
 
     private static final String SELECT_INDEXSECURITY = "SELECT null FROM index_securities WHERE index_isin = ? AND security_isin = ?";
     private static final String SELECT_INDEXSECURITIES = "SELECT index_isin, security_isin FROM index_securities";
-    private static final String INSERT_INDEXSECURITY = "INSERT INTO index_securties(index_isin, security_isin) VALUES(?, ?)";
+    private static final String INSERT_INDEXSECURITY = "INSERT INTO index_securities(index_isin, security_isin) VALUES(?, ?)";
     private static final String DELETE_INDEXSECURITY = "DELETE FROM index_securities WHERE index_isin = ? AND security_isin = ?";
     private static IndexSecurityDAO instance = new IndexSecurityDAO();
 

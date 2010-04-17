@@ -72,7 +72,8 @@ public class IndexSecurity {
     }
 
     public void applyStruct(Hashtable<String, Object> iStruct) throws StockPlayException {
-        throw new InvocationException(InvocationException.Type.READ_ONLY_KEY, "No keys can be modified");
+        if (iStruct.size() > 0)
+            throw new InvocationException(InvocationException.Type.READ_ONLY_KEY, "No keys can be modified");
     }
 
     public static IndexSecurity fromStruct(Hashtable<String, Object> iStruct) throws StockPlayException {

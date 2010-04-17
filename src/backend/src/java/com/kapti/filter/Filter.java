@@ -101,7 +101,7 @@ public class Filter {
             graph.render(new PrintStream(tFile));
         }
         catch (IOException e) {
-            throw new InternalException(InternalException.Type.INTERNAL_FAILURE, "Problem creating output file", e.getCause());
+            throw new FilterException(FilterException.Type.DEBUG_FAILURE, "Problem creating output file", e.getCause());
         }
 
         // Render the DOT file to a PNG
@@ -111,13 +111,13 @@ public class Filter {
 
             tConverter.waitFor();
             if (tConverter.exitValue() != 0)
-                throw new InternalException(InternalException.Type.INTERNAL_FAILURE, "Conversion failed");
+                throw new FilterException(FilterException.Type.DEBUG_FAILURE, "Conversion failed");
         }
         catch (IOException e) {
-            throw new InternalException(InternalException.Type.INTERNAL_FAILURE, "Problem executing child process to convert DOT code", e.getCause());
+            throw new FilterException(FilterException.Type.DEBUG_FAILURE, "Problem executing child process to convert DOT code", e.getCause());
         }
         catch (InterruptedException e) {
-            throw new InternalException(InternalException.Type.INTERNAL_FAILURE, "Was not allowed to wait for DOT output due to interrupt", e.getCause());
+            throw new FilterException(FilterException.Type.DEBUG_FAILURE, "Was not allowed to wait for DOT output due to interrupt", e.getCause());
         }
     }
 
