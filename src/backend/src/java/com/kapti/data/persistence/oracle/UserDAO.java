@@ -272,7 +272,7 @@ public class UserDAO implements GenericDAO<User, Integer> {
                 conn = OracleConnection.getConnection();
                 stmt = conn.prepareStatement(UPDATE_USER);
 
-                stmt.setInt(11, entity.getId());
+                stmt.setInt(12, entity.getId());
                 stmt.setString(1, entity.getNickname());
                 stmt.setString(2, entity.getPassword());
                 stmt.setString(3, entity.getEmail());
