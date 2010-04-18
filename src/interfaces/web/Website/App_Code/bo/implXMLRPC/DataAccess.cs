@@ -159,6 +159,32 @@ namespace implXMLRPC
             return quote;
         }
 
+        public List<IQuote> GetQuotesFromSecurity(string isin, DateTime iFrom, DateTime iTo)
+        {
+            List<IQuote> quotes = new List<IQuote>();
+            string from = iFrom.Year + "-" + iFrom.Month + "-" + iFrom.Day + "T" + iFrom.Hour + ":" + iFrom.Minute + "Z";
+            string to = iTo.Year + "-" + iTo.Month + "-" + iTo.Day + "T" + iTo.Hour + ":" + iTo.Minute + "Z";
+
+            XmlRpcStruct[] query = securityHandler.Quotes("(ISIN EQUALS '" + isin + "') AND ((TIMESTAMP LESSTHAN '" + to + "'d) AND (TIMESTAMP GREATERTHAN '" + from + "'d))");
+            foreach(XmlRpcStruct quote in query)
+                quotes.Add(new Quote(quote));
+
+            return quotes;
+        }
+
+
+        public DateTime GetLatestTime(string isin)
+        {
+            DateTime time = securityHandler.getLatestTime(isin);
+            return time;
+        }
+
+        public DateTime GetFirstTime(string isin)
+        {
+            DateTime time = securityHandler.getFirstTime(isin);
+            return time;
+        }
+        
         /**
          * EXCHANGE
          */
