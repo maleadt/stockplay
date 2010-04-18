@@ -144,5 +144,5 @@ var BarOptions = function() {
 	this.init();
 }
 
-$.extend(true, LineOptions, options, lineOptions);
-$.extend(true, BarOptions, options, barOptions);
+$.extend(true, LineOptions.prototype, options.prototype, lineOptions.prototype);
+$.extend(true, BarOptions.prototype, options.prototype, barOptions.prototype);
