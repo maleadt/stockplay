@@ -11,7 +11,6 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.logging.Level;
 import org.apache.log4j.Logger;
 
 /**
