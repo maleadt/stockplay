@@ -65,11 +65,11 @@
 }
 
 .plot:hover div.subPlot {
-	top: -22px;
+	top: -24px;
 }
 
 .plot:hover div.subPlot div.tickLabel {
-	margin-top: 22px;
+	margin-top: 24px;
 }
 
 .plot:hover ul {
