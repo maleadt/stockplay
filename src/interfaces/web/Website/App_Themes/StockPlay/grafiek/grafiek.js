@@ -1,156 +1,350 @@
-$(function (){
+var foo = new Date;
+var d1 = [[foo.getTime() - (1000 * 60 * 60 * 24 * 7), 10], [foo.getTime(), 10]];
 
-    // grafiek opstellen
-    function getData(x1, x2) {
-    	//alert("data opvragen");
-        var d = [];
-        for (var i = 0; i <= 250; ++i) {
-            var x = x1 + i * (x2 - x1) / 500;
-            d.push([x*10000000, (Math.sin(x+4)+2)*25]);
+var primaryPlot = function() { };
+var subPlot = function() { };
+var plot = function() { };
+
+$.extend(plot.prototype, {
+
+    init: function(container, from, to, isin) {
+        this.containerName = '#' + container;
+        this.data = this.getData(from, to);
+        this.plotListeners = [];
+        this.codes = [];
+        this._init(container, from, to, isin);
+    },
+
+    getData: function(from, to) {
+        return this.getDummyData(from, to);
+    },
+
+    draw: function() {
+        this.plot = $.plot(this.container, this.data, this.options);
+        this.addTemporyEvents();
+    },
+
+    addTemporyEvents: function() { },
+
+    getStats: function(from, to) {
+        var min, max, data, noPoints = 0;
+        var output = [];
+        for (line in this.data) {
+            data = this.data[line]['data'];
+            for (i = 0; i < data.length; i++)
+                if (data[i][0] <= to && data[i][0] >= from) {
+                if (max === undefined) {
+                    max = data[i][1];
+                    min = data[i][1];
+                }
+                if (data[i][1] > max)
+                    max = data[i][1];
+                if (data[i][1] < min)
+                    min = data[i][1];
+                noPoints++;
+            }
         }
-                
-        return [
-            { label: "Beursverloop Tomtom", data: d, color: "lightblue" }
-        ];
+        output.min = min;
+        output.max = max;
+        output.noPoints = noPoints;
+        return output;
+    },
+
+    setView: function(from, to) {
+        if (from < this.rangeMin)
+            from = this.rangeMin;
+        if (to > this.rangeMax)
+            to = this.rangeMax;
+        this.options.setXRange(from, to);
+        var range = this.getStats(from, to);
+        this.options.setYRange(range.min, range.max);
+        var target;
+        for (t in this.plotListeners) {
+            target = this.plotListeners[t];
+            target.setView(from, to);
+            target.requestData();
+            target.draw();
+        }
+    },
+
+    addPlotListener: function(target) {
+        this.plotListeners.push(target);
     }
 
-    var options = {
-        legend: {
-        	show: true,
-        	position: "sw"
-        },
-        series: {
-            lines: {
-            	show: true,
-            	fill: true,
-            	lineWidth: 2
-            },
-            points: { show: false }
-        },
-        xaxis: {
-        	ticks: 9,
-        	mode: "time"
-        },
-        x2axis: {
-        	ticks: 9,
-        	mode: "time"
-        },
-        yaxis: { ticks: 6 },
-        //selection: { mode: "x" },
-        pan: {
-            interactive: true
-        },
-        zoom: {
-            interactive: true
-        },
-        grid: {
-    		borderWidth: 1,
-    		borderColor: "#d8d8d8",
-    		labelMargin: 8,
+});
 
-			color: "#444",
-			backgroundColor: "#fafafa",
-			borderColor: "#fff",
-			tickColor: "#ddd",
-			borderWidth: 0,
-			hoverable: true,
-			autoHighlight: true,
-			mouseActiveRadius: 50
-  		}
-    };
+$.extend(subPlot.prototype, {
 
-    var startData = getData(2, 11);
-    $.plot($("#plotTest div"), startData, options);
-    
-    var geschiedenis = new Array();
-    var vorige;
+    _init: function(container, from, to, isin) {
+        this.container = $(this.containerName);
+        this.options = new BarOptions();
+        this.draw();
+        this.setView(this.plot.getAxes().xaxis.min, this.plot.getAxes().xaxis.max); // dubbel tekenen vervangen door from en max functie
+        this.draw();
+        this.codes.push(isin);
+    },
 
-	$("#plotTest div").bind('plotpan', function (event, plot) {
-        
-        var axes = plot.getAxes();
+    getDummyData: function(from, to) {
+        return [
+			{ label: '', data: d1, color: 'lightblue', bars: { show: true }, id: 0 }
+		];
+    },
 
-        $.plot($("#plotTest div"), getData(axes.xaxis.min/10000000, axes.xaxis.max*2/10000000),
-                      $.extend(true, {}, options, {
-                          xaxis: { min: axes.xaxis.min, max: axes.xaxis.max }
-        }));        
-        
-        return;
-        
-        var axes = plot.getAxes();
-        // zoom data ophalen
-        
-        //alert(axes.xaxis.min);
-        
-        $.plot($("#plotTest div"), getData(axes.xaxis.min/10000000, axes.xaxis.max*2/10000000), options,
-                      $.extend(true, {}, options, {
-                          //xaxis: { min: axes.xaxis.min, max: axes.xaxis.max }
-        }));
-                      
-    });
-    
-    $("#plotTest div").bind("plotselected", function (event, ranges) {
-        // limiet instellen
-        if (ranges.xaxis.to - ranges.xaxis.from < 10000)
-            ranges.xaxis.to = ranges.xaxis.from + 10000;
-        if (ranges.yaxis.to - ranges.yaxis.from < 10000)
-            ranges.yaxis.to = ranges.yaxis.from + 10000;
-        
-        // zoom data ophalen
-        $.plot($("#plotTest div"), getData(ranges.xaxis.from/10000000, ranges.xaxis.to*2/10000000),
-                      $.extend(true, {}, options, {
-                          xaxis: { min: ranges.xaxis.from, max: ranges.xaxis.to }
-                      }));
-                      
-        // geschiedenis
-       	geschiedenis.push(vorige);
-        vorige = [ranges.xaxis.from, ranges.xaxis.to];
-        
-    });
-    
-    $("#plotTest div").bind('plotzoom', function (event, plot) {
-        
-        return;
-        var ranges = plot.getAxes();
-        
-        // limiet instellen
-        if (ranges.xaxis.to - ranges.xaxis.min < 10000)
-            ranges.xaxis.to = ranges.xaxis.min + 10000;
-        if (ranges.yaxis.to - ranges.yaxis.min < 10000)
-            ranges.yaxis.to = ranges.yaxis.min + 10000;
-        
-        // zoom data ophalen
-        $.plot($("#plotTest div"), getData(ranges.xaxis.min/10000000, ranges.xaxis.max*2/10000000),
-                      $.extend(true, {}, options, {
-                          xaxis: { min: ranges.xaxis.min, max: ranges.xaxis.max }
-                      }));
-                      
-        // geschiedenis
-       	geschiedenis.push(vorige);
-        vorige = [ranges.xaxis.min, ranges.xaxis.max];
-    });
-        
-    $("#plotTest li.hand.zoomOut").bind('click', function(e){
-    
-			if (geschiedenis.length <= 1) {
-				$.plot($("#plotTest div"), startData, options);
-				geschiedenis.length = 0;
-				return;
-			}
-			
-    		var bereik = geschiedenis.pop();
-    		   
-			$.plot($("#plotTest div"), getData(bereik[0]/10000000, bereik[1]*2/10000000),
-                      $.extend(true, {}, options, {
-                          xaxis: { min: bereik[0], max: bereik[1] }
-            		  }));
-                      
-       		return false;
-    });
+    requestDataFromService: function(id, isin, from, to) {
+        var _this = this;
+        var diff = (to - from) / 2;
+        from -= diff;
+        to += diff;
+        $.ajax({
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            url: "WebService.asmx/getVolumes",
+            data: "{'isin':'" + isin + "','from':" + from + ",'to':" + to + "}",
+            dataType: "json",
+            success: function(json) {
+                var line = _this.data[id];
+                var data = eval("(" + json.d + ")");
+                var xaxis = _this.plot.getAxes().xaxis;
+                line.label = '';
+                line.data = data.data;
+                _this.draw();
+                _this.setView(xaxis.min, xaxis.max);
+                _this.draw();
+            }
+        });
+    },
 
-    $("#plotTest li.hand.reset").bind('click', function(e){
-		$.plot($("#plotTest div"), startData, options);
-		geschiedenis.length = 0;
-		return false;
-    });
-        
+    requestData: function() {
+        for (nr in this.codes)
+            this.requestDataFromService(nr, this.codes[nr], this.plot.getAxes().xaxis.min, this.plot.getAxes().xaxis.max);
+    },
+
+    setView: function(from, to) {
+        this.options.setXRange(from, to);
+        var range = this.getStats(from, to);
+        this.options.setYRange(0, range.max);
+        var target;
+        for (t in this.plotListeners) {
+            target = this.plotListeners[t];
+            target.setView(from, to);
+            target.draw();
+        }
+    }
+
+});
+
+$.extend(primaryPlot.prototype, {
+
+    _init: function(container, from, to, isin) {
+        this.container = $(this.containerName + ' div');
+        this.options = new LineOptions();
+        this.draw();
+        this.setView(this.plot.getAxes().xaxis.min, this.plot.getAxes().xaxis.max); // dubbel tekenen vervangen door from en max functie
+        this.draw();
+        this.addEvents();
+        this.lastView = [this.plot.getAxes().xaxis.min, this.plot.getAxes().xaxis.max];
+        this.history = new Array();
+        this.noLines = 1;
+        this.requestDataFromService(0, isin, this.plot.getAxes().xaxis.min, this.plot.getAxes().xaxis.max);
+        this.codes.push(isin);
+        this.draw();
+        this.setView(this.plot.getAxes().xaxis.min, this.plot.getAxes().xaxis.max);
+        this.draw();
+    },
+
+    getDummyData: function(from, to) {
+        return [
+			{ label: "Bezig met laden..", data: d1, color: 'lightblue', lines: { fill: true }, id: 0 }
+		];
+    },
+
+    addLine: function(from, to, ref) {
+        this.data.push({ label: "Bezig met laden..", data: [], color: 'red', id: 1 });
+        this.requestDataFromService(1, 'BE0003565737', this.plot.getAxes().xaxis.min, this.plot.getAxes().xaxis.max);
+        this.codes.push('BE0003565737');
+    },
+
+    addTemporyEvents: function() {
+        $(this.containerName + ' .legendLabel a').bind('click', { me: this }, function(event) {
+            var me = event.data.me;
+            //var href = event.srcElement.href;
+            var href = event.target.href;
+            me.data.splice(href.substring(href.length - 1), 1);
+            me.draw();
+            $(me.containerName + ' li.add').removeClass('disabled');
+            me.noLines--;
+            return false;
+        });
+    },
+
+    pushHistory: function() {
+        this.history.push(this.lastView);
+        this.lastView = [this.plot.getAxes().xaxis.min, this.plot.getAxes().xaxis.max];
+        $(this.containerName + ' li.last, ' + this.containerName + ' li.reset').removeClass('disabled');
+    },
+
+    requestDataFromService: function(id, isin, from, to) {
+        var _this = this;
+        var diff = (to - from) / 2;
+        from -= diff;
+        to += diff;
+        $.ajax({
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            url: "WebService.asmx/getData",
+            data: "{'isin':'" + isin + "','from':" + from + ",'to':" + to + "}",
+            dataType: "json",
+            success: function(json) {
+                var line = _this.data[id];
+                var data = eval("(" + json.d + ")");
+                var xaxis = _this.plot.getAxes().xaxis;
+                line.label = "Beursverloop" + " " + data.name;
+                line.data = data.data;
+                _this.draw();
+                _this.setView(xaxis.min, xaxis.max);
+                _this.draw();
+                if (_this.rangeMin === undefined || _this.rangeMin > data.min)
+                    _this.rangeMin = data.min;
+                if (_this.rangeMax === undefined || _this.rangeMax < data.max)
+                    _this.rangeMax = data.max;
+            }
+        });
+    },
+
+    requestData: function() {
+        for (nr in this.codes)
+            this.requestDataFromService(nr, this.codes[nr], this.plot.getAxes().xaxis.min, this.plot.getAxes().xaxis.max);
+    },
+
+    addEvents: function() {
+
+        this.container.bind('plotzoom', { me: this }, function(event, plot) {
+            var ranges = plot.getAxes().xaxis;
+            var me = event.data.me;
+            // controle op maximum inzoomen
+            //var range = me.getStats(ranges.min, ranges.max);
+            //if (range.noPoints < 10)
+            //    return false;
+            me.setView(ranges.min, ranges.max);
+            me.draw();
+            me.requestData();
+            me.pushHistory();
+        });
+
+        this.container.bind("plotselected", { me: this }, function(event, ranges) {
+            var me = event.data.me;
+            me.setView(ranges.xaxis.from, ranges.xaxis.to);
+            me.draw();
+            me.requestData();
+            me.pushHistory();
+        });
+
+        this.container.bind('plotpan', { me: this }, function(event, plot) {
+            var ranges = plot.getAxes().xaxis;
+            var me = event.data.me;
+            me.setView(ranges.min, ranges.max);
+            me.draw();
+            me.requestData();
+            me.pushHistory();
+        });
+
+        $(this.containerName + ' li.selection').bind('click', { me: this }, function(event) {
+            var me = event.data.me;
+            me.options.setSelectionMode();
+            me.draw();
+            me.requestData();
+            $(me.containerName + ' .selection').hide();
+            $(me.containerName + ' .pan').show();
+            me.pushHistory();
+        });
+
+        $(this.containerName + ' li.pan').bind('click', { me: this }, function(event) {
+            var me = event.data.me;
+            me.options.setPanningMode();
+            me.draw();
+            me.requestData();
+            $(me.containerName + ' .pan').hide();
+            $(me.containerName + ' .selection').show();
+            me.pushHistory();
+        });
+
+        $(this.containerName + ' li.zoomOut').bind('click', { me: this }, function(event) {
+            event.data.me.plot.zoomOut();
+        });
+
+        $(this.containerName + ' li.zoomIn').bind('click', { me: this }, function(event) {
+            event.data.me.plot.zoom();
+        });
+
+        $(this.containerName + ' li.reset').addClass('disabled').bind('click', { me: this }, function(event) {
+            var me = event.data.me;
+            delete me.options;
+            me.options = new LineOptions();
+            me.data.length = 1;
+            me.noLines = 1;
+            me.codes.lenght = 0;
+            me.draw();
+            me.setView(me.plot.getAxes().xaxis.min, me.plot.getAxes().xaxis.max);
+            // dubbel tekenen vervangen door from en max functie
+            me.draw();
+            me.requestData();
+            me.history.length = 0;
+            var ranges = me.plot.getAxes().xaxis;
+            me.lastView = [ranges.min, ranges.max];
+            $(me.containerName + ' li.last, ' + me.containerName + ' li.reset').addClass('disabled');
+            $(me.containerName + ' li.add').removeClass('disabled');
+        });
+
+        $(this.containerName + ' li.last').addClass('disabled').bind('click', { me: this }, function(event) {
+            var me = event.data.me;
+            if (me.history.length == 0)
+                return;
+            var range = me.history.pop();
+            me.setView(range[0], range[1]);
+            me.draw();
+            me.requestData();
+            if (me.history.length == 0) {
+                var ranges = me.plot.getAxes().xaxis;
+                me.lastView = [ranges.min, ranges.max];
+                $(me.containerName + ' li.last').addClass('disabled');
+            }
+        });
+
+        $(this.containerName + ' li.add').bind('click', { me: this }, function(event) {
+            var me = event.data.me;
+            if (me.noLines == 2)
+                return;
+            me.addLine(1, 1, 1);
+            me.noLines++;
+            if (me.noLines == 2)
+                $(me.containerName + ' li.add').addClass('disabled');
+            $(me.containerName + ' li.reset').removeClass('disabled');
+        });
+
+        $(this.containerName).bind('mouseover', { me: this }, function(event) {
+            $(event.data.me.containerName + ' .legendLabel a').show();
+        });
+
+        $(this.containerName).bind('mouseout', { me: this }, function(event) {
+            $(event.data.me.containerName + ' .legendLabel a').hide();
+        });
+    }
+
+});
+
+var PrimaryPlot = function(container, from, to, isin) {
+    this.init(container, from, to, isin);
+}
+
+var SubPlot = function(container, from, to, isin) {
+    this.init(container, from, to, isin);
+}
+
+$.extend(true, PrimaryPlot.prototype, plot.prototype, primaryPlot.prototype);
+$.extend(true, SubPlot.prototype, plot.prototype, subPlot.prototype);
+
+$(function() {
+    var prim = new PrimaryPlot('plotTest', 2, 11, 'BE0003793107');
+    var sec = new SubPlot('volumes', 2, 11, 'BE0003793107');
+    prim.addPlotListener(sec);
 });
