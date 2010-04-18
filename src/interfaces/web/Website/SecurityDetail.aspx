@@ -52,14 +52,25 @@
         </Columns>
     </asp:GridView>
 
-    <div id="plotTest" class="plot">
-        <div class="draw">
-            <ul>
-                <li class="zoomOut hand">Uitzoomen</li>
-                <li class="reset hand">Herstel</li>
-            </ul>
-        </div>
+    <div style="height:100px">
     </div>
+
+	<div id="plotTestContainer" class="plot">
+		<div id="plotTest">
+			<div class="draw"></div>
+			<ul>
+				<li class="pan hand">Verplaats</li>
+				<li class="selection hand">Selectie</li>
+				<li class="last hand" onselectstart="return false">Vorige</li>
+				<li class="zoomIn hand" onselectstart="return false">Kleiner</li>
+				<li class="zoomOut hand" onselectstart="return false">Groter</li>
+				<li class="add hand">Toevoegen</li>
+				<li class="reset hand">Herstel</li>
+			</ul>
+		</div>
+		<div id="volumes" class="subPlot">
+		</div>
+	</div>
 
     <!-- JAVASCRIPT -->
     <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
@@ -69,6 +80,7 @@
     <script type="text/javascript" src="App_Themes/StockPlay/grafiek/flot/jquery.flot.min.js"></script>
     <script type="text/javascript" src="App_Themes/StockPlay/grafiek/flot/jquery.flot.selection.min.js"></script>
     <script type="text/javascript" src="App_Themes/StockPlay/grafiek/flot/jquery.flot.navigate.min.js"></script>
+    <script type="text/javascript" src="App_Themes/StockPlay/grafiek/options.js"></script>
     <script type="text/javascript" src="App_Themes/StockPlay/grafiek/grafiek.js"></script>
 
 </asp:Content>

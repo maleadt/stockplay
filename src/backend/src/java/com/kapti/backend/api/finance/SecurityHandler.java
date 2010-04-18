@@ -36,6 +36,7 @@ import java.util.Vector;
 import com.kapti.data.Quote;
 import com.kapti.data.Security;
 import com.kapti.exceptions.FilterException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import org.apache.xmlrpc.XmlRpcException;
@@ -208,7 +209,7 @@ public class SecurityHandler extends MethodClass {
     }
 
 
-        /**
+     /**
      * Geeft alle koersen die aan aan de opgegeven filter voldoen
      * @param iFilter
      * @return
@@ -242,6 +243,39 @@ public class SecurityHandler extends MethodClass {
         return oVector;
     }
 
+
+     /**
+     * Geeft het tijdstip van de eerste datum van een koers
+     * @param String isin
+     * @return Timestamp
+     * @throws XmlRpcException
+     * @throws StockPlayException
+     * @throws FilterException
+     * @throws ParserException
+     */
+    public Timestamp getFirstTime(String isin) throws StockPlayException {
+        // Get DAO reference
+        
+        QuoteDAO tQuoteDAO = getDAO().getQuoteDAO();
+
+        return tQuoteDAO.getFirstTime(isin);
+    }
+
+     /**
+     * Geeft het tijdstip van de laatste datum van een koers
+     * @param String isin
+     * @return Timestamp
+     * @throws XmlRpcException
+     * @throws StockPlayException
+     * @throws FilterException
+     * @throws ParserException
+     */
+    public Timestamp getLatestTime(String isin) throws StockPlayException {
+        // Get DAO reference
+        QuoteDAO tQuoteDAO = getDAO().getQuoteDAO();
+
+        return tQuoteDAO.getLatestTime(isin);
+    }
 
     public int Update(Hashtable<String, Object> iDetails) throws StockPlayException {
         // Get DAO reference

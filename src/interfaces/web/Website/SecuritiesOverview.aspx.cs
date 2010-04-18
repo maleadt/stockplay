@@ -15,7 +15,6 @@ using implADO;
 
 public partial class SecuritiesOverview : System.Web.UI.Page
 {
-
     protected void Page_Load(object sender, EventArgs e)
     {
         DataView securitiesView;

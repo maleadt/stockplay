@@ -20,6 +20,12 @@ public interface SecurityHandler : IXmlRpcProxy
     [XmlRpcMethod("Finance.Security.Remove")]
     int Remove(string iFilter);
 
+    [XmlRpcMethod("Finance.Security.getFirstTime")]
+    System.DateTime getFirstTime(string isin);
+
+    [XmlRpcMethod("Finance.Security.getLatestTime")]
+    System.DateTime getLatestTime(string isin);
+
     [XmlRpcMethod("Finance.Security.Details")]
     XmlRpcStruct[] Details(string iFilter);
 
