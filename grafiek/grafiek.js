@@ -1,3 +1,8 @@
+	var d1 = [[1.2708504E+12, 11.1]];
+	
+		var dataa = eval("("+'{"data":[[1271335429000,138.4],[1271336037000,138.5],[1271336455000,138.5],[1271336515000,138.5],[1271336871000,138.45],[1271337173000,138.5],[1271337348000,138.5],[1271337495000,138.5],[1271337616000,138.8],[1271337740000,138.9],[1271337844000,138.95],[1271337983000,138.85],[1271338077000,139],[1271338129000,139],[1271338340000,138.85],[1271338450000,138.8],[1271338476000,139],[1271338689000,138.9]],"min":0,"max":12713388000,"name":"Testing"}'+")");
+
+
 var primaryPlot = function() {};
 var subPlot = function() {};
 var plot = function() {};
@@ -71,7 +76,7 @@ $.extend(subPlot.prototype, {
 
 	getDummyData: function(from, to) {
 		return [
-			{ label: "Beursverloop Tomtom", data: d1, color: 'lightblue', bars: { show: true }, id: 0 }
+			{ label: "Beursverloop Tomtom", data: [], color: 'lightblue', bars: { show: true }, id: 0 }
 		];
 	},
 
@@ -101,16 +106,26 @@ $.extend(primaryPlot.prototype, {
 		this.lastView = [this.plot.getAxes().xaxis.min, this.plot.getAxes().xaxis.max];
 		this.history = new Array();
 		this.noLines = 1;
+		this.requestData(0, 'BE0003780948', this.plot.getAxes().xaxis.min, this.plot.getAxes().xaxis.max);
+		this.draw();
+		this.setView(this.plot.getAxes().xaxis.min, this.plot.getAxes().xaxis.max);
+		this.draw();
+	},
+
+	requestData: function(id, isin, from, to) {
+		var line = this.data[id];
+		line.label = "Beursverloop" + " " + dataa.name;
+		line.data = dataa.data;
 	},
 
 	getDummyData: function(from, to) {
 		return [
-			{ label: "Beursverloop Tomtom", data: d2, color: 'lightblue', lines: { fill: true }, id: 0 }
+			{ label: "Beursverloop Tomtom", data: d1, color: 'lightblue', lines: { fill: true }, id: 0 }
 		];
 	},
 
 	addLine: function(from, to, ref) {
-		this.data.push({label: "Beursverloop Ordina", data: d3, color: 'red', id: 1});
+		this.data.push({label: "Beursverloop Ordina", data: [], color: 'red', id: 1});
 		this.draw();
 		this.setView(this.plot.getAxes().xaxis.min, this.plot.getAxes().xaxis.max); // dubbel tekenen vervangen door from en max functie
 		this.draw();
