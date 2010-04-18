@@ -20,6 +20,15 @@ import org.apache.xmlrpc.client.XmlRpcClient;
  */
 public class TransactionFactory {
 
+    private static TransactionFactory instance = new TransactionFactory();
+
+    public static TransactionFactory getInstance() {
+        return instance;
+    }
+    
+    
+
+    private TransactionFactory() {}
 
 
     public Transaction createTransaction(){
@@ -68,6 +77,7 @@ public class TransactionFactory {
             h.remove(Transaction.Fields.ID.toString());
             return (Integer) client.execute("User.Transaction.Modify", new Object[]{"id == '" + t.getId() + "'", h}) > 0;
         } else {
+            h.remove(Transaction.Fields.ID.toString());
             Integer id = (Integer) client.execute("User.Transaction.Create", new Object[]{h});
             if (id > 0) {
                 t.setId(id);

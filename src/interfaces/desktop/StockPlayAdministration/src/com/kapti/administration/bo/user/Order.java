@@ -18,14 +18,22 @@ import org.apache.log4j.Logger;
  *
  * @author Thijs
  */
-public class Transaction {
+public class Order {
 
-    private static Logger logger = Logger.getLogger(Transaction.class);
+    private static Logger logger = Logger.getLogger(Order.class);
 
     public static enum Fields {
 
         ID, USER, ISIN, AMOUNT, PRICE, TYPE, // Instruction.Fields
-        TIME, COMMENTS
+        STATUS, CREATIONTIME, EXPIRATIONTIME, EXECUTIONTIME, PARAMETERS
+    }
+
+    public enum OrderStatus {
+
+        ACCEPTED,
+        EXECUTED,
+        CANCELLED,
+        FAILED
     }
     protected int id;
     public static final String PROP_ID = "id";
@@ -43,7 +51,7 @@ public class Transaction {
         this.id = id;
     }
 
-    Transaction(int id) {
+    Order(int id) {
         this.id = id;
     }
     protected User user;
@@ -67,28 +75,6 @@ public class Transaction {
         User oldUser = this.user;
         this.user = user;
         propertyChangeSupport.firePropertyChange(PROP_USER, oldUser, user);
-    }
-    protected Date time;
-    public static final String PROP_TIME = "time";
-
-    /**
-     * Get the value of time
-     *
-     * @return the value of time
-     */
-    public Date getTime() {
-        return time;
-    }
-
-    /**
-     * Set the value of time
-     *
-     * @param time new value of time
-     */
-    public void setTime(Date time) {
-        Date oldTime = this.time;
-        this.time = time;
-        propertyChangeSupport.firePropertyChange(PROP_TIME, oldTime, time);
     }
     protected Security security;
     public static final String PROP_SECURITY = "security";
@@ -118,7 +104,6 @@ public class Transaction {
         BUY,
         SELL,
         MANUAL;
- 
     }
     protected Type type;
 
@@ -183,27 +168,93 @@ public class Transaction {
         this.price = price;
         propertyChangeSupport.firePropertyChange(PROP_PRICE, oldPrice, price);
     }
-    protected String comment;
-    public static final String PROP_COMMENT = "comment";
+    protected OrderStatus status;
+    public static final String PROP_STATUS = "status";
 
     /**
-     * Get the value of comment
+     * Get the value of status
      *
-     * @return the value of comment
+     * @return the value of status
      */
-    public String getComment() {
-        return comment;
+    public OrderStatus getStatus() {
+        return status;
     }
 
     /**
-     * Set the value of comment
+     * Set the value of status
      *
-     * @param comment new value of comment
+     * @param status new value of status
      */
-    public void setComment(String comment) {
-        String oldComment = this.comment;
-        this.comment = comment;
-        propertyChangeSupport.firePropertyChange(PROP_COMMENT, oldComment, comment);
+    public void setStatus(OrderStatus status) {
+        OrderStatus oldStatus = this.status;
+        this.status = status;
+        propertyChangeSupport.firePropertyChange(PROP_STATUS, oldStatus, status);
+    }
+    protected Date creationTime;
+    public static final String PROP_CREATIONTIME = "creationTime";
+
+    /**
+     * Get the value of creationTime
+     *
+     * @return the value of creationTime
+     */
+    public Date getCreationTime() {
+        return creationTime;
+    }
+
+    /**
+     * Set the value of creationTime
+     *
+     * @param creationTime new value of creationTime
+     */
+    public void setCreationTime(Date creationTime) {
+        Date oldCreationTime = this.creationTime;
+        this.creationTime = creationTime;
+        propertyChangeSupport.firePropertyChange(PROP_CREATIONTIME, oldCreationTime, creationTime);
+    }
+    protected Date executionTime;
+    public static final String PROP_EXECUTIONTIME = "executionTime";
+
+    /**
+     * Get the value of executionTime
+     *
+     * @return the value of executionTime
+     */
+    public Date getExecutionTime() {
+        return executionTime;
+    }
+
+    /**
+     * Set the value of executionTime
+     *
+     * @param executionTime new value of executionTime
+     */
+    public void setExecutionTime(Date executionTime) {
+        Date oldExecutionTime = this.executionTime;
+        this.executionTime = executionTime;
+        propertyChangeSupport.firePropertyChange(PROP_EXECUTIONTIME, oldExecutionTime, executionTime);
+    }
+    protected Date expirationTime;
+    public static final String PROP_EXPIRATIONTIME = "expirationTime";
+
+    /**
+     * Get the value of expirationTime
+     *
+     * @return the value of expirationTime
+     */
+    public Date getExpirationTime() {
+        return expirationTime;
+    }
+
+    /**
+     * Set the value of expirationTime
+     *
+     * @param expirationTime new value of expirationTime
+     */
+    public void setExpirationTime(Date expirationTime) {
+        Date oldExpirationTime = this.expirationTime;
+        this.expirationTime = expirationTime;
+        propertyChangeSupport.firePropertyChange(PROP_EXPIRATIONTIME, oldExpirationTime, expirationTime);
     }
     private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 
@@ -225,58 +276,8 @@ public class Transaction {
         propertyChangeSupport.removePropertyChangeListener(listener);
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Transaction other = (Transaction) obj;
-        if (this.id != other.id) {
-            return false;
-        }
-        if (this.user != other.user && (this.user == null || !this.user.equals(other.user))) {
-            return false;
-        }
-//        if (this.time != other.time && (this.time == null || !this.time.equals(other.time))) {
-//            return false;
-//        }
-//        if (this.security != other.security && (this.security == null || !this.security.equals(other.security))) {
-//            return false;
-//        }
-//        if (this.type != other.type && (this.type == null || !this.type.equals(other.type))) {
-//            return false;
-//        }
-//        if (this.amount != other.amount) {
-//            return false;
-//        }
-//        if (this.price != other.price) {
-//            return false;
-//        }
-//        if ((this.comment == null) ? (other.comment != null) : !this.comment.equals(other.comment)) {
-//            return false;
-//        }
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 3;
-        hash = 37 * hash + this.id;
-        hash = 37 * hash + (this.user != null ? this.user.hashCode() : 0);
-        hash = 37 * hash + (this.time != null ? this.time.hashCode() : 0);
-        hash = 37 * hash + (this.security != null ? this.security.hashCode() : 0);
-        hash = 37 * hash + (this.type != null ? this.type.hashCode() : 0);
-        hash = 37 * hash + this.amount;
-        hash = 37 * hash + (int) (Double.doubleToLongBits(this.price) ^ (Double.doubleToLongBits(this.price) >>> 32));
-        hash = 37 * hash + (this.comment != null ? this.comment.hashCode() : 0);
-        return hash;
-    }
-
-    public static Transaction fromStruct(HashMap h) {
-        Transaction t = new Transaction((Integer) h.get(Fields.ID.toString()));
+    public static Order fromStruct(HashMap h) {
+        Order t = new Order((Integer) h.get(Fields.ID.toString()));
         try {
             t.setUser(UserFactory.getInstance().getUserById((Integer) h.get(Fields.USER.toString())));
         } catch (StockPlayException ex) {
@@ -294,8 +295,10 @@ public class Transaction {
         t.setType(Type.valueOf((String) h.get(Fields.TYPE.toString())));
         t.setAmount((Integer) h.get(Fields.AMOUNT.toString()));
         t.setPrice((Double) h.get(Fields.PRICE.toString()));
-        t.setComment((String) h.get(Fields.COMMENTS.toString()));
-
+        t.setCreationTime((Date) h.get(Fields.CREATIONTIME.toString()));
+        t.setExecutionTime((Date) h.get(Fields.EXECUTIONTIME.toString()));
+        t.setExpirationTime((Date) h.get(Fields.EXPIRATIONTIME.toString()));
+        t.setStatus(OrderStatus.valueOf((String) h.get(Fields.STATUS.toString())));
         return t;
     }
 
@@ -307,11 +310,21 @@ public class Transaction {
         h.put(Fields.USER.toString(), getUser().getId());
         h.put(Fields.ISIN.toString(), getSecurity().getISIN());
         h.put(Fields.TYPE.toString(), getType().toString());
-        if(getTime() != null)
-        h.put(Fields.TIME.toString(), getTime());
+        if (getCreationTime() != null) {
+            h.put(Fields.CREATIONTIME.toString(), getCreationTime());
+        }
+        if (getExecutionTime() != null) {
+            h.put(Fields.EXECUTIONTIME.toString(), getExecutionTime());
+        }
+        if (getExpirationTime() != null) {
+            h.put(Fields.EXPIRATIONTIME.toString(), getExpirationTime());
+        }
         h.put(Fields.AMOUNT.toString(), getAmount());
         h.put(Fields.PRICE.toString(), getPrice());
-        h.put(Fields.COMMENTS.toString(), getComment());
+        h.put(Fields.TYPE.toString(), getType().name());
+        if (getStatus() != null) {
+            h.put(Fields.STATUS.toString(), getStatus().toString());
+        }
 
         return h;
 

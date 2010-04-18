@@ -411,4 +411,60 @@ public class User implements Cloneable {
 
 
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final User other = (User) obj;
+        if (this.id != other.id) {
+            return false;
+        }
+        if ((this.nickname == null) ? (other.nickname != null) : !this.nickname.equals(other.nickname)) {
+            return false;
+        }
+        if ((this.email == null) ? (other.email != null) : !this.email.equals(other.email)) {
+            return false;
+        }
+        if ((this.lastname == null) ? (other.lastname != null) : !this.lastname.equals(other.lastname)) {
+            return false;
+        }
+        if ((this.firstname == null) ? (other.firstname != null) : !this.firstname.equals(other.firstname)) {
+            return false;
+        }
+        if (this.role != other.role && (this.role == null || !this.role.equals(other.role))) {
+            return false;
+        }
+        if (this.regdate != other.regdate && (this.regdate == null || !this.regdate.equals(other.regdate))) {
+            return false;
+        }
+        if (this.startamount != other.startamount && (this.startamount == null || !this.startamount.equals(other.startamount))) {
+            return false;
+        }
+        if (this.RRN != other.RRN && (this.RRN == null || !this.RRN.equals(other.RRN))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 97 * hash + this.id;
+        hash = 97 * hash + (this.nickname != null ? this.nickname.hashCode() : 0);
+        hash = 97 * hash + (this.email != null ? this.email.hashCode() : 0);
+        hash = 97 * hash + (this.lastname != null ? this.lastname.hashCode() : 0);
+        hash = 97 * hash + (this.firstname != null ? this.firstname.hashCode() : 0);
+        hash = 97 * hash + (this.role != null ? this.role.hashCode() : 0);
+        hash = 97 * hash + (this.regdate != null ? this.regdate.hashCode() : 0);
+        hash = 97 * hash + (this.startamount != null ? this.startamount.hashCode() : 0);
+        hash = 97 * hash + (this.RRN != null ? this.RRN.hashCode() : 0);
+        return hash;
+    }
+
+    
 }
