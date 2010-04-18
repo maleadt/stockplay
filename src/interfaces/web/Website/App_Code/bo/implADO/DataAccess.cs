@@ -100,6 +100,21 @@ namespace implADO
             return securitiesList;
         }
 
+        public List<IQuote> GetQuotesFromSecurity(string isin, DateTime iFrom, DateTime iTo)
+        {
+            return null;
+        }
+
+        public DateTime GetLatestTime(string isin)
+        {
+            return new System.DateTime();
+        }
+
+        public DateTime GetFirstTime(string isin)
+        {
+            return new System.DateTime();
+        }
+
         public ISecurity GetSecurityByIsin(string isin)
         {
             DbConnection conn = GetConnection();
