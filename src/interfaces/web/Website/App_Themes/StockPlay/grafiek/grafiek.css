@@ -5,23 +5,30 @@
 	padding: 0;
 }
 
+#plotTestContainer {
+	width: 560px;
+}
+
+#plotTest div.draw {
+	height: 200px;
+}
+
+#volumes {
+	height: 50px;
+}
+
+#plotTwee {
+	width: 560px;
+}
+
 .plot {
 	font: 80% Arial, Verdana, sans-serif;
 	color: #5A5A5A;
 }
 
-#plotTest {
-	width: 560px;
-	clear: both;
-}
-
 .plot {
 	padding: 23px 14px 34px 22px;
-	background: url(plot.gif) no-repeat top left;
-}
-
-.plot .draw {
-	height: 250px;
+	background: url(images/plot.gif) no-repeat top left;
 }
 
 .tickLabel {
@@ -33,16 +40,36 @@
 	padding: 2px;
 }
 
+.legend table {
+	background: #fff;
+	border: #d8d8d8 1px solid;
+	padding-left: 1px;
+}
+
+.legendLabel a {
+	color: #f00202;
+	text-decoration: none;
+}
+
 .plot ul {
 	background: #fff;
 	list-style-type: none;
 	border: #d8d8d8 1px solid;
 	float: right;
 	position: relative;
-	padding: 0 6px;
-	top: -238px;
+	padding: 0 0.4em;
+	top: -188px;
 	right: 12px;
 	display: none;
+	font-size: 1.0em;
+}
+
+.plot:hover div.subPlot {
+	top: -24px;
+}
+
+.plot:hover div.subPlot div.tickLabel {
+	margin-top: 24px;
 }
 
 .plot:hover ul {
@@ -50,22 +77,60 @@
 }
 
 .plot li {
-	margin-right: 1.4em;
+	margin-right: 0.8em;
 	background: no-repeat center left;
-	padding: 5px 0 5px 22px;
+	padding: 4px 0 4px 20px;
 	float: left;
 	font-size: 1.1em;
 }
 
-li.zoomOut {
-	background-image: url(magifier_zoom_out.png);
+.plot li.disabled {
+	color: #b7bebe;
+	cursor: default;	
 }
 
-li.reset {
-	background-image: url(chart_line.png);
-	margin-right: 0;	
+.plot li.zoomOut {
+	background-image: url(images/magnifier_zoom_out.png);
 }
 
-li {
+.plot li.last {
+	background-image: url(images/arrow_undo.png);
+}
+
+.plot li.last.disabled {
+	background-image: url(images/arrow_undo_disabled.png);
+}
+
+.plot li.zoomIn {
+	background-image: url(images/magnifier_zoom_in.png);
+}
+
+.plot li.selection {
+	background-image: url(images/plugin.png);
+}
+
+.plot li.add {
+	background-image: url(images/brick_add.png);
+}
+
+.plot li.add.disabled {
+	background-image: url(images/brick_add_disabled.png);
+}
+
+.plot li.pan {
+	background-image: url(images/tag.png);
+	display: none;
+}
+
+.plot li.reset {
+	background-image: url(images/lightning.png);
+	margin-right: 0.1em;	
+}
+
+.plot li.reset.disabled {
+	background-image: url(images/lightning_disabled.png);
+}
+
+.plot li {
 	cursor: pointer;
 }
