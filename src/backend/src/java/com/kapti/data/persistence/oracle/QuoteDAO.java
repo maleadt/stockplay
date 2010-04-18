@@ -28,7 +28,6 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import org.apache.log4j.Logger;
 
 public class QuoteDAO implements com.kapti.data.persistence.QuoteDAO {
 
@@ -37,6 +36,8 @@ public class QuoteDAO implements com.kapti.data.persistence.QuoteDAO {
     private static final String INSERT_QUOTE = "INSERT INTO quotes(isin, timestamp, price, volume, bid, ask, low, high, open) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String UPDATE_QUOTE = "UPDATE quotes SET price = ?, volume ?, bid = ?, ask = ?, low = ?, high = ?, open ? WHERE isin = ? AND timestamp = ?";
     private static final String DELETE_QUOTE = "DELETE FROM quotes WHERE isin = ? AND timestamp = ?";
+    private static final String MIN_QUOTE = "SELECT MAX(TIMESTAMP) timestamp FROM quotes WHERE isin = ?";
+    private static final String MAX_QUOTE = "SELECT MIN(TIMESTAMP) timestamp FROM quotes WHERE isin = ?";
     private static final String SELECT_LATEST_QUOTE = "SELECT price, volume, bid, ask, low, high, open, timestamp FROM quotes WHERE isin = ? AND timestamp =(select max(timestamp) from quotes WHERE isin = ? )";
     private static final String SELECT_LATEST_QUOTE_FILTER =    "SELECT  ISIN, TIMESTAMP, PRICE, VOLUME, BID, ASK, LOW, HIGH, OPEN"
                                                                 + " FROM ( SELECT  QUOTES.*, MAX(TIMESTAMP) OVER (PARTITION BY ISIN) AS MAX_TIMESTAMP FROM QUOTES ) WHERE TIMESTAMP = MAX_TIMESTAMP AND ( $filter )";
@@ -385,9 +386,74 @@ public class QuoteDAO implements com.kapti.data.persistence.QuoteDAO {
             throw new DBException(ex);
         }
 
-
-
     }
+
+    public Timestamp getLatestTime(String isin) throws StockPlayException {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            try {
+                conn = OracleConnection.getConnection();
+                stmt = conn.prepareStatement(MIN_QUOTE);
+
+                stmt.setString(1, isin);
+
+                rs = stmt.executeQuery();
+                if (rs.next()) {
+                    return rs.getTimestamp("timestamp");
+                } else {
+                    return null;
+                }
+            } finally {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            }
+        } catch (SQLException ex) {
+            throw new DBException(ex);
+        }
+    }
+
+    public Timestamp getFirstTime(String isin) throws StockPlayException {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            try {
+                conn = OracleConnection.getConnection();
+                stmt = conn.prepareStatement(MAX_QUOTE);
+
+                stmt.setString(1, isin);
+
+                rs = stmt.executeQuery();
+                if (rs.next()) {
+                    return rs.getTimestamp("timestamp");
+                } else {
+                    return null;
+                }
+            } finally {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            }
+        } catch (SQLException ex) {
+            throw new DBException(ex);
+        }
+    }
+
 
     public Collection<Quote> findLatestByFilter(Filter iFilter) throws StockPlayException, FilterException {
 
