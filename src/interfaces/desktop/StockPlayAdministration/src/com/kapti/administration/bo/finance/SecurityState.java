@@ -5,8 +5,6 @@
 
 package com.kapti.administration.bo.finance;
 
-import com.kapti.administration.bo.finance.Security;
-
 /**
  *
  * @author Thijs

@@ -30,7 +30,7 @@ public class OrderFactory {
     }
 
     public Order createOrder() {
-        return new Order(-1);
+        return new Order(-1); // We kennen het nog geen ID toe
     }
 
     public Collection<Order> getAllOrders() throws StockPlayException {
@@ -44,12 +44,10 @@ public class OrderFactory {
             XmlRpcClient client = XmlRpcClientFactory.getXmlRpcClient();
             Object[] users = (Object[]) client.execute("User.Order.List", new Object[]{filter});
 
-            for (Object obj : users) {
+            for (Object obj : users)
                 result.add(Order.fromStruct((HashMap) obj));
 
-            }
             return result;
-
         } catch (XmlRpcException ex) {
             throw new RequestError(ex);
         }
@@ -64,24 +62,20 @@ public class OrderFactory {
         } else {
             return null;
         }
-
-
     }
 
     public boolean makePersistent(Order t) throws XmlRpcException {
         XmlRpcClient client = XmlRpcClientFactory.getXmlRpcClient();
         HashMap h = t.toStruct();
 
-
         //verwijder illegale velden
         h.remove(Order.Fields.ID.toString());
         h.remove(Order.Fields.CREATIONTIME.toString());
         h.remove(Order.Fields.EXECUTIONTIME.toString());
 
-        if (t.getId() > 0) {
-
+        if (t.getId() > 0)
             return (Integer) client.execute("User.Order.Modify", new Object[]{"id == '" + t.getId() + "'", h}) > 0;
-        } else {
+        else {
             Integer id = (Integer) client.execute("User.Order.Create", new Object[]{h});
             if (id > 0) {
                 t.setId(id);
