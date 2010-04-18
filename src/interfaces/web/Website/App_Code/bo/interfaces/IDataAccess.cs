@@ -12,6 +12,9 @@ public interface IDataAccess
     IQuote GetLatestQuoteFromSecurity(string isin);
     IQuote GetQuoteFromSecurity(string isin, DateTime time);
     List<IQuote> GetDailyQuotesFromSecurity(string isin, DateTime minDate, DateTime maxDate);
+    List<IQuote> GetQuotesFromSecurity(string isin, DateTime iFrom, DateTime iTo);
+    DateTime GetLatestTime(string isin);
+    DateTime GetFirstTime(string isin);
 
     //Exhanges
     IExchange GetExchangeBySymbol(string symbol);
