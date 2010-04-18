@@ -203,6 +203,7 @@ public class OrderDAO implements GenericDAO<Order, Integer> {
                 stmt.setDouble(3, entity.getPrice());
                 stmt.setInt(4, entity.getAmount());
                 stmt.setString(5, entity.getType().toString());
+
                 stmt.setString(6, entity.getStatus().toString());
                 stmt.setTimestamp(7, new Timestamp(entity.getCreationTime().getTime()));
                 if (entity.getExpirationTime() != null) {

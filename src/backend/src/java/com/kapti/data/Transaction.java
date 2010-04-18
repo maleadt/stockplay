@@ -98,13 +98,16 @@ public class Transaction extends Instruction {
                     break;
                 case TYPE:
                     if (getType() != null)
-                        oStruct.put(tField.name(), getType());
+                        oStruct.put(tField.name(), getType().toString());
                     break;
 
                 case TIME:
                     if (getTime() != null)
                         oStruct.put(tField.name(), getTime());
                     break;
+                case COMMENTS:
+                    if(getComments() != null)
+                        oStruct.put(tField.name(), getComments());
             }
         }
         return oStruct;
@@ -122,6 +125,7 @@ public class Transaction extends Instruction {
             }
 
             switch (tField) {
+
                 case AMOUNT:
                     setAmount((Integer)tValue);
                     break;
@@ -135,7 +139,9 @@ public class Transaction extends Instruction {
                 case TIME:
                     setTime((Date)tValue);
                     break;
-
+                case COMMENTS:
+                    setComments((String) tValue);
+                    break;
                 default:
                     throw new InvocationException(InvocationException.Type.READ_ONLY_KEY, "requested key '" + tKey + "' cannot be modified");
             }

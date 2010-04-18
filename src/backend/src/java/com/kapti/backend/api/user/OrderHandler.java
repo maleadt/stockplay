@@ -23,14 +23,17 @@
 package com.kapti.backend.api.user;
 
 import com.kapti.backend.api.MethodClass;
+import com.kapti.backend.helpers.DateHelper;
 import com.kapti.data.Order;
 import com.kapti.data.OrderStatus;
 import com.kapti.data.persistence.GenericDAO;
 import com.kapti.exceptions.StockPlayException;
 import com.kapti.filter.Filter;
 import com.kapti.filter.parsing.Parser;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Hashtable;
+import java.util.TimeZone;
 import java.util.Vector;
 /**
  * \brief   Handler van de User.Order subklasse.
@@ -54,9 +57,15 @@ public class OrderHandler extends MethodClass {
         for (com.kapti.data.Order tOrder : tOrders)
             oVector.add(tOrder.toStruct(
                     com.kapti.data.Order.Fields.ID,
+                    com.kapti.data.Order.Fields.USER,
                     com.kapti.data.Order.Fields.TYPE,
                     com.kapti.data.Order.Fields.ISIN,
-                    com.kapti.data.Order.Fields.AMOUNT));
+                    com.kapti.data.Order.Fields.AMOUNT,
+                    com.kapti.data.Order.Fields.STATUS,
+                    com.kapti.data.Order.Fields.CREATIONTIME,
+                    com.kapti.data.Order.Fields.EXECUTIONTIME,
+                    com.kapti.data.Order.Fields.EXPIRATIONTIME,
+                    com.kapti.data.Order.Fields.PRICE));
 
         return oVector;    
     }
@@ -67,8 +76,9 @@ public class OrderHandler extends MethodClass {
 
         // Instantiate a new order
         Order tOrder = Order.fromStruct(iDetails);
-
         tOrder.applyStruct(iDetails);
+        tOrder.setStatus(OrderStatus.ACCEPTED);
+        tOrder.setCreationTime(DateHelper.convertCalendar(Calendar.getInstance(), TimeZone.getTimeZone("GMT")).getTime());
         return orDAO.create(tOrder);
 
     }

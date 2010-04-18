@@ -27,5 +27,6 @@ public enum InstructionType {
     SELL,
     CANCEL,
     BUY_IMMIDIATE,
-    SELL_IMMIDIATE
+    SELL_IMMIDIATE,
+    MANUAL
 }

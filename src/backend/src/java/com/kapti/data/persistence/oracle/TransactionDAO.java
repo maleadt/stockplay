@@ -197,7 +197,7 @@ public class TransactionDAO implements GenericDAO<Transaction, Integer> {
 
                     stmtID = conn.prepareStatement(SELECT_TRANSACTION_LASTID);
 
-                    rs = stmt.executeQuery();
+                    rs = stmtID.executeQuery();
                     if(rs.next()){
                         conn.commit();
                         conn.setAutoCommit(true);
