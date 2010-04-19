@@ -1,0 +1,136 @@
+#!/usr/bin/env perl
+
+################################################################################
+# Configuration
+#
+
+# XXX: library location
+use lib '../lib';
+
+# Packages
+use LWP::Simple;
+use XML::RPC;
+use Date::Manip;
+use DateTime::Format::DateManip;
+use StockPlay::Factory;
+use StockPlay::Exchange;
+use StockPlay::Index;
+use StockPlay::Security;
+
+# Write nicely
+use warnings;
+use strict;
+
+# Constants
+my $PLUGIN_MAX_AGE = 3600*24*7;
+
+
+################################################################################
+# Main
+#
+
+# Load the factory
+print "- Loading factory\n";
+my $factory = new StockPlay::Factory();
+
+# Load the exchanges
+print "- Building hierarchy\n";
+my %markets = (
+	'PA'	=> 1,
+	'BSE'	=> 3
+);
+my @exchanges = $factory->buildExchanges( sub {
+	grep { $_->symbol =~ m{^(BSE|PA)$} } @_;
+});
+
+# Process all securities (per exchange)
+print "- Fetching and saving historic data\n";
+foreach my $exchange (@exchanges) {
+	foreach my $security (@{$exchange->securities}) {
+		# Fetch historic data
+		print "DEBUG: Processing " . $security->name, " (ISIN " . $security->isin . ")\n";
+		my ($d1, $d2) = (UnixDate("2 year ago", "%d\/%m\/%Y"), UnixDate("1 day ago", "%d\/%m\/%Y"));
+		my $isin = $security->isin;
+		my $mep = $markets{$exchange->symbol};
+		my $content = get("http://www.euronext.com/tools/datacentre/dataCentreDownloadExcell.jcsv?cha=2593&lan=EN&fileFormat=txt&separator=.&dateFormat=dd/MM/yy&isinCode=$isin&selectedMep=$mep&indexCompo=&opening=on&high=on&low=on&closing=on&volume=on&dateFrom=$d1&dateTo=$d2&typeDownload=2");
+		
+		# Convert to quotes
+		my @quotes;
+		foreach (split(/\n/, $content)) {
+			s/\s//g;	# Because chomp doesn't remove CR's
+			s/,//g;		# We want no thousands-separator
+			my @fields = split(/;/);
+			if (@fields == 6) {
+				my ($date, $open, $high, $low, $close, $volume) =  @fields;
+				next unless $date =~ m{^[\d\/]+$};
+				$volume = 0 if ($volume eq "-");
+				
+				my $quote = new StockPlay::Quote (
+					security	=> $isin,
+					time		=> to_datetime($date),	# TODO: timezone (now floating) && closing hour
+					price		=> $close,
+					low		=> $low,
+					high		=> $high,
+					open		=> $open,
+					volume		=> $volume
+				);
+				
+				push(@quotes, $quote);
+			}
+		}
+		
+		# Save the quotes
+		if (@quotes > 0) {
+			$factory->createQuotes(@quotes);
+		} else {
+			print "ERROR: no quotes found\n";
+		}
+	}
+}
+
+exit(0);
+
+################################################################################
+# Routines
+#
+
+sub to_datetime {
+	my ($date) = @_;
+	my ($day, $month, $year) = split(/\//, $date);
+	$year = "20".$year;
+	
+	return new DateTime(
+		year	=> $year,
+		month	=> $month,
+		day	=> $day,
+		hour	=> 23,
+		minute	=> 59
+	);
+}
+
+__END__
+
+################################################################################
+# Documentation
+#
+
+=pod
+
+=head1 NAME
+
+stockplay-scraper - Scraper component of StockPlay
+
+=head1 SYNOPSIS
+
+=head1 COPYRIGHT
+
+Copyright 2010 The StockPlay development team as listed in the AUTHORS file.
+
+This software is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public Licence (GPL) as published by the
+Free Software Foundation (FSF).
+
+The full text of the license can be found in the
+LICENSE file included with this module.
+
+=cut
