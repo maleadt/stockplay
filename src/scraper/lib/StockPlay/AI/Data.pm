@@ -7,13 +7,9 @@ package StockPlay::AI::Data;
 
 =pod
 
-=head1 NAME StockPlay::AI::Data - StockPlay AI neural forecaster
+=head1 NAME StockPlay::AI::Data - StockPlay AI main data object
 
 =head1 DESCRIPTION
-
-The C<StockPlay::Scraper::Daemon> package contains the daemon which performs
-the actual quote requests and pushes the resulting data towards the
-XML-RPC backend.
 
 =head1 SYNPOSIS
 
@@ -21,7 +17,6 @@ XML-RPC backend.
 
 # Packages
 use Moose::Role;
-use MooseX::ClassAttribute;
 
 # Write nicely
 use strict;
@@ -76,5 +71,3 @@ The full text of the license can be found in the
 LICENSE file included with this module.
 
 =cut
-
-

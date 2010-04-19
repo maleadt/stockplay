@@ -45,6 +45,7 @@ has 'time' => (
 	required	=> 1
 );
 
+# TODO: nodig? Zoja, mss ook in Security & Index
 has 'security' => (
 	is		=> 'ro',
 	isa		=> 'Str',

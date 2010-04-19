@@ -9,7 +9,6 @@ use lib '../lib';
 
 # Packages
 use LWP::Simple;
-use XML::RPC;
 use Date::Manip;
 use DateTime::Format::DateManip;
 use StockPlay::Factory;
@@ -20,9 +19,6 @@ use StockPlay::Security;
 # Write nicely
 use warnings;
 use strict;
-
-# Constants
-my $PLUGIN_MAX_AGE = 3600*24*7;
 
 
 ################################################################################

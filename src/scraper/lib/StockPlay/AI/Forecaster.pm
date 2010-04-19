@@ -7,13 +7,9 @@ package StockPlay::AI::Forecaster;
 
 =pod
 
-=head1 NAME StockPlay::AI::Manager - StockPlay AI manager
+=head1 NAME StockPlay::AI::Forecaster - StockPlay AI forecaster interface
 
 =head1 DESCRIPTION
-
-The C<StockPlay::Scraper::Daemon> package contains the daemon which performs
-the actual quote requests and pushes the resulting data towards the
-XML-RPC backend.
 
 =head1 SYNPOSIS
 
@@ -102,5 +98,3 @@ The full text of the license can be found in the
 LICENSE file included with this module.
 
 =cut
-
-

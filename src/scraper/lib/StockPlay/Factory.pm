@@ -53,7 +53,7 @@ use warnings;
 has 'server' => (
 	is		=> 'ro',
 	isa		=> 'Str',
-	default		=> 'http://localhost:6800/backend/public'
+	default		=> 'http://be04.kapti.com:6800/backend/public'
 );
 
 has 'xmlrpc' => (

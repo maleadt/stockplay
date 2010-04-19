@@ -11,10 +11,6 @@ package StockPlay::AI::Forecaster::Neural;
 
 =head1 DESCRIPTION
 
-The C<StockPlay::Scraper::Daemon> package contains the daemon which performs
-the actual quote requests and pushes the resulting data towards the
-XML-RPC backend.
-
 =head1 SYNPOSIS
 
 =cut
