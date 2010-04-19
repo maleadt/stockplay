@@ -1,45 +1,24 @@
 package com.kapti.transactionmanager;
 
-import com.kapti.administration.bo.user.Order;
-import com.kapti.administration.bo.user.OrderFactory;
-import com.kapti.administration.bo.user.Transaction;
-import com.kapti.administration.bo.user.TransactionFactory;
-import com.kapti.exceptions.StockPlayException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import org.apache.log4j.Logger;
 
 public class Main {
+
+    private static Logger logger = Logger.getLogger(Main.class);
+    private static ScheduledExecutorService daemonService;
+
+    public Main() {
+    }
+
     public static void main(String[] as) {
-        System.out.println("Starting Transaction Manager..");
-
-        TransactionFactory transactionFactory = TransactionFactory.getInstance();
-        OrderFactory orderFactory = OrderFactory.getInstance();
-
-        // TESTING
-        try {
-            for (Transaction transaction : transactionFactory.getAllTransactions()) {
-                System.out.println(transaction.getId());
-            }
-
- 
-            for (Order order : orderFactory.getAllOrders()) {
-                System.out.println(order.getId());
-            }
-        } catch (StockPlayException ex) {
-        }
-        // TESTING
+        logger.info("Starting Transaction Manager..");
 
 
-        OrderDeamon deamon = new OrderDeamon();
-        deamon.setTransactionFactory(transactionFactory);
-
-        for (;;) {
-            System.out.println("Controlling orders..");
-            try {
-                deamon.processOrder(orderFactory.getAllOrders());
-            } catch (StockPlayException ex) {
-            }
-        }
-
+        daemonService = Executors.newSingleThreadScheduledExecutor();
+        //we voeren elke minuut een controle van de orders uit
+       daemonService.scheduleAtFixedRate(new CheckOrdersTask(), 0, 30, TimeUnit.SECONDS);
     }
 }
