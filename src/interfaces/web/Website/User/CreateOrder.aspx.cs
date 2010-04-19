@@ -21,7 +21,7 @@ public partial class User_CreateOrder : System.Web.UI.Page
             {
                 IDataAccess data = DataAccessFactory.GetDataAccess();
 
-                ISecurity security = data.GetSecurityByIsin(Request.Params["ISIN"]);
+                ISecurity security = data.GetSecurityByIsin(Request.Params["ISIN"])[0];
                 IQuote latestQuote = data.GetLatestQuoteFromSecurity(Request.Params["ISIN"]);
 
                 StockplayMembershipUser user = (StockplayMembershipUser) Membership.GetUser(User.Identity.Name);
@@ -61,7 +61,7 @@ public partial class User_CreateOrder : System.Web.UI.Page
     {
         IDataAccess data = DataAccessFactory.GetDataAccess();
 
-        ISecurity security = data.GetSecurityByIsin(Request.Params["ISIN"]);
+        ISecurity security = data.GetSecurityByIsin(Request.Params["ISIN"])[0];
         IQuote latestQuote = data.GetLatestQuoteFromSecurity(Request.Params["ISIN"]);
         StockplayMembershipUser user = (StockplayMembershipUser)Membership.GetUser(User.Identity.Name);
 

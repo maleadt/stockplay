@@ -115,10 +115,10 @@ namespace implADO
             return new System.DateTime();
         }
 
-        public ISecurity GetSecurityByIsin(string isin)
+        public List<ISecurity> GetSecurityByIsin(params string[] isin)
         {
             DbConnection conn = GetConnection();
-            ISecurity security = null;
+            List<ISecurity> security = new List<ISecurity>();
             DbDataReader securityReader = null;
 
             try
@@ -135,7 +135,7 @@ namespace implADO
                 securityReader = command.ExecuteReader();
 
                 if (securityReader.Read())
-                    security = GenerateSecurity(securityReader);
+                    security.Add(GenerateSecurity(securityReader));
             }
             catch (Exception e)
             {

@@ -23,7 +23,7 @@ public partial class SecurityDetail : System.Web.UI.Page
 
             try
             {
-                ISecurity security = data.GetSecurityByIsin(Request.Params["param"]);
+                ISecurity security = data.GetSecurityByIsin(Request.Params["param"])[0];
                 GeneratePage(security);
                 Page.Title = security.Name + " " + Page.Title;
             }
@@ -49,7 +49,7 @@ public partial class SecurityDetail : System.Web.UI.Page
 
         if (latestQuote != null)
         {
-            Value.InnerText = Convert.ToString(latestQuote.Price);
+            Value.InnerText = String.Format("{0:0.00}", latestQuote.Price);
             quoteChange = security.GetLatestQuote().Change;
         }
 

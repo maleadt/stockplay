@@ -73,10 +73,6 @@ namespace implXMLRPC
             user.Add("EMAIL", email);
             if(lastname != null) user.Add("LASTNAME", lastname);
             if(firstname != null) user.Add("FIRSTNAME", firstname);
-            user.Add("REGDATE", regDate);
-            user.Add("POINTS", points);
-            user.Add("STARTAMOUNT", startAmount);
-            user.Add("CASH", cash);
             if(rrn != -1) user.Add("RRN", Convert.ToString(rrn));
 
             return user;

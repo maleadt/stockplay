@@ -17,7 +17,7 @@ public class WebService  : System.Web.Services.WebService {
     public string getData(string isin, double from, double to) {
         IDataAccess data = DataAccessFactory.GetDataAccess();
         List<IQuote> quotes = data.GetQuotesFromSecurity(isin, Helpers.ConvertFromUnixTimestamp(from / 1000), Helpers.ConvertFromUnixTimestamp(to / 1000));
-        ISecurity security = data.GetSecurityByIsin(isin);
+        ISecurity security = data.GetSecurityByIsin(isin)[0];
 
         Plot plot = new Plot();
         plot.name = security.Name;

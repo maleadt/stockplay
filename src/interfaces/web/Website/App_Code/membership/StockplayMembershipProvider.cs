@@ -40,6 +40,7 @@ public class StockplayMembershipProvider : System.Web.Security.MembershipProvide
 
         try
         {
+            user.Password = newPassword;
             data.UpdateUser(user);
         }
         catch(Exception e)
@@ -57,10 +58,9 @@ public class StockplayMembershipProvider : System.Web.Security.MembershipProvide
 
     public override MembershipUser CreateUser(string nickname, string password, string email, string passwordQuestion, string passwordAnswer, bool isApproved, object providerUserKey, out MembershipCreateStatus status)
     {
-        return this.CreateUser(nickname, password, email, "", "", -1, out status);
+        throw new NotImplementedException();
     }
 
-    // TODO - Deze methode wordt niet gebruikt momenteel. Is er een manier om de CreateUser wizard deze te laten oproepen?
     public StockplayMembershipUser CreateUser(string nickname, string password, string email, string lastname, string firstname, long rrn, out MembershipCreateStatus status)
     {
         IDataAccess data = DataAccessFactory.GetDataAccess();
@@ -183,7 +183,15 @@ public class StockplayMembershipProvider : System.Web.Security.MembershipProvide
     // TODO Methode in backend voorzien om wachtwoord te wijzigen!
     public override string ResetPassword(string username, string answer)
     {
-        throw new NotImplementedException();
+        IDataAccess data = DataAccessFactory.GetDataAccess();
+        IUser user = data.GetUserByNickname(username);
+
+        string newPassword = System.Guid.NewGuid().ToString();
+
+        user.Password = newPassword;
+        data.UpdateUser(user);
+
+        return newPassword;
     }
 
     public override bool UnlockUser(string userName)
@@ -197,13 +205,13 @@ public class StockplayMembershipProvider : System.Web.Security.MembershipProvide
         try
         {
             IUser userData = data.GetUserByNickname(user.UserName);
-            StockplayMembershipUser userMembership = (StockplayMembershipUser)user;
+            StockplayMembershipUser userMembership = (StockplayMembershipUser) user;
 
             userData.Nickname = userMembership.UserName;
             userData.Lastname = userMembership.Lastname;
             userData.Firstname = userMembership.Firstname;
             userData.Email = userMembership.Email;
-            userData.RRN = userData.RRN;
+            userData.RRN = userMembership.RRN;
 
             data.UpdateUser(userData);
         }

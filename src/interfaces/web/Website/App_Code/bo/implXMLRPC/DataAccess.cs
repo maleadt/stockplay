@@ -11,6 +11,8 @@ using System.Web.UI.WebControls.WebParts;
 using System.Xml.Linq;
 using System.Collections.Generic;
 using CookComputing.XmlRpc;
+using log4net;
+using System.Text;
 
 namespace implXMLRPC
 {
@@ -21,6 +23,8 @@ namespace implXMLRPC
     public class DataAccess : IDataAccess
     {
         private static DataAccess instance;
+
+        private static readonly ILog sysLog = LogManager.GetLogger(typeof(DataAccess));
 
         //Handlerinstanties
         private ExchangeHandler exchangeHandler;
@@ -105,15 +109,27 @@ namespace implXMLRPC
             return securities;
         }
 
-        public ISecurity GetSecurityByIsin(string isin)
+        public List<ISecurity> GetSecurityByIsin(params string[] isin)
         {
-            ISecurity security = null;
+            //ISecurity security = null;
 
-            XmlRpcStruct[] query = securityHandler.List("ISIN EQUALS '" + isin + "'");
-            if(query.Length>0)
-                security = new Security(query[0], null);
+            StringBuilder parameters = new StringBuilder();
+            for (int i = 0; i < isin.Length-1 ; i++)
+                parameters.Append("(ISIN == '" + isin[i] + "') OR ");
 
-            return security;
+            parameters.Append("(ISIN == '" + isin[isin.Length-1] + "')");
+
+            //XmlRpcStruct[] query = securityHandler.List("ISIN EQUALS '" + isin + "'");
+            //if(query.Length>0)
+            //    security = new Security(query[0]);
+
+            List<ISecurity> securities = new List<ISecurity>();
+
+            XmlRpcStruct[] query = securityHandler.List(parameters.ToString());
+            foreach (XmlRpcStruct security in query)
+                securities.Add(new Security(security));
+
+            return securities;
         }
 
         // TODO - Methode testen (is deze wel nodig?)

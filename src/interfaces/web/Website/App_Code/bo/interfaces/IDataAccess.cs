@@ -5,7 +5,7 @@ public interface IDataAccess
 {
     //Securities
     List<ISecurity> GetSecuritiesList();
-    ISecurity GetSecurityByIsin(string isin);
+    List<ISecurity> GetSecurityByIsin(params string[] isin);
     List<ISecurity> GetSecuritiesFromExchange(string id);
 
     //Quotes
@@ -27,6 +27,8 @@ public interface IDataAccess
     bool UpdateUser(IUser user);
     IUser GetUserByNickname(string nickname);
     bool ValidateUser(string nickname, string password);
+
+    //User Securities
     List<IUserSecurity> GetUserSecurities(int id);
 
     //Transactions
