@@ -73,7 +73,8 @@ public class CheckOrdersTask implements Runnable {
           
               
 
-            if (verifier != null && verifier.verifyOrder(order, quote)) {
+            if (verifier != null && verifier.verifyOrder(order, quote) &&
+                    (((order.getType() != Order.Type.BUY || order.getType() != Order.Type.IMMEDIATE_BUY)) &&  order.getUser().getCash() > quote.getPrice() * order.getAmount())) {
                 // de voorwaarden om het order te kunnen uitvoeren zijn voldaan, we voeren het uit!
                 Transaction transaction = transactionFactory.createTransaction();
                 transaction.setUser(order.getUser());
@@ -103,6 +104,9 @@ public class CheckOrdersTask implements Runnable {
                         order.setStatus(Order.OrderStatus.FAILED);
                     }
                     orderFactory.makePersistent(order);
+
+                    //we passen de user aan in onze cache
+                    order.getUser().setCash(order.getUser().getCash() - quote.getPrice() * order.getAmount());
                     
                 } catch (StockPlayException ex) {
                     logger.error("Exception occured while executing order " + order.getId(), ex);
