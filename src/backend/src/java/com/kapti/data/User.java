@@ -22,7 +22,6 @@
 package com.kapti.data;
 
 import com.kapti.exceptions.InvocationException;
-import com.kapti.exceptions.ServiceException;
 import com.kapti.exceptions.StockPlayException;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
@@ -67,6 +66,8 @@ public class User {
 //        this.regdate = regdate;
 //    }
 
+    public User(){}
+
     public User (int id){
         this.id = id;
     }
@@ -74,6 +75,11 @@ public class User {
     //
     // Methods
     //
+
+    private void setId(int id){
+        this.id = id;
+    }
+
     public void setEncryptedPassword(String password) {
 
         this.password = password;
@@ -274,6 +280,8 @@ public class User {
 
 
             switch (tField) {
+                case ID:
+                    setId((Integer) tValue);
                 case FIRSTNAME:
                     setFirstname((String) tValue);
                     break;
@@ -323,23 +331,23 @@ public class User {
         }
 
         // Check needed keys
-        if (tStructMap.containsKey(Fields.ID)){// && tStructMap.containsKey(Fields.NICKNAME) && tStructMap.containsKey(Fields.EMAIL) && tStructMap.containsKey(Fields.FIRSTNAME) && tStructMap.containsKey(Fields.LASTNAME) && tStructMap.containsKey(Fields.REGDATE)) {
-            User tUser = new User(
-                    (Integer) iStruct.get(tStructMap.get(Fields.ID)));
+        //if (tStructMap.containsKey(Fields.ID)){// && tStructMap.containsKey(Fields.NICKNAME) && tStructMap.containsKey(Fields.EMAIL) && tStructMap.containsKey(Fields.FIRSTNAME) && tStructMap.containsKey(Fields.LASTNAME) && tStructMap.containsKey(Fields.REGDATE)) {
+            User tUser = new User();
+              //      (Integer) iStruct.get(tStructMap.get(Fields.ID)));
 //                    (String) iStruct.get(tStructMap.get(Fields.NICKNAME)),
 //                    (String) iStruct.get(tStructMap.get(Fields.EMAIL)),
 //                    (String) iStruct.get(tStructMap.get(Fields.LASTNAME)),
 //                    (String) iStruct.get(tStructMap.get(Fields.FIRSTNAME)),
 //                    (Date) iStruct.get(tStructMap.get(Fields.REGDATE)));
-            iStruct.remove(tStructMap.get(Fields.ID));
+       //     iStruct.remove(tStructMap.get(Fields.ID));
 //            iStruct.remove(tStructMap.get(Fields.NICKNAME));
 //            iStruct.remove(tStructMap.get(Fields.EMAIL));
 //            iStruct.remove(tStructMap.get(Fields.LASTNAME));
 //            iStruct.remove(tStructMap.get(Fields.FIRSTNAME));
 //            iStruct.remove(tStructMap.get(Fields.REGDATE));
             return tUser;
-        } else {
-            throw new ServiceException(ServiceException.Type.NOT_ENOUGH_INFORMATION);
-        }
+//        } else {
+//            throw new ServiceException(ServiceException.Type.NOT_ENOUGH_INFORMATION);
+//        }
     }
 }
