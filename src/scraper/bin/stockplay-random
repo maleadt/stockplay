@@ -1,0 +1,90 @@
+#!/usr/bin/env perl
+
+################################################################################
+# Configuration
+#
+
+# XXX: library location
+use lib '../lib';
+
+# Packages
+use StockPlay::Factory;
+use StockPlay::Exchange;
+use StockPlay::Index;
+use StockPlay::Security;
+
+# Write nicely
+use warnings;
+use strict;
+
+
+################################################################################
+# Main
+#
+
+# Load the factory
+print "- Loading factory\n";
+my $factory = new StockPlay::Factory();
+
+# Build an hierarchy
+print "- Building hierarchy\n";
+my @exchanges = $factory->buildExchanges();
+
+while (1) {
+	print "- Generating quotes\n";
+	my @quotes;
+	foreach my $exchange (@exchanges) {
+		foreach my $security (@{$exchange->securities}) {
+			my $quote = $security->quote;
+			if (defined $quote) {
+				my $price = abs($quote->price * (0.97+rand(0.06)));
+				my $min = $price<$quote->low?$price:$quote->low;
+				my $max = $price>$quote->high?$price:$quote->high;
+				my $quote_random = new StockPlay::Quote(
+					time		=> DateTime->now(),
+					security	=> $security->isin,
+					price		=> $price,
+					volume		=> int($quote->volume * (1+rand(0.05))),
+					low		=> $min,
+					high		=> $max,
+					bid		=> $price*(1-rand(0.05)),
+					ask		=> $price*(1+rand(0.05))
+				);
+				$security->quote($quote);
+				push(@quotes, $quote_random);
+			}
+		}
+	}
+	
+	print "- Sending quotes\n";
+	$factory->createQuotes(@quotes);
+	print "  done\n";
+	sleep(30);
+}
+
+__END__
+
+################################################################################
+# Documentation
+#
+
+=pod
+
+=head1 NAME
+
+stockplay-scraper - Scraper component of StockPlay
+
+=head1 SYNOPSIS
+
+=head1 COPYRIGHT
+
+Copyright 2010 The StockPlay development team as listed in the AUTHORS file.
+
+This software is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public Licence (GPL) as published by the
+Free Software Foundation (FSF).
+
+The full text of the license can be found in the
+LICENSE file included with this module.
+
+=cut
