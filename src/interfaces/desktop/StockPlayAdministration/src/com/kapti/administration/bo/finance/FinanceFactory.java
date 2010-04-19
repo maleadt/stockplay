@@ -102,7 +102,7 @@ public class FinanceFactory {
             Vector v = new Vector();
 
             //we maken de filter aan zodat enkel dit object wordt gewijzigd
-            v.add("id EQUALS '" + exch.getSymbol()+"'");
+            v.add("id EQUALS '" + exch.getSymbol() + "'");
 
             //we voegen nu de argumenten aan het bericht toe
             v.add(exch.toStruct());
@@ -142,5 +142,37 @@ public class FinanceFactory {
 
         }
         return true;
+    }
+
+    public Collection<Quote> getAllLatestQuotes() throws StockPlayException {
+        return getLatestQuoteByFilter("");
+
+
+
+    }
+
+    private Collection<Quote> getLatestQuoteByFilter(String filter) throws StockPlayException {
+        ArrayList<Quote> result = new ArrayList<Quote>();
+        try {
+            XmlRpcClient client = XmlRpcClientFactory.getXmlRpcClient();
+            Object[] securities = (Object[]) client.execute("Finance.Security.LatestQuotes", new Object[]{filter});
+
+            for (Object sec : securities) {
+                result.add(Quote.fromStruct((HashMap) sec));
+            }
+            return result;
+
+        } catch (XmlRpcException ex) {
+            throw new RequestError(ex);
+        }
+    }
+
+    public Quote getLatestQuoteFromSecurity(Security sec) throws StockPlayException {
+
+        Collection<Quote> quotes = getLatestQuoteByFilter("isin == '" +sec.getISIN() + "'");
+        Iterator<Quote> it = quotes.iterator();
+
+        return quotes.iterator().next();
+
     }
 }

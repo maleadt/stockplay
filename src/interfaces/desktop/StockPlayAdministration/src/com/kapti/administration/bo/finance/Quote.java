@@ -4,13 +4,20 @@
  */
 package com.kapti.administration.bo.finance;
 
+import com.kapti.exceptions.StockPlayException;
 import java.util.Date;
+import java.util.HashMap;
 
 /**
  *
  * @author Thijs
  */
 public class Quote {
+
+    public static enum Fields {
+
+        ISIN, TIME, PRICE, VOLUME, BID, ASK, LOW, HIGH, OPEN
+    }
 
     Quote(Security security, Date time, double price, int volume, double bid, double ask, double low, double high, double open) {
         this.security = security;
@@ -63,15 +70,6 @@ public class Quote {
     public int getVolume() {
         return volume;
     }
-
-    /**
-     * Set the value of volume
-     *
-     * @param volume new value of volume
-     */
-    public void setVolume(int volume) {
-        this.volume = volume;
-    }
     protected double bid;
 
     /**
@@ -121,5 +119,21 @@ public class Quote {
      */
     public double getOpen() {
         return open;
+    }
+
+    public static Quote fromStruct(HashMap h) throws StockPlayException {
+        try {
+            return new Quote(FinanceFactory.getInstance().getSecurityById((String) h.get(Fields.ISIN.toString())),
+                    (Date) h.get(Fields.TIME.toString()),
+                    (Double) h.get(Fields.PRICE.toString()),
+                    (Integer) h.get(Fields.VOLUME.toString()),
+                    (Double) h.get(Fields.BID.toString()),
+                    (Double) h.get(Fields.ASK.toString()),
+                    (Double) h.get(Fields.LOW.toString()),
+                    (Double) h.get(Fields.HIGH.toString()),
+                    (Double) h.get(Fields.OPEN.toString()));
+        } catch (Exception ex) {
+            throw new StockPlayException("Error while parsing Quote-struct to quote-object");
+        }
     }
 }
