@@ -5,6 +5,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <link rel="Stylesheet" href="App_Themes/StockPlay/vormgeving/style.css" type="text/css" media="screen" />
+    
+    <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
     <!--[if IE]><link rel="Stylesheet" href="App_Themes/StockPlay/vormgeving/ie.css" type="text/css" media="screen"/><![endif]-->
     
     <title>StockPlay</title>
@@ -22,8 +24,7 @@
         <div id="content">
             <div id="menu">            
                 <div id="left">
-                    <asp:TextBox ID="search" name="search" Text="Effect zoeken..." runat="server" />
-                    <!-- <input id="search" name="search" type="text" value="Effect zoeken.." /> -->
+                    <input id="search" name="search" type="text" value="Effect zoeken.." />
 
                     <asp:SiteMapDataSource ID="SiteMapSource" runat="server" ShowStartingNode="false" />
                     <asp:TreeView CssClass="menu" ID="TreeView1" runat="server" ShowExpandCollapse="False" DataSourceID="SiteMapSource">
@@ -50,11 +51,11 @@
             <div id="right">
                 <asp:ContentPlaceHolder id="ContentPlaceHolder" runat="server" />
             </div>
+            
+            <!-- Javascript -->
+            <script type="text/javascript" src="App_Themes/StockPlay/dynamiek/taalbestanden/nl-be.js"></script>
+            <script type="text/javascript" src="App_Themes/StockPlay/dynamiek/algemeen.js"></script>
         </div>
-        
-        <!-- Javascript -->
-        <script type="text/javascript" src="App_Themes/StockPlay/dynamiek/taalbestanden/nl-be.js"></script>
-        <script type="text/javascript" src="App_Themes/StockPlay/dynamiek/algemeen.js"></script>
     
         <asp:ScriptManager id="ScriptManager" runat="server" />
     </div>   

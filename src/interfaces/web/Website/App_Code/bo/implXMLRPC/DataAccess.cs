@@ -100,9 +100,9 @@ namespace implXMLRPC
             //De zoekterm zoekt zowel op isin, naam of exchange
             XmlRpcStruct[] querySecurities = null;
             if (searchterm == "")
-                securityHandler.List();
+                querySecurities = securityHandler.List();
             else
-                securityHandler.List("(ISIN =~ '" + searchterm + "') OR (NAME =~ '" + searchterm + "') OR (EXCHANGE =~ '" + searchterm + "')");
+                querySecurities = securityHandler.List("(ISIN =~ '" + searchterm + "') OR (NAME =~ '" + searchterm + "') OR (EXCHANGE =~ '" + searchterm + "')");
             
             XmlRpcStruct[] queryQuotes = securityHandler.LatestQuotes("");
 

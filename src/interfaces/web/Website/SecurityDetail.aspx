@@ -73,7 +73,6 @@
 	</div>
 
     <!-- JAVASCRIPT -->
-    <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
     <!--[if IE]><script language="javascript" type="text/javascript" src="App_Themes/StockPlay/grafiek/flot/excanvas.min.js"></script><![endif]-->
     <script type="text/javascript" src="App_Themes/StockPlay/grafiek/flot/jquery.flot.min.js"></script>
     <script type="text/javascript" src="App_Themes/StockPlay/grafiek/flot/jquery.flot.selection.min.js"></script>
