@@ -11,6 +11,8 @@ searchBox.focus(function(){
 	if($(this).attr('value') == '')
 		$(this).attr("value", searchDefault);  
 }).bind("keydown", function(e) {
-	if (e.keyCode == 13)
+	if (e.keyCode == 13) {
 		location.href="SecuritiesOverview.aspx?search="+searchBox.val();
+		e.preventDefault();
+	}
 });
