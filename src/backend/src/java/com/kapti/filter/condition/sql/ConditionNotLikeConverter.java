@@ -24,7 +24,7 @@ package com.kapti.filter.condition.sql;
 import com.kapti.exceptions.FilterException;
 import com.kapti.filter.condition.ConditionNotLike;
 import com.kapti.filter.data.DataKey;
-import com.kapti.filter.data.DataString;
+import com.kapti.filter.data.DataRegex;
 
 public class ConditionNotLikeConverter extends ConditionNotLike {
 
@@ -41,7 +41,13 @@ public class ConditionNotLikeConverter extends ConditionNotLike {
     //
 
     @Override
-    public Object process(DataKey a, DataString b) throws FilterException {
-        return (String)a.compile() + " NOT LIKE " + (String)b.compile();
+    public Object process(DataKey a, DataRegex b) throws FilterException {
+        StringBuilder tQuery = new StringBuilder();
+        tQuery.append("NOT REGEXP_LIKE(" + (String)a.compile() + ", " + (String)b.compile() + ", '");
+        if (! b.isCaseSensitive())
+            tQuery.append("i");
+        tQuery.append("')");
+
+        return tQuery.toString();
     }
 }

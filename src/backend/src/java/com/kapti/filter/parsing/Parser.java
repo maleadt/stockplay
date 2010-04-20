@@ -32,6 +32,7 @@ import com.kapti.filter.data.DataDate;
 import com.kapti.filter.data.DataFloat;
 import com.kapti.filter.data.DataInt;
 import com.kapti.filter.data.DataKey;
+import com.kapti.filter.data.DataRegex;
 import com.kapti.filter.data.DataString;
 import com.kapti.filter.relation.RelationAnd;
 import com.kapti.filter.relation.RelationOr;
@@ -82,7 +83,7 @@ public class Parser {
         mTokenRules.add(new Rule(TokenType.RIGHT_PARENTHESIS, "\\)"));
         mTokenRules.add(new Rule(TokenType.COMMA, ","));
         mTokenRules.add(new Rule(TokenType.WORD, "[A-Za-z_]+"));
-        mTokenRules.add(new Rule(TokenType.QUOTE, "'([^\']*+)'([sdifk]?)"));
+        mTokenRules.add(new Rule(TokenType.QUOTE, "'([^\']*+)'([rksdifk]*)"));
         mTokenRules.add(new Rule(TokenType.FLOAT, "-?[0-9.]+"));
         mTokenRules.add(new Rule(TokenType.INT, "-?[0-9]+"));
         mTokenRules.add(new Rule(TokenType.OPERATOR_EQUALS, "(==|EQUALS)"));
@@ -342,28 +343,41 @@ public class Parser {
                     if (tToken.getExtra() == null) {
                         tStack.push(new DataString(tToken.getContent()));
                     } else if (tToken.getExtra().size() != 1) {
+                        // TODO: getExtra no array, only return 1.
                         throw new FilterException(FilterException.Type.FILTER_FAILURE, "incorrect amount of extra data for quote construction");
                     } else {
-                        String tModifier = tToken.getExtra().get(0);
-                        if (tModifier.length() != 1) {
-                            throw new FilterException(FilterException.Type.FILTER_FAILURE, "quote modifier can only be one character");
+                        String tModifiers = tToken.getExtra().get(0);
+
+                        // Process the type modifier
+                        Data tData = null;
+                        String tType = tModifiers.substring(0, 1);
+                        if (tType.equals("s")) {
+                            tData = new DataString(tToken.getContent());
+                        } else if (tType.equals("i")) {
+                            tData = new DataInt(Integer.parseInt(tToken.getContent()));
+                        } else if (tType.equals("f")) {
+                            tData = new DataFloat(Double.parseDouble(tToken.getContent()));
+                        } else if (tType.equals("d")) {
+                            tData = new DataDate(DataDate.parseDate(tToken.getContent()));
+                        } else if (tType.equals("d")) {
+                            tData = new DataKey(tToken.getContent());
+                        } else if (tType.equals("r")) {
+                            tData = new DataRegex(tToken.getContent());
+                        } else {
+                            throw new FilterException(FilterException.Type.FILTER_FAILURE, "unknown type modifier '" + tType + "'");
                         }
 
-                        // Process all modifiers
-                        Data tData = null;
-                        if (tModifier.equals("s")) {
-                            tData = new DataString(tToken.getContent());
-                        } else if (tModifier.equals("i")) {
-                            tData = new DataInt(Integer.parseInt(tToken.getContent()));
-                        } else if (tModifier.equals("f")) {
-                            tData = new DataFloat(Double.parseDouble(tToken.getContent()));
-                        } else if (tModifier.equals("d")) {
-                            tData = new DataDate(DataDate.parseDate(tToken.getContent()));
-                        } else if (tModifier.equals("d")) {
-                            tData = new DataKey(tToken.getContent());
-                        } else {
-                            throw new FilterException(FilterException.Type.FILTER_FAILURE, "unknown quote modifier '" + tModifier + "'");
+                        // Process extra modifiers
+                        if (tModifiers.length() > 1) {
+                            String tExtraModifiers = tModifiers.substring(1);
+
+                            if (tData instanceof DataRegex) {
+                                ((DataRegex)tData).setModifiers(tExtraModifiers.toCharArray());
+                            } else {
+                                throw new FilterException(FilterException.Type.FILTER_FAILURE, "datatype doesn't accept extra modifiers");
+                            }
                         }
+
                         tStack.push(tData);
                     }
 

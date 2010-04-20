@@ -1,6 +1,6 @@
 /*
- * ConditionNotConverter.java
- * StockPlay - SQL converter voor een gelijkheids-conditie.
+ * DataStringConverter.java
+ * StockPlay - Converter voor string dataobject.
  *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
@@ -19,35 +19,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.kapti.filter.condition.sql;
+package com.kapti.filter.data.sql;
 
 import com.kapti.exceptions.FilterException;
-import com.kapti.filter.condition.ConditionLike;
-import com.kapti.filter.data.DataKey;
 import com.kapti.filter.data.DataRegex;
 
-public class ConditionLikeConverter extends ConditionLike {
-
+/**
+ *
+ * @author tim
+ */
+public class DataRegexConverter extends DataRegex {
     //
     // Construction
     //
 
-    public ConditionLikeConverter(ConditionLike iObject) {
+    public DataRegexConverter(DataRegex iObject) {
         super(iObject);
     }
+
 
     //
     // Methods
     //
 
     @Override
-    public Object process(DataKey a, DataRegex b) throws FilterException {
-        StringBuilder tQuery = new StringBuilder();
-        tQuery.append("REGEXP_LIKE(" + (String)a.compile() + ", " + (String)b.compile() + ", '");
-        if (! b.isCaseSensitive())
-            tQuery.append("i");
-        tQuery.append("')");
-
-        return tQuery.toString();
+    public Object process(String a) throws FilterException {
+        return "'" + a + "'";
     }
 }
