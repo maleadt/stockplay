@@ -64,7 +64,7 @@ public class Parser {
     }
 
     private List<Rule<TokenType>> mTokenRules;
-    private Map<TokenType, Class> mOperatorMap;
+    private Map<TokenType, Class<? extends Condition>> mOperatorMap;
     //private Map<TokenType, Class> mFunctionMap;
     private static Parser instance = new Parser();
 
@@ -98,7 +98,7 @@ public class Parser {
         mTokenRules.add(new Rule<TokenType>(TokenType.OPERATOR_OR, "(\\|\\||OR)"));
         
         // Create operator translation map
-        mOperatorMap = new HashMap<TokenType, Class>();
+        mOperatorMap = new HashMap<TokenType, Class<? extends Condition>>();
         mOperatorMap.put(TokenType.OPERATOR_EQUALS, ConditionEquals.class);
         mOperatorMap.put(TokenType.OPERATOR_NOTEQUALS, ConditionNotEquals.class);
         mOperatorMap.put(TokenType.OPERATOR_STRICTLESS, ConditionStrictLess.class);
@@ -394,8 +394,7 @@ public class Parser {
                 case OPERATOR_AND:
                 case OPERATOR_OR:
                     // Pick the class
-                    // TODO: more strict type; Condition?
-                    Class<?> tClass = mOperatorMap.get(tToken.getType());
+                    Class<? extends Condition> tClass = mOperatorMap.get(tToken.getType());
 
                     // Fetch parameter signature
                     Method[] tMethods = tClass.getMethods();
