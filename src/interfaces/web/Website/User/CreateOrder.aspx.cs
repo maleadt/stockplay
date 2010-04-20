@@ -76,10 +76,10 @@ public partial class User_CreateOrder : System.Web.UI.Page
                 IDataAccess data = DataAccessFactory.GetDataAccess();
 
                 ISecurity security = data.GetSecurityByIsin(Request.Params["ISIN"])[0];
-                IQuote latestQuote = data.GetLatestQuoteFromSecurity(Request.Params["ISIN"]);
+
                 StockplayMembershipUser user = (StockplayMembershipUser)Membership.GetUser(User.Identity.Name);
 
-                data.CreateOrder(user.ID, security.Isin, Convert.ToInt32(txtAmount.Text), latestQuote.Price, "BUY");
+                data.CreateOrder(user.ID, security.Isin, Convert.ToInt32(txtAmount.Text), Convert.ToInt32(txtQuote.Text), "BUY");
 
                 Response.Redirect("~/User/OrdersOverview.aspx");
             }

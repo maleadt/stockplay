@@ -5,7 +5,7 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder" Runat="Server">
     <h1>Portfolio</h1>
 
-    <p>Here you can view all of the securities you currently have in your portfolio. If you want to sell one of
+    <p class="para">Here you can view all of the securities you currently have in your portfolio. If you want to sell one of
     your securities, you can click the 'Place sell order' link next to the security.</p>
 
     <div id="SellMessage" runat="server" visible="false">
@@ -19,7 +19,7 @@
             
             Asking price per stock? <asp:TextBox ID="txtPrice" runat="server"></asp:TextBox>
             <asp:RangeValidator ID="txtPriceValidator" runat="server" ControlToValidate="txtPrice"
-            ErrorMessage="Please enter a positive number."></asp:RangeValidator>
+            ErrorMessage="Please enter a positive number." MinimumValue="1" MaximumValue="1000000" Type=Double></asp:RangeValidator>
         </p>
         <p>
             <asp:Button ID="btnConfirm" Text="Confirm" runat="server" OnClick="btnConfirm_Click" />

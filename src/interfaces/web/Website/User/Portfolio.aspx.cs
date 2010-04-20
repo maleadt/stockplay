@@ -32,7 +32,7 @@ public partial class User_Portfolio : System.Web.UI.Page
 
                 int maxAmount = 0;
                 for (int i = 0; i < portfolio.Count; i++)
-                    if (security[0].Isin.Equals(portfolio[i]))
+                    if (security[0].Isin.Equals(portfolio[i].Isin))
                         maxAmount = portfolio[i].Amount;
 
                 txtTotalAmount.Text = Convert.ToString(maxAmount);
@@ -97,7 +97,7 @@ public partial class User_Portfolio : System.Web.UI.Page
     {
         Page.Validate();
 
-        if (Page.IsValid)
+        if (Page.IsValid && txtAmount.Text != "" && txtPrice.Text != "")
         {
             IDataAccess data = DataAccessFactory.GetDataAccess();
 
