@@ -5,6 +5,8 @@
 package com.kapti.administration;
 
 import com.kapti.administration.ValueChangeWithReasonDialog.ComputeChange;
+import com.kapti.administration.bo.user.PointsTransaction;
+import com.kapti.administration.bo.user.PointsTransactionFactory;
 import com.kapti.administration.bo.user.Transaction;
 import com.kapti.administration.bo.user.TransactionFactory;
 import com.kapti.administration.bo.user.User;
@@ -20,6 +22,7 @@ import java.awt.event.ActionListener;
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.util.Calendar;
 import java.util.regex.Pattern;
 import javax.swing.BorderFactory;
 import javax.swing.InputVerifier;
@@ -397,31 +400,50 @@ public class EditUserDialog extends JDialog implements ActionListener {
             }
             user.setRole((User.Role) roleField.getSelectedItem());
 
+            TransactionFactory tf = TransactionFactory.getInstance();
             Transaction t = null;
-            if (cashChange != null) {
+            if (cashChange.getDelta() != 0.0) {
 
-                TransactionFactory tf = TransactionFactory.getInstance();
-                tf.createTransaction();
+                t = tf.createTransaction();
 
                 t.setUser(user);
                 t.setPrice(cashChange.getDelta());
                 t.setAmount(1);
                 t.setType(Transaction.Type.MANUAL);
                 t.setComment(cashChange.getReason());
-
-
-
-
             }
 
-            try{
-                if (t != null) {
-                    TransactionFactory.getInstance().execute(t);
-                }
+
+            PointsTransactionFactory ptf = PointsTransactionFactory.getInstance();
+            PointsTransaction pt = null;
+            if (pointsChange.getDelta() != 0) {
+
+                pt = ptf.createTransaction(user, Calendar.getInstance().getTime());
+                pt.setComment(pointsChange.getReason());
+                pt.setDelta(pt.getDelta());
+            }
+
+            try {
                 userFactory.makePersistent(user);
+
+
+                if (t != null) {
+                    tf.execute(t);
+                    user.setCash(user.getCash() + cashChange.getDelta());
+                }
+
+
+                if (pt != null) {
+                    ptf.makePersistent(pt);
+                    user.setPoints(user.getPoints() + pointsChange.getDelta());
+                }
+
+
+
+
                 success = true;
-            } catch (StockPlayException ex ){
-                  logger.error(ex);
+            } catch (StockPlayException ex) {
+                logger.error(ex);
                 JXErrorPane.showDialog(this, new ErrorInfo("Error while saving changes to user", "An exception occured while saving the changes to user " + user.getId(), null, null, ex, null, null));
 
             } catch (XmlRpcException ex) {

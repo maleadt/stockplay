@@ -21,6 +21,19 @@ import org.apache.xmlrpc.client.XmlRpcClient;
  */
 public class PointsTransactionFactory {
 
+    private static PointsTransactionFactory instance = new PointsTransactionFactory();
+
+    public static PointsTransactionFactory getInstance() {
+        return instance;
+    }
+
+    
+    private PointsTransactionFactory() {
+    }
+
+
+
+
     public PointsTransaction createTransaction(User user, Date time) {
         return new PointsTransaction(user, time);
     }
@@ -64,7 +77,7 @@ public class PointsTransactionFactory {
         HashMap h = t.toStruct();
 
 
-        return (Boolean) client.execute("User.Transaction.CreateTransaction", new Object[]{h});
+        return (Boolean) client.execute("User.Points.CreateTransaction", new Object[]{h});
     }
 }
 
