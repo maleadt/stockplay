@@ -7,9 +7,10 @@ var searchBox = $('#search');
 searchBox.focus(function(){  
 	if($(this).attr('value') == searchDefault)
 		$(this).attr('value', '');
-});
-
-searchBox.blur(function(){  
+}).blur(function(){  
 	if($(this).attr('value') == '')
 		$(this).attr("value", searchDefault);  
+}).bind("keydown", function(e) {
+	if (e.keyCode == 13)
+		location.href="SecuritiesOverview.aspx?search="+searchBox.val();
 });
