@@ -14,6 +14,10 @@ a {
 	text-decoration: none;
 }
 
+p.para {
+	margin: 0.5em 0 0.5em 0;
+}
+
 a:hover {
 	color: #4395cd;
 }
@@ -45,6 +49,11 @@ a:hover {
 	border-top: solid 2px white;
 	border-left: solid 2px white;
 	width: 15.9em;
+}
+
+#right 
+{
+	width: 46em; 
 }
 
 #menu {
@@ -184,6 +193,17 @@ a:hover {
 }
 
 #search {
+	margin: 1.5em 0 1em 1em;
+	width: 77.5%;
+	height: 1.4em;
+	padding-left: 1.7em;
+	background: url(../afbeeldingen/magnifier.png) 1px 1px no-repeat;
+	color: gray;
+}
+
+/* ID van de asp textbox is anders */
+#ctl00_search 
+{
 	margin: 1.5em 0 1em 1em;
 	width: 77.5%;
 	height: 1.4em;

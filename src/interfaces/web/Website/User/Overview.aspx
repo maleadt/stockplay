@@ -3,6 +3,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder" Runat="Server">
+    <h1>Overview</h1>
 
     <p>Here you can view your general account information. If you want to change your account data, you can fill in the form below.</p>
 

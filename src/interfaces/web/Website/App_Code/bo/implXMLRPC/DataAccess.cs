@@ -90,18 +90,30 @@ namespace implXMLRPC
          */
         public List<ISecurity> GetSecuritiesList()
         {
+            return GetSecuritiesList("");
+        }
+
+        public List<ISecurity> GetSecuritiesList(string searchterm)
+        {
             List<ISecurity> securities = new List<ISecurity>();
 
-            XmlRpcStruct[] querySecurities = securityHandler.List();
-            XmlRpcStruct[] queryQuotes = securityHandler.LatestQuotes("ISIN NOT '0'");
+            //De zoekterm zoekt zowel op isin, naam of exchange
+            XmlRpcStruct[] querySecurities = null;
+            if (searchterm == "")
+                securityHandler.List();
+            else
+                securityHandler.List("(ISIN =~ '" + searchterm + "') OR (NAME =~ '" + searchterm + "') OR (EXCHANGE =~ '" + searchterm + "')");
+            
+            XmlRpcStruct[] queryQuotes = securityHandler.LatestQuotes("");
+
             Dictionary<string, XmlRpcStruct> quoteDictionary = new Dictionary<string, XmlRpcStruct>();
             foreach (XmlRpcStruct quote in queryQuotes)
                 quoteDictionary.Add((string)quote["ISIN"], quote);
 
-            foreach(XmlRpcStruct security in querySecurities)
+            foreach (XmlRpcStruct security in querySecurities)
             {
                 XmlRpcStruct quote = null;
-                if(quoteDictionary.ContainsKey((string)security["ISIN"]))
+                if (quoteDictionary.ContainsKey((string)security["ISIN"]))
                     quote = quoteDictionary[(string)security["ISIN"]];
                 securities.Add(new Security(security, quote));
             }

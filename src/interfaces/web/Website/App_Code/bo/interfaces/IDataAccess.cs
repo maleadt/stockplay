@@ -5,6 +5,7 @@ public interface IDataAccess
 {
     //Securities
     List<ISecurity> GetSecuritiesList();
+    List<ISecurity> GetSecuritiesList(string searchterm);
     List<ISecurity> GetSecurityByIsin(params string[] isin);
     List<ISecurity> GetSecuritiesFromExchange(string id);
 

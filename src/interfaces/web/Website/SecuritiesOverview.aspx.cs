@@ -27,6 +27,8 @@ public partial class SecuritiesOverview : System.Web.UI.Page
 
             if (Request.Params["exchange"] != null)
                 securitiesTable = GenerateDataTable(data.GetSecuritiesFromExchange(Request.Params["exchange"]));
+            else if (Request.Params["search"] != null)
+                securitiesTable = GenerateDataTable(data.GetSecuritiesList(Request.Params["search"]));
             else
                 securitiesTable = GenerateDataTable(data.GetSecuritiesList());
 

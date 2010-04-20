@@ -12,5 +12,6 @@
         <siteMapNode url="SecuritiesOverview.aspx?exchange=PA" title="Euronext Paris" description="Securities on Euronext Paris" />
       </siteMapNode>
         <siteMapNode url="Ranking.aspx" title="Ranking" description="Ranking of all StockPlay users" />
+      <siteMapNode url="Help.aspx" title="Help" description="Help with Stockplay" />
       </siteMapNode>
 </siteMap>

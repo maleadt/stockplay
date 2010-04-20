@@ -100,6 +100,11 @@ namespace implADO
             return securitiesList;
         }
 
+        public List<ISecurity> GetSecuritiesList(string searchterm)
+        {
+            throw new NotImplementedException();
+        }
+
         public List<IQuote> GetQuotesFromSecurity(string isin, DateTime iFrom, DateTime iTo)
         {
             return null;

@@ -4,7 +4,7 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder" Runat="Server">
 
-    <p id="FinishRegistration" runat="server" visible="false">Your account has now been registered! You will receive a copy of your login information in your inbox shortly.
+    <p class="para" id="FinishRegistration" runat="server" visible="false">Your account has now been registered! You will receive a copy of your login information in your inbox shortly.
     Go to the <a runat="server" href="~/Login.aspx">login page</a> to login and participate in StockPlay</p>
     <table id="TableRegister" runat="server">
         <tr>

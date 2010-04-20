@@ -21,8 +21,9 @@
         
         <div id="content">
             <div id="menu">            
-                <div id="left">       
-                    <input id="search" name="search" type="text" value="Effect zoeken.." />
+                <div id="left">
+                    <asp:TextBox ID="search" name="search" Text="Effect zoeken..." runat="server" />
+                    <!-- <input id="search" name="search" type="text" value="Effect zoeken.." /> -->
 
                     <asp:SiteMapDataSource ID="SiteMapSource" runat="server" ShowStartingNode="false" />
                     <asp:TreeView CssClass="menu" ID="TreeView1" runat="server" ShowExpandCollapse="False" DataSourceID="SiteMapSource">
@@ -50,6 +51,10 @@
                 <asp:ContentPlaceHolder id="ContentPlaceHolder" runat="server" />
             </div>
         </div>
+        
+        <!-- Javascript -->
+        <script type="text/javascript" src="App_Themes/StockPlay/dynamiek/taalbestanden/nl-be.js"></script>
+        <script type="text/javascript" src="App_Themes/StockPlay/dynamiek/algemeen.js"></script>
     
         <asp:ScriptManager id="ScriptManager" runat="server" />
     </div>   

@@ -21,13 +21,22 @@ public partial class User_Portfolio : System.Web.UI.Page
             IDataAccess data = DataAccessFactory.GetDataAccess();
 
             List<ISecurity> security = data.GetSecurityByIsin(Request.Params["sell"]);
+            List<IUserSecurity> portfolio = data.GetUserSecurities(((StockplayMembershipUser)Membership.GetUser(User.Identity.Name)).ID);
 
-            if (security != null && security.Count > 0)
+            if (security != null && security.Count > 0 && portfolio != null && portfolio.Count > 0)
             {
                 SellMessage.Visible = true;
 
                 SecurityName.InnerText = security[0].Name;
                 Price.InnerText = Convert.ToString(security[0].GetLatestQuote().Price);
+
+                int maxAmount = 0;
+                for (int i = 0; i < portfolio.Count; i++)
+                    if (security[0].Isin.Equals(portfolio[i]))
+                        maxAmount = portfolio[i].Amount;
+
+                txtTotalAmount.Text = Convert.ToString(maxAmount);
+                txtAmountValidator.MaximumValue = Convert.ToString(maxAmount);
             }
             else
                 Response.Redirect("~/User/Portfolio.aspx");
@@ -86,19 +95,24 @@ public partial class User_Portfolio : System.Web.UI.Page
     }
     protected void btnConfirm_Click(object sender, EventArgs e)
     {
-        IDataAccess data = DataAccessFactory.GetDataAccess();
+        Page.Validate();
 
-        ISecurity security = data.GetSecurityByIsin(Request.Params["sell"])[0];
-        IQuote latestQuote = data.GetLatestQuoteFromSecurity(Request.Params["sell"]);
+        if (Page.IsValid)
+        {
+            IDataAccess data = DataAccessFactory.GetDataAccess();
 
-        int amount = Convert.ToInt32(Request.Params["amount"]);
+            ISecurity security = data.GetSecurityByIsin(Request.Params["sell"])[0];
+            IQuote latestQuote = data.GetLatestQuoteFromSecurity(Request.Params["sell"]);
 
-        StockplayMembershipUser user = (StockplayMembershipUser)Membership.GetUser(User.Identity.Name);
+            int amount = Convert.ToInt32(txtAmount.Text);
+
+            StockplayMembershipUser user = (StockplayMembershipUser)Membership.GetUser(User.Identity.Name);
 
 
-        data.CreateOrder(user.ID, security.Isin, amount, latestQuote.Price, "SELL");
+            data.CreateOrder(user.ID, security.Isin, amount, latestQuote.Price, "SELL");
 
-        Response.Redirect("~/User/OrdersOverview.aspx");
+            Response.Redirect("~/User/OrdersOverview.aspx");
+        }
     }
 
     protected void btnCancel_Click(object sender, EventArgs e)
