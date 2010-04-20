@@ -89,7 +89,11 @@ public class PointsTransactionDAO implements GenericDAO<PointsTransaction, Point
         try {
             try {
                 conn = OracleConnection.getConnection();
-                stmt = conn.prepareStatement(SELECT_POINTSTRANSACTIONS + " WHERE " + (String)iFilter.compile());
+
+                StringBuilder tQuery = new StringBuilder(SELECT_POINTSTRANSACTIONS);
+                if (!iFilter.empty())
+                    tQuery.append(" WHERE " + (String)iFilter.compile());
+                stmt = conn.prepareStatement(tQuery.toString());
 
                 rs = stmt.executeQuery();
                 ArrayList<PointsTransaction> list = new ArrayList<PointsTransaction>();
@@ -122,37 +126,7 @@ public class PointsTransactionDAO implements GenericDAO<PointsTransaction, Point
      * @throws StockPlayException
      */
     public Collection<PointsTransaction> findAll() throws StockPlayException {
-        Connection conn = null;
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        try {
-            try {
-                conn = OracleConnection.getConnection();
-                stmt = conn.prepareStatement(SELECT_POINTSTRANSACTIONS);
-
-                rs = stmt.executeQuery();
-                ArrayList<PointsTransaction> list = new ArrayList<PointsTransaction>();
-                while (rs.next()) {
-                    PointsTransaction tPointsTransaction = new PointsTransaction(rs.getInt(1), new Date(rs.getTimestamp(2).getTime()));
-                    tPointsTransaction.setDelta(rs.getInt(3));
-                    tPointsTransaction.setComments(rs.getString(4));
-                    list.add(tPointsTransaction);
-                }
-                return list;
-            } finally {
-                if (rs != null) {
-                    rs.close();
-                }
-                if (stmt != null) {
-                    stmt.close();
-                }
-                if (conn != null) {
-                    conn.close();
-                }
-            }
-        } catch (SQLException ex) {
-            throw new DBException(ex);
-        }
+        return findByFilter(new Filter());
     }
 
     /**

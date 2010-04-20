@@ -103,7 +103,11 @@ public class UserDAO implements GenericDAO<User, Integer> {
         try {
             try {
                 conn = OracleConnection.getConnection();
-                stmt = conn.prepareStatement(SELECT_USERS + " WHERE " + (String)iFilter.compile());
+
+                StringBuilder tQuery = new StringBuilder(SELECT_USERS);
+                if (!iFilter.empty())
+                    tQuery.append(" WHERE " + (String)iFilter.compile());
+                stmt = conn.prepareStatement(tQuery.toString());
 
                 rs = stmt.executeQuery();
                 ArrayList<User> list = new ArrayList<User>();
@@ -146,46 +150,7 @@ public class UserDAO implements GenericDAO<User, Integer> {
      * @throws StockPlayException
      */
     public Collection<User> findAll() throws StockPlayException {
-        Connection conn = null;
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        try {
-            try {
-                conn = OracleConnection.getConnection();
-                stmt = conn.prepareStatement(SELECT_USERS);
-
-                rs = stmt.executeQuery();
-                ArrayList<User> list = new ArrayList<User>();
-                while (rs.next()) {
-                    User tUser = new User(rs.getInt(1));
-                    tUser.setNickname(rs.getString(2));
-                    tUser.setEncryptedPassword(rs.getString(3));
-                    tUser.setEmail(rs.getString(4));
-                    tUser.setLastname(rs.getString(5));
-                    tUser.setFirstname(rs.getString(6));
-                    tUser.setRole(rs.getInt(7));
-                    tUser.setRegdate(rs.getDate(8));
-                    tUser.setRijksregisternummer(rs.getLong(9));
-                    tUser.setPoints(rs.getInt(10));
-                    tUser.setStartamount(rs.getDouble(11));
-                    tUser.setCash(rs.getDouble(12));
-                    list.add(tUser);
-                }
-                return list;
-            } finally {
-                if (rs != null) {
-                    rs.close();
-                }
-                if (stmt != null) {
-                    stmt.close();
-                }
-                if (conn != null) {
-                    conn.close();
-                }
-            }
-        } catch (SQLException ex) {
-            throw new DBException(ex);
-        }
+        return findByFilter(new Filter());
     }
 
     /**

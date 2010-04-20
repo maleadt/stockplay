@@ -92,7 +92,11 @@ public class UserSecurityDAO implements GenericDAO<UserSecurity, UserSecurityPK>
         try {
             try {
                 conn = OracleConnection.getConnection();
-                stmt = conn.prepareStatement(SELECT_USERSECURITIES + " WHERE " + (String)iFilter.compile());
+
+                StringBuilder tQuery = new StringBuilder(SELECT_USERSECURITIES);
+                if (!iFilter.empty())
+                    tQuery.append(" WHERE " + (String)iFilter.compile());
+                stmt = conn.prepareStatement(tQuery.toString());
 
                 rs = stmt.executeQuery();
                 ArrayList<UserSecurity> list = new ArrayList<UserSecurity>();
@@ -124,36 +128,7 @@ public class UserSecurityDAO implements GenericDAO<UserSecurity, UserSecurityPK>
      * @throws StockPlayException
      */
     public Collection<UserSecurity> findAll() throws StockPlayException {
-        Connection conn = null;
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        try {
-            try {
-                conn = OracleConnection.getConnection();
-                stmt = conn.prepareStatement(SELECT_USERSECURITIES);
-
-                rs = stmt.executeQuery();
-                ArrayList<UserSecurity> list = new ArrayList<UserSecurity>();
-                while (rs.next()) {
-                    UserSecurity tSecurity = new UserSecurity(rs.getInt(1), rs.getString(2));
-                    tSecurity.setAmount(rs.getInt(3));
-                    list.add(tSecurity);
-                }
-                return list;
-            } finally {
-                if (rs != null) {
-                    rs.close();
-                }
-                if (stmt != null) {
-                    stmt.close();
-                }
-                if (conn != null) {
-                    conn.close();
-                }
-            }
-        } catch (SQLException ex) {
-            throw new DBException(ex);
-        }
+        return findByFilter(new Filter());
     }
 
     /**

@@ -90,7 +90,11 @@ public class IndexDAO implements GenericDAO<Index, String> {
         try {
             try {
                 conn = OracleConnection.getConnection();
-                stmt = conn.prepareStatement(SELECT_INDEXES + " WHERE " + (String)iFilter.compile());
+
+                StringBuilder tQuery = new StringBuilder(SELECT_INDEXES);
+                if (!iFilter.empty())
+                    tQuery.append(" WHERE " + (String)iFilter.compile());
+                stmt = conn.prepareStatement(tQuery.toString());
 
                 rs = stmt.executeQuery();
                 ArrayList<Index> list = new ArrayList<Index>();
@@ -118,36 +122,7 @@ public class IndexDAO implements GenericDAO<Index, String> {
     }
 
     public Collection<Index> findAll() throws StockPlayException {
-        Connection conn = null;
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        try {
-            try {
-                conn = OracleConnection.getConnection();
-                stmt = conn.prepareStatement(SELECT_INDEXES);
-
-                rs = stmt.executeQuery();
-                ArrayList<Index> list = new ArrayList<Index>();
-                while (rs.next()) {
-                    Index tIndex = new Index(rs.getString("isin"), rs.getString("symbol"), rs.getString("exchange"));
-                    tIndex.setName(rs.getString("name"));
-                    list.add(tIndex);
-               }
-                return list;
-            } finally {
-                if (rs != null) {
-                    rs.close();
-                }
-                if (stmt != null) {
-                    stmt.close();
-                }
-                if (conn != null) {
-                    conn.close();
-                }
-            }
-        } catch (SQLException ex) {
-            throw new DBException(ex);
-        }
+        return findByFilter(new Filter());
     }
 
     /**

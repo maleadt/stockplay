@@ -103,7 +103,11 @@ public class OrderDAO implements GenericDAO<Order, Integer> {
         try {
             try {
                 conn = OracleConnection.getConnection();
-                stmt = conn.prepareStatement(SELECT_ORDERS + " AND " + (String)iFilter.compile());
+
+                StringBuilder tQuery = new StringBuilder(SELECT_ORDERS);
+                if (!iFilter.empty())
+                    tQuery.append(" AND (" + (String)iFilter.compile() + ")");
+                stmt = conn.prepareStatement(tQuery.toString());
 
                 rs = stmt.executeQuery();
                 ArrayList<Order> list = new ArrayList<Order>();
@@ -140,45 +144,7 @@ public class OrderDAO implements GenericDAO<Order, Integer> {
     }
 
     public Collection<Order> findAll() throws StockPlayException {
-        Connection conn = null;
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        try {
-            try {
-                conn = OracleConnection.getConnection();
-                stmt = conn.prepareStatement(SELECT_ORDERS);
-
-                rs = stmt.executeQuery();
-                ArrayList<Order> list = new ArrayList<Order>();
-                while (rs.next()) {
-                    Order o = new Order(rs.getInt(1), rs.getInt(2), rs.getString(3));
-                    o.setPrice(rs.getDouble(4));
-                    o.setAmount(rs.getInt(5));
-                    // type op 5
-                    o.setType(InstructionType.valueOf(rs.getString(6).toUpperCase()));
-                    //status op 6
-                    o.setStatus(OrderStatus.valueOf(rs.getString(7).toUpperCase()));
-                    o.setCreationTime(rs.getTimestamp(8));
-                    o.setExpirationTime(rs.getTimestamp(9));
-                    o.setExecutionTime(rs.getTimestamp(10));
-
-                    list.add(o);
-                }
-                return list;
-            } finally {
-                if (rs != null) {
-                    rs.close();
-                }
-                if (stmt != null) {
-                    stmt.close();
-                }
-                if (conn != null) {
-                    conn.close();
-                }
-            }
-        } catch (SQLException ex) {
-            throw new DBException(ex);
-        }
+        return findByFilter(new Filter());
     }
 
     /**
@@ -195,7 +161,7 @@ public class OrderDAO implements GenericDAO<Order, Integer> {
         try {
             try {
                 conn = OracleConnection.getConnection();
-                conn.setAutoCommit(false) ;
+                conn.setAutoCommit(false);
                 stmt = conn.prepareStatement(INSERT_ORDER);
 
                 stmt.setInt(1, entity.getUser());

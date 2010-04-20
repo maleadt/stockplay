@@ -97,7 +97,11 @@ public class TransactionDAO implements GenericDAO<Transaction, Integer> {
         try {
             try {
                 conn = OracleConnection.getConnection();
-                stmt = conn.prepareStatement(SELECT_TRANSACTIONS + " WHERE " + (String)iFilter.compile());
+
+                StringBuilder tQuery = new StringBuilder(SELECT_TRANSACTIONS);
+                if (!iFilter.empty())
+                    tQuery.append(" WHERE " + (String)iFilter.compile());
+                stmt = conn.prepareStatement(tQuery.toString());
 
                 rs = stmt.executeQuery();
                 ArrayList<Transaction> list = new ArrayList<Transaction>();
@@ -130,42 +134,7 @@ public class TransactionDAO implements GenericDAO<Transaction, Integer> {
     }
 
      public Collection<Transaction> findAll() throws StockPlayException {
-        Connection conn = null;
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        try {
-            try {
-                conn = OracleConnection.getConnection();
-                stmt = conn.prepareStatement(SELECT_TRANSACTIONS);
-
-                rs = stmt.executeQuery();
-                ArrayList<Transaction> list = new ArrayList<Transaction>();
-                while (rs.next()) {
-                    Transaction t = new Transaction(rs.getInt(1), rs.getInt(2), rs.getString(4));
-                    t.setUser(rs.getInt(2));
-                    t.setTime(new Date(rs.getTimestamp(3).getTime()));
-                    t.setIsin(rs.getString(4));
-                    t.setType(InstructionType.valueOf(rs.getString(5).toUpperCase()));
-                    t.setAmount(rs.getInt(6));
-                    t.setPrice(rs.getDouble(7));
-                    t.setComments(rs.getString(8));
-                    list.add(t);
-                }
-                return list;
-            } finally {
-                if (rs != null) {
-                    rs.close();
-                }
-                if (stmt != null) {
-                    stmt.close();
-                }
-                if (conn != null) {
-                    conn.close();
-                }
-            }
-        } catch (SQLException ex) {
-            throw new DBException(ex);
-        }
+        return findByFilter(new Filter());
     }
 
     /**

@@ -92,7 +92,11 @@ public class IndexSecurityDAO implements GenericDAO<IndexSecurity, IndexSecurity
         try {
             try {
                 conn = OracleConnection.getConnection();
-                stmt = conn.prepareStatement(SELECT_INDEXSECURITIES + " WHERE " + (String)iFilter.compile());
+
+                StringBuilder tQuery = new StringBuilder(SELECT_INDEXSECURITIES);
+                if (!iFilter.empty())
+                    tQuery.append(" WHERE " + (String)iFilter.compile());
+                stmt = conn.prepareStatement(tQuery.toString());
 
                 rs = stmt.executeQuery();
                 ArrayList<IndexSecurity> list = new ArrayList<IndexSecurity>();
@@ -122,34 +126,7 @@ public class IndexSecurityDAO implements GenericDAO<IndexSecurity, IndexSecurity
      * @throws StockPlayException
      */
     public Collection<IndexSecurity> findAll() throws StockPlayException {
-        Connection conn = null;
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        try {
-            try {
-                conn = OracleConnection.getConnection();
-                stmt = conn.prepareStatement(SELECT_INDEXSECURITIES);
-
-                rs = stmt.executeQuery();
-                ArrayList<IndexSecurity> list = new ArrayList<IndexSecurity>();
-                while (rs.next()) {
-                    list.add(new IndexSecurity(rs.getString("index_isin"), rs.getString("security_isin")));
-                }
-                return list;
-            } finally {
-                if (rs != null) {
-                    rs.close();
-                }
-                if (stmt != null) {
-                    stmt.close();
-                }
-                if (conn != null) {
-                    conn.close();
-                }
-            }
-        } catch (SQLException ex) {
-            throw new DBException(ex);
-        }
+        return findByFilter(new Filter());
     }
 
     /**

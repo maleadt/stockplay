@@ -89,7 +89,11 @@ public class SecurityDAO implements com.kapti.data.persistence.SecurityDAO {
         try {
             try {
                 conn = OracleConnection.getConnection();
-                stmt = conn.prepareStatement(SELECT_SECURITIES + " WHERE " + (String) iFilter.compile());
+
+                StringBuilder tQuery = new StringBuilder(SELECT_SECURITIES);
+                if (!iFilter.empty())
+                    tQuery.append(" WHERE " + (String)iFilter.compile());
+                stmt = conn.prepareStatement(tQuery.toString());
 
                 rs = stmt.executeQuery();
                 ArrayList<Security> list = new ArrayList<Security>();
@@ -119,38 +123,7 @@ public class SecurityDAO implements com.kapti.data.persistence.SecurityDAO {
     }
 
     public Collection<Security> findAll() throws StockPlayException {
-        Connection conn = null;
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        try {
-            try {
-                conn = OracleConnection.getConnection();
-                stmt = conn.prepareStatement(SELECT_SECURITIES);
-
-                rs = stmt.executeQuery();
-                ArrayList<Security> list = new ArrayList<Security>();
-                while (rs.next()) {
-                    Security tSecurity = new Security(rs.getString(1), rs.getString(2), rs.getString(4));
-                    tSecurity.setName(rs.getString(3));
-                    tSecurity.setVisible(rs.getBoolean(5));
-                    tSecurity.setSuspended(rs.getBoolean(6));
-                    list.add(tSecurity);
-                }
-                return list;
-            } finally {
-                if (rs != null) {
-                    rs.close();
-                }
-                if (stmt != null) {
-                    stmt.close();
-                }
-                if (conn != null) {
-                    conn.close();
-                }
-            }
-        } catch (SQLException ex) {
-            throw new DBException(ex);
-        }
+        return findByFilter(new Filter());
     }
 
     /**

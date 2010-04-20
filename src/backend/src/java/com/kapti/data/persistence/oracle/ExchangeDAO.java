@@ -92,7 +92,11 @@ public class ExchangeDAO implements GenericDAO<Exchange, String> {
         try {
             try {
                 conn = OracleConnection.getConnection();
-                stmt = conn.prepareStatement(SELECT_EXCHANGES + " WHERE " + (String)iFilter.compile());
+
+                StringBuilder tQuery = new StringBuilder(SELECT_EXCHANGES);
+                if (!iFilter.empty())
+                    tQuery.append(" WHERE " + (String)iFilter.compile());
+                stmt = conn.prepareStatement(tQuery.toString());
 
                 rs = stmt.executeQuery();
                 ArrayList<Exchange> list = new ArrayList<Exchange>();
@@ -117,34 +121,7 @@ public class ExchangeDAO implements GenericDAO<Exchange, String> {
     }
 
     public Collection<Exchange> findAll() throws StockPlayException {
-        Connection conn = null;
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        try {
-            try {
-                conn = OracleConnection.getConnection();
-                stmt = conn.prepareStatement(SELECT_EXCHANGES);
-
-                rs = stmt.executeQuery();
-                ArrayList<Exchange> list = new ArrayList<Exchange>();
-                while (rs.next()) {
-                    Exchange tExchange = new Exchange(rs.getString(1));
-                    tExchange.setName(rs.getString(2));
-                    tExchange.setLocation(rs.getString(3));
-                    list.add(tExchange);
-                }
-                return list;
-            } finally {
-                if (rs != null)
-                    rs.close();
-                if (stmt != null)
-                    stmt.close();
-                if (conn != null)
-                    conn.close();
-            }
-        } catch (SQLException ex) {
-            throw new DBException(ex);
-        }
+        return findByFilter(new Filter());
     }
 
     public int create(Exchange entity) throws StockPlayException {
