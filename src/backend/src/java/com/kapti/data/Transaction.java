@@ -133,6 +133,7 @@ public class Transaction extends Instruction {
             switch (tField) {
                 case ISIN:
                     setIsin((String)tValue);
+                    break;
                 case AMOUNT:
                     setAmount((Integer)tValue);
                     break;
