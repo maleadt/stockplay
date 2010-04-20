@@ -28,6 +28,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import org.apache.log4j.Logger;
 
 public class QuoteDAO implements com.kapti.data.persistence.QuoteDAO {
 
@@ -36,6 +37,7 @@ public class QuoteDAO implements com.kapti.data.persistence.QuoteDAO {
     private static final String INSERT_QUOTE = "INSERT INTO quotes(isin, timestamp, price, volume, bid, ask, low, high, open) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String UPDATE_QUOTE = "UPDATE quotes SET price = ?, volume ?, bid = ?, ask = ?, low = ?, high = ?, open ? WHERE isin = ? AND timestamp = ?";
     private static final String DELETE_QUOTE = "DELETE FROM quotes WHERE isin = ? AND timestamp = ?";
+    private static final String SELECT_LATEST_QUOTES = "with x as (select isin, max(timestamp)  latesttime from quotes group by isin) select isin, timestamp, price, volume, bid, ask, low, high, open from quotes q where timestamp = (select latesttime from x where q.isin=x.isin)";
     private static final String MIN_QUOTE = "SELECT MAX(TIMESTAMP) timestamp FROM quotes WHERE isin = ?";
     private static final String MAX_QUOTE = "SELECT MIN(TIMESTAMP) timestamp FROM quotes WHERE isin = ?";
     private static final String SELECT_LATEST_QUOTE = "SELECT price, volume, bid, ask, low, high, open, timestamp FROM quotes WHERE isin = ? AND timestamp =(select max(timestamp) from quotes WHERE isin = ? )";
@@ -464,8 +466,10 @@ public class QuoteDAO implements com.kapti.data.persistence.QuoteDAO {
         try {
             try {
                 conn = OracleConnection.getConnection();
+                if(!iFilter.empty())
                 stmt = conn.prepareStatement(SELECT_LATEST_QUOTE_FILTER.replace("$filter", (String) iFilter.compile()));
-
+                else
+                    stmt = conn.prepareStatement(SELECT_LATEST_QUOTES);
                 rs = stmt.executeQuery();
 
                 ArrayList<Quote> result = new ArrayList<Quote>();

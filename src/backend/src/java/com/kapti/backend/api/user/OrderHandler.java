@@ -19,7 +19,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
 package com.kapti.backend.api.user;
 
 import com.kapti.backend.api.MethodClass;
@@ -35,6 +34,7 @@ import java.util.Collection;
 import java.util.Hashtable;
 import java.util.TimeZone;
 import java.util.Vector;
+
 /**
  * \brief   Handler van de User.Order subklasse.
  *
@@ -44,17 +44,18 @@ import java.util.Vector;
  * op conforme wijze terug te sturen.
  */
 public class OrderHandler extends MethodClass {
+
     public Vector<Hashtable<String, Object>> List(String iFilter) throws StockPlayException {
         // Get DAO reference
         GenericDAO<com.kapti.data.Order, Integer> orDAO = getDAO().getOrderDAO();
 
         Parser parser = Parser.getInstance();
         Filter filter = parser.parse(iFilter);
-        
+
         // Fetch and convert all orders
         Collection<com.kapti.data.Order> tOrders = orDAO.findByFilter(filter);
         Vector<Hashtable<String, Object>> oVector = new Vector<Hashtable<String, Object>>();
-        for (com.kapti.data.Order tOrder : tOrders)
+        for (com.kapti.data.Order tOrder : tOrders) {
             oVector.add(tOrder.toStruct(
                     com.kapti.data.Order.Fields.ID,
                     com.kapti.data.Order.Fields.USER,
@@ -66,8 +67,9 @@ public class OrderHandler extends MethodClass {
                     com.kapti.data.Order.Fields.EXECUTIONTIME,
                     com.kapti.data.Order.Fields.EXPIRATIONTIME,
                     com.kapti.data.Order.Fields.PRICE));
+        }
 
-        return oVector;    
+        return oVector;
     }
 
     public int Create(Hashtable<String, Object> iDetails) throws StockPlayException {
@@ -82,7 +84,27 @@ public class OrderHandler extends MethodClass {
         return orDAO.create(tOrder);
 
     }
-    
+
+    public boolean Modify(String iFilter, Hashtable<String, Object> iDetails) throws StockPlayException {
+        // Get DAO reference
+        GenericDAO<com.kapti.data.Order, Integer> orDAO = getDAO().getOrderDAO();
+
+        Parser parser = Parser.getInstance();
+        Filter filter = parser.parse(iFilter);
+
+        // Get the exchanges we need to modify
+        Collection<com.kapti.data.Order> tOrders = orDAO.findByFilter(filter);
+
+        boolean success = true;
+        // Now apply the cancelation
+        for (com.kapti.data.Order tOrder : tOrders) {
+            tOrder.applyStruct(iDetails);
+            if(!orDAO.update(tOrder))
+                success = false;
+        }
+        return success;
+    }
+
     public int Cancel(String iFilter) throws StockPlayException {
         // Get DAO reference
         GenericDAO<com.kapti.data.Order, Integer> orDAO = getDAO().getOrderDAO();
@@ -100,5 +122,5 @@ public class OrderHandler extends MethodClass {
         }
 
         return 1;
-    }    
+    }
 }

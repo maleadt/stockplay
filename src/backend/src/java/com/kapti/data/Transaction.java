@@ -41,9 +41,15 @@ public class Transaction extends Instruction {
     private Date time;
     private String comments;
 
+    public Transaction(int user) {
+        super(user);
+    }
+
     //
     // Construction
     //
+
+    
 
     public Transaction(int user, String isin) {
         super(user, isin);
@@ -125,7 +131,8 @@ public class Transaction extends Instruction {
             }
 
             switch (tField) {
-
+                case ISIN:
+                    setIsin((String)tValue);
                 case AMOUNT:
                     setAmount((Integer)tValue);
                     break;
@@ -163,10 +170,10 @@ public class Transaction extends Instruction {
         }
 
         // Check needed keys
-        if (tStructMap.containsKey(Fields.USER) && tStructMap.containsKey(Fields.ISIN)) {
-            Transaction tTransaction = new Transaction((Integer)iStruct.get(tStructMap.get(Fields.USER)), (String)iStruct.get(tStructMap.get(Fields.ISIN)));
+        if (tStructMap.containsKey(Fields.USER)) {// && tStructMap.containsKey(Fields.ISIN)) {
+            Transaction tTransaction = new Transaction((Integer)iStruct.get(tStructMap.get(Fields.USER)));//, (String)iStruct.get(tStructMap.get(Fields.ISIN)));
             iStruct.remove(tStructMap.get(Fields.USER));
-            iStruct.remove(tStructMap.get(Fields.ISIN));
+            //iStruct.remove(tStructMap.get(Fields.ISIN));
             return tTransaction;
         } else
             throw new ServiceException(ServiceException.Type.NOT_ENOUGH_INFORMATION);

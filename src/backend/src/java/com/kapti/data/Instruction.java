@@ -29,15 +29,21 @@ public class Instruction {
     
     private int id = -1;
     private int user;
-    private String isin;
+    private String isin = "";
     private int amount;
     private double price;
     private InstructionType type;
+
+    public Instruction(int user) {
+        this.user = user;
+    }
 
 
     //
     // Construction
     //
+
+
 
     public Instruction(int id, int user, String isin) {
         this(user, isin);
