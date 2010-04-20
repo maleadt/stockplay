@@ -31,14 +31,11 @@ public class PointsTransactionFactory {
     private PointsTransactionFactory() {
     }
 
-
-
-
     public PointsTransaction createTransaction(User user, Date time) {
         return new PointsTransaction(user, time);
     }
 
-            public Collection<PointsTransaction> getAllTransactions() throws StockPlayException {
+    public Collection<PointsTransaction> getAllTransactions() throws StockPlayException {
         return getTransactionByFilter("");
     }
 
@@ -72,12 +69,15 @@ public class PointsTransactionFactory {
 
     }
 
-    public boolean makePersistent(PointsTransaction t) throws XmlRpcException {
+    public boolean makePersistent(PointsTransaction t) throws StockPlayException {
         XmlRpcClient client = XmlRpcClientFactory.getXmlRpcClient();
         HashMap h = t.toStruct();
 
-
-        return (Boolean) client.execute("User.Points.CreateTransaction", new Object[]{h});
+        try {
+        return (Integer) client.execute("User.Points.CreateTransaction", new Object[]{h}) > 0;
+                } catch (XmlRpcException ex) {
+            throw new StockPlayException("Error while saving user", ex);
+        }
     }
 }
 

@@ -20,12 +20,14 @@ import org.apache.xmlrpc.client.XmlRpcClient;
  */
 public class UserFactory {
 
-    private static  UserFactory  instance = new UserFactory();
+    private static UserFactory instance = new UserFactory();
 
     public static UserFactory getInstance() {
         return instance;
     }
-    private UserFactory() {}
+
+    private UserFactory() {
+    }
 
     public Collection<User> getAllUsers() throws StockPlayException {
         return getUsersByFilter("");
@@ -49,14 +51,15 @@ public class UserFactory {
         }
     }
 
-    public User getUserById(int id) throws StockPlayException{
-        Collection<User> users = getUsersByFilter("id == '"+ id +"'");
+    public User getUserById(int id) throws StockPlayException {
+        Collection<User> users = getUsersByFilter("id == '" + id + "'");
         Iterator<User> it = users.iterator();
 
-        if(it.hasNext())
+        if (it.hasNext()) {
             return it.next();
-        else
+        } else {
             return null;
+        }
 
 
     }
@@ -89,26 +92,35 @@ public class UserFactory {
      * @return
      * @throws XmlRpcException
      */
-    public boolean makePersistent(User user) throws XmlRpcException {
+    public boolean makePersistent(User user) throws StockPlayException {
         XmlRpcClient client = XmlRpcClientFactory.getXmlRpcClient();
         HashMap h = user.toStruct();
 
-        if (user.getId() > 0) {
-            h.remove(User.Fields.ID.toString());
-            return (Integer) client.execute("User.Modify", new Object[]{"id EQUALS '" + user.getId() + "'", h}) > 0;
-        } else {
-            Integer id = (Integer) client.execute("User.Create", new Object[]{h});
-            if (id > 0) {
-                user.setId(id);
-            }
+        try {
+            if (user.getId() > 0) {
+                h.remove(User.Fields.ID.toString());
+                return (Integer) client.execute("User.Modify", new Object[]{"id EQUALS '" + user.getId() + "'", h}) > 0;
+            } else {
+                Integer id = (Integer) client.execute("User.Create", new Object[]{h});
+                if (id > 0) {
+                    user.setId(id);
+                }
 
-            return id > 0;
+                return id > 0;
+            }
+        } catch (XmlRpcException ex) {
+            throw new StockPlayException("Error while saving user", ex);
         }
     }
 
-    public boolean removeUser(User user) throws XmlRpcException {
+    public boolean removeUser(User user) throws StockPlayException {
         XmlRpcClient client = XmlRpcClientFactory.getXmlRpcClient();
 
-        return (Integer) client.execute("User.Remove", new Object[]{"id EQUALS '" + user.getId() + "'"}) > 0;
+        try {
+            return (Integer) client.execute("User.Remove", new Object[]{"id EQUALS '" + user.getId() + "'"}) > 0;
+        } catch (XmlRpcException ex) {
+            throw new StockPlayException("Error while deleting user", ex);
+        }
     }
 }
+

@@ -420,7 +420,7 @@ public class EditUserDialog extends JDialog implements ActionListener {
 
                 pt = ptf.createTransaction(user, Calendar.getInstance().getTime());
                 pt.setComment(pointsChange.getReason());
-                pt.setDelta(pt.getDelta());
+                pt.setDelta(pointsChange.getDelta());
             }
 
             try {
@@ -445,12 +445,7 @@ public class EditUserDialog extends JDialog implements ActionListener {
             } catch (StockPlayException ex) {
                 logger.error(ex);
                 JXErrorPane.showDialog(this, new ErrorInfo("Error while saving changes to user", "An exception occured while saving the changes to user " + user.getId(), null, null, ex, null, null));
-
-            } catch (XmlRpcException ex) {
-                logger.error(ex);
-                JXErrorPane.showDialog(this, new ErrorInfo("Error while saving changes to user", "An exception occured while saving the changes to user " + user.getId(), null, null, ex, null, null));
-
-            }
+            } 
         }
 
         this.setVisible(false);
