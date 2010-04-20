@@ -305,6 +305,7 @@ public class Transaction {
 
         h.put(Fields.ID.toString(), getId());
         h.put(Fields.USER.toString(), getUser().getId());
+        if(getSecurity() != null)
         h.put(Fields.ISIN.toString(), getSecurity().getISIN());
         h.put(Fields.TYPE.toString(), getType().toString());
         if(getTime() != null)

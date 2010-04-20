@@ -37,6 +37,10 @@ public class OrderFactory {
         return getOrdersByFilter("");
     }
 
+    public Collection<Order> getAllPendingOrders() throws StockPlayException {
+        return getOrdersByFilter("status == '" + Order.OrderStatus.ACCEPTED.name() + "'");
+    }
+
     public Collection<Order> getOrdersByFilter(String filter) throws StockPlayException {
 
         ArrayList<Order> result = new ArrayList<Order>();
@@ -64,7 +68,7 @@ public class OrderFactory {
         }
     }
 
-    public boolean makePersistent(Order t) throws XmlRpcException {
+    public boolean makePersistent(Order t) throws StockPlayException {
         XmlRpcClient client = XmlRpcClientFactory.getXmlRpcClient();
         HashMap h = t.toStruct();
 
@@ -73,15 +77,22 @@ public class OrderFactory {
         h.remove(Order.Fields.CREATIONTIME.toString());
         h.remove(Order.Fields.EXECUTIONTIME.toString());
 
-        if (t.getId() > 0)
-            return (Integer) client.execute("User.Order.Modify", new Object[]{"id == '" + t.getId() + "'", h}) > 0;
-        else {
+        try {
+        if (t.getId() > 0) {
+            h.remove(Order.Fields.USER.name());
+            h.remove(Order.Fields.ISIN.name());
+      
+            return (Boolean) client.execute("User.Order.Modify", new Object[]{"id == '" + t.getId() + "'", h});
+        }else {
             Integer id = (Integer) client.execute("User.Order.Create", new Object[]{h});
             if (id > 0) {
                 t.setId(id);
             }
 
             return id > 0;
+        }
+        } catch(XmlRpcException ex) {
+            throw new StockPlayException("Error occured while saving order " + t.getId() , ex);
         }
     }
 }

@@ -102,6 +102,8 @@ public class Order {
 
         BUY,
         SELL,
+        IMMEDIATE_BUY,
+        IMMEDIATE_SELL,
         MANUAL;
     }
     protected Type type;

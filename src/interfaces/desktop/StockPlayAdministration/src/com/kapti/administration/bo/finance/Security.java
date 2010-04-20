@@ -219,24 +219,6 @@ public class Security implements Cloneable {
         if ((this.ISIN == null) ? (other.ISIN != null) : !this.ISIN.equals(other.ISIN)) {
             return false;
         }
-        if ((this.symbol == null) ? (other.symbol != null) : !this.symbol.equals(other.symbol)) {
-            return false;
-        }
-        if (this.exchange != other.exchange && (this.exchange == null || !this.exchange.equals(other.exchange))) {
-            return false;
-        }
-        if ((this.name == null) ? (other.name != null) : !this.name.equals(other.name)) {
-            return false;
-        }
-        if (this.visible != other.visible) {
-            return false;
-        }
-        if (this.suspended != other.suspended) {
-            return false;
-        }
-        if (this.type != other.type && (this.type == null || !this.type.equals(other.type))) {
-            return false;
-        }
         return true;
     }
 
@@ -244,12 +226,6 @@ public class Security implements Cloneable {
     public int hashCode() {
         int hash = 7;
         hash = 41 * hash + (this.ISIN != null ? this.ISIN.hashCode() : 0);
-        hash = 41 * hash + (this.symbol != null ? this.symbol.hashCode() : 0);
-        hash = 41 * hash + (this.exchange != null ? this.exchange.hashCode() : 0);
-        hash = 41 * hash + (this.name != null ? this.name.hashCode() : 0);
-        hash = 41 * hash + (this.visible ? 1 : 0);
-        hash = 41 * hash + (this.suspended ? 1 : 0);
-        hash = 41 * hash + (this.type != null ? this.type.hashCode() : 0);
         return hash;
     }
 

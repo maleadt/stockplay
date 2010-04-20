@@ -29,10 +29,30 @@ public class FinanceFactory {
 
     private FinanceFactory() {
     }
+    private HashMap<String, Security> securities = null;
+
+    private void cacheSecurities() throws StockPlayException {
+        securities = new HashMap<String, Security>();
+        try {
+            XmlRpcClient client = XmlRpcClientFactory.getXmlRpcClient();
+            Object[] obj = (Object[]) client.execute("Finance.Security.List", new Object[]{});
+
+            for (Object exch : obj) {
+                Security security = Security.fromStruct((HashMap) exch);
+                securities.put(security.getISIN(), security);
+            }
+        } catch (XmlRpcException ex) {
+            throw new RequestError(ex);
+        }
+    }
 
     public Collection<Security> getAllSecurities() throws StockPlayException {
+        if (securities == null) {
+            cacheSecurities();
+        }
+        return securities.values();
 
-        return getSecurityByFilter("");
+        //return getSecurityByFilter("");
     }
 
     public Collection<Security> getSecurityByFilter(String filter) throws StockPlayException {
@@ -40,9 +60,9 @@ public class FinanceFactory {
         ArrayList<Security> result = new ArrayList<Security>();
         try {
             XmlRpcClient client = XmlRpcClientFactory.getXmlRpcClient();
-            Object[] securities = (Object[]) client.execute("Finance.Security.List", new Object[]{filter});
+            Object[] res = (Object[]) client.execute("Finance.Security.List", new Object[]{filter});
 
-            for (Object sec : securities) {
+            for (Object sec : res) {
                 result.add(Security.fromStruct((HashMap) sec));
             }
             return result;
@@ -53,14 +73,19 @@ public class FinanceFactory {
     }
 
     public Security getSecurityById(String isin) throws StockPlayException {
-        Collection<Security> users = getSecurityByFilter("isin == '" + isin + "'");
-        Iterator<Security> it = users.iterator();
 
-        if (it.hasNext()) {
-            return it.next();
-        } else {
-            return null;
-        }
+        if(securities == null)
+            cacheSecurities();
+        return securities.get(isin);
+
+//        Collection<Security> users = getSecurityByFilter("isin == '" + isin + "'");
+//        Iterator<Security> it = users.iterator();
+//
+//        if (it.hasNext()) {
+//            return it.next();
+//        } else {
+//            return null;
+//        }
     }
     // <editor-fold>
     private HashMap<String, Exchange> exchanges = null;
@@ -110,6 +135,7 @@ public class FinanceFactory {
             Integer result = (Integer) client.execute("Finance.Exchange.Modify", v);
             if (result == 1) {
                 exch.setDirty(false);
+                exchanges.put(exch.getSymbol(), exch);
                 return true;
             }
             return false;
@@ -136,6 +162,7 @@ public class FinanceFactory {
             Integer result = (Integer) client.execute("Finance.Security.Modify", v);
             if (result == 1) {
                 security.setDirty(false);
+                securities.put(security.getISIN(), security);
                 return true;
             }
             return false;
@@ -155,10 +182,10 @@ public class FinanceFactory {
         ArrayList<Quote> result = new ArrayList<Quote>();
         try {
             XmlRpcClient client = XmlRpcClientFactory.getXmlRpcClient();
-            Object[] securities = (Object[]) client.execute("Finance.Security.LatestQuotes", new Object[]{filter});
+            Object[] res = (Object[]) client.execute("Finance.Security.LatestQuotes", new Object[]{filter});
 
-            for (Object sec : securities) {
-                result.add(Quote.fromStruct((HashMap) sec));
+            for (Object quote : res) {
+                result.add(Quote.fromStruct((HashMap) quote));
             }
             return result;
 
@@ -169,7 +196,7 @@ public class FinanceFactory {
 
     public Quote getLatestQuoteFromSecurity(Security sec) throws StockPlayException {
 
-        Collection<Quote> quotes = getLatestQuoteByFilter("isin == '" +sec.getISIN() + "'");
+        Collection<Quote> quotes = getLatestQuoteByFilter("isin == '" + sec.getISIN() + "'");
         Iterator<Quote> it = quotes.iterator();
 
         return quotes.iterator().next();

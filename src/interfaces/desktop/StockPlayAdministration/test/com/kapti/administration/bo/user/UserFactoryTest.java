@@ -200,7 +200,7 @@ public class UserFactoryTest {
         t.setTime(Calendar.getInstance().getTime());
 
         boolean expResult = true;
-        boolean result = instance.makePersistent(t);
+        boolean result = instance.execute(t);
         assertEquals(expResult, result);
         transaction = t;
     }

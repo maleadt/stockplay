@@ -5,8 +5,11 @@
 package com.kapti.administration;
 
 import com.kapti.administration.ValueChangeWithReasonDialog.ComputeChange;
+import com.kapti.administration.bo.user.Transaction;
+import com.kapti.administration.bo.user.TransactionFactory;
 import com.kapti.administration.bo.user.User;
 import com.kapti.administration.bo.user.UserFactory;
+import com.kapti.exceptions.StockPlayException;
 import java.awt.Font;
 import java.awt.Frame;
 import java.awt.GridBagConstraints;
@@ -46,7 +49,6 @@ public class EditUserDialog extends JDialog implements ActionListener {
     private static final String SAVE_ACTION = "SAVE";
     private static final String CANCEL_ACTION = "CANCEL";
     private UserFactory userFactory = UserFactory.getInstance();
-
     private String title;
     private User user;
     private JTextField nicknameField;
@@ -384,8 +386,9 @@ public class EditUserDialog extends JDialog implements ActionListener {
         if (e.getActionCommand().equals(SAVE_ACTION)) {
 
             user.setNickname(nicknameField.getText());
-            if(passwordEdited)
+            if (passwordEdited) {
                 user.setPassword(new String(passwordField.getPassword()));
+            }
             user.setLastname(lastnameField.getText());
             user.setFirstname(firstnameField.getText());
             user.setEmail(emailField.getText());
@@ -394,9 +397,33 @@ public class EditUserDialog extends JDialog implements ActionListener {
             }
             user.setRole((User.Role) roleField.getSelectedItem());
 
-            try {
+            Transaction t = null;
+            if (cashChange != null) {
+
+                TransactionFactory tf = TransactionFactory.getInstance();
+                tf.createTransaction();
+
+                t.setUser(user);
+                t.setPrice(cashChange.getDelta());
+                t.setAmount(1);
+                t.setType(Transaction.Type.MANUAL);
+                t.setComment(cashChange.getReason());
+
+
+
+
+            }
+
+            try{
+                if (t != null) {
+                    TransactionFactory.getInstance().execute(t);
+                }
                 userFactory.makePersistent(user);
                 success = true;
+            } catch (StockPlayException ex ){
+                  logger.error(ex);
+                JXErrorPane.showDialog(this, new ErrorInfo("Error while saving changes to user", "An exception occured while saving the changes to user " + user.getId(), null, null, ex, null, null));
+
             } catch (XmlRpcException ex) {
                 logger.error(ex);
                 JXErrorPane.showDialog(this, new ErrorInfo("Error while saving changes to user", "An exception occured while saving the changes to user " + user.getId(), null, null, ex, null, null));
