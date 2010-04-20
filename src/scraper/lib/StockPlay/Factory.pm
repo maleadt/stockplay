@@ -53,7 +53,7 @@ use warnings;
 has 'server' => (
 	is		=> 'ro',
 	isa		=> 'Str',
-	default		=> 'http://be04.kapti.com:6800/backend/public'
+	default		=> 'http://oersted.iii.hogent.be:6800/backend/public'
 );
 
 has 'xmlrpc' => (
@@ -430,7 +430,7 @@ sub doFault {
 	
 	# DO add bloat (because the RPC fault hash needs to be stringified
 	unless (defined $^S && $^S == 0) {
-		die("code $code: $message");
+		die("code $code: $message\n");
 	} else {		
 		die("XML-RPC request failed at XMLRPC level (code $code: $message)\n");
 	}

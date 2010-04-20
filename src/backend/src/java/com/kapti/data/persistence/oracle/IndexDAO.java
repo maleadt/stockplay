@@ -168,6 +168,8 @@ public class IndexDAO implements GenericDAO<Index, String> {
 
                 stmt.setString(1, entity.getName());
                 stmt.setString(2, entity.getExchange());
+                stmt.setString(3, entity.getIsin());
+                stmt.setString(4, entity.getSymbol());
 
                 return stmt.executeUpdate();
             } finally {

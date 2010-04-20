@@ -143,7 +143,6 @@ sub _build_plugins {
 			# Check exchanges
 			# TODO: veel duplicate code, misschien beter buildExchanges met selector?
 			my @s_exchanges = $self->factory->getExchanges();
-			die("no exchanges provided") unless @s_exchanges;
 			foreach my $exchange (@{$plugin->exchanges}) {
 				$self->logger->debug("processing exchange " . $exchange->name);
 				
