@@ -11,12 +11,15 @@
     
     <p>
         Amount: <asp:TextBox ID="txtAmount" runat="server" ValidationGroup="AmountValidation"></asp:TextBox> x 
-        <asp:TextBox ID="txtQuote" runat="server" ReadOnly="True" Enabled="false"></asp:TextBox> = <asp:Label ID="Total" runat="server"></asp:Label>
+        <asp:TextBox ID="txtQuote" runat="server"></asp:TextBox> = <asp:Label ID="Total" runat="server"></asp:Label>
     </p>
     <p>
         <asp:RangeValidator ID="RangeValidator1" runat="server" 
-            ErrorMessage="You need to enter an integer larger than 0" ValidationGroup="AmountValidation"
-            ControlToValidate="txtAmount" MinimumValue="1" MaximumValue="100000" Type="Integer"></asp:RangeValidator>
+            ErrorMessage="You need to enter an amount larger than 0" ValidationGroup="AmountValidation"
+            ControlToValidate="txtAmount" MinimumValue="1" MaximumValue="1000000" Type="Integer"></asp:RangeValidator>
+        <asp:RangeValidator ID="RangeValidator2" runat="server" ValidationGroup="AmountValidation" ControlToValidate="txtQuote"
+         ErorrMessage="Please enter a correct price, greater than 1" Type="Double" MinimumValue="1" MaximumValue="1000000"></asp:RangeValidator>
+         <asp:Label ID="ErrorLabel" Text="You do not have enough cash to place this order" ForeColor="Red" runat="server" Visible="false" />
     </p>
     <p id="Notification" runat="server" visible="false">
         After this order your new account balance will be <b id="NewBalance" runat="server"></b>. Are you sure?

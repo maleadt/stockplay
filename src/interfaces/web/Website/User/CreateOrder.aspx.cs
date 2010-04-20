@@ -48,26 +48,42 @@ public partial class User_CreateOrder : System.Web.UI.Page
     {
         Page.Validate();
         if (Page.IsValid)
-        {
-            btnConfirm.Visible = true;
-            btnContinue.Visible = false;
-            Notification.Visible = true;
-            Total.Text = Convert.ToString(Convert.ToDouble(txtQuote.Text) * Convert.ToInt32(txtAmount.Text));
-            NewBalance.InnerText = Convert.ToString(Convert.ToDouble(Cash.InnerText) - Convert.ToDouble(Total.Text));
+        {            
+            double total = Convert.ToDouble(txtQuote.Text) * Convert.ToInt32(txtAmount.Text);
+            if (total > Convert.ToDouble(Cash.InnerText))
+                ErrorLabel.Visible = true;
+            else
+            {
+                btnConfirm.Visible = true;
+                btnContinue.Visible = false;
+                Notification.Visible = true;
+                Total.Text = Convert.ToString(total);
+                NewBalance.InnerText = Convert.ToString(Convert.ToDouble(Cash.InnerText) - Convert.ToDouble(Total.Text));
+            }
         }
     }
 
     protected void btnConfirm_Click(object sender, EventArgs e)
     {
-        IDataAccess data = DataAccessFactory.GetDataAccess();
+        Page.Validate();
+        if (Page.IsValid)
+        {
+            double total = Convert.ToDouble(txtQuote.Text) * Convert.ToInt32(txtAmount.Text);
+            if (total > Convert.ToDouble(Cash.InnerText))
+                ErrorLabel.Visible = true;
+            else
+            {
+                IDataAccess data = DataAccessFactory.GetDataAccess();
 
-        ISecurity security = data.GetSecurityByIsin(Request.Params["ISIN"])[0];
-        IQuote latestQuote = data.GetLatestQuoteFromSecurity(Request.Params["ISIN"]);
-        StockplayMembershipUser user = (StockplayMembershipUser)Membership.GetUser(User.Identity.Name);
+                ISecurity security = data.GetSecurityByIsin(Request.Params["ISIN"])[0];
+                IQuote latestQuote = data.GetLatestQuoteFromSecurity(Request.Params["ISIN"]);
+                StockplayMembershipUser user = (StockplayMembershipUser)Membership.GetUser(User.Identity.Name);
 
-        data.CreateOrder(user.ID, security.Isin, Convert.ToInt32(txtAmount.Text), latestQuote.Price, "BUY");
+                data.CreateOrder(user.ID, security.Isin, Convert.ToInt32(txtAmount.Text), latestQuote.Price, "BUY");
 
-        Response.Redirect("~/User/OrdersOverview.aspx");
+                Response.Redirect("~/User/OrdersOverview.aspx");
+            }
+        }
     }
 
     protected void btnCancel_Click(object sender, EventArgs e)

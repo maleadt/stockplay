@@ -5,7 +5,7 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder" Runat="Server">
     <h1>Orders Overview</h1>
     
-    <p>Here you can review your outstanding orders. Active orders can still be cancelled. All of your running orders are displayed, but only the cancelled
+    <p class="para">Here you can review your outstanding orders. Active orders can still be cancelled. All of your running orders are displayed, but only the cancelled
     orders from the past 7 days are displayed.
     Currently StockPlay only supports orders which are executed directly, in the future you will
     be able to place orders with complex rulesets.</p>
