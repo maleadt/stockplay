@@ -77,7 +77,7 @@ public abstract class Convertable {
         String tObjectName = this.getClass().getPackage().getName() + "." + rb.getString("converter") + "." + this.getClass().getSimpleName() + "Converter";
         Constructor tConstructor = null;
         try {
-            Class tObjectClass = Class.forName(tObjectName);
+            Class<?> tObjectClass = Class.forName(tObjectName);
             tConstructor = tObjectClass.getConstructor(this.getClass());
         }
         catch (ClassNotFoundException e) {

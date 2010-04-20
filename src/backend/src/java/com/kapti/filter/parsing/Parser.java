@@ -78,24 +78,24 @@ public class Parser {
 
         // Create token ruleset (lower items have higher priority)
         mTokenRules = new ArrayList<Rule<TokenType>>();
-        mTokenRules.add(new Rule(TokenType.WHITESPACE, "\\s+"));
-        mTokenRules.add(new Rule(TokenType.LEFT_PARENTHESIS, "\\("));
-        mTokenRules.add(new Rule(TokenType.RIGHT_PARENTHESIS, "\\)"));
-        mTokenRules.add(new Rule(TokenType.COMMA, ","));
-        mTokenRules.add(new Rule(TokenType.WORD, "[A-Za-z_]+"));
-        mTokenRules.add(new Rule(TokenType.QUOTE, "'([^\']*+)'([rksdifk]*)"));
-        mTokenRules.add(new Rule(TokenType.FLOAT, "-?[0-9.]+"));
-        mTokenRules.add(new Rule(TokenType.INT, "-?[0-9]+"));
-        mTokenRules.add(new Rule(TokenType.OPERATOR_EQUALS, "(==|EQUALS)"));
-        mTokenRules.add(new Rule(TokenType.OPERATOR_NOTEQUALS, "(!=|NOT)"));
-        mTokenRules.add(new Rule(TokenType.OPERATOR_LESS, "(<=|LESSTHANOREQUAL)"));
-        mTokenRules.add(new Rule(TokenType.OPERATOR_GREATER, "(>=|GREATERTHANOREQUAL)"));
-        mTokenRules.add(new Rule(TokenType.OPERATOR_STRICTLESS, "(<|LESSTHAN)"));
-        mTokenRules.add(new Rule(TokenType.OPERATOR_STRICTGREATER, "(>|GREATERTHAN)"));
-        mTokenRules.add(new Rule(TokenType.OPERATOR_LIKE, "(=~|LIKE)"));
-        mTokenRules.add(new Rule(TokenType.OPERATOR_NOTLIKE, "(!~|NOTLIKE)"));
-        mTokenRules.add(new Rule(TokenType.OPERATOR_AND, "(&&|AND)"));
-        mTokenRules.add(new Rule(TokenType.OPERATOR_OR, "(\\|\\||OR)"));
+        mTokenRules.add(new Rule<TokenType>(TokenType.WHITESPACE, "\\s+"));
+        mTokenRules.add(new Rule<TokenType>(TokenType.LEFT_PARENTHESIS, "\\("));
+        mTokenRules.add(new Rule<TokenType>(TokenType.RIGHT_PARENTHESIS, "\\)"));
+        mTokenRules.add(new Rule<TokenType>(TokenType.COMMA, ","));
+        mTokenRules.add(new Rule<TokenType>(TokenType.WORD, "[A-Za-z_]+"));
+        mTokenRules.add(new Rule<TokenType>(TokenType.QUOTE, "'([^\']*+)'([rksdifk]*)"));
+        mTokenRules.add(new Rule<TokenType>(TokenType.FLOAT, "-?[0-9.]+"));
+        mTokenRules.add(new Rule<TokenType>(TokenType.INT, "-?[0-9]+"));
+        mTokenRules.add(new Rule<TokenType>(TokenType.OPERATOR_EQUALS, "(==|EQUALS)"));
+        mTokenRules.add(new Rule<TokenType>(TokenType.OPERATOR_NOTEQUALS, "(!=|NOT)"));
+        mTokenRules.add(new Rule<TokenType>(TokenType.OPERATOR_LESS, "(<=|LESSTHANOREQUAL)"));
+        mTokenRules.add(new Rule<TokenType>(TokenType.OPERATOR_GREATER, "(>=|GREATERTHANOREQUAL)"));
+        mTokenRules.add(new Rule<TokenType>(TokenType.OPERATOR_STRICTLESS, "(<|LESSTHAN)"));
+        mTokenRules.add(new Rule<TokenType>(TokenType.OPERATOR_STRICTGREATER, "(>|GREATERTHAN)"));
+        mTokenRules.add(new Rule<TokenType>(TokenType.OPERATOR_LIKE, "(=~|LIKE)"));
+        mTokenRules.add(new Rule<TokenType>(TokenType.OPERATOR_NOTLIKE, "(!~|NOTLIKE)"));
+        mTokenRules.add(new Rule<TokenType>(TokenType.OPERATOR_AND, "(&&|AND)"));
+        mTokenRules.add(new Rule<TokenType>(TokenType.OPERATOR_OR, "(\\|\\||OR)"));
         
         // Create operator translation map
         mOperatorMap = new HashMap<TokenType, Class>();
@@ -394,7 +394,8 @@ public class Parser {
                 case OPERATOR_AND:
                 case OPERATOR_OR:
                     // Pick the class
-                    Class tClass = mOperatorMap.get(tToken.getType());
+                    // TODO: more strict type; Condition?
+                    Class<?> tClass = mOperatorMap.get(tToken.getType());
 
                     // Fetch parameter signature
                     Method[] tMethods = tClass.getMethods();
