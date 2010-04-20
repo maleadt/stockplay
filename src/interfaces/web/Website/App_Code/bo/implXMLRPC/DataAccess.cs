@@ -102,7 +102,7 @@ namespace implXMLRPC
             if (searchterm == "")
                 querySecurities = securityHandler.List();
             else
-                querySecurities = securityHandler.List("(ISIN =~ '" + searchterm + "') OR (NAME =~ '" + searchterm + "') OR (EXCHANGE =~ '" + searchterm + "')");
+                querySecurities = securityHandler.List("(ISIN =~ '" + searchterm + "'ri) OR (NAME =~ '" + searchterm + "'ri) OR (EXCHANGE =~ '" + searchterm + "'ri) OR (SYMBOL =~ '" + searchterm + "'ri)");
             
             XmlRpcStruct[] queryQuotes = securityHandler.LatestQuotes("");
 
