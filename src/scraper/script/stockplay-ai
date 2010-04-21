@@ -49,9 +49,13 @@ __END__
 
 =head1 NAME
 
-stockplay-scraper - Scraper component of StockPlay
+stockplay-ai - Artificial player intelligence
 
-=head1 SYNOPSIS
+=head1 DESCRIPTION
+
+This script emulates the behaviour of an ordinary player using a set of
+artificial intelligence technologies. It aims at maximizing the return profits
+of the investment.
 
 =head1 COPYRIGHT
 

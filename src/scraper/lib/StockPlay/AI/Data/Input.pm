@@ -7,9 +7,14 @@ package StockPlay::AI::Data::Input;
 
 =pod
 
-=head1 NAME StockPlay::AI::Data::Input - StockPlay AI input data object
+=head1 NAME
+
+StockPlay::AI::Data::Input - StockPlay AI input data object
 
 =head1 DESCRIPTION
+
+This is the input data object, see the L<ATTRIBUTES> section for a detailled
+listing.
 
 =head1 SYNPOSIS
 

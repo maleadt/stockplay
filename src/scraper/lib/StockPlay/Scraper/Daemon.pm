@@ -53,52 +53,18 @@ my $MINDELAY = 60;
 
 =cut
 
-has 'plugins' => (
-	is		=> 'ro',
-	isa		=> 'ArrayRef',
-	lazy		=> 1,
-	builder		=> '_build_plugins'
-);
-
 has 'factory' => (
 	is		=> 'ro',
 	isa		=> 'StockPlay::Factory',
 	required	=> 1
 );
 
-has 'pluginmanager' => (
+has 'plugins' => (
 	is		=> 'ro',
-	isa		=> 'StockPlay::PluginManager',
-	builder		=> '_build_pluginmanager'
+	isa		=> 'ArrayRef',
+	lazy		=> 1,
+	builder		=> '_build_plugins'
 );
-
-
-################################################################################
-# Methods
-
-=pod
-
-=head1 METHODS
-
-=cut
-
-sub BUILD {
-	my ($self) = @_;
-	
-	# Build lazy attributes which depend on passed values
-	$self->plugins;
-}
-
-sub _build_pluginmanager {
-	my ($self) = @_;
-	
-	# Plugin manager
-	$self->logger->debug("loading plugin manager");
-	my $pluginmanager = new StockPlay::PluginManager;
-	$pluginmanager->load_group('StockPlay::Scraper::Source');
-	
-	return $pluginmanager;
-}
 
 sub _build_plugins {
 	my ($self) = @_;	
@@ -209,6 +175,54 @@ sub _build_plugins {
 	
 	return \@plugins;
 }
+
+has 'pluginmanager' => (
+	is		=> 'ro',
+	isa		=> 'StockPlay::PluginManager',
+	builder		=> '_build_pluginmanager'
+);
+
+sub _build_pluginmanager {
+	my ($self) = @_;
+	
+	# Plugin manager
+	$self->logger->debug("loading plugin manager");
+	my $pluginmanager = new StockPlay::PluginManager;
+	$pluginmanager->load_group('StockPlay::Scraper::Source');
+	
+	return $pluginmanager;
+}
+
+
+################################################################################
+# Methods
+
+=pod
+
+=head1 METHODS
+
+=head2 C<$daemon->BUILD>
+
+The object constructor. Builds pseudo-lazy attributes which depend on values
+passed by constructor.
+
+=cut
+
+sub BUILD {
+	my ($self) = @_;
+	
+	# Build lazy attributes which depend on passed values
+	$self->plugins;
+}
+
+=pod
+
+=head2 C<$pluginmanager->run>
+
+Main application loop. During each loop all exchanges and their securities get
+checked, eventually updated, an finally pushed to the backend.
+
+=cut
 
 sub run {
 	my ($self) = @_;	

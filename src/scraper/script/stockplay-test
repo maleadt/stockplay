@@ -68,7 +68,9 @@ __END__
 
 stockplay-test - StockPlay test client.
 
-=head1 SYNOPSIS
+=head1 DESCRIPTION
+
+This client is used to quickly verify backend functionality.
 
 =head1 COPYRIGHT
 

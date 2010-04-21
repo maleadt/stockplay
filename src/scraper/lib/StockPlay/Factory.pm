@@ -12,7 +12,9 @@ package StockPlay::Factory;
 =head1 DESCRIPTION
 
 The C<StockPlay::Scraper::Factory> package contains functionality to load and
-push data to a remove StockPlay backend.
+push data to a remove StockPlay backend. It is the only module which directly
+uses XML-RPC to contact the backend, and should provide all necessary
+functionality for other modules to never use XML-RPC itself.
 
 =head1 SYNPOSIS
 
@@ -61,31 +63,15 @@ has 'xmlrpc' => (
 	builder		=> '_build_xmlrpc'
 );
 
-
-################################################################################
-# Methods
-
 =pod
 
-=head1 METHODS
+=head2 C<$factory->_build_xmlrpc>
+
+Private method, builds the xmlrpc attribute. This method is also responsible
+for compression management, containing a boolean which enables (or disables)
+content encoding.
 
 =cut
-
-sub BUILD {
-	my ($self) = @_;
-	
-	# Build data members which require other data members
-	$self->xmlrpc;
-	
-	# Verify server connection & protocol version by sending a HELLO
-	eval {
-		$self->xmlrpc->send_request('User.Hello', "perl_factory/0.1", 1);
-	};
-	if ($@) {
-		chomp $@;
-		die("could not connect to backend ($@)\n");
-	}
-}
 
 sub _build_xmlrpc {
 	my ($self) = @_;
@@ -106,6 +92,50 @@ sub _build_xmlrpc {
 	
 	return $xmlrpc;
 }
+
+
+################################################################################
+# Methods
+
+=pod
+
+=head1 METHODS
+
+=head2 C<$factory->BUILD>
+
+Object constructor, loads lazy attributes, connects to the server, and sends
+an initial HELLO message.
+
+=cut
+
+sub BUILD {
+	my ($self) = @_;
+	
+	# Build data members which require other data members
+	$self->xmlrpc;
+	
+	# Verify server connection & protocol version by sending a HELLO
+	eval {
+		$self->xmlrpc->send_request('User.Hello', "perl_factory/0.1", 1);
+	};
+	if ($@) {
+		chomp $@;
+		die("could not connect to backend ($@)\n");
+	}
+}
+
+=pod
+
+=head2 C<$factory->buildExchanges($selector)>
+
+This method builds a deep hierarchy of objects, by recursivly fetching
+all data available (with exception to quotes: only the latest one is fetched).
+The only argument is a selector, which is used to narrow the selection of
+exchanges.
+
+# TODO: ook selector voor indexes enzo
+
+=cut
 
 sub buildExchanges {
 	my ($self, $selector) = @_;
@@ -148,6 +178,15 @@ sub buildExchanges {
 	return @exchanges;
 }
 
+=pod
+
+=head2 C<$factory->getExchanges>
+
+This method fetches a list of exchanges, and converts it to StockPlay::Exchange
+objects.
+
+=cut
+
 sub getExchanges {
 	my ($self) = @_;
 	
@@ -174,6 +213,16 @@ sub getExchanges {
 	return @exchanges;	
 }
 
+=pod
+
+=head2 C<$factory->getIndexes($exchange)>
+
+This method fetches a list of indexes on a given exchange, and converts it to
+StockPlay::Exchange objects. It does however not fetches the securities linked
+with the index (although that is a field of the Index object).
+
+=cut
+
 sub getIndexes {
 	my ($self, $exchange) = @_;
 	
@@ -197,6 +246,16 @@ sub getIndexes {
 	return @indexes;	
 }
 
+=pod
+
+=head2 C<$factory->getSecurities($exchange)>
+
+This method fetches a list of securities on a given exchange, and converts it to
+StockPlay::Exchange objects. It does however not fetches the quotes linked
+with the securities (although that is a field of the Security object).
+
+=cut
+
 sub getSecurities {
 	my ($self, $exchange) = @_;
 	
@@ -219,6 +278,16 @@ sub getSecurities {
 	
 	return @securities;	
 }
+
+=pod
+
+=head2 C<$factory->getIndexSecurities($exchange, $index)>
+
+This method fetches a list of securities on a given index, and returns them.
+The objects are no new instantiations, but are references to the existing ones
+in the exchange object.
+
+=cut
 
 sub getIndexSecurities {
 	my ($self, $exchange, $index) = @_;
@@ -245,6 +314,15 @@ sub getIndexSecurities {
 	
 	return @securities;
 }
+
+=pod
+
+=head2 C<$factory->getLatestQuotes(@securities)>
+
+This method fetches the latest quotes linked to each passed security, and
+returns them.
+
+=cut
 
 sub getLatestQuotes {
 	my ($self, @securities) = @_;
@@ -279,6 +357,15 @@ sub getLatestQuotes {
 	
 	return @quotes;
 }
+
+=pod
+
+=head2 C<$factory->getQuotes($start, $end, $security)>
+
+This method fetches and returns all the quotes from a given security between
+two dates.
+
+=cut
 
 sub getQuotes {
 	my ($self, $start, $end, $security) = @_;
@@ -319,6 +406,19 @@ sub getQuotes {
 	return @quotes;
 }
 
+=pod
+
+=head2 C<$factory->createQuotes(@quotes)>
+
+This method sends new quotes to the backend. The security field in the Quote
+object is currently used to link the given quotes to the correct security.
+This method uses bulk upload, so if one quote fails, none of them get saved.
+
+# TODO: deze ref wordt nooit gedaan buiten bij quotes. Mss pairs van
+# security -> quote?
+
+=cut
+
 sub createQuotes {
 	my ($self, @quotes) = @_;
 	
@@ -343,6 +443,14 @@ sub createQuotes {
 	$self->xmlrpc->send_request('Finance.Security.UpdateBulk', \@s_quotes);	
 }
 
+=pod
+
+=head2 C<$factory->createExchange($exchange)>
+
+This method sends a new exchange to the remote backend.
+
+=cut
+
 sub createExchange {
 	my ($self, $exchange) = @_;
 	
@@ -356,6 +464,14 @@ sub createExchange {
 	# Send the exchange to the server
 	$self->xmlrpc->send_request('Finance.Exchange.Create', \%s_exchange);
 }
+
+=pod
+
+=head2 C<$factory->createIndex($exchange, $index)>
+
+This method sends a new index to the remote backend.
+
+=cut
 
 sub createIndex {
 	my ($self, $exchange, $index) = @_;
@@ -372,6 +488,14 @@ sub createIndex {
 	$self->xmlrpc->send_request('Finance.Index.Create', \%s_index);		
 }
 
+=pod
+
+=head2 C<$factory->createIndexSecurity($index, $security)>
+
+This method remotely links an existing security to an existing index.
+
+=cut
+
 sub createIndexSecurity {
 	my ($self, $index, $security) = @_;
 	
@@ -384,6 +508,14 @@ sub createIndexSecurity {
 	# Send the index to the server
 	$self->xmlrpc->send_request('Finance.IndexSecurity.Create', \%s_indexsecurity);
 }
+
+=pod
+
+=head2 C<$factory->createSecurity($exchange, $security)>
+
+This method sends a new exchange to the remote backend.
+
+=cut
 
 sub createSecurity {
 	my ($self, $exchange, $security) = @_;
@@ -409,6 +541,13 @@ sub createSecurity {
 
 =head1 AUXILIARY
 
+=head2 C<doError>
+
+This static method is used as error handler to the internally-used C<RPC::XML>
+object. It intelligently handles eval- and parse-time errors to avoid
+bloat in the logfiles. Errors are reported when problems occur on the
+transport level (eg. HTTP or TCP).
+
 =cut
 
 sub doError {
@@ -419,6 +558,17 @@ sub doError {
 	chomp $error;
 	die("XML-RPC request failed at transport level ($error)\n");
 }
+
+=pod
+
+=head2 C<doFault>
+
+This static method is used as fault handler to the internally-used C<RPC::XML>
+object. It intelligently handles eval- and parse-time errors to avoid
+bloat in the logfiles. Faults are reported when problems occur on the
+XML-RPC error (eg. XLM-RPC errors).
+
+=cut
 
 sub doFault {
 	my $fault = shift;
@@ -434,9 +584,19 @@ sub doFault {
 	}
 }
 
-# RPC::XML sends the invalid, but by-spec requested YYYY-MM-DD (...) format,
-# while ws-xmlrpc is only able to parse the more widely used yet here invalid
-# YYYYMMDD format (FYI: this is extremely nasty).
+=pod
+
+=head2 C<hack_datetime($datetime)>
+
+The XML-RPC spec is a bit strange concerning datetimes. The spec uses the
+ISO-invalid YY-MM-DD (...) format, which is correctly implemented by the
+RPC::XML library. Java's ws-xmlrpc however decided not to support that
+datetime-format, but uses the ISO-correct YYYYMMDD (...) format. As however
+ws-xmlrpc also fails at decoding the by-spec format, we kinda hack the 
+RPC::XML::DateTime object to get it parsed by ws-xmlrpc after transmission.
+
+=cut
+
 sub hack_datetime {
 	my $datetime = shift;
 	my $value = $datetime->value;

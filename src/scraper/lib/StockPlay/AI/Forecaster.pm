@@ -8,9 +8,15 @@ package StockPlay::AI::Forecaster;
 
 =pod
 
-=head1 NAME StockPlay::AI::Forecaster - StockPlay AI forecaster interface
+=head1 NAME
+
+StockPlay::AI::Forecaster - StockPlay AI forecaster role
 
 =head1 DESCRIPTION
+
+This package serves as main role for forecasters, aiding that by providing
+some helper routines, as well as defining the interface forecasters should
+implement.
 
 =head1 SYNPOSIS
 
@@ -45,16 +51,65 @@ use warnings;
 
 =head1 METHODS
 
+=head2 C<$forecaster->preprocess_input(@inputs)>
+
+Input preprocessor. This is used to convert raw input data to an internal
+representation (which doesn't even have to be StockPlay::AI::Data objects).
+
 =cut
 
 requires 'preprocess_input';
+
+=pod
+
+=head2 C<$forecaster->preprocess_output(@outputs)>
+
+Output preprocessor. This is used to convert raw output data to an internal
+representation (which doesn't even have to be StockPlay::AI::Data objects).
+
+=cut
+
 requires 'preprocess_output';
+
+=pod
+
+=head2 C<$forecaster->postprocess_output(@internal_outputs)>
+
+Output postprocessor. This is used to convert internal output data back to the
+regular representation in terms of StockPlay::AI::Data objects.
+
+=cut
 
 requires 'postprocess_output';
 
+=pod
+
+=head2 C<$forecaster->train($inputs, $outputs)>
+
+This method is called with sets of known data to train the forcaster.
+
+=cut
+
 requires 'train';
 
+=pod
+
+=head2 C<$forecaster->run(@inputs)>
+
+This method runs (but does not train) the network against unknown values.
+Predicted output values are calculated and returned as an array.
+
+=cut
+
 requires 'run';
+
+=pod
+
+=head2 C<test($dataset)
+
+A stub testing routine.
+
+=cut
 
 sub test {
 	my ($self, $dataset) = @_;

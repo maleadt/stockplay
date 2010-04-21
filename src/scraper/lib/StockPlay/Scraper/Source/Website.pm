@@ -17,7 +17,7 @@ StockPlay::Scraper::Source::Website - StockPlay website scraper functionality
 
 =head1 DESCRIPTION
 
-Plugin met functionaliteit voor scrapers die websites gebruiken.
+Plugin with specific functionality for web-based sources.
 
 =head1 SYNPOSIS
 
@@ -54,6 +54,14 @@ has 'browser' => (
 	lazy		=> 1,	# Triggers a rebuild when undef'ing (retrieve after clean+dump)
 	builder		=> '_build_browser'
 );
+
+=pod
+
+=head2 C<$source->_build_browser>
+
+Private method, builds the browser attribute.
+
+=cut
 
 sub _build_browser {
 	my ($self) = @_;

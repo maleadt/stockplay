@@ -14,7 +14,8 @@ StockPlay::Object - StockPlay Object data object
 =head1 DESCRIPTION
 
 The C<StockPlay::Object> package contains a container for all Object-related
-data.
+data. This essentially inserts a "private data container", which can be used
+to save application-specific data for which no attributes have been reserved.
 
 =head1 SYNPOSIS
 
@@ -55,7 +56,7 @@ has 'private' => (
 
 =head2 C<$object->set($key, $value)>
 
-Sets a key in the private data hash.
+Sets a key in the private data container.
 
 =cut
 
@@ -69,7 +70,7 @@ sub set {
 
 =head2 C<$object->get($key)>
 
-Gets a key out of the private data hash.
+Gets a key out of the private data container.
 
 =cut
 

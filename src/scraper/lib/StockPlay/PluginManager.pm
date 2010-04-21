@@ -13,6 +13,11 @@ StockPlay::PluginManager - StockPlay scraper plugin manager
 
 =head1 DESCRIPTION
 
+This is the plugin manager, which is used to discover, parse, check, and
+finally instantiate plugins. It provides some additional functionality, like
+fancy error reporting upon problems, robust plugin instantiation, or parsing
+of the code files to load a set of informative tags.
+
 =head1 SYNPOSIS
 
 =cut
@@ -54,6 +59,17 @@ has 'plugins' => (
 	isa		=> "HashRef",
 	default		=> sub { {} }
 );
+
+=pod
+
+=head2 C<$pluginmanager->load_group($base)>
+
+This method loads plugins from a given base package, by attempting to find
+a suitable directory layout in the C<@INC> variable. This means that the base
+package must exist as a specific folder layout, and not only virtually as
+package definitions!
+
+=cut
 
 sub load_group {
 	my ($self, $base) = @_;

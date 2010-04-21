@@ -65,17 +65,6 @@ has 'exchanges' => (
 
 =head1 METHODS
 
-=cut
-
-sub BUILD {
-	my ($self) = @_;
-	
-	# Build lazy-attributes
-	$self->exchanges;
-}
-
-=pod
-
 =head2 C<$plugin->getQuotes(@securities)>
 
 =cut

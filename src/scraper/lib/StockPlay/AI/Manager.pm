@@ -7,9 +7,15 @@ package StockPlay::AI::Manager;
 
 =pod
 
-=head1 NAME StockPlay::AI::Manager - StockPlay AI manager
+=head1 NAME
+
+StockPlay::AI::Manager - StockPlay AI manager
 
 =head1 DESCRIPTION
+
+This is the main library used to construct an artificial player. It gathers
+and manipulates the needed datasets, instantiates plugins, manages the 
+portfolio, etc.
 
 =head1 SYNPOSIS
 
@@ -52,52 +58,18 @@ my $DATA_END = DateTime::Format::DateManip->parse_datetime(ParseDate("1 month ag
 
 =cut
 
-has 'forecasters' => (
-	is		=> 'ro',
-	isa		=> 'ArrayRef',
-	lazy		=> 1,
-	builder		=> '_build_forecasters'
-);
-
 has 'factory' => (
 	is		=> 'ro',
 	isa		=> 'StockPlay::Factory',
 	required	=> 1
 );
 
-has 'pluginmanager' => (
+has 'forecasters' => (
 	is		=> 'ro',
-	isa		=> 'StockPlay::PluginManager',
-	builder		=> '_build_pluginmanager'
+	isa		=> 'ArrayRef',
+	lazy		=> 1,
+	builder		=> '_build_forecasters'
 );
-
-
-################################################################################
-# Methods
-
-=pod
-
-=head1 METHODS
-
-=cut
-
-sub BUILD {
-	my ($self) = @_;
-	
-	# Build lazy attributes which depend on passed values
-	$self->forecasters;
-}
-
-sub _build_pluginmanager {
-	my ($self) = @_;
-	
-	# Plugin manager
-	$self->logger->debug("loading plugin manager");
-	my $pluginmanager = new StockPlay::PluginManager;
-	$pluginmanager->load_group('StockPlay::AI::Forecaster');
-	
-	return $pluginmanager;
-}
 
 sub _build_forecasters {
 	my ($self) = @_;	
@@ -126,6 +98,56 @@ sub _build_forecasters {
 	
 	return \@forecasters;
 }
+
+has 'pluginmanager' => (
+	is		=> 'ro',
+	isa		=> 'StockPlay::PluginManager',
+	builder		=> '_build_pluginmanager'
+);
+
+sub _build_pluginmanager {
+	my ($self) = @_;
+	
+	# Plugin manager
+	$self->logger->debug("loading plugin manager");
+	my $pluginmanager = new StockPlay::PluginManager;
+	$pluginmanager->load_group('StockPlay::AI::Forecaster');
+	
+	return $pluginmanager;
+}
+
+
+################################################################################
+# Methods
+
+=pod
+
+=head1 METHODS
+
+=head2 C<$daemon->BUILD>
+
+The object constructor. Builds pseudo-lazy attributes which depend on values
+passed by constructor.
+
+=cut
+
+sub BUILD {
+	my ($self) = @_;
+	
+	# Build lazy attributes which depend on passed values
+	$self->forecasters;
+}
+
+=pod
+
+=head2 C<$manager->run>
+
+Main run loop. This will continuously scan all securities on all exchanges,
+attempt to accuratly predict the course for the following day (using the
+available forecasters, and pick the one with the smallest rate of error), and
+using those predicted courses collect an optimal portfolio.
+
+=cut
 
 
 sub run {
@@ -207,6 +229,11 @@ sub run {
 =pod
 
 =head1 AUXILIARY
+
+=head2 C<quote_truncate>
+
+Truncates the quote resolution to 1 per day. This because there currently is
+no such functionality in the backend.
 
 =cut
 

@@ -138,9 +138,13 @@ __END__
 
 =head1 NAME
 
-stockplay-scraper - Scraper component of StockPlay
+stockplay-historic - Historic data fetcher
 
-=head1 SYNOPSIS
+=head1 DESCRIPTION
+
+This component is able to fetch historic data from online resources. As this
+is a process only done once, it is not integrated with the other scraper
+component.
 
 =head1 COPYRIGHT
 

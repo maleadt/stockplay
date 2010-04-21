@@ -92,9 +92,14 @@ __END__
 
 =head1 NAME
 
-stockplay-scraper - Scraper component of StockPlay
+stockplay-scraper - Random data generator
 
-=head1 SYNOPSIS
+=head1 DESCRIPTION
+
+This script is used to insert random data into the database, by looking up
+the existing quotes and generate data similar to the latest known quote. This
+data can be very high-resolution, and can thus be used when much data is
+required but the scraper cannot provide it (eg. game simulations or testing).
 
 =head1 COPYRIGHT
 

@@ -10,9 +10,15 @@ package StockPlay::AI::Forecaster::Neural;
 
 =pod
 
-=head1 NAME StockPlay::AI::Forecaster::Neural - StockPlay AI neural forecaster
+=head1 NAME
+
+StockPlay::AI::Forecaster::Neural - StockPlay AI neural forecaster
 
 =head1 DESCRIPTION
+
+This forecaster uses neural networks to forecast output data. It uses a
+genetic network (Cascade2) to intelligently guess all parameters of the
+network, and is based on the C-library FANN.
 
 =head1 SYNPOSIS
 
@@ -76,15 +82,28 @@ has 'scales' => (
 
 =head1 METHODS
 
+=head2 C<$forecaster->BUILD>
+
+Constructor, used to construct pseudo-lazy attributes which actually
+depend on passed values.
+
 =cut
 
 sub BUILD {
 	my ($self) = @_;
 	
 	# Build lazy attributes
-	$self->network;
-	
+	$self->network;	
 }
+
+=pod
+
+=head2 C<$forecaster->preprocess_input>
+
+Implementation of the preprocess_input method. See the 
+L<StockPlay::AI::Forecaster> package for documentation.
+
+=cut
 
 sub preprocess_input {
 	my ($self, @inputs) = @_;
@@ -107,14 +126,23 @@ sub preprocess_input {
 	}
 	
 	# Scale
-	$self->scale("input", \@inputs_proc, 0);
-	$self->scale("input", \@inputs_proc, 1);
-	$self->scale("input", \@inputs_proc, 2);
-	$self->scale("input", \@inputs_proc, 3);
-	$self->scale("input", \@inputs_proc, 4);
+	$self->_scale("input", \@inputs_proc, 0);
+	$self->_scale("input", \@inputs_proc, 1);
+	$self->_scale("input", \@inputs_proc, 2);
+	$self->_scale("input", \@inputs_proc, 3);
+	$self->_scale("input", \@inputs_proc, 4);
 	
 	return @inputs_proc;
 }
+
+=pod
+
+=head2 C<$forecaster->preprocess_output>
+
+Implementation of the preprocess_output method. See the 
+L<StockPlay::AI::Forecaster> package for documentation.
+
+=cut
 
 sub preprocess_output {
 	my ($self, @outputs) = @_;
@@ -128,16 +156,25 @@ sub preprocess_output {
 	}
 	
 	# Scale
-	$self->scale("output", \@outputs_proc, 0);
+	$self->_scale("output", \@outputs_proc, 0);
 	
 	return @outputs_proc;
 }
+
+=pod
+
+=head2 C<$forecaster->postprocess_output>
+
+Implementation of the postprocess_output method. See the 
+L<StockPlay::AI::Forecaster> package for documentation.
+
+=cut
 
 sub postprocess_output {
 	my ($self, @outputs_proc) = @_;
 	
 	# Descale
-	$self->descale("output", \@outputs_proc, 0);
+	$self->_descale("output", \@outputs_proc, 0);
 	
 	# Implode
 	my @outputs;
@@ -150,6 +187,14 @@ sub postprocess_output {
 	return @outputs;
 }
 
+=pod
+
+=head2 C<$forecaster->train>
+
+Implementation of the train method. See the 
+L<StockPlay::AI::Forecaster> package for documentation.
+
+=cut
 
 sub train {
 	my ($self, $inputs, $outputs) = @_;
@@ -177,10 +222,24 @@ sub train {
 	$self->network->print_connections();
 }
 
+=pod
+
+=head2 C<$forecaster->run>
+
+Implementation of the run method. See the 
+L<StockPlay::AI::Forecaster> package for documentation.
+
+=cut
+
 sub run {
-	my ($self, $input) = @_;
+	my ($self, @inputs) = @_;
 	
-	return $self->network->run($input);
+	my @outputs;
+	foreach my $input (@inputs) {
+		push @outputs, $self->network->run($input);
+	}
+	
+	return @outputs;
 }
 
 
@@ -194,7 +253,7 @@ sub run {
 
 =cut
 
-sub scale {
+sub _scale {
 	my ($self, $tag, $arrayref, $index) = @_;
 	
 	my $max = max map { $_->[$index] } @$arrayref;
@@ -207,7 +266,7 @@ sub scale {
 	$self->scales->{$tag.$index."max"} = $max;
 }
 
-sub descale {
+sub _descale {
 	my ($self, $tag, $arrayref, $index) = @_;
 	my $min = $self->scales->{$tag.$index."min"};
 	my $max = $self->scales->{$tag.$index."max"};

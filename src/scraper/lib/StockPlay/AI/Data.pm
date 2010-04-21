@@ -7,9 +7,16 @@ package StockPlay::AI::Data;
 
 =pod
 
-=head1 NAME StockPlay::AI::Data - StockPlay AI main data object
+=head1 NAME
+
+StockPlay::AI::Data - StockPlay AI data object
 
 =head1 DESCRIPTION
+
+This object represents a set of data which will be provided (or requested)
+from a forecaster. It contains all relevant data, meaning the forecaster
+should not have to look up or calculate data fields from several data objects
+(eg. calculate the closing course from the opening course at data object i+1).
 
 =head1 SYNPOSIS
 

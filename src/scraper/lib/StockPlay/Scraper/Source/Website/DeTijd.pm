@@ -36,31 +36,6 @@ with 'StockPlay::Scraper::Source::Website';
 use strict;
 use warnings;
 
-# Proper DateTime conversion
-sub parse_datetime {
-	my ($timezone, $string) = @_;
-
-	# Get a localized datetime to fill in missing parameters
-	my $datetime_reference = DateTime->now(time_zone => $timezone);
-
-	# Create a new datetime object with all parameters filled in
-	my @items = split(/:/, $string);
-	die("invalid time specification") unless $#items == 2;
-	my $datetime = new DateTime (
-		time_zone	=> $timezone,
-		year		=> $datetime_reference->year,
-		month		=> $datetime_reference->month,
-		day		=> $datetime_reference->day,
-		hour		=> $items[0],
-		minute		=> $items[1],
-		second		=> $items[2],
-	);
-
-	# Convert back to UTC and return
-	$datetime->set_time_zone("UTC");
-	return $datetime;
-}
-
 
 ################################################################################
 # Attributes
@@ -84,7 +59,7 @@ sub _build_exchanges {
 			time_zone	=> new DateTime::TimeZone(name => "Europe/Brussels")
 		}
 	);
-	$self->addSecurities($brussel, 'http://www.tijd.be/beurzen/euronext-brussel/continumarkt');
+	$self->_addSecurities($brussel, 'http://www.tijd.be/beurzen/euronext-brussel/continumarkt');
 	my $bel20 = new StockPlay::Index(
 		name		=> "bel20",
 		symbol		=> "BEL20",
@@ -93,7 +68,7 @@ sub _build_exchanges {
 			site_id	=> 190015497
 		}
 	);
-	$self->addSecuritiesIndex($brussel, $bel20, 'http://www.tijd.be/beurzen/euronext-brussel/bel20');
+	$self->_addSecuritiesIndex($brussel, $bel20, 'http://www.tijd.be/beurzen/euronext-brussel/bel20');
 	push(@{$brussel->indexes}, $bel20);
 	
 	# Euronext Parijs
@@ -105,9 +80,9 @@ sub _build_exchanges {
 			time_zone	=> new DateTime::TimeZone(name => "Europe/Paris")
 		}
 	);
-	$self->addSecurities($parijs, 'http://www.tijd.be/beurzen/euronext-parijs/frencha');
-	$self->addSecurities($parijs, 'http://www.tijd.be/beurzen/euronext-parijs/frenchb');
-	$self->addSecurities($parijs, 'http://www.tijd.be/beurzen/euronext-parijs/frenchc');
+	$self->_addSecurities($parijs, 'http://www.tijd.be/beurzen/euronext-parijs/frencha');
+	$self->_addSecurities($parijs, 'http://www.tijd.be/beurzen/euronext-parijs/frenchb');
+	$self->_addSecurities($parijs, 'http://www.tijd.be/beurzen/euronext-parijs/frenchc');
 	my $cac40 = new StockPlay::Index(
 		name		=> "cac40",
 		symbol		=> "PX1",
@@ -116,7 +91,7 @@ sub _build_exchanges {
 			site_id	=> 360015511
 		}
 	);
-	$self->addSecuritiesIndex($parijs, $cac40, 'http://www.tijd.be/beurzen/euronext-parijs/cac40');
+	$self->_addSecuritiesIndex($parijs, $cac40, 'http://www.tijd.be/beurzen/euronext-parijs/cac40');
 	push(@{$parijs->indexes}, $cac40);
 	
 	return [$brussel, $parijs];
@@ -127,11 +102,13 @@ sub _build_exchanges {
 # Methods
 #
 
-sub BUILD {
-	
-}
+=pod
 
-sub addSecuritiesIndex {
+=head1 METHODS
+
+=cut
+
+sub _addSecuritiesIndex {
 	my ($self, $exchange, $index, $url) = @_;
 	my @securities;
 	
@@ -204,7 +181,7 @@ sub addSecuritiesIndex {
 	
 }
 
-sub addSecurities {
+sub _addSecurities {
 	my ($self, $exchange, $url) = @_;
 	my @securities;	
 	
@@ -305,6 +282,15 @@ sub addSecurities {
 	push(@{$exchange->securities}, @securities);
 }
 
+=pod
+
+=head2 C<$source->getLatestQuotes>
+
+Implementation of the getLatestQuotes method. See the 
+L<StockPlay::Scraper::Source> package for documentation.
+
+=cut
+
 sub getLatestQuotes {
 	my ($self, $exchange, @securities) = @_;
 	
@@ -337,7 +323,7 @@ sub getLatestQuotes {
 		my $security = (grep { $_->get('site_id') == $site_id } @securities)[0]
 			or die("Could not connect data to security");
 		eval {
-			my $datetime = parse_datetime($exchange->get('time_zone'), $data{time});
+			my $datetime = _parse_datetime($exchange->get('time_zone'), $data{time});
 			die("could not parse time") unless $datetime;
 			push(@quotes, new StockPlay::Quote({
 				time		=> $datetime,
@@ -364,6 +350,15 @@ sub getLatestQuotes {
 	
 	return @quotes;
 }
+
+=pod
+
+=head2 C<$source->isOpen>
+
+Implementation of the isOpen method. See the 
+L<StockPlay::Scraper::Source> package for documentation.
+
+=cut
 
 sub isOpen {
 	my ($self, $exchange, $datetime) = @_;
@@ -412,6 +407,31 @@ sub isOpen {
 =head1 AUXILIARY
 
 =cut
+
+# Proper DateTime conversion
+sub _parse_datetime {
+	my ($timezone, $string) = @_;
+
+	# Get a localized datetime to fill in missing parameters
+	my $datetime_reference = DateTime->now(time_zone => $timezone);
+
+	# Create a new datetime object with all parameters filled in
+	my @items = split(/:/, $string);
+	die("invalid time specification") unless $#items == 2;
+	my $datetime = new DateTime (
+		time_zone	=> $timezone,
+		year		=> $datetime_reference->year,
+		month		=> $datetime_reference->month,
+		day		=> $datetime_reference->day,
+		hour		=> $items[0],
+		minute		=> $items[1],
+		second		=> $items[2],
+	);
+
+	# Convert back to UTC and return
+	$datetime->set_time_zone("UTC");
+	return $datetime;
+}
 
 1;
 

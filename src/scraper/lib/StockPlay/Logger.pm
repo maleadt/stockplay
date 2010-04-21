@@ -14,7 +14,10 @@ StockPlay::Logger - StockPlay logger
 =head1 DESCRIPTION
 
 The C<StockPlay::Logger> package contains a base role for packages needing a
-logger.
+logger. By implementing this role, a module gets hold of a "logger" attribute,
+an instantiation of C<Log::Log4perl> which can be used to log as much as needed.
+Before doing anything though, the main script should use the static C<setup>
+method to set the library up.
 
 =head1 SYNPOSIS
 
@@ -50,6 +53,14 @@ my $IS_SETUP = 0;
 
 =head1 METHODS
 
+=head2 C<$object->logger>
+=head2 C<StockPlay::Logger->logger($name)>
+
+This method, available as object method as well as static method, creates a
+new instantiation of a C<Log::Log4perl> object with the tag already set up
+correctly. When calling statically, the tag is guessed from the callstack, but
+a manual tag may be used as well by passing it as parameter.
+
 =cut
 
 sub logger {
@@ -66,9 +77,24 @@ sub logger {
 	return get_logger($package);
 }
 
+=pod
+
+=head2 C<StockPlay:Logger->setup($name)>
+
+This method is to be called once before using an logger objects provided
+by this class, as some initialization stuff needs to happen. The method should
+get passed the name suffix of the application (eg. "ai" or "scraper"), which
+will then (prepended with "stockplay-") be used as syslog tag.
+
+This method will also register last-resort signal handlers, causing modules
+not to have use "logdie" or "logwarn", but the usual Perl counterparts.
+
+=cut
+
 sub setup {
 	my ($package, $name) = @_;
 	croak("logger should be set-up statically") if (ref $package);
+	croak("cannot be set-up twice") if ($IS_SETUP);
 	$name = "anonymous" unless defined $name;
 	
 	# Initialize Log4Perl
