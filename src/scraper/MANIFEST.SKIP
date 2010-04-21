@@ -15,3 +15,5 @@ StockPlay-.+
 ^tools
 ^lib\/RPC
 ^MYMETA.yml$
+~$
+\.bak$
