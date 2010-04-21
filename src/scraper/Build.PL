@@ -15,6 +15,12 @@ my $builder = Module::Build->new (
         'DateTime'                      => 0,
         'Date::Manip'                   => 0,
         'DateTime::Format::ISO8601'     => 0,
+        'DateTime::Format::DateManip'   => 0,
+        'Carp'                          => 0,
+
+        # StockPlay::PluginManager
+        'File::Find'                    => 0,
+        'Storable'                      => 0,
         
         # StockPlay::Factory
         'RPC::XML'		        => 0,
@@ -22,11 +28,11 @@ my $builder = Module::Build->new (
         # StockPlay::Logger
         'Log::Log4perl'                 => 0,
         'Log::Dispatch'                 => 0,
-        'carp'                          => 0,
     },
     recommends => {
         # StockPlay::Scraper::Source::Website
         'WWW::Mechanize'        => 0,
+        'Time::HiRes'           => 0,
         
         # StockPlay::Scraper::Source::Website::DeTijd
         'JSON'                  => 0,
@@ -34,7 +40,10 @@ my $builder = Module::Build->new (
         
         # StockPlay::AI::Forecaster
         'AI::FANN'              => 0,
-        'List::Util'            => 0
+        'List::Util'            => 0,
+        
+        # StockPlay::Historic::Euronext
+        'LWP::UserAgent'         => 0
     },
     add_to_cleanup      => [ 'StockPlay-*' ]
 );

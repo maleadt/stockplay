@@ -4,9 +4,6 @@
 # Configuration
 #
 
-# XXX: library location
-use lib '../lib';
-
 # Packages
 use Date::Manip;
 use DateTime::Format::DateManip;

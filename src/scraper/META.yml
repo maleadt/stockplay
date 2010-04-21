@@ -1,0 +1,75 @@
+---
+abstract: 'The StockPlay framework'
+author:
+  - 'The StockPlay team <http://code.google.com/p/stockplay/>'
+configure_requires:
+  Module::Build: 0.36
+generated_by: 'Module::Build version 0.3607'
+license: gpl
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: 1.4
+name: StockPlay
+provides:
+  StockPlay::AI::Data:
+    file: lib/StockPlay/AI/Data.pm
+  StockPlay::AI::Data::Input:
+    file: lib/StockPlay/AI/Data/Input.pm
+  StockPlay::AI::Data::Output:
+    file: lib/StockPlay/AI/Data/Output.pm
+  StockPlay::AI::Forecaster:
+    file: lib/StockPlay/AI/Forecaster.pm
+  StockPlay::AI::Forecaster::Neural:
+    file: lib/StockPlay/AI/Forecaster/Neural.pm
+  StockPlay::AI::Manager:
+    file: lib/StockPlay/AI/Manager.pm
+  StockPlay::Exchange:
+    file: lib/StockPlay/Exchange.pm
+  StockPlay::Factory:
+    file: lib/StockPlay/Factory.pm
+  StockPlay::Index:
+    file: lib/StockPlay/Index.pm
+  StockPlay::Logger:
+    file: lib/StockPlay/Logger.pm
+  StockPlay::Object:
+    file: lib/StockPlay/Object.pm
+  StockPlay::Plugin:
+    file: lib/StockPlay/Plugin.pm
+  StockPlay::PluginManager:
+    file: lib/StockPlay/PluginManager.pm
+  StockPlay::Quote:
+    file: lib/StockPlay/Quote.pm
+  StockPlay::Scraper::Daemon:
+    file: lib/StockPlay/Scraper/Daemon.pm
+  StockPlay::Scraper::Source:
+    file: lib/StockPlay/Scraper/Source.pm
+  StockPlay::Scraper::Source::Website:
+    file: lib/StockPlay/Scraper/Source/Website.pm
+  StockPlay::Scraper::Source::Website::DeTijd:
+    file: lib/StockPlay/Scraper/Source/Website/DeTijd.pm
+  StockPlay::Security:
+    file: lib/StockPlay/Security.pm
+recommends:
+  AI::FANN: 0
+  HTML::TreeBuilder: 0
+  JSON: 0
+  LWP::UserAgent: 0
+  List::Util: 0
+  Time::HiRes: 0
+  WWW::Mechanize: 0
+requires:
+  Carp: 0
+  Date::Manip: 0
+  DateTime: 0
+  DateTime::Format::DateManip: 0
+  DateTime::Format::ISO8601: 0
+  File::Find: 0
+  Log::Dispatch: 0
+  Log::Log4perl: 0
+  Moose: 0.26
+  RPC::XML: 0
+  Storable: 0
+  perl: 5
+resources:
+  license: http://opensource.org/licenses/gpl-license.php
+version: 0.1

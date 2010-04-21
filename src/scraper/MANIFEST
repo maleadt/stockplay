@@ -5,25 +5,17 @@ README
 
 lib/StockPlay/Factory.pm
 lib/StockPlay/Object.pm
-lib/StockPlay/Scraper
-lib/StockPlay/Scraper/Plugin
-lib/StockPlay/Scraper/Plugin/Website
 lib/StockPlay/Scraper/Daemon.pm
-lib/StockPlay/Scraper/Source
 lib/StockPlay/Scraper/Source/Website.pm
-lib/StockPlay/Scraper/Source/Website
 lib/StockPlay/Scraper/Source/Website/DeTijd.pm
 lib/StockPlay/Scraper/Source.pm
 lib/StockPlay/Security.pm
 lib/StockPlay/PluginManager.pm
 lib/StockPlay/Logger.pm
 lib/StockPlay/Plugin.pm
-lib/StockPlay/AI
 lib/StockPlay/AI/Manager.pm
 lib/StockPlay/AI/Forecaster.pm
-lib/StockPlay/AI/Forecaster
 lib/StockPlay/AI/Forecaster/Neural.pm
-lib/StockPlay/AI/Data
 lib/StockPlay/AI/Data/Output.pm
 lib/StockPlay/AI/Data/Input.pm
 lib/StockPlay/AI/Data.pm
@@ -42,4 +34,6 @@ t/00-load.t
 t/manifest.t
 t/pod-coverage.t
 t/pod.t
+
+META.yml
 

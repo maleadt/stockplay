@@ -4,9 +4,6 @@
 # Configuration
 #
 
-# XXX: library location
-use lib '../lib';
-
 # Packages
 use LWP::Simple;
 use Date::Manip;

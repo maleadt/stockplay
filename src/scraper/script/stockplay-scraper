@@ -4,9 +4,6 @@
 # Configuration
 #
 
-# XXX: library location
-use lib '../lib';
-
 # Packages
 use StockPlay::Scraper::Daemon;
 

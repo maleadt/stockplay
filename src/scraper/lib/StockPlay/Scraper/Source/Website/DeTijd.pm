@@ -23,7 +23,6 @@ StockPlay::Scraper::Source::DeTijd - Scraper voor de website van De Tijd.
 
 # Packages
 use Moose;
-use Moose::Util::TypeConstraints;
 use JSON;
 use HTML::TreeBuilder;
 use StockPlay::Scraper::Source::Website;
