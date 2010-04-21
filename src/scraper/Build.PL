@@ -21,7 +21,8 @@ my $builder = Module::Build->new (
         
         # StockPlay::Logger
         'Log::Log4perl'                 => 0,
-        'Log::Dispatch'                 => 0
+        'Log::Dispatch'                 => 0,
+        'carp'                          => 0,
     },
     recommends => {
         # StockPlay::Scraper::Source::Website

@@ -18,24 +18,48 @@ use warnings;
 use strict;
 
 
+
 ################################################################################
 # Main
 #
 
+#
+# Setup
+#
+
+# Get a logger
+StockPlay::Logger->setup("test");
+my $logger = StockPlay::Logger->logger;
+$logger->info("loading test client");
+
 # Load the factory
-print "- Setting up factory\n";
+$logger->debug("loading factory");
 my $factory = new StockPlay::Factory();
 
-print "- Building hierarchy\n";
+
+#
+# Test
+#
+
+$logger->info("fetching dataset");
 my @exchanges = $factory->buildExchanges();
 
+print "- Found exchanges:\n";
+foreach my $exchange (@exchanges) {
+	print "\t" . $exchange->name . "\n";
+}
+
 exit(0);
+
+
 
 ################################################################################
 # Routines
 #
 
 __END__
+
+
 
 ################################################################################
 # Documentation

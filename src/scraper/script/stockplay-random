@@ -18,20 +18,41 @@ use warnings;
 use strict;
 
 
+
 ################################################################################
 # Main
 #
 
+#
+# Setup
+#
+
+# Get a logger
+StockPlay::Logger->setup("random");
+my $logger = StockPlay::Logger->logger;
+$logger->info("bootstrapping scraper");
+
 # Load the factory
-print "- Loading factory\n";
+$logger->debug("loading factory");
 my $factory = new StockPlay::Factory();
 
-# Build an hierarchy
-print "- Building hierarchy\n";
+
+#
+# Fetch existing data
+#
+
+$logger->info("fetching exchanges");
+
 my @exchanges = $factory->buildExchanges();
 
+
+#
+# Generate new data
+#
+
+$logger->info("generating quotes");
+
 while (1) {
-	print "- Generating quotes\n";
 	my @quotes;
 	foreach my $exchange (@exchanges) {
 		foreach my $security (@{$exchange->securities}) {
@@ -57,13 +78,14 @@ while (1) {
 		}
 	}
 	
-	print "- Sending quotes\n";
+	$logger->debug("sending random quotes");
 	$factory->createQuotes(@quotes);
-	print "  done\n";
 	sleep(1);
 }
 
 __END__
+
+
 
 ################################################################################
 # Documentation

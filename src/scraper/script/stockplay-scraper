@@ -15,39 +15,22 @@ use warnings;
 use strict;
 
 
+
 ################################################################################
 # Main
 #
 
 # Get a logger
+StockPlay::Logger->setup("scraper");
 my $logger = StockPlay::Logger->logger;
 $logger->info("bootstrapping scraper");
 
-# Configure last-resort error loggers
-# TODO: place in Logger.pm?
-$SIG{__DIE__} = sub {
-	die(@_) unless (defined $^S && $^S == 0);
-	die(@_) if (defined caller(2) && (caller(2))[3] =~ m{Log::Log4perl::Logger::logdie});
-	
-	my $error = shift;
-	chomp $error;
-	StockPlay::Logger->logger((caller(0))[0])->logexit($error);
-};
-$SIG{__WARN__} = sub {
-	die(@_) unless (defined $^S && $^S == 0);
-	die(@_) if (defined caller(2) && (caller(2))[3] =~ m{Log::Log4perl::Logger::logwarn});
-	
-	my $warning = shift;
-	chomp $warning;
-	StockPlay::Logger->logger((caller(0))[0])->warn($warning);
-};
-
 # Load the factory
-$logger->info("loading factory");
+$logger->debug("loading factory");
 my $factory = new StockPlay::Factory();
 
 # Load the daemon
-$logger->info("loading daemon");
+$logger->debug("loading daemon");
 my $daemon = new StockPlay::Scraper::Daemon(
 	factory	=> $factory
 );
@@ -56,6 +39,8 @@ $daemon->run();
 exit(0);
 
 __END__
+
+
 
 ################################################################################
 # Documentation

@@ -23,6 +23,7 @@ logger.
 # Packages
 use Moose::Role;
 use Log::Log4perl qw(get_logger);
+use Carp;
 
 # Write nicely
 use strict;
@@ -37,33 +38,9 @@ use warnings;
 
 =head1 ATTRIBUTES
 
-=head2 C<infohash>
-
-The plugin-specific infohash, containing the info keys defined in the plugin
-file. This infohash is constructed in C<StockPlay::Scraper::PluginManager::parse>,
-so look there for more information.
-
 =cut
 
-BEGIN {
-	Log::Log4perl->init(\<<EOT);
-		log4perl.logger = DEBUG, screen, syslog
-		
-		# Syslog appender
-		log4perl.appender.syslog=Log::Dispatch::Syslog
-		log4perl.appender.syslog.Facility=user
-		log4perl.appender.syslog.ident=stockplay-scraper
-		log4perl.appender.syslog.layout=PatternLayout
-		log4perl.appender.syslog.layout.ConversionPattern=%c - %m%n
-
-
-		# Console appender
-		log4perl.appender.screen=Log::Log4perl::Appender::Screen
-		log4perl.appender.screen.layout=PatternLayout
-		log4perl.appender.screen.layout.ConversionPattern=%c - %m%n
-EOT
-	
-}
+my $IS_SETUP = 0;
 
 
 ################################################################################
@@ -75,7 +52,9 @@ EOT
 
 =cut
 
-sub logger {	
+sub logger {
+	croak("Logger not properly set-up") unless $IS_SETUP;
+	
 	# Logger for role implementors
 	my $self = shift;
 	if (ref $self) {
@@ -85,6 +64,51 @@ sub logger {
 	# Specific logger request
 	my $package = shift || (caller(0))[0];
 	return get_logger($package);
+}
+
+sub setup {
+	my ($package, $name) = @_;
+	croak("logger should be set-up statically") if (ref $package);
+	$name = "anonymous" unless defined $name;
+	
+	# Initialize Log4Perl
+	Log::Log4perl->init(\<<EOT);
+		log4perl.logger = DEBUG, screen, syslog
+		
+		# Syslog appender
+		log4perl.appender.syslog=Log::Dispatch::Syslog
+		log4perl.appender.syslog.Facility=user
+		log4perl.appender.syslog.ident=stockplay-$name
+		log4perl.appender.syslog.layout=PatternLayout
+		log4perl.appender.syslog.layout.ConversionPattern=%c - %m%n
+
+
+		# Console appender
+		log4perl.appender.screen=Log::Log4perl::Appender::Screen
+		log4perl.appender.screen.layout=PatternLayout
+		log4perl.appender.screen.layout.ConversionPattern=%c - %m%n
+EOT
+	
+	# Configure last-resort error loggers
+	$SIG{__DIE__} = sub {
+		die(@_) unless (defined $^S && $^S == 0);
+		exit 1 if (defined caller(2) && (caller(2))[3] =~ m{Log::Log4perl::Logger::logdie});
+		
+		my $error = shift;
+		chomp $error;
+		StockPlay::Logger->logger((caller(0))[0])->logexit($error);
+	};
+	$SIG{__WARN__} = sub {
+		warn(@_) unless (defined $^S && $^S == 0);
+		return if (defined caller(2) && (caller(2))[3] =~ m{Log::Log4perl::Logger::logwarn});
+		
+		my $warning = shift;
+		chomp $warning;
+		StockPlay::Logger->logger((caller(0))[0])->warn($warning);
+	};
+
+	# Set the flag
+	$IS_SETUP = 1;
 }
 
 ################################################################################

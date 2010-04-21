@@ -21,16 +21,32 @@ use warnings;
 use strict;
 
 
+
 ################################################################################
 # Main
 #
 
+#
+# Setup
+#
+
+# Get a logger
+StockPlay::Logger->setup("historic");
+my $logger = StockPlay::Logger->logger;
+$logger->info("loading historic data loader");
+
 # Load the factory
-print "- Loading factory\n";
+$logger->debug("loading factory");
 my $factory = new StockPlay::Factory();
 
+
+#
+# Existing data
+#
+
+$logger->info("fetching dataset");
+
 # Load the exchanges
-print "- Building hierarchy\n";
 my %markets = (
 	'PA'	=> 1,
 	'BSE'	=> 3
@@ -39,13 +55,19 @@ my @exchanges = $factory->buildExchanges( sub {
 	grep { $_->symbol =~ m{^(BSE|PA)$} } @_;
 });
 
+
+#
+# Historic data
+#
+
+$logger->info("fetching historic data");
+
 # Process all securities (per exchange)
 # TODO: Move to a plugin
-print "- Fetching and saving historic data\n";
 foreach my $exchange (@exchanges) {
 	foreach my $security (@{$exchange->securities}) {
 		# Fetch historic data
-		print "DEBUG: Processing " . $security->name, " (ISIN " . $security->isin . ")\n";
+		$logger->debug("processing " . $security->name, " (ISIN " . $security->isin . ")");
 		my ($d1, $d2) = (UnixDate("2 year ago", "%d\/%m\/%Y"), UnixDate("1 day ago", "%d\/%m\/%Y"));
 		my $isin = $security->isin;
 		my $mep = $markets{$exchange->symbol};
@@ -80,12 +102,14 @@ foreach my $exchange (@exchanges) {
 		if (@quotes > 0) {
 			$factory->createQuotes(@quotes);
 		} else {
-			print "ERROR: no quotes found\n";
+			$logger->error("no quotes found");
 		}
 	}
 }
 
 exit(0);
+
+
 
 ################################################################################
 # Routines
@@ -106,6 +130,8 @@ sub to_datetime {
 }
 
 __END__
+
+
 
 ################################################################################
 # Documentation

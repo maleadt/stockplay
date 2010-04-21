@@ -37,17 +37,24 @@ my $PLUGIN_MAX_AGE = 3600*24*7;
 # Setup
 #
 
+# Get a logger
+StockPlay::Logger->setup("chart");
+my $logger = StockPlay::Logger->logger;
+$logger->info("bootstrapping charter");
+
 # Load the factory
-print "- Setting up factory\n";
+$logger->debug("loading factory");
 my $factory = new StockPlay::Factory();
 my $choice;
+
 
 #
 # Exchanges
 #
 
+$logger->info("fetching exchanges");
+
 # Load the exchanges
-print "- Fetching exchanges\n";
 my @exchanges = $factory->getExchanges();
 
 # Show them
@@ -68,8 +75,9 @@ my $exchange = $exchanges[$choice];
 # Securities
 #
 
+$logger->info("fetching securities");
+
 # Load the securities
-print "- Fetching securities\n";
 my @securities = $factory->getSecurities($exchange);
 
 # Show them
@@ -90,8 +98,7 @@ my $security = $securities[$choice];
 # Quotes
 #
 
-# Load the quotes
-print "- Fetching quotes\n";
+$logger->info("fetching quotes");
 
 # Get date range
 my ($dm1, $dm2) = (ParseDate("today"), ParseDate("now"));
@@ -99,17 +106,18 @@ my ($dt1, $dt2) = (DateTime::Format::DateManip->parse_datetime($dm1), DateTime::
 
 # Load the quotes
 my @quotes = $factory->getQuotes($dt1, $dt2, $security);
-print "- Loaded ", scalar @quotes, " quotes\n";
+$logger->debug("fetched " . scalar @quotes . " quotes");
 
 
 #
 # Generate chart
 #
 
-# Sort quotes
-@quotes = sort { DateTime->compare($a->time, $b->time) } @quotes;
+$logger->info("generating chart");
 
 # Create the dataset
+$logger->debug("preparing data");
+@quotes = sort { DateTime->compare($a->time, $b->time) } @quotes;
 my $series = Chart::Clicker::Data::Series->new(
     keys	=> [ map { $_->time->epoch() } @quotes ],
     values	=> [ map { $_->price } @quotes ],
@@ -120,6 +128,7 @@ my $ds = Chart::Clicker::Data::DataSet->new(
 );
 
 # Create a graph
+$logger->debug("creating graph");
 my $cc = Chart::Clicker->new;
 my $ctx = $cc->get_context('default');
 $ctx->domain_axis(
@@ -131,16 +140,20 @@ $ctx->domain_axis(
 $cc->add_to_datasets($ds);
 
 # Write the graph
+$logger->debug("writing graph");
 $cc->write_output($security->name . '.png');
 
-
 exit(0);
+
+
 
 ################################################################################
 # Routines
 #
 
 __END__
+
+
 
 ################################################################################
 # Documentation

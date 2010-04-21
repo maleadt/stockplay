@@ -17,20 +17,22 @@ use warnings;
 use strict;
 
 
+
 ################################################################################
 # Main
 #
 
 # Get a logger
+StockPlay::Logger->setup("ai");
 my $logger = StockPlay::Logger->logger;
-$logger->info("bootstrapping scraper");
+$logger->info("bootstrapping ai");
 
 # Load the factory
-$logger->info("loading factory");
+$logger->debug("loading factory");
 my $factory = new StockPlay::Factory();
 
 # Load the manager
-$logger->info("loading manager");
+$logger->debug("loading manager");
 my $manager = new StockPlay::AI::Manager(
 	factory	=> $factory
 );
@@ -39,6 +41,8 @@ $manager->run();
 exit(0);
 
 __END__
+
+
 
 ################################################################################
 # Documentation

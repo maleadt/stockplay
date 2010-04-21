@@ -13,7 +13,7 @@ package StockPlay::Scraper::Source::Website::DeTijd;
 
 =head1 NAME
 
-StockPlay::Scraper::Plugin::DeTijd - Scraper voor de website van De Tijd.
+StockPlay::Scraper::Source::DeTijd - Scraper voor de website van De Tijd.
 
 =head1 DESCRIPTION
 
@@ -121,6 +121,15 @@ sub _build_exchanges {
 	push(@{$parijs->indexes}, $cac40);
 	
 	return [$brussel, $parijs];
+}
+
+
+################################################################################
+# Methods
+#
+
+sub BUILD {
+	
 }
 
 sub addSecuritiesIndex {
@@ -394,9 +403,6 @@ sub isOpen {
 	
 }
 
-
-################################################################################
-# Methods
 
 ################################################################################
 # Auxiliary

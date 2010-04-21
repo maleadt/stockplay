@@ -17,6 +17,7 @@ package StockPlay::AI::Manager;
 
 # Packages
 use Moose;
+use StockPlay::PluginManager;
 use StockPlay::Factory;
 use StockPlay::Exchange;
 use StockPlay::Index;
@@ -26,7 +27,6 @@ use Date::Manip;
 use DateTime::Format::DateManip;
 use StockPlay::AI::Data::Input;
 use StockPlay::AI::Data::Output;
-use StockPlay::AI::Forecaster::Neural;
 
 # Roles
 with 'StockPlay::Logger';
@@ -52,10 +52,23 @@ my $DATA_END = DateTime::Format::DateManip->parse_datetime(ParseDate("1 month ag
 
 =cut
 
+has 'forecasters' => (
+	is		=> 'ro',
+	isa		=> 'ArrayRef',
+	lazy		=> 1,
+	builder		=> '_build_forecasters'
+);
+
 has 'factory' => (
 	is		=> 'ro',
 	isa		=> 'StockPlay::Factory',
 	required	=> 1
+);
+
+has 'pluginmanager' => (
+	is		=> 'ro',
+	isa		=> 'StockPlay::PluginManager',
+	builder		=> '_build_pluginmanager'
 );
 
 
@@ -70,6 +83,48 @@ has 'factory' => (
 
 sub BUILD {
 	my ($self) = @_;
+	
+	# Build lazy attributes which depend on passed values
+	$self->forecasters;
+}
+
+sub _build_pluginmanager {
+	my ($self) = @_;
+	
+	# Plugin manager
+	$self->logger->debug("loading plugin manager");
+	my $pluginmanager = new StockPlay::PluginManager;
+	$pluginmanager->load_group('StockPlay::AI::Forecaster');
+	
+	return $pluginmanager;
+}
+
+sub _build_forecasters {
+	my ($self) = @_;	
+	$self->logger->info("loading all forecasters");
+	
+	# Get infohashes
+	my @infohashes = $self->pluginmanager->get_group('StockPlay::AI::Forecaster');
+
+	# Load plugins
+	my @forecasters;
+	foreach my $infohash (@infohashes) {
+		$self->logger->info("loading plugin " . $infohash->{name});
+		eval {
+			my $forecaster = $self->pluginmanager->instantiate($infohash);
+			push(@forecasters, $forecaster);
+		};
+		if ($@) {
+			chomp $@;
+			$self->logger->error("failed to load plugin ($@)");
+		}
+	}
+	
+	unless (@forecasters) {
+		die("no plugins managed to load correctly");
+	}
+	
+	return \@forecasters;
 }
 
 

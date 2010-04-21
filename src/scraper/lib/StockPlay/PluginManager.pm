@@ -3,13 +3,13 @@
 #
 
 # Package definition
-package StockPlay::Scraper::PluginManager;
+package StockPlay::PluginManager;
 
 =pod
 
 =head1 NAME
 
-StockPlay::Scraper::PluginManager - StockPlay scraper plugin manager
+StockPlay::PluginManager - StockPlay scraper plugin manager
 
 =head1 DESCRIPTION
 
@@ -47,28 +47,22 @@ info-hash created by the C<parse> function, which imposes certain restrictions
 (have a look at the documentation of C<parse>). The plugin hash its key is the
 plugin's package, while the value is a reference to the info hash.
 
-The builder method uses the C<discover> method to scan for all plugins under
-L<StockPlay::Scraper::Plugin::logger>, and uses C<parse> to parse the plugin.
-This imposes certain restrictions on the info a plugin should contain, which
-are documented.
-
 =cut
 
 has 'plugins' => (
 	is		=> 'ro',
 	isa		=> "HashRef",
-	builder		=> '_build_plugins'
+	default		=> sub { {} }
 );
 
-sub _build_plugins {
-	my ($self, @params) = @_;
+sub load_group {
+	my ($self, $base) = @_;
 	
 	# Discover all plugins
-	my %plugins = discover('StockPlay::Scraper::Plugin')
+	my %plugins = discover($base)
 		or die("error discovering plugins: $!");
 	
 	# Process all plugins
-	my %plugins_usable;
 	for my $package (sort keys %plugins) {
 		my $file = $plugins{$package};
 		
@@ -105,10 +99,10 @@ sub _build_plugins {
 			}
 			next;
 		}
-		$plugins_usable{$package} = \%infohash;
+		die("cannot reload identically named plugin")
+			if (defined $self->plugins->{$package});
+		$self->plugins->{$package} = \%infohash;
 	}
-	
-	return \%plugins_usable;
 }
 
 ################################################################################
@@ -260,7 +254,9 @@ sub parse {
 	close($read);
 	
 	# Check for missing keys
-	check_info(\%info, qw{name source description});	
+	check_info(\%info, qw{name description});
+	# TODO: removed "source" tag, make it obligatory when instructed
+	#       by an abstract superclass-plugin (eg Website forces "source")
 	return %info;
 }
 

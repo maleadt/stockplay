@@ -13,7 +13,7 @@ package StockPlay::Scraper::Source::Website;
 
 =head1 NAME
 
-StockPlay::Scraper::Plugin::Website - StockPlay website scraper functionality
+StockPlay::Scraper::Source::Website - StockPlay website scraper functionality
 
 =head1 DESCRIPTION
 

@@ -1,6 +1,9 @@
 ###############################################################################
 # Configuration
 #
+## NAME		= Neural
+## DESCRIPTION	= Forecaster based on neural networks.
+## TYPE		= concrete
 
 # Package definition
 package StockPlay::AI::Forecaster::Neural;

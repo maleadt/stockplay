@@ -26,7 +26,8 @@ use StockPlay::Factory;
 use StockPlay::Exchange;
 use StockPlay::Index;
 use StockPlay::Security;
-use StockPlay::Quote
+use StockPlay::Quote;
+use StockPlay::PluginManager;
 
 # Roles
 with 'StockPlay::Logger';
@@ -94,6 +95,7 @@ sub _build_pluginmanager {
 	# Plugin manager
 	$self->logger->debug("loading plugin manager");
 	my $pluginmanager = new StockPlay::PluginManager;
+	$pluginmanager->load_group('StockPlay::Scraper::Source');
 	
 	return $pluginmanager;
 }
@@ -102,7 +104,7 @@ sub _build_plugins {
 	my ($self) = @_;	
 	$self->logger->info("loading all plugins");
 	
-	# Get infohashes	
+	# Get infohashes
 	my @infohashes = $self->pluginmanager->get_group('StockPlay::Scraper::Source');
 
 	# Check homefolder
@@ -119,7 +121,7 @@ sub _build_plugins {
 			if (-f $dumpfolder . $infohash->{name} . '.dump') {
 				$self->logger->debug("loading from dump");
 				$plugin = retrieve($dumpfolder . $infohash->{name} . '.dump')
-					or $logger->logdie("could not load dump ($!)");
+					or die("could not load dump ($!)");
 				
 				if (time - $plugin->infohash->{time} > $PLUGIN_MAX_AGE) {
 					$self->logger->debug("loaded dump out of date");			
@@ -136,7 +138,7 @@ sub _build_plugins {
 			}
 			
 			# Check roles	
-			if (not $plugin->does('StockPlay::Scraper::Plugin')) {
+			if (not $plugin->does('StockPlay::Scraper::Source')) {
 				die("passed plugin doesn't implement correct coles");
 			}
 			
