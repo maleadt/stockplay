@@ -83,9 +83,6 @@ public class ExchangeDAO implements GenericDAO<Exchange, String> {
     }
 
     public Collection<Exchange> findByFilter(Filter iFilter) throws StockPlayException, FilterException {
-        if (iFilter.empty())
-            return findAll();
-
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;

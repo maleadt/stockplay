@@ -95,8 +95,6 @@ public class OrderDAO implements GenericDAO<Order, Integer> {
     }
 
     public Collection<Order> findByFilter(Filter iFilter) throws StockPlayException, FilterException {
-        if (iFilter.empty())
-            return findAll();
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;

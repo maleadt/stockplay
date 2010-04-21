@@ -95,8 +95,6 @@ public class UserDAO implements GenericDAO<User, Integer> {
     }
 
     public Collection<User> findByFilter(Filter iFilter) throws StockPlayException, FilterException {
-        if (iFilter.empty())
-            return findAll();
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;

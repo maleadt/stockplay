@@ -84,8 +84,6 @@ public class IndexSecurityDAO implements GenericDAO<IndexSecurity, IndexSecurity
     }
 
     public Collection<IndexSecurity> findByFilter(Filter iFilter) throws StockPlayException, FilterException {
-        if (iFilter.empty())
-            return findAll();
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;

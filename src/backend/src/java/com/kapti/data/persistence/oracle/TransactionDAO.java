@@ -89,8 +89,6 @@ public class TransactionDAO implements GenericDAO<Transaction, Integer> {
     }
 
     public Collection<Transaction> findByFilter(Filter iFilter) throws StockPlayException, FilterException {
-        if (iFilter.empty())
-            return findAll();
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;

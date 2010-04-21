@@ -404,7 +404,7 @@ public class Parser {
                             tSignatureMethod = tMethod;
                     if (tSignatureMethod == null)
                         throw new FilterException(FilterException.Type.FILTER_FAILURE, "could not get parameter signature of class due to missing definition");
-                    Class[] tParameterSignature;
+                    Class[] tParameterSignature;    // TODO: ? extends Data
                     try {
                         Object tReturn = tSignatureMethod.invoke(null);
                         tParameterSignature = (Class[]) tReturn;

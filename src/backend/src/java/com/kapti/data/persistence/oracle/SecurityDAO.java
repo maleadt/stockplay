@@ -80,9 +80,6 @@ public class SecurityDAO implements com.kapti.data.persistence.SecurityDAO {
     }
 
     public Collection<Security> findByFilter(Filter iFilter) throws StockPlayException, FilterException {
-        if (iFilter.empty()) {
-            return findAll();
-        }
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;

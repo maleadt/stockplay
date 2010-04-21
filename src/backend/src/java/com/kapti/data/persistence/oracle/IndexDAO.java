@@ -82,8 +82,6 @@ public class IndexDAO implements GenericDAO<Index, String> {
     }
 
     public Collection<Index> findByFilter(Filter iFilter) throws StockPlayException, FilterException {
-        if (iFilter.empty())
-            return findAll();
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;

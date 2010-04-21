@@ -81,8 +81,6 @@ public class PointsTransactionDAO implements GenericDAO<PointsTransaction, Point
     }
 
     public Collection<PointsTransaction> findByFilter(Filter iFilter) throws StockPlayException, FilterException {
-        if (iFilter.empty())
-            return findAll();
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
