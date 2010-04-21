@@ -67,7 +67,7 @@ has 'factory' => (
 
 has 'pluginmanager' => (
 	is		=> 'ro',
-	isa		=> 'StockPlay::Scraper::PluginManager',
+	isa		=> 'StockPlay::PluginManager',
 	builder		=> '_build_pluginmanager'
 );
 
@@ -93,7 +93,7 @@ sub _build_pluginmanager {
 	
 	# Plugin manager
 	$self->logger->debug("loading plugin manager");
-	my $pluginmanager = new StockPlay::Scraper::PluginManager;
+	my $pluginmanager = new StockPlay::PluginManager;
 	
 	return $pluginmanager;
 }
@@ -103,7 +103,7 @@ sub _build_plugins {
 	$self->logger->info("loading all plugins");
 	
 	# Get infohashes	
-	my @infohashes = $self->pluginmanager->get_group('StockPlay::Scraper::Plugin');
+	my @infohashes = $self->pluginmanager->get_group('StockPlay::Scraper::Source');
 
 	# Check homefolder
 	my $dumpfolder = $ENV{'HOME'} . '/dumps/';

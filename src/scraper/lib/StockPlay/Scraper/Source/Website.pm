@@ -7,7 +7,7 @@
 ## TYPE		= abstract
 
 # Package definition
-package StockPlay::Scraper::Plugin::Website;
+package StockPlay::Scraper::Source::Website;
 
 =pod
 
@@ -26,10 +26,10 @@ Plugin met functionaliteit voor scrapers die websites gebruiken.
 # Packages
 use Moose::Role;
 use WWW::Mechanize;
-use StockPlay::Scraper::Plugin;
+use StockPlay::Scraper::Source;
 
 # Roles
-with 'StockPlay::Scraper::Plugin';
+with 'StockPlay::Scraper::Source';
 
 # Write nicely
 use strict;

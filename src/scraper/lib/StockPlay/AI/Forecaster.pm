@@ -4,6 +4,7 @@
 
 # Package definition
 package StockPlay::AI::Forecaster;
+# TODO: also load through PluginManager
 
 =pod
 
@@ -18,12 +19,12 @@ package StockPlay::AI::Forecaster;
 # Packages
 use Moose::Role;
 
+# Roles
+with 'StockPlay::Plugin';
+
 # Write nicely
 use strict;
 use warnings;
-
-# Consume roles
-with 'StockPlay::Logger';
 
 
 ################################################################################

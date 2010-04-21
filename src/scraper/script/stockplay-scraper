@@ -8,7 +8,6 @@
 use lib '../lib';
 
 # Packages
-use StockPlay::Scraper::PluginManager;
 use StockPlay::Scraper::Daemon;
 
 # Write nicely
@@ -25,6 +24,7 @@ my $logger = StockPlay::Logger->logger;
 $logger->info("bootstrapping scraper");
 
 # Configure last-resort error loggers
+# TODO: place in Logger.pm?
 $SIG{__DIE__} = sub {
 	die(@_) unless (defined $^S && $^S == 0);
 	die(@_) if (defined caller(2) && (caller(2))[3] =~ m{Log::Log4perl::Logger::logdie});

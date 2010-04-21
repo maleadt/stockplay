@@ -7,7 +7,7 @@
 ## TYPE		= concrete
 
 # Package definition
-package StockPlay::Scraper::Plugin::Website::DeTijd;
+package StockPlay::Scraper::Source::Website::DeTijd;
 
 =pod
 
@@ -26,12 +26,12 @@ use Moose;
 use Moose::Util::TypeConstraints;
 use JSON;
 use HTML::TreeBuilder;
-use StockPlay::Scraper::Plugin::Website;
+use StockPlay::Scraper::Source::Website;
 use Time::HiRes;
 use DateTime;
 
 # Roles
-with 'StockPlay::Scraper::Plugin::Website';
+with 'StockPlay::Scraper::Source::Website';
 
 # Write nicely
 use strict;

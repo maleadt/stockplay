@@ -3,17 +3,17 @@
 #
 
 # Package definition
-package StockPlay::Scraper::Plugin;
+package StockPlay::Plugin;
 
 =pod
 
 =head1 NAME
 
-StockPlay::Scraper::Plugin - StockPlay scraper base plugin
+StockPlay::Plugin - StockPlay scraper base plugin
 
 =head1 DESCRIPTION
 
-The C<StockPlay::Scraper::Plugin> package contains base functionality for all
+The C<StockPlay::Plugin> package contains base functionality for all
 plugins.
 
 =head1 SYNPOSIS
@@ -22,10 +22,6 @@ plugins.
 
 # Packages
 use Moose::Role;
-use StockPlay::Exchange;
-use StockPlay::Index;
-use StockPlay::Security;
-use StockPlay::Quote;
 
 # Roles
 with 'StockPlay::Logger';
@@ -57,22 +53,6 @@ has 'infohash' => (
 	required	=> 1
 );
 
-=pod
-
-=head2 C<exchanges>
-
-This method returns an array containing all the exchanges the plugin can
-fetch.
-
-=cut
-
-has 'exchanges' => (
-	is		=> 'ro',
-	isa		=> 'ArrayRef[StockPlay::Exchange]',
-	builder		=> '_build_exchanges',
-	lazy		=> 1
-);
-
 
 ################################################################################
 # Methods
@@ -85,44 +65,8 @@ has 'exchanges' => (
 
 sub BUILD {
 	my ($self) = @_;
-	
-	# Build lazy-attributes
-	$self->exchanges;
 }
 
-=pod
-
-=head2 C<$plugin->getQuotes(@securities)>
-
-=cut
-
-requires 'getLatestQuotes';
-
-=pod
-
-=head2 C<$plugin->clean()>
-
-This method prepares the object to be dumped. Subclasses can augment this
-method to remove certain attributes before performing a dump.
-
-=cut
-
-sub clean {
-	my ($self) = @_;
-	
-	return 1;
-}
-
-=pod
-
-=head2 C<$plugin->isOpen($exchange, $datetime)>
-
-This method which should be implemented by subclasses, is used to check whether
-a certain exchange is open.
-
-=cut
-
-requires 'isOpen';
 
 ################################################################################
 # Auxiliary

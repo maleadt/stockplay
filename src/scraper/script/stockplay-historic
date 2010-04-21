@@ -40,6 +40,7 @@ my @exchanges = $factory->buildExchanges( sub {
 });
 
 # Process all securities (per exchange)
+# TODO: Move to a plugin
 print "- Fetching and saving historic data\n";
 foreach my $exchange (@exchanges) {
 	foreach my $security (@{$exchange->securities}) {

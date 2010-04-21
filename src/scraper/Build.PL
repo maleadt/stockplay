@@ -1,24 +1,40 @@
-#!/usr/bin/env perl
-
+use strict;
+use warnings;
 use Module::Build;
 
-my $build = Module::Build->new (
-    module_name         => 'StockPlay::Scraper',
-    dist_name           => 'StockPlay::Scraper',
+my $builder = Module::Build->new (
+    module_name         => 'StockPlay',
+    dist_name           => 'StockPlay',
     dist_version        => '0.1',
     dist_author         => 'The StockPlay team <http://code.google.com/p/stockplay/>',
-    dist_abstract       => 'The StockPlay scraper',
+    dist_abstract       => 'The StockPlay framework',
     license             => 'gpl',
     requires            => {
-        'perl'                  => 5,
-        'Moose'		        => '0.26',
-        'XML::RPC'		=> 0,
+        'perl'                          => 5,
+        'Moose'		                => '0.26',
+        'DateTime'                      => 0,
+        'Date::Manip'                   => 0,
+        'DateTime::Format::ISO8601'     => 0,
+        
+        # StockPlay::Factory
+        'RPC::XML'		        => 0,
+        
+        # StockPlay::Logger
+        'Log::Log4perl'                 => 0,
+        'Log::Dispatch'                 => 0
     },
     recommends => {
-        'WWW::Mechanize'        => 1,
-        'JSON'                  => 1,
-        'HTML::TreeBuilder'     => 1,
-        'DBI'                   => 1
-    }
+        # StockPlay::Scraper::Source::Website
+        'WWW::Mechanize'        => 0,
+        
+        # StockPlay::Scraper::Source::Website::DeTijd
+        'JSON'                  => 0,
+        'HTML::TreeBuilder'     => 0,
+        
+        # StockPlay::AI::Forecaster
+        'AI::FANN'              => 0,
+        'List::Util'            => 0
+    },
+    add_to_cleanup      => [ 'StockPlay-*' ]
 );
-$build->create_build_script;
+$builder->create_build_script;

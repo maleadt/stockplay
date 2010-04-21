@@ -22,8 +22,6 @@ push data to a remove StockPlay backend.
 use Moose;
 use RPC::XML qw/:types/;
 use RPC::XML::Client;
-use Compress::Zlib;
-use HTTP::Message;
 use StockPlay::Exchange;
 use StockPlay::Index;
 use StockPlay::Security;
