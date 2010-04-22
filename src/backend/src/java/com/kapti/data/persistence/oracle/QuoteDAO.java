@@ -41,12 +41,12 @@ public class QuoteDAO implements com.kapti.data.persistence.QuoteDAO {
     private static final String MAX_QUOTE = "SELECT MIN(TIMESTAMP) timestamp FROM quotes WHERE isin = ?";
     private static final String SELECT_LATEST_QUOTE_FILTER =    "SELECT  ISIN, TIMESTAMP, PRICE, VOLUME, BID, ASK, LOW, HIGH, OPEN"
                                                                 + " FROM ( SELECT  QUOTES.*, MAX(TIMESTAMP) OVER (PARTITION BY ISIN) AS MAX_TIMESTAMP FROM QUOTES ) WHERE TIMESTAMP = MAX_TIMESTAMP AND ( $filter )";
-    private static final String SELECT_SPAN_QUOTE =         "select isin, median(timestamp) as timestamp, avg(price) as price, max(volume) as volume, avg(bid) as bid, avg(ask) as ask, min(low) as low, max(high) as high, avg(open) as open"
+    private static final String SELECT_SPAN_QUOTE =         "select isin, ? + batch*?/(24*60*60) as timestamp, avg(price) as price, max(volume) as volume, avg(bid) as bid, avg(ask) as ask, min(low) as low, max(high) as high, max(open) KEEP (DENSE_RANK FIRST ORDER BY timestamp) as open"
                                                             + " from ( select isin, timestamp, price, volume, bid, ask, low, high, open,"
                                                             + " trunc(abs(extract(second from timestamp-?) + extract(minute from timestamp-?)*60 + extract(hour from timestamp-?)*60*60 + extract(day from timestamp-?)*24*60*60)/(?) ) as batch"
                                                             + " from quotes )"
                                                             + " WHERE timestamp between ? and ? group by isin, batch";
-    private static final String SELECT_SPAN_QUOTE_FILTER = "select isin, median(timestamp) as timestamp, avg(price) as price, max(volume) as volume, avg(bid) as bid, avg(ask) as ask, min(low) as low, max(high) as high, avg(open) as open"
+    private static final String SELECT_SPAN_QUOTE_FILTER = "select isin, ? + batch*?/(24*60*60) as timestamp, avg(price) as price, max(volume) as volume, avg(bid) as bid, avg(ask) as ask, min(low) as low, max(high) as high, max(open) KEEP (DENSE_RANK FIRST ORDER BY timestamp) as open"
                                                             + " from ( select isin, timestamp, price, volume, bid, ask, low, high, open,"
                                                             + " trunc(abs(extract(second from timestamp-?) + extract(minute from timestamp-?)*60 + extract(hour from timestamp-?)*60*60 + extract(day from timestamp-?)*24*60*60)/(?) ) as batch"
                                                             + " from quotes )"
@@ -429,7 +429,7 @@ public class QuoteDAO implements com.kapti.data.persistence.QuoteDAO {
         }
     }
 
-    public Collection<Quote> findSpanByFilter(java.util.Date iStart, java.util.Date iStop, int iSeconds, Filter iFilter) throws StockPlayException, FilterException {
+    public Collection<Quote> findSpanByFilter(java.util.Date iStart, java.util.Date iStop, int iSpan, Filter iFilter) throws StockPlayException, FilterException {
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -442,12 +442,14 @@ public class QuoteDAO implements com.kapti.data.persistence.QuoteDAO {
                     stmt = conn.prepareStatement(SELECT_SPAN_QUOTE);
                 
                 stmt.setDate(1, new Date(iStart.getTime()));
-                stmt.setDate(2, new Date(iStart.getTime()));
+                stmt.setInt(2, iSpan);
                 stmt.setDate(3, new Date(iStart.getTime()));
                 stmt.setDate(4, new Date(iStart.getTime()));
-                stmt.setInt(5, iSeconds);
+                stmt.setDate(5, new Date(iStart.getTime()));
                 stmt.setDate(6, new Date(iStart.getTime()));
-                stmt.setDate(7, new Date(iStop.getTime()));
+                stmt.setInt(7, iSpan);
+                stmt.setDate(8, new Date(iStart.getTime()));
+                stmt.setDate(9, new Date(iStop.getTime()));
 
                 rs = stmt.executeQuery();
 

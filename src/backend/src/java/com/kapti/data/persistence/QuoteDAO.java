@@ -37,5 +37,5 @@ public interface QuoteDAO extends GenericDAO<Quote, Quote.QuotePK> {
     Timestamp getLatestTime(String symbol) throws StockPlayException;
 
     Collection<Quote> findLatestByFilter(Filter iFilter) throws StockPlayException, FilterException;
-    Collection<Quote> findSpanByFilter(Date iStart, Date iStop, int iSeconds, Filter iFilter) throws StockPlayException, FilterException;
+    Collection<Quote> findSpanByFilter(Date iStart, Date iStop, int iSpan, Filter iFilter) throws StockPlayException, FilterException;
 }
