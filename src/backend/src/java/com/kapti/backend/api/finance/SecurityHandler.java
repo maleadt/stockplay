@@ -38,6 +38,7 @@ import com.kapti.data.Security;
 import com.kapti.exceptions.FilterException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import org.apache.xmlrpc.XmlRpcException;
 
@@ -192,6 +193,44 @@ public class SecurityHandler extends MethodClass {
 
         // Fetch and convert all Indexs
         Collection<com.kapti.data.Quote> tQuotes = tQuoteDAO.findByFilter(filter);
+        Vector<Map<String, Object>> oVector = new Vector<Map<String, Object>>();
+        for (com.kapti.data.Quote tQuote : tQuotes) {
+            oVector.add(tQuote.toStruct(
+                    Quote.Fields.ISIN,
+                    Quote.Fields.TIME,
+                    Quote.Fields.PRICE,
+                    Quote.Fields.VOLUME,
+                    Quote.Fields.BID,
+                    Quote.Fields.ASK,
+                    Quote.Fields.LOW,
+                    Quote.Fields.HIGH,
+                    Quote.Fields.OPEN));
+        }
+        return oVector;
+    }
+
+    /**
+     * Geeft alle koersen die aan aan de opgegeven filter voldoen, gelimiteerd
+     * tot een bepaalde range en "breedte".
+     * @param iStart
+     * @param iEnd
+     * @param iSpan
+     * @param iFilter
+     * @return
+     * @throws XmlRpcException
+     * @throws StockPlayException
+     * @throws FilterException
+     * @throws ParserException
+     */
+    public List<Map<String, Object>> Quotes(Date iStart, Date iEnd, int iSpan, String iFilter) throws StockPlayException {
+        // Get DAO reference
+        QuoteDAO tQuoteDAO = getDAO().getQuoteDAO();
+
+        Parser parser = Parser.getInstance();
+        Filter filter = parser.parse(iFilter);
+
+        // Fetch and convert all Indexs
+        Collection<com.kapti.data.Quote> tQuotes = tQuoteDAO.findSpanByFilter(iStart, iEnd, iSpan, filter);
         Vector<Map<String, Object>> oVector = new Vector<Map<String, Object>>();
         for (com.kapti.data.Quote tQuote : tQuotes) {
             oVector.add(tQuote.toStruct(

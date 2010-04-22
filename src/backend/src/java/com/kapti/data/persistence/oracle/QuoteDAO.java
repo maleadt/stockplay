@@ -28,7 +28,6 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import org.apache.log4j.Logger;
 
 public class QuoteDAO implements com.kapti.data.persistence.QuoteDAO {
 
@@ -40,9 +39,18 @@ public class QuoteDAO implements com.kapti.data.persistence.QuoteDAO {
     private static final String SELECT_LATEST_QUOTES = "with x as (select isin, max(timestamp)  latesttime from quotes group by isin) select isin, timestamp, price, volume, bid, ask, low, high, open from quotes q where timestamp = (select latesttime from x where q.isin=x.isin)";
     private static final String MIN_QUOTE = "SELECT MAX(TIMESTAMP) timestamp FROM quotes WHERE isin = ?";
     private static final String MAX_QUOTE = "SELECT MIN(TIMESTAMP) timestamp FROM quotes WHERE isin = ?";
-    private static final String SELECT_LATEST_QUOTE = "SELECT price, volume, bid, ask, low, high, open, timestamp FROM quotes WHERE isin = ? AND timestamp =(select max(timestamp) from quotes WHERE isin = ? )";
     private static final String SELECT_LATEST_QUOTE_FILTER =    "SELECT  ISIN, TIMESTAMP, PRICE, VOLUME, BID, ASK, LOW, HIGH, OPEN"
                                                                 + " FROM ( SELECT  QUOTES.*, MAX(TIMESTAMP) OVER (PARTITION BY ISIN) AS MAX_TIMESTAMP FROM QUOTES ) WHERE TIMESTAMP = MAX_TIMESTAMP AND ( $filter )";
+    private static final String SELECT_SPAN_QUOTE =         "select isin, median(timestamp) as timestamp, avg(price) as price, max(volume) as volume, avg(bid) as bid, avg(ask) as ask, min(low) as low, max(high) as high, avg(open) as open"
+                                                            + " from ( select isin, timestamp, price, volume, bid, ask, low, high, open,"
+                                                            + " trunc(abs(extract(second from timestamp-?) + extract(minute from timestamp-?)*60 + extract(hour from timestamp-?)*60*60 + extract(day from timestamp-?)*24*60*60)/(?) ) as batch"
+                                                            + " from quotes )"
+                                                            + " WHERE timestamp between ? and ? group by isin, batch";
+    private static final String SELECT_SPAN_QUOTE_FILTER = "select isin, median(timestamp) as timestamp, avg(price) as price, max(volume) as volume, avg(bid) as bid, avg(ask) as ask, min(low) as low, max(high) as high, avg(open) as open"
+                                                            + " from ( select isin, timestamp, price, volume, bid, ask, low, high, open,"
+                                                            + " trunc(abs(extract(second from timestamp-?) + extract(minute from timestamp-?)*60 + extract(hour from timestamp-?)*60*60 + extract(day from timestamp-?)*24*60*60)/(?) ) as batch"
+                                                            + " from quotes )"
+                                                            + " WHERE (timestamp between ? and ?) and ($filter) group by isin, batch";
     private static QuoteDAO instance = new QuoteDAO();
 
     public static QuoteDAO getInstance() {
@@ -312,50 +320,6 @@ public class QuoteDAO implements com.kapti.data.persistence.QuoteDAO {
         }
     }
 
-    public Quote findLatest(String isin) throws StockPlayException {
-
-        Connection conn = null;
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        try {
-            try {
-                conn = OracleConnection.getConnection();
-                stmt = conn.prepareStatement(SELECT_LATEST_QUOTE);
-
-                stmt.setString(1, isin);
-
-
-                rs = stmt.executeQuery();
-                if (rs.next()) {
-                    Quote tQuote = new Quote(isin, rs.getTimestamp("timestamp"));
-                    tQuote.setPrice(rs.getDouble("price"));
-                    tQuote.setVolume(rs.getInt("volume"));
-                    tQuote.setBid(rs.getDouble("bid"));
-                    tQuote.setAsk(rs.getDouble("ask"));
-                    tQuote.setLow(rs.getDouble("low"));
-                    tQuote.setHigh(rs.getDouble("high"));
-                    tQuote.setOpen(rs.getDouble("open"));
-                    return tQuote;
-                } else {
-                    return null;
-                }
-            } finally {
-                if (rs != null) {
-                    rs.close();
-                }
-                if (stmt != null) {
-                    stmt.close();
-                }
-                if (conn != null) {
-                    conn.close();
-                }
-            }
-        } catch (SQLException ex) {
-            throw new DBException(ex);
-        }
-
-    }
-
     public Timestamp getLatestTime(String isin) throws StockPlayException {
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -424,8 +388,6 @@ public class QuoteDAO implements com.kapti.data.persistence.QuoteDAO {
 
 
     public Collection<Quote> findLatestByFilter(Filter iFilter) throws StockPlayException, FilterException {
-
-
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -465,8 +427,56 @@ public class QuoteDAO implements com.kapti.data.persistence.QuoteDAO {
         } catch (SQLException ex) {
             throw new DBException(ex);
         }
+    }
 
+    public Collection<Quote> findSpanByFilter(java.util.Date iStart, java.util.Date iStop, int iSeconds, Filter iFilter) throws StockPlayException, FilterException {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            try {
+                conn = OracleConnection.getConnection();
+                if(!iFilter.empty())
+                    stmt = conn.prepareStatement(SELECT_SPAN_QUOTE_FILTER.replace("$filter", (String) iFilter.compile()));
+                else
+                    stmt = conn.prepareStatement(SELECT_SPAN_QUOTE);
+                
+                stmt.setDate(1, new Date(iStart.getTime()));
+                stmt.setDate(2, new Date(iStart.getTime()));
+                stmt.setDate(3, new Date(iStart.getTime()));
+                stmt.setDate(4, new Date(iStart.getTime()));
+                stmt.setInt(5, iSeconds);
+                stmt.setDate(6, new Date(iStart.getTime()));
+                stmt.setDate(7, new Date(iStop.getTime()));
 
+                rs = stmt.executeQuery();
 
+                ArrayList<Quote> result = new ArrayList<Quote>();
+                while (rs.next()) {
+                    Quote tQuote = new Quote(rs.getString("isin"), rs.getTimestamp("timestamp"));
+                    tQuote.setPrice(rs.getDouble("price"));
+                    tQuote.setVolume(rs.getInt("volume"));
+                    tQuote.setBid(rs.getDouble("bid"));
+                    tQuote.setAsk(rs.getDouble("ask"));
+                    tQuote.setLow(rs.getDouble("low"));
+                    tQuote.setHigh(rs.getDouble("high"));
+                    tQuote.setOpen(rs.getDouble("open"));
+                    result.add(tQuote);
+                }
+                return result;
+            } finally {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            }
+        } catch (SQLException ex) {
+            throw new DBException(ex);
+        }
     }
 }
