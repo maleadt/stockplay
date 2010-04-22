@@ -53,7 +53,7 @@ use warnings;
 has 'server' => (
 	is		=> 'ro',
 	isa		=> 'Str',
-	default		=> 'http://be04.kapti.com:6800/backend/public'
+	default		=> 'http://localhost:6800/backend/public'
 );
 
 has 'xmlrpc' => (
@@ -368,23 +368,39 @@ two dates.
 =cut
 
 sub getQuotes {
-	my ($self, $start, $end, $security) = @_;
+	my ($self, $start, $end, $security, $span) = @_;
 	
-	# Get appropriate dates
-	$start->set_time_zone("UTC");
-	$end->set_time_zone("UTC");
-	my $start_string = $start->strftime('%Y-%m-%dT%H:%MZ');
-	my $end_string = $end->strftime('%Y-%m-%dT%H:%MZ');
-	
-	# Build a filter
-	my $isin = $security->isin;
-	my $filter = "timestamp >= '" . $start_string . "'d && timestamp < '" . $end_string . "'d && isin == '" . $isin . "'s";
-	
-	# Request quotes from the server
-	my @s_quotes = @{$self->xmlrpc->send_request(
-		'Finance.Security.Quotes',
-		$filter
-	)->value};
+	my @s_quotes;
+	if (defined $span) {
+		# Build a filter
+		my $isin = $security->isin;
+		my $filter = "isin == '" . $isin . "'s";
+		
+		# Request quotes from the server
+		@s_quotes = @{$self->xmlrpc->send_request(
+			'Finance.Security.Quotes',
+			hack_datetime(RPC_DATETIME_ISO8601($start)),
+			hack_datetime(RPC_DATETIME_ISO8601($end)),
+			RPC_INT($span),
+			$filter
+		)->value};
+	} else {	
+		# Get appropriate dates
+		$start->set_time_zone("UTC");
+		$end->set_time_zone("UTC");
+		my $start_string = $start->strftime('%Y-%m-%dT%H:%MZ');
+		my $end_string = $end->strftime('%Y-%m-%dT%H:%MZ');
+		
+		# Build a filter
+		my $isin = $security->isin;
+		my $filter = "timestamp >= '" . $start_string . "'d && timestamp < '" . $end_string . "'d && isin == '" . $isin . "'s";
+		
+		# Request quotes from the server
+		@s_quotes = @{$self->xmlrpc->send_request(
+			'Finance.Security.Quotes',
+			$filter
+		)->value};
+	}
 	
 	# Build StockPlay::Quote objects
 	my @quotes;

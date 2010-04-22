@@ -9,6 +9,8 @@ use StockPlay::Factory;
 use StockPlay::Exchange;
 use StockPlay::Index;
 use StockPlay::Security;
+use Date::Manip;
+use DateTime::Format::DateManip;
 
 # Write nicely
 use warnings;
@@ -36,15 +38,17 @@ my $factory = new StockPlay::Factory();
 
 #
 # Test
-#
 
-$logger->info("fetching dataset");
-my @exchanges = $factory->buildExchanges();
+$logger->debug("testing");
 
-print "- Found exchanges:\n";
-foreach my $exchange (@exchanges) {
-	print "\t" . $exchange->name . "\n";
-}
+my $start = DateTime::Format::DateManip->parse_datetime(ParseDate("1 month ago"));
+my $end = DateTime::Format::DateManip->parse_datetime(ParseDate("today"));
+
+my $exchange = (grep { $_->symbol eq "BSE" } $factory->getExchanges())[0] or die();
+my $security = (grep { $_->isin eq "BE0003755692" } $factory->getSecurities($exchange))[0] or die();
+my @quotes = $factory->getQuotes($start, $end, $security, 60*60*24);
+
+print "Quotes:\n\t", join("\n\t", map { $_->time->dmy . " " . $_->time->hms } sort { DateTime->compare($a->time, $b->time) } @quotes), "\n";
 
 exit(0);
 
