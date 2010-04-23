@@ -92,27 +92,53 @@ Het bewerken van een gebruiker, dan verschijnt een gelijkaardig veld aan dat van
 
 \chapter{Handleiding webapplicatie}
 
-De website is bereikbaar op 'http://nernst/' 
+De website is te bereiken op het interne schoolnetwerk op het internetadres 'http://nernst/'.
+Buiten het schoolnetwerk kan men een versie van de site bekijken op 'http://www.kapti.com'.
 
-Het eerste wat je moet doen is het je registeren. Dit kan door de "Register"-knop te gebruiken in de linkerzijbalk. Geef je gegevens in en druk op "Registreer". Log vervolgens in met je vers aangemaakte gegevens.
+De welkomstpagina verschijnt waarin een korte omschrijving van het spel gegeven wordt. Het navigatiemenu links op de pagina en het informatieblok onderaan worden op elke pagina weergegeven. In dat informatieblok kan je informatie vinden over het pad van de huidige pagina die je bekijkt. De aangemelde gebruiker staat ook in het informatieblok. Als je naar deze overzichtspagina terug wil keren kan je het item 'Home' aanklikken in het navigatiemenu.
+
+Klik je in het navigatiemenu de optie Ranking aan, dan krijg je een overzicht te zien van de tien spelers die op dit moment de hoogste score behaald hebben.
+Deze pagina is op het moment van schrijven nog niet afgewerkt.
+
+Je kan de pagina "Help" aanklikken om een nog wat extra algemene informatie over het spel en ook de status van het project te bekijken.
+
+De pagina's 'Portfolio', 'Orders' en 'Transaction History' werken enkel maar als een gebruiker aangemeld is.
+Om te kunnen aanmelden dien je eerst over een lidmaatschap te beschikken. Een lidmaatschap kan je verkrijgen door in het informatieblok op de verwijzing 'Register' te klikken. Je kan vervolgens een gebruikersnaam kiezen en een wachtwoord opgeven. Na het invullen van de velden klik je 'Regsitreer' aan.
+Na het doorlopen van deze procedure zal je ook een email ontvangen hebben. Die kan je bewaren ter geheugensteuntje voor je gebruikersnaam.
+Nu heb je een persoonlijk lidmaatschap. Om het te activeren kan je inloggen met de gekozen gebruikersnaam en bijhorende wachtwoord.
 
 \section{Overzicht van effecten - opvragen van details}
 
-Klik links op "Securities Overview" of een van de beurzen die aanwezig is in het spel om een lijst te krijgen van effecten.
+Onder "Securities Overview" krijg je een overzicht te zien van de effecten die op dit moment in het StockPlay systeem aanwezig zijn. Je kan in het navigatiemenu ook rechtstreeks een beurs aanklikken. Zo krijg je al direct een eerste filtering op de lijst.
+Op dit moment gebeurd het ophalen nog wat traag. Dit komt omdat door de abstractielagen nogal wat verbindingen tussen verschillende lagen en servers opgezet moeten worden.
+De beurzen onder "Securities Overview" zijn die die op dit moment in het spel aanwezig zijn en waarop gescrapped wordt.
 
-Als je op de naam van een effect klikt krijg je een detailinformatie over het aandeel met het pieçe de resistance van Laurens: zijn grafiek.
+Klik je op de naam van een effect, dan krijg je detailinformatie te zien over een effect.
+Je vind er de huidige prijs, verandering, de beurs waar deze op noteert, de ISIN code, het symbool, de openingsprijs, de maximumprijs van die dag en de laagste prijs van de laagste verhandelingsdag.
 
-De grafiek kent vele opties en laadt dynamisch zijn data in.
-De grafiek kan:
+De grafiek kent vele mogelijkheden.
+Deze is opgebouwd uit twee delen. Het bovenste deel bevat een weergave van het prijsverloop van het gekozen effect. Onderaan zijn bargrafieken te zien van de volumes. Het bovendeel toont standaard het verloop van de voorbije 7 dagen. Hierop kunnen een aantal handelingen verricht worden.
+Als je de muisaanwijzer boven dit deel gaat hangen verschijnt het menu.
 
-\begin{itemize}
-\item{uitzoomen, maximaal tot wanneer er geen data meer is voor}
-\end{itemize}
+Met de selectie knop wijzig je de modus van de muis. Standaard staat deze op de verplaats modus.
+In deze modus kan je dubbel klikken op een locatie om daarop in te zoomen. Of je kan meer detail krijgen door met de muisaanwijzer het deel aan te wijzen waar je meer detail op wil en het muiswieltje naar boven te verplaatsen. Verplaats het wieltje naar onderen om terug uit te zoomen.
+Je kan ook een deel van de grafiek aanklikken en verslepen. Het tekengebied wordt pas opnieuw getekent nadat de linker muisknop losgelaten is.
+In de selectie modus is het nog steeds mogelijk om meer of minder detail te verkrijgen door dubbel te klikken en het scrolwieltje te gebruiken.
+Alleen ga je in deze modus bij het slepen niet de grafiek verplaatsen, maar een detail venster aanduiden dat je wil bekijken.
+
+Gebruik de knop 'vorige' om het vorige beeld terug op te roepen. Deze knop kan je oneindig blijven gebruiken tot je terug in de standaardweergave terechtkomt.
+
+Met de knoppen 'kleiner' en 'groter' is het opnieuw mogelijk om meer of minder detail op te vragen.
+
+Klik op 'Toevoegen' om een referentie toe te voegen. Op het huidige moment is dit nog een vaste referentie, maar in de toekomst zal het mogelijk zijn deze zelf te kiezen. Een extra lijn wordt bijgetekend. Deze kan je weghalen door in de legende de x aan te klikken rechts van de referentie die je wenst te verwijderen.
+Het zal in de toekomst ook mogelijk zijn meerdere referenties toe te voegen.
+
+De 'Herstel' actie gaat de standaardweergave van de grafiek herstellen. Referenties en weergave geschiedenissen worden terug weggehaald.
+
+Alle datapunten in de grafiek worden dynamisch opgehaald via AJAX technologie na het wijzigen van de view. Het kan dus even duren voor de nieuwe wijzigen zichtbaar worden. Bij het uitzoomen worden minder punten en dus minder detail opgehaald. Het zal nooit mogelijk zijn een tijdsdeel te bekijken waar geen data voor handen is voor ofwel de hoofdgrafiek ofwel voor de referentielijnen. Het maximum uitgezoomde level toont dus alle data die momenteel in het systeem zit.
 
 \section{Aankopen van effecten}
 
-Klik links op "Securities Overview" of een van de beurzen die aanwezig is in het spel om een lijst te krijgen van effecten. Klik op de "Buy" knop van het gewenste aandeel.
+Klik links op "Securities Overview" of een van de beurzen die aanwezig is in het spel om een lijst te krijgen van effecten. Klik op de "Buy" knop van het gewenste aandeel. Deze knop is ook te vinden op een detailpagina van een effect.
 
-\chapter{Handleiding grafieken module op de website}
-
-Standaard wordt een weergave gegeven van het beursverloop van de laatste 
+Je kan een prijs een een aantal aandelen opgeven die je wenst te kopen. Als aan de voorwaarden vervolgens voldaan wordt, dan zal de transactionmanager deze op bepaalde tijdstippen omzetten naar een geldige transactie. Hierbij zal het order dan uitgevoerd worden en worden de effecten aan het portfolio toegevoegd.
