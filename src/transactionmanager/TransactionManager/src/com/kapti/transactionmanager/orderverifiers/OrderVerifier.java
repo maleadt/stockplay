@@ -5,8 +5,8 @@
 
 package com.kapti.transactionmanager.orderverifiers;
 
-import com.kapti.administration.bo.finance.Quote;
-import com.kapti.administration.bo.user.Order;
+import com.kapti.client.finance.Quote;
+import com.kapti.client.user.Order;
 
 /**
  *

@@ -5,7 +5,7 @@
 
 package com.kapti.transactionmanager.orderverifiers;
 
-import com.kapti.administration.bo.user.Order;
+import com.kapti.client.user.Order;
 
 /**
  *

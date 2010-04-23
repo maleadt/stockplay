@@ -4,13 +4,13 @@
  */
 package com.kapti.transactionmanager;
 
-import com.kapti.administration.bo.finance.FinanceFactory;
-import com.kapti.administration.bo.finance.Quote;
-import com.kapti.administration.bo.finance.Security;
-import com.kapti.administration.bo.user.Order;
-import com.kapti.administration.bo.user.OrderFactory;
-import com.kapti.administration.bo.user.Transaction;
-import com.kapti.administration.bo.user.TransactionFactory;
+import com.kapti.client.finance.FinanceFactory;
+import com.kapti.client.finance.Quote;
+import com.kapti.client.finance.Security;
+import com.kapti.client.user.Order;
+import com.kapti.client.user.OrderFactory;
+import com.kapti.client.user.Transaction;
+import com.kapti.client.user.TransactionFactory;
 import com.kapti.exceptions.StockPlayException;
 import com.kapti.transactionmanager.orderverifiers.OrderVerifier;
 import com.kapti.transactionmanager.orderverifiers.OrderVerifierFactory;
