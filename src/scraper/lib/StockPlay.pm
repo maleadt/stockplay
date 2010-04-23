@@ -69,6 +69,10 @@ sub _build_config {
 
 =head1 METHODS
 
+=head2 C<$stockplay->getFactory(@params)>
+
+Instantiate a new C<StockPlay::Factory>.
+
 =cut
 
 sub getFactory {
@@ -81,6 +85,14 @@ sub getFactory {
 	);
 }
 
+=pod
+
+=head2 C<$stockplay->getPluginManager(@params)>
+
+Instantiate a new C<StockPlay::PluginManager>.
+
+=cut
+
 sub getPluginManager {
 	my ($self, @params) = @_;
 	
@@ -90,6 +102,15 @@ sub getPluginManager {
 		@params
 	);
 }
+
+=pod
+
+=head2 C<$stockplay->getScraper(@params)>
+
+Instantiate a new C<StockPlay::Scraper>. This automatically instantiates the
+required plugin manager as well.
+
+=cut
 
 sub getScraper {
 	my ($self, @params) = @_;
@@ -101,6 +122,15 @@ sub getScraper {
 		@params
 	);
 }
+
+=pod
+
+=head2 C<$stockplay->getAI(@params)>
+
+Instantiate a new C<StockPlay::AI>. This automatically instantiates the
+required plugin manager as well.
+
+=cut
 
 sub getAI {
 	my ($self, @params) = @_;

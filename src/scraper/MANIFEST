@@ -1,11 +1,15 @@
 Build.PL
 Changes
+lib/StockPlay.pm
+lib/StockPlay/AI.pm
 lib/StockPlay/AI/Data.pm
 lib/StockPlay/AI/Data/Input.pm
 lib/StockPlay/AI/Data/Output.pm
 lib/StockPlay/AI/Forecaster.pm
 lib/StockPlay/AI/Forecaster/Neural.pm
-lib/StockPlay/AI/Manager.pm
+lib/StockPlay/Configurable.pm
+lib/StockPlay/Configuration.pm
+lib/StockPlay/Configuration/Entry.pm
 lib/StockPlay/Exchange.pm
 lib/StockPlay/Factory.pm
 lib/StockPlay/Index.pm
@@ -14,7 +18,7 @@ lib/StockPlay/Object.pm
 lib/StockPlay/Plugin.pm
 lib/StockPlay/PluginManager.pm
 lib/StockPlay/Quote.pm
-lib/StockPlay/Scraper/Daemon.pm
+lib/StockPlay/Scraper.pm
 lib/StockPlay/Scraper/Source.pm
 lib/StockPlay/Scraper/Source/Website.pm
 lib/StockPlay/Scraper/Source/Website/DeTijd.pm

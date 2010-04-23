@@ -105,7 +105,7 @@ requires 'run';
 
 =pod
 
-=head2 C<test($dataset)
+=head2 C<test($dataset)>
 
 A stub testing routine.
 
