@@ -145,7 +145,7 @@ public class FinanceFactory {
     }
 
     // </editor-fold>
-    public boolean makePersistent(Security security) throws XmlRpcException {
+    public boolean makePersistent(Security security) throws StockPlayException {
         //enkel als er veranderingen zijn moeten ze worden opgeslagen!
         if (security.isDirty()) {
             XmlRpcClient client = XmlRpcClientFactory.getXmlRpcClient();
@@ -158,12 +158,15 @@ public class FinanceFactory {
             //we voegen nu de argumenten aan het bericht toe
 
             v.add(security.toStruct());
-
+            try{
             Integer result = (Integer) client.execute("Finance.Security.Modify", v);
             if (result == 1) {
                 security.setDirty(false);
                 securities.put(security.getISIN(), security);
                 return true;
+            }
+            }catch(XmlRpcException ex ){
+                throw new StockPlayException("Error while saving security", ex);
             }
             return false;
 

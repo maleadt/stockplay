@@ -22,7 +22,7 @@ public class XmlRpcClientFactory {
     public static XmlRpcClient getXmlRpcClient() {
         try {
 
-            ResourceBundle settings = ResourceBundle.getBundle("com/kapti/administration/settings");
+            ResourceBundle settings = ResourceBundle.getBundle("com/kapti/client/settings");
 
             XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
             config.setServerURL(new URL(settings.getString("server")));

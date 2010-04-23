@@ -5,9 +5,6 @@
 
 package com.kapti.client.user;
 
-import com.kapti.administration.bo.finance.*;
-import com.kapti.client.finance.Security;
-
 /**
  *
  * @author Thijs
