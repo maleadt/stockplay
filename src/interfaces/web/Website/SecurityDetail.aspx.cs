@@ -16,6 +16,9 @@ using implADO;
 
 public partial class SecurityDetail : System.Web.UI.Page
 {
+
+    public string ISINcode;
+
     protected void Page_Load(object sender, EventArgs e)
     {
         if(Request.Params["param"] != null) {
@@ -62,6 +65,7 @@ public partial class SecurityDetail : System.Web.UI.Page
         
         Exchange.InnerText = security.Exchange.Name;
         ISIN.InnerText = security.Isin;
+        ISINcode = security.Isin;
         Symbol.InnerText = security.Symbol;
 
         //Data

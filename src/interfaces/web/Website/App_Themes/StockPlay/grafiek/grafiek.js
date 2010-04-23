@@ -342,9 +342,3 @@ var SubPlot = function(container, from, to, isin) {
 
 $.extend(true, PrimaryPlot.prototype, plot.prototype, primaryPlot.prototype);
 $.extend(true, SubPlot.prototype, plot.prototype, subPlot.prototype);
-
-$(function() {
-    var prim = new PrimaryPlot('plotTest', 2, 11, 'BE0003793107');
-    var sec = new SubPlot('volumes', 2, 11, 'BE0003793107');
-    prim.addPlotListener(sec);
-});

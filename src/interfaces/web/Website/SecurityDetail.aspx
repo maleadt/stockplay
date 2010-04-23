@@ -80,5 +80,13 @@
     <script type="text/javascript" src="App_Themes/StockPlay/grafiek/options.js"></script>
     <script type="text/javascript" src="App_Themes/StockPlay/grafiek/grafiek.js"></script>
 
+    <script type="text/javascript">
+        $(function() {
+        var prim = new PrimaryPlot('plotTest', 2, 11, '<%=ISINcode%>');
+        var sec = new SubPlot('volumes', 2, 11, '<%=ISINcode%>');
+            prim.addPlotListener(sec);
+        });
+    </script>
+
 </asp:Content>
 
