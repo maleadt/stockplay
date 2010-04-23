@@ -5,10 +5,8 @@
 #
 
 # Packages
+use StockPlay;
 use StockPlay::Factory;
-use StockPlay::Exchange;
-use StockPlay::Index;
-use StockPlay::Security;
 use Date::Manip;
 use DateTime::Format::DateManip;
 
@@ -29,11 +27,9 @@ use strict;
 # Get a logger
 StockPlay::Logger->setup("test");
 my $logger = StockPlay::Logger->logger;
-$logger->info("loading test client");
-
-# Load the factory
-$logger->debug("loading factory");
-my $factory = new StockPlay::Factory();
+$logger->info("bootstrapping test client");
+my $stockplay = new StockPlay();
+my $factory = $stockplay->getFactory();
 
 
 #

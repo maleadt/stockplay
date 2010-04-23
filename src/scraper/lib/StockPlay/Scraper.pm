@@ -3,15 +3,15 @@
 #
 
 # Package definition
-package StockPlay::Scraper::Daemon;
+package StockPlay::Scraper;
 
 =pod
 
-=head1 NAME StockPlay::Scraper::Daemon - StockPlay scraper plugin daemon
+=head1 NAME StockPlay::Scraper - StockPlay scraper plugin daemon
 
 =head1 DESCRIPTION
 
-The C<StockPlay::Scraper::Daemon> package contains the daemon which performs
+The C<StockPlay::Scraper> package contains the daemon which performs
 the actual quote requests and pushes the resulting data towards the
 XML-RPC backend.
 
@@ -71,6 +71,7 @@ sub _build_plugins {
 	$self->logger->info("loading all plugins");
 	
 	# Get infohashes
+	$self->pluginmanager->load_group('StockPlay::Scraper::Source');
 	my @infohashes = $self->pluginmanager->get_group('StockPlay::Scraper::Source');
 
 	# Check homefolder
@@ -179,19 +180,8 @@ sub _build_plugins {
 has 'pluginmanager' => (
 	is		=> 'ro',
 	isa		=> 'StockPlay::PluginManager',
-	builder		=> '_build_pluginmanager'
+	required	=> 1
 );
-
-sub _build_pluginmanager {
-	my ($self) = @_;
-	
-	# Plugin manager
-	$self->logger->debug("loading plugin manager");
-	my $pluginmanager = new StockPlay::PluginManager;
-	$pluginmanager->load_group('StockPlay::Scraper::Source');
-	
-	return $pluginmanager;
-}
 
 
 ################################################################################

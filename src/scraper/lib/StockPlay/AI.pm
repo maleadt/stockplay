@@ -3,13 +3,13 @@
 #
 
 # Package definition
-package StockPlay::AI::Manager;
+package StockPlay::AI;
 
 =pod
 
 =head1 NAME
 
-StockPlay::AI::Manager - StockPlay AI manager
+StockPlay::AI - StockPlay AI manager
 
 =head1 DESCRIPTION
 
@@ -76,6 +76,7 @@ sub _build_forecasters {
 	$self->logger->info("loading all forecasters");
 	
 	# Get infohashes
+	$self->pluginmanager->load_group('StockPlay::AI::Forecaster');
 	my @infohashes = $self->pluginmanager->get_group('StockPlay::AI::Forecaster');
 
 	# Load plugins
@@ -102,19 +103,8 @@ sub _build_forecasters {
 has 'pluginmanager' => (
 	is		=> 'ro',
 	isa		=> 'StockPlay::PluginManager',
-	builder		=> '_build_pluginmanager'
+	required	=> 1
 );
-
-sub _build_pluginmanager {
-	my ($self) = @_;
-	
-	# Plugin manager
-	$self->logger->debug("loading plugin manager");
-	my $pluginmanager = new StockPlay::PluginManager;
-	$pluginmanager->load_group('StockPlay::AI::Forecaster');
-	
-	return $pluginmanager;
-}
 
 
 ################################################################################

@@ -1,55 +1,74 @@
-#!/usr/bin/env perl
-
 ################################################################################
 # Configuration
 #
 
-# Packages
-use StockPlay;
-use StockPlay::AI;
-
-# Write nicely
-use warnings;
-use strict;
-
-
-
-################################################################################
-# Main
-#
-
-# Get a logger
-StockPlay::Logger->setup("ai");
-my $logger = StockPlay::Logger->logger;
-$logger->info("bootstrapping ai");
-
-my $stockplay = new StockPlay();
-my $factory = $stockplay->getFactory();
-my $ai = $stockplay->getAI();
-
-$ai->run();
-
-exit(0);
-
-__END__
-
-
-
-################################################################################
-# Documentation
-#
+# Package definition
+package StockPlay::Configurable;
 
 =pod
 
 =head1 NAME
 
-stockplay-ai - Artificial player intelligence
+StockPlay::Configurable - StockPlay role for configurable objects
 
 =head1 DESCRIPTION
 
-This script emulates the behaviour of an ordinary player using a set of
-artificial intelligence technologies. It aims at maximizing the return profits
-of the investment.
+The C<StockPlay::Configurable> is a simple role, which extends classes with
+a configuration object.
+
+=head1 SYNPOSIS
+
+=cut
+
+# Packages
+use Moose::Role;
+
+# Write nicely
+use strict;
+use warnings;
+
+
+################################################################################
+# Attributes
+#
+
+=pod
+
+=head1 ATTRIBUTES
+
+=cut
+
+has 'config' => (
+	is		=> 'ro',
+	isa		=> 'StockPlay::Configuration',
+	required	=> 1
+);
+
+
+################################################################################
+# Methods
+
+=pod
+
+=head1 METHODS
+
+=cut
+
+################################################################################
+# Auxiliary
+#
+
+=pod
+
+=head1 AUXILIARY
+
+=cut
+
+1;
+
+__END__
+
+=pod
 
 =head1 COPYRIGHT
 

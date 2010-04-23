@@ -5,7 +5,8 @@
 #
 
 # Packages
-use StockPlay::Scraper::Daemon;
+use StockPlay;
+use StockPlay::Scraper;
 
 # Write nicely
 use warnings;
@@ -22,16 +23,11 @@ StockPlay::Logger->setup("scraper");
 my $logger = StockPlay::Logger->logger;
 $logger->info("bootstrapping scraper");
 
-# Load the factory
-$logger->debug("loading factory");
-my $factory = new StockPlay::Factory();
+my $stockplay = new StockPlay();
+my $factory = $stockplay->getFactory();
+my $scraper = $stockplay->getScraper();
 
-# Load the daemon
-$logger->debug("loading daemon");
-my $daemon = new StockPlay::Scraper::Daemon(
-	factory	=> $factory
-);
-$daemon->run();
+$scraper->run();
 
 exit(0);
 

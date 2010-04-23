@@ -29,6 +29,7 @@ use Carp;
 
 # Roles
 with 'StockPlay::Logger';
+with 'StockPlay::Configurable';
 
 # Write nicely
 use strict;

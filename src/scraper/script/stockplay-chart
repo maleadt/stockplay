@@ -5,6 +5,7 @@
 #
 
 # Packages
+use StockPlay;
 use Date::Manip;
 use DateTime::Format::DateManip;
 use StockPlay::Factory;
@@ -39,9 +40,9 @@ StockPlay::Logger->setup("chart");
 my $logger = StockPlay::Logger->logger;
 $logger->info("bootstrapping charter");
 
-# Load the factory
-$logger->debug("loading factory");
-my $factory = new StockPlay::Factory();
+my $stockplay = new StockPlay();
+my $factory = $stockplay->getFactory();
+
 my $choice;
 
 

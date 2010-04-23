@@ -5,6 +5,7 @@
 #
 
 # Packages
+use StockPlay;
 use LWP::Simple;
 use Date::Manip;
 use DateTime::Format::DateManip;
@@ -30,11 +31,10 @@ use strict;
 # Get a logger
 StockPlay::Logger->setup("historic");
 my $logger = StockPlay::Logger->logger;
-$logger->info("loading historic data loader");
+$logger->info("bootstrapping historic data loader");
 
-# Load the factory
-$logger->debug("loading factory");
-my $factory = new StockPlay::Factory();
+my $stockplay = new StockPlay();
+my $factory = $stockplay->getFactory();
 
 
 #

@@ -5,10 +5,11 @@
 #
 
 # Packages
+use StockPlay;
 use StockPlay::Factory;
 use StockPlay::Exchange;
-use StockPlay::Index;
 use StockPlay::Security;
+use StockPlay::Quote;
 
 # Write nicely
 use warnings;
@@ -29,9 +30,8 @@ StockPlay::Logger->setup("random");
 my $logger = StockPlay::Logger->logger;
 $logger->info("bootstrapping scraper");
 
-# Load the factory
-$logger->debug("loading factory");
-my $factory = new StockPlay::Factory();
+my $stockplay = new StockPlay();
+my $factory = $stockplay->getFactory();
 
 
 #

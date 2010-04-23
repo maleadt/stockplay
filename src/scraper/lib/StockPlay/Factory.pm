@@ -29,9 +29,11 @@ use StockPlay::Index;
 use StockPlay::Security;
 use StockPlay::Quote;
 use DateTime::Format::ISO8601;
+use StockPlay::Configuration;
 
 # Roles
 with 'StockPlay::Logger';
+with 'StockPlay::Configurable';
 
 # Write nicely
 use strict;
@@ -49,12 +51,6 @@ use warnings;
 =head2 C<plugins>
 
 =cut
-
-has 'server' => (
-	is		=> 'ro',
-	isa		=> 'Str',
-	default		=> 'http://localhost:6800/backend/public'
-);
 
 has 'xmlrpc' => (
 	is		=> 'ro',
@@ -80,7 +76,7 @@ sub _build_xmlrpc {
 	#$RPC::XML::Client::COMPRESSION_AVAILABLE = "";
 	
 	my $xmlrpc = new RPC::XML::Client(
-		$self->server,
+		$self->config->get('server'),
 		error_handler	=> \&doError,
 		fault_handler	=> \&doFault
 	) or die("could not connect to backend ($!)");
@@ -110,6 +106,9 @@ an initial HELLO message.
 
 sub BUILD {
 	my ($self) = @_;
+	
+	# Default configuration
+	$self->config->set_default('server', 'http://localhost:6800/backend/public');
 	
 	# Build data members which require other data members
 	$self->xmlrpc;
