@@ -1,6 +1,6 @@
 package com.kapti.administration.tablemodels;
 
-import com.kapti.administration.bo.user.User;
+import com.kapti.client.user.User;
 import java.util.Collection;
 import java.util.Date;
 import java.util.ResourceBundle;

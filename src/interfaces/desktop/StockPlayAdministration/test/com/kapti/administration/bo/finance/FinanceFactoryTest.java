@@ -5,6 +5,8 @@
 
 package com.kapti.administration.bo.finance;
 
+import com.kapti.client.finance.FinanceFactory;
+import com.kapti.client.finance.Exchange;
 import java.util.Collection;
 import org.junit.After;
 import org.junit.AfterClass;

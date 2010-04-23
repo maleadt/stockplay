@@ -4,8 +4,8 @@
  */
 package com.kapti.administration;
 
-import com.kapti.administration.bo.system.Backend;
-import com.kapti.administration.bo.system.StatusObject;
+import com.kapti.client.system.Backend;
+import com.kapti.client.system.StatusObject;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;

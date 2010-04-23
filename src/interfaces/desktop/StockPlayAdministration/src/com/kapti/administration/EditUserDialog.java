@@ -5,12 +5,12 @@
 package com.kapti.administration;
 
 import com.kapti.administration.ValueChangeWithReasonDialog.ComputeChange;
-import com.kapti.administration.bo.user.PointsTransaction;
-import com.kapti.administration.bo.user.PointsTransactionFactory;
-import com.kapti.administration.bo.user.Transaction;
-import com.kapti.administration.bo.user.TransactionFactory;
-import com.kapti.administration.bo.user.User;
-import com.kapti.administration.bo.user.UserFactory;
+import com.kapti.client.user.PointsTransaction;
+import com.kapti.client.user.PointsTransactionFactory;
+import com.kapti.client.user.Transaction;
+import com.kapti.client.user.TransactionFactory;
+import com.kapti.client.user.User;
+import com.kapti.client.user.UserFactory;
 import com.kapti.exceptions.StockPlayException;
 import java.awt.Font;
 import java.awt.Frame;
@@ -38,7 +38,6 @@ import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.text.MaskFormatter;
 import org.apache.log4j.Logger;
-import org.apache.xmlrpc.XmlRpcException;
 import org.jdesktop.swingx.JXErrorPane;
 import org.jdesktop.swingx.error.ErrorInfo;
 

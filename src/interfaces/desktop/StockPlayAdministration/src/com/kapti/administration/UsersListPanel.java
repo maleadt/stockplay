@@ -4,9 +4,10 @@
  */
 package com.kapti.administration;
 
-import com.kapti.administration.bo.user.User;
-import com.kapti.administration.bo.user.UserFactory;
+import com.kapti.client.user.User;
+import com.kapti.client.user.UserFactory;
 import com.kapti.administration.tablemodels.UsersTableModel;
+import com.kapti.exceptions.StockPlayException;
 import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -23,7 +24,6 @@ import javax.swing.event.*;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import org.apache.log4j.Logger;
-import org.apache.xmlrpc.XmlRpcException;
 import org.jdesktop.swingx.JXErrorPane;
 
 import org.jdesktop.swingx.JXTable;
@@ -266,7 +266,7 @@ public class UsersListPanel extends JPanel implements TableModelListener, ListSe
                     try {
                         usersFactory.removeUser(usersTableModel.getUserAt(rownr));
                         usersTableModel.removeUserAt(rownr);
-                    } catch (XmlRpcException ex) {
+                    } catch (StockPlayException ex) {
                         JXErrorPane.showDialog(this, new ErrorInfo(translations.getString("ERROR"), translations.getString("ERROR_DELETING_USER"), null, null, ex, null, null));
 
                     }

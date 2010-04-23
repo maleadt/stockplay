@@ -4,8 +4,8 @@
  */
 package com.kapti.administration;
 
-import com.kapti.administration.bo.finance.Exchange;
-import com.kapti.administration.bo.finance.FinanceFactory;
+import com.kapti.client.finance.Exchange;
+import com.kapti.client.finance.FinanceFactory;
 import com.kapti.administration.tablemodels.SecuritiesTableModel;
 import com.kapti.exceptions.StockPlayException;
 import java.beans.PropertyChangeListener;

@@ -4,8 +4,14 @@
  */
 package com.kapti.administration.bo.user;
 
-import com.kapti.administration.bo.finance.FinanceFactory;
-import com.kapti.administration.bo.finance.Security;
+import com.kapti.client.user.OrderFactory;
+import com.kapti.client.user.User;
+import com.kapti.client.user.TransactionFactory;
+import com.kapti.client.user.Transaction;
+import com.kapti.client.user.UserFactory;
+import com.kapti.client.user.Order;
+import com.kapti.client.finance.FinanceFactory;
+import com.kapti.client.finance.Security;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Iterator;

@@ -1,7 +1,7 @@
 package com.kapti.administration.tablemodels;
 
-import com.kapti.administration.bo.finance.Exchange;
-import com.kapti.administration.bo.finance.Security;
+import com.kapti.client.finance.Exchange;
+import com.kapti.client.finance.Security;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Collection;

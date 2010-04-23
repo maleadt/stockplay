@@ -4,10 +4,10 @@
  */
 package com.kapti.administration;
 
-import com.kapti.administration.bo.finance.SecurityState;
-import com.kapti.administration.bo.finance.Exchange;
-import com.kapti.administration.bo.finance.FinanceFactory;
-import com.kapti.administration.bo.finance.Security;
+import com.kapti.client.finance.SecurityState;
+import com.kapti.client.finance.Exchange;
+import com.kapti.client.finance.FinanceFactory;
+import com.kapti.client.finance.Security;
 import com.kapti.administration.tablemodels.SecuritiesTableModel;
 import com.kapti.exceptions.StockPlayException;
 import java.awt.BorderLayout;
@@ -21,7 +21,6 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.*;
 import org.apache.log4j.Logger;
-import org.apache.xmlrpc.XmlRpcException;
 import org.jdesktop.jxlayer.JXLayer;
 import org.jdesktop.swingx.JXErrorPane;
 
@@ -193,7 +192,7 @@ public class SecuritiesListPanel extends JPanel implements TableModelListener, L
                             success = false;
                         }
 
-                    } catch (XmlRpcException ex) {
+                    } catch (StockPlayException ex) {
                         logger.error("Error while saving changes to security", ex);
                         success = false;
                     }
