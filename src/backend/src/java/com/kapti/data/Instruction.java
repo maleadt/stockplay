@@ -22,7 +22,7 @@
 
 package com.kapti.data;
 
-public class Instruction {
+public abstract class Instruction {
     //
     // Member data
     //

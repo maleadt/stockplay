@@ -25,7 +25,9 @@ package com.kapti.data;
 import com.kapti.exceptions.InvocationException;
 import com.kapti.exceptions.ServiceException;
 import com.kapti.exceptions.StockPlayException;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Map;
 
 public class IndexSecurity {
     //
@@ -35,6 +37,10 @@ public class IndexSecurity {
     public static enum Fields {
         INDEX_ISIN, SECURITY_ISIN
     }
+    public static Map<Fields, Class> Types = new HashMap<Fields, Class>() { {
+            put(Fields.INDEX_ISIN, String.class);     // Deel van de
+            put(Fields.SECURITY_ISIN, String.class);   // IndexSecurityPK
+    } };
     
     private IndexSecurityPK pk;
 
@@ -87,6 +93,8 @@ public class IndexSecurity {
             catch (IllegalArgumentException e) {
                 throw new InvocationException(InvocationException.Type.NON_EXISTING_ENTITY, "requested key '" + tKey + "' does not exist");
             }
+            if (!Types.get(tField).isInstance(iStruct.get(tKey)))
+                throw new InvocationException(InvocationException.Type.BAD_REQUEST, "provided key '" + tKey + "' requires a " + Types.get(tField) + " instead of an " + iStruct.get(tKey).getClass());
             tStructMap.put(tField, tKey);
         }
 

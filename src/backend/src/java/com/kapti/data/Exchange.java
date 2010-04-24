@@ -25,7 +25,9 @@ package com.kapti.data;
 import com.kapti.exceptions.InvocationException;
 import com.kapti.exceptions.ServiceException;
 import com.kapti.exceptions.StockPlayException;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Map;
 
 public class Exchange  {
     //
@@ -35,6 +37,12 @@ public class Exchange  {
     public static enum Fields {
         SYMBOL, NAME, LOCATION
     }
+    public static Map<Fields, Class> Types = new HashMap<Fields, Class>() { {
+            put(Fields.SYMBOL, String.class);
+            put(Fields.NAME, String.class);
+            put(Fields.LOCATION, String.class);
+    } };
+
 
     private String symbol = "";
     private String name ="";
@@ -129,6 +137,8 @@ public class Exchange  {
             catch (IllegalArgumentException e) {
                 throw new InvocationException(InvocationException.Type.NON_EXISTING_ENTITY, "requested key '" + tKey + "' does not exist");
             }
+            if (!Types.get(tField).isInstance(iStruct.get(tKey)))
+                throw new InvocationException(InvocationException.Type.BAD_REQUEST, "provided key '" + tKey + "' requires a " + Types.get(tField) + " instead of an " + iStruct.get(tKey).getClass());
 
             switch (tField) {
                 case NAME:
@@ -154,6 +164,8 @@ public class Exchange  {
             catch (IllegalArgumentException e) {
                 throw new InvocationException(InvocationException.Type.NON_EXISTING_ENTITY, "requested key '" + tKey + "' does not exist");
             }
+            if (!Types.get(tField).isInstance(iStruct.get(tKey)))
+                throw new InvocationException(InvocationException.Type.BAD_REQUEST, "provided key '" + tKey + "' requires a " + Types.get(tField) + " instead of an " + iStruct.get(tKey).getClass());
             tStructMap.put(tField, tKey);
         }
 

@@ -25,7 +25,9 @@ package com.kapti.data;
 import com.kapti.exceptions.InvocationException;
 import com.kapti.exceptions.ServiceException;
 import com.kapti.exceptions.StockPlayException;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Map;
 
 public class Security {
     //
@@ -35,6 +37,14 @@ public class Security {
     public static enum Fields {
         ISIN, SYMBOL, NAME, EXCHANGE, VISIBLE, SUSPENDED
     }
+    public static Map<Fields, Class> Types = new HashMap<Fields, Class>() { {
+            put(Fields.ISIN, String.class);
+            put(Fields.SYMBOL, String.class);
+            put(Fields.NAME, String.class);
+            put(Fields.EXCHANGE, String.class);
+            put(Fields.VISIBLE, Boolean.class);
+            put(Fields.SUSPENDED, Boolean.class);
+    } };
     private String isin = "";
     private String symbol = "";
     private String name = "";
@@ -135,6 +145,8 @@ public class Security {
             } catch (IllegalArgumentException e) {
                 throw new InvocationException(InvocationException.Type.KEY_DOES_NOT_EXIST, "requested key '" + tKey + "' does not exist");
             }
+            if (!Types.get(tField).isInstance(iStruct.get(tKey)))
+                throw new InvocationException(InvocationException.Type.BAD_REQUEST, "provided key '" + tKey + "' requires a " + Types.get(tField) + " instead of an " + iStruct.get(tKey).getClass());
 
             switch (tField) {
                 case NAME:
@@ -163,6 +175,8 @@ public class Security {
             catch (IllegalArgumentException e) {
                 throw new InvocationException(InvocationException.Type.KEY_DOES_NOT_EXIST, "requested key '" + tKey + "' does not exist");
             }
+            if (!Types.get(tField).isInstance(iStruct.get(tKey)))
+                throw new InvocationException(InvocationException.Type.BAD_REQUEST, "provided key '" + tKey + "' requires a " + Types.get(tField) + " instead of an " + iStruct.get(tKey).getClass());
             tStructMap.put(tField, tKey);
         }
 

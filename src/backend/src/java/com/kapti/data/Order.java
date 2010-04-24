@@ -26,7 +26,9 @@ import com.kapti.exceptions.InvocationException;
 import com.kapti.exceptions.ServiceException;
 import com.kapti.exceptions.StockPlayException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Map;
 
 public class Order extends Instruction {
 
@@ -38,6 +40,20 @@ public class Order extends Instruction {
         ID, USER, ISIN, AMOUNT, PRICE, TYPE,    // Instruction.Fields
         STATUS, CREATIONTIME, EXPIRATIONTIME, EXECUTIONTIME, PARAMETERS
     }
+    public static Map<Fields, Class> Types = new HashMap<Fields, Class>() { {
+            put(Fields.ID, Integer.class);
+            put(Fields.USER, Integer.class);
+            put(Fields.ISIN, String.class);
+            put(Fields.AMOUNT, Integer.class);
+            put(Fields.PRICE, Double.class);
+            put(Fields.TYPE, String.class); // Wordt ingelezen via InstructionType.valueOf
+
+            put(Fields.STATUS, String.class); // Wordt ingelezen via OrderStatus.valueOf
+            put(Fields.CREATIONTIME, Date.class);
+            put(Fields.EXPIRATIONTIME, Date.class);
+            put(Fields.EXECUTIONTIME, Date.class);
+            put(Fields.PARAMETERS, String.class);
+    } };
     
     private OrderStatus status;
     private Date creationTime;
@@ -161,6 +177,8 @@ public class Order extends Instruction {
             catch (IllegalArgumentException e) {
                 throw new InvocationException(InvocationException.Type.NON_EXISTING_ENTITY, "requested key '" + tKey + "' does not exist");
             }
+            if (!Types.get(tField).isInstance(iStruct.get(tKey)))
+                throw new InvocationException(InvocationException.Type.BAD_REQUEST, "provided key '" + tKey + "' requires a " + Types.get(tField) + " instead of an " + iStruct.get(tKey).getClass());
 
             switch (tField) {
                 case AMOUNT:
@@ -206,6 +224,8 @@ public class Order extends Instruction {
             catch (IllegalArgumentException e) {
                 throw new InvocationException(InvocationException.Type.KEY_DOES_NOT_EXIST, "requested key '" + tKey + "' does not exist");
             }
+            if (!Types.get(tField).isInstance(iStruct.get(tKey)))
+                throw new InvocationException(InvocationException.Type.BAD_REQUEST, "provided key '" + tKey + "' requires a " + Types.get(tField) + " instead of an " + iStruct.get(tKey).getClass());
             tStructMap.put(tField, tKey);
         }
 

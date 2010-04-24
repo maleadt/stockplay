@@ -8,41 +8,37 @@ import com.kapti.exceptions.InvocationException;
 import com.kapti.exceptions.ServiceException;
 import com.kapti.exceptions.StockPlayException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Map;
 
 /**
  *
  * @author Thijs
  */
 public class PointsTransaction {
-
-    public class PointsTransactionPK {
-
-        private int user;
-        private Date timestamp;
-
-        public PointsTransactionPK(int user, Date timestamp) {
-            this.user = user;
-            this.timestamp = timestamp;
-        }
-
-        public Date getTimestamp() {
-            return timestamp;
-        }
-
-        public int getUser() {
-            return user;
-        }
-    }
+    //
+    // Member data
+    //
 
     public static enum Fields {
-
         USER, TIMESTAMP, DELTA, COMMENTS
     }
+    public static Map<Fields, Class> Types = new HashMap<Fields, Class>() { {
+            put(Fields.USER, Integer.class);        // Deel van de
+            put(Fields.TIMESTAMP, Date.class);      // PointsTransactionPK
+            put(Fields.DELTA, Integer.class);
+            put(Fields.COMMENTS, String.class);
+    } };
 
     private int delta;
     private String comments;
     private PointsTransactionPK pk;
+
+
+    //
+    // Construction
+    //
 
     public PointsTransaction(int user, Date timestamp) {
         this.pk = new PointsTransactionPK(user, timestamp);
@@ -103,6 +99,8 @@ public class PointsTransaction {
             } catch (IllegalArgumentException e) {
                 throw new InvocationException(InvocationException.Type.KEY_DOES_NOT_EXIST, "requested key '" + tKey + "' does not exist");
             }
+            if (!Types.get(tField).isInstance(iStruct.get(tKey)))
+                throw new InvocationException(InvocationException.Type.BAD_REQUEST, "provided key '" + tKey + "' requires a " + Types.get(tField) + " instead of an " + iStruct.get(tKey).getClass());
 
             switch (tField) {
                 case DELTA:
@@ -127,6 +125,8 @@ public class PointsTransaction {
             } catch (IllegalArgumentException e) {
                 throw new InvocationException(InvocationException.Type.KEY_DOES_NOT_EXIST, "requested key '" + tKey + "' does not exist");
             }
+            if (!Types.get(tField).isInstance(iStruct.get(tKey)))
+                throw new InvocationException(InvocationException.Type.BAD_REQUEST, "provided key '" + tKey + "' requires a " + Types.get(tField) + " instead of an " + iStruct.get(tKey).getClass());
             tStructMap.put(tField, tKey);
         }
 
@@ -138,6 +138,30 @@ public class PointsTransaction {
             return tTransaction;
         } else {
             throw new ServiceException(ServiceException.Type.NOT_ENOUGH_INFORMATION);
+        }
+    }
+    
+    
+    //
+    // Classes
+    //
+
+    public class PointsTransactionPK {
+
+        private int user;
+        private Date timestamp;
+
+        public PointsTransactionPK(int user, Date timestamp) {
+            this.user = user;
+            this.timestamp = timestamp;
+        }
+
+        public Date getTimestamp() {
+            return timestamp;
+        }
+
+        public int getUser() {
+            return user;
         }
     }
 }

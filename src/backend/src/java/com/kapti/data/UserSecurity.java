@@ -25,7 +25,9 @@ package com.kapti.data;
 import com.kapti.exceptions.InvocationException;
 import com.kapti.exceptions.ServiceException;
 import com.kapti.exceptions.StockPlayException;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Map;
 
 public class UserSecurity {
     //
@@ -35,6 +37,11 @@ public class UserSecurity {
     public static enum Fields {
         USER, ISIN, AMOUNT
     }
+    public static Map<Fields, Class> Types = new HashMap<Fields, Class>() { {
+            put(Fields.USER, Integer.class);     // Deel van de
+            put(Fields.ISIN, String.class);     // UserSecurityPK
+            put(Fields.AMOUNT, Integer.class);
+    } };
     
     private UserSecurityPK pk;
     private int amount;
@@ -95,6 +102,8 @@ public class UserSecurity {
             catch (IllegalArgumentException e) {
                 throw new InvocationException(InvocationException.Type.NON_EXISTING_ENTITY, "requested key '" + tKey + "' does not exist");
             }
+            if (!Types.get(tField).isInstance(iStruct.get(tKey)))
+                throw new InvocationException(InvocationException.Type.BAD_REQUEST, "provided key '" + tKey + "' requires a " + Types.get(tField) + " instead of an " + iStruct.get(tKey).getClass());
             tStructMap.put(tField, tKey);
         }
 
@@ -118,6 +127,8 @@ public class UserSecurity {
             catch (IllegalArgumentException e) {
                 throw new InvocationException(InvocationException.Type.KEY_DOES_NOT_EXIST, "requested key '" + tKey + "' does not exist");
             }
+            if (!Types.get(tField).isInstance(iStruct.get(tKey)))
+                throw new InvocationException(InvocationException.Type.BAD_REQUEST, "provided key '" + tKey + "' requires a " + Types.get(tField) + " instead of an " + iStruct.get(tKey).getClass());
 
             switch (tField) {
                 case AMOUNT:

@@ -26,7 +26,9 @@ import com.kapti.exceptions.InvocationException;
 import com.kapti.exceptions.ServiceException;
 import com.kapti.exceptions.StockPlayException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Map;
 
 public class Quote {
     //
@@ -36,6 +38,17 @@ public class Quote {
     public static enum Fields {
         ISIN, TIME, PRICE, VOLUME, BID, ASK, LOW, HIGH, OPEN
     }
+    public static Map<Fields, Class> Types = new HashMap<Fields, Class>() { {
+            put(Fields.ISIN, String.class);     // Deel van de
+            put(Fields.TIME, Date.class);       // QuotePK
+            put(Fields.PRICE, Double.class);
+            put(Fields.VOLUME, Integer.class);
+            put(Fields.BID, Double.class);
+            put(Fields.ASK, Double.class);
+            put(Fields.LOW, Double.class);
+            put(Fields.HIGH, Double.class);
+            put(Fields.OPEN, Double.class);
+    } };
 
     private QuotePK pk = null;
     private double price = 0.0;
@@ -173,6 +186,8 @@ public class Quote {
             catch (IllegalArgumentException e) {
                 throw new InvocationException(InvocationException.Type.KEY_DOES_NOT_EXIST, "requested key '" + tKey + "' does not exist");
             }
+            if (!Types.get(tField).isInstance(iStruct.get(tKey)))
+                throw new InvocationException(InvocationException.Type.BAD_REQUEST, "provided key '" + tKey + "' requires a " + Types.get(tField) + " instead of an " + iStruct.get(tKey).getClass());
 
             switch (tField) {
                 case PRICE:
@@ -213,6 +228,8 @@ public class Quote {
             catch (IllegalArgumentException e) {
                 throw new InvocationException(InvocationException.Type.KEY_DOES_NOT_EXIST, "requested key '" + tKey + "' does not exist");
             }
+            if (!Types.get(tField).isInstance(iStruct.get(tKey)))
+                throw new InvocationException(InvocationException.Type.BAD_REQUEST, "provided key '" + tKey + "' requires a " + Types.get(tField) + " instead of an " + iStruct.get(tKey).getClass());
             tStructMap.put(tField, tKey);
         }
 

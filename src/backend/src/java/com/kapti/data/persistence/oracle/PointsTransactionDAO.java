@@ -31,7 +31,7 @@ public class PointsTransactionDAO implements GenericDAO<PointsTransaction, Point
     private static final String SELECT_POINTSTRANSACTIONS = "SELECT userid, timest, delta, comments FROM pointstransactions";
     private static final String INSERT_POINTSTRANSACTION = "INSERT INTO pointstransactions(userid, timest, delta, comments) "
             + "VALUES(?, ?, ?, ?)";
-    private static final String UPDATE_POINTSTRANSACTION = "UPDATE pointstransactions SET delta = ? AND comments = ? WHERE userid = ? AND timest = ?;";
+    private static final String UPDATE_POINTSTRANSACTION = "UPDATE pointstransactions SET delta = ?, comments = ? WHERE userid = ? AND timest = ?";
     private static final String DELETE_POINTSTRANSACTION = "DELETE FROM pointstransactions WHERE userid = ? AND timest = ?";
     private static PointsTransactionDAO instance = new PointsTransactionDAO();
 

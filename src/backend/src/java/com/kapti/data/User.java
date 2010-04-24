@@ -28,6 +28,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.Hashtable;
 import java.security.MessageDigest;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,9 +40,23 @@ public class User {
     //
 
     public static enum Fields {
-
         ID, NICKNAME, PASSWORD, EMAIL, LASTNAME, FIRSTNAME, REGDATE, ROLE, POINTS, STARTAMOUNT, CASH, RRN
     }
+    public static Map<Fields, Class> Types = new HashMap<Fields, Class>() { {
+            put(Fields.ID, Integer.class);
+            put(Fields.NICKNAME, String.class);
+            put(Fields.PASSWORD, String.class);
+            put(Fields.EMAIL, String.class);
+            put(Fields.LASTNAME, String.class);
+            put(Fields.FIRSTNAME, String.class);
+            put(Fields.REGDATE, Date.class);
+            put(Fields.ROLE, Integer.class);
+            put(Fields.POINTS, Integer.class);
+            put(Fields.STARTAMOUNT, Double.class);
+            put(Fields.CASH, Double.class);
+            put(Fields.RRN, String.class);
+    } };
+
     private int id = -1;
     private String nickname = "";
     private String password = "";
@@ -277,6 +293,8 @@ public class User {
             } catch (IllegalArgumentException e) {
                 throw new InvocationException(InvocationException.Type.KEY_DOES_NOT_EXIST, "requested key '" + tKey + "' does not exist");
             }
+            if (!Types.get(tField).isInstance(iStruct.get(tKey)))
+                throw new InvocationException(InvocationException.Type.BAD_REQUEST, "provided key '" + tKey + "' requires a " + Types.get(tField) + " instead of an " + iStruct.get(tKey).getClass());
 
 
             switch (tField) {
@@ -327,6 +345,8 @@ public class User {
             } catch (IllegalArgumentException e) {
                 throw new InvocationException(InvocationException.Type.KEY_DOES_NOT_EXIST, "requested key '" + tKey + "' does not exist");
             }
+            if (!Types.get(tField).isInstance(iStruct.get(tKey)))
+                throw new InvocationException(InvocationException.Type.BAD_REQUEST, "provided key '" + tKey + "' requires a " + Types.get(tField) + " instead of an " + iStruct.get(tKey).getClass());
             tStructMap.put(tField, tKey);
         }
 
