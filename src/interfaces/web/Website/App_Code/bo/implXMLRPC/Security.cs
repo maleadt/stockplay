@@ -31,8 +31,6 @@ namespace implXMLRPC
         private bool visible;
         private bool suspended;
 
-        private bool quoteUnavailable; //Houdt bij ofdat de quote beschikbaar was, om te voorkomen dat nieuwe opvragingen niet nogmaals een query versturen
-
         public Security(string isin, string symbol, string name, string type, bool visible, bool suspended, IExchange exchange)
         {
             this.isin = isin;
@@ -41,8 +39,6 @@ namespace implXMLRPC
             this.exchange = exchange;
             this.visible = visible;
             this.suspended = suspended;
-
-            this.quoteUnavailable = false;
         }
 
         public Security(XmlRpcStruct security)
@@ -55,14 +51,13 @@ namespace implXMLRPC
             this.exchange = data.GetExchangeBySymbol((string)security["EXCHANGE"]);
             this.visible = (Convert.ToInt32(security["VISIBLE"]) == 1) ? true : false;
             this.suspended = (Convert.ToInt32(security["SUSPENDED"]) == 1) ? true : false;
-
-            this.quoteUnavailable = false;
+            this.latestQuote = null;
         }
 
         public Security(XmlRpcStruct security, XmlRpcStruct quote) : this(security)
         {
             if (quote == null)
-                this.quoteUnavailable = true;
+                this.latestQuote = null;
             else
                 this.latestQuote = new Quote(quote);
         }
@@ -84,7 +79,7 @@ namespace implXMLRPC
 
         public IQuote GetLatestQuote()
         {
-            if (latestQuote == null && quoteUnavailable == false)
+            if (latestQuote == null)
             {
                 IDataAccess data = DataAccessFactory.GetDataAccess();
                 latestQuote = data.GetLatestQuoteFromSecurity(isin);

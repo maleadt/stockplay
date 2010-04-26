@@ -60,6 +60,9 @@ public partial class SecuritiesOverview : System.Web.UI.Page
         securitiesTable.Columns.Add("Date");
         securitiesTable.Columns["Date"].DataType = typeof(DateTime);
 
+        IDataAccess data = DataAccessFactory.GetDataAccess();
+        List<IQuote> quotes = data.GetLatestQuotesFromSecurities(securities);
+
         foreach (ISecurity security in securities)
         {
             DataRow row = securitiesTable.NewRow();
@@ -68,7 +71,12 @@ public partial class SecuritiesOverview : System.Web.UI.Page
             row[2] = security.Name;
             row[3] = security.Exchange.Name;
 
-            IQuote q = security.GetLatestQuote();
+            IQuote q = quotes.Find(
+                delegate(IQuote quote)
+                {
+                    return quote.Isin == security.Isin;
+                }
+            );
 
             if (q != null)
             {

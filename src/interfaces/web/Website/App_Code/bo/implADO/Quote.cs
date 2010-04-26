@@ -19,6 +19,8 @@ namespace implADO
     public class Quote : IQuote
     {
         private DateTime time;
+        private string isin;
+
         private double price;
         private double open; //Slotkoers van de vorige dag = 
 
@@ -116,6 +118,11 @@ namespace implADO
             {
                 return high;
             }
+        }
+
+        public String Isin
+        {
+            get { return isin; }
         }
     }
 }

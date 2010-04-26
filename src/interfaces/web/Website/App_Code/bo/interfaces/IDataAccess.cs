@@ -11,6 +11,7 @@ public interface IDataAccess
 
     //Quotes
     IQuote GetLatestQuoteFromSecurity(string isin);
+    List<IQuote> GetLatestQuotesFromSecurities(List<ISecurity> securities);
     IQuote GetQuoteFromSecurity(string isin, DateTime time);
     List<IQuote> GetDailyQuotesFromSecurity(string isin, DateTime minDate, DateTime maxDate);
     List<IQuote> GetQuotesFromSecurity(string isin, DateTime iFrom, DateTime iTo);

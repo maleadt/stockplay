@@ -170,6 +170,25 @@ namespace implXMLRPC
             return quote;
         }
 
+        public List<IQuote> GetLatestQuotesFromSecurities(List<ISecurity> securities)
+        {
+            List<IQuote> quotes = new List<IQuote>();
+
+            List<string> isins = new List<string>();
+            foreach (ISecurity security in securities)
+            {
+                isins.Add("ISIN == '" + security.Isin + "'");
+            }
+
+            XmlRpcStruct[] queries = securityHandler.LatestQuotes(string.Join(" && ", isins));
+            foreach (XmlRpcStruct query in queries)
+            {
+                quotes.Add(new Quote(query));
+            }
+
+            return quotes;
+        }
+
         public List<IQuote> GetDailyQuotesFromSecurity(string isin, DateTime minDate, DateTime maxDate)
         {
             return new List<IQuote>();

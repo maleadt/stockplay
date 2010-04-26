@@ -52,6 +52,11 @@ namespace implADO
             return instance;
         }
 
+        public List<IQuote> GetLatestQuotesFromSecurities(List<ISecurity> securities)
+        {
+            return new List<IQuote>();
+        }
+
         #region IDataAccess Members
 
         private DbConnection GetConnection()

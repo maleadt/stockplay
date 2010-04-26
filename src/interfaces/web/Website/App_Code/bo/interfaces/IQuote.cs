@@ -10,5 +10,6 @@ public interface IQuote
     double Price { get; }
     double Bid { get; }
     DateTime Time { get; }
+    string Isin { get; }
     int Volume { get; }
 }

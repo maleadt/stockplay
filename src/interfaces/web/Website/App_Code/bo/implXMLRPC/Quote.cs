@@ -20,6 +20,8 @@ namespace implXMLRPC
     public class Quote : IQuote
     {
         private DateTime time;
+        private string isin;
+
         private double price;
         private double open; //Slotkoers van de vorige dag
 
@@ -35,7 +37,8 @@ namespace implXMLRPC
 
         public Quote(XmlRpcStruct quote)
         {
-            this.time = (DateTime) quote["TIME"];
+            this.time = (DateTime)quote["TIME"];
+            this.isin = (String)quote["ISIN"];
             this.price = Convert.ToDouble(quote["PRICE"]);
             this.open = Convert.ToDouble(quote["OPEN"]);
             this.volume = Convert.ToInt32(quote["VOLUME"]);
@@ -49,6 +52,7 @@ namespace implXMLRPC
         {
             XmlRpcStruct quote = new XmlRpcStruct();
             quote.Add("TIME", time);
+            quote.Add("ISIN", isin);
             quote.Add("PRICE", price);
             quote.Add("OPEN", open);
             quote.Add("VOLUME", volume);
@@ -109,6 +113,11 @@ namespace implXMLRPC
         public int Volume
         {
             get { return volume; }
+        }
+
+        public String Isin
+        {
+            get { return isin; }
         }
 
         #endregion
