@@ -26,7 +26,7 @@ public partial class User_CreateOrder : System.Web.UI.Page
 
                 StockplayMembershipUser user = (StockplayMembershipUser) Membership.GetUser(User.Identity.Name);
 
-                if (security != null && latestQuote != null)
+                if (security != null && latestQuote != null && user != null)
                 {
                     Security.InnerText = security.Name;
                     Quote.InnerText = Convert.ToString(latestQuote.Price);

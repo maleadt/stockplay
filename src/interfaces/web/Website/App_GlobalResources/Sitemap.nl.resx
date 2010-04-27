@@ -117,61 +117,64 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="CancelButton.InnerText" xml:space="preserve">
-    <value>Annuleren</value>
+  <data name="Default" xml:space="preserve">
+    <value>Home</value>
   </data>
-  <data name="ConfirmPassword.InnerText" xml:space="preserve">
-    <value>Paswoord bevestigen:</value>
+  <data name="DefaultDescription" xml:space="preserve">
+    <value>Stockplay homepagina</value>
   </data>
-  <data name="ConfirmPasswordError.ErrorMessage" xml:space="preserve">
-    <value>Het ingevulde paswoord komt niet overeen</value>
+  <data name="Help" xml:space="preserve">
+    <value>Help</value>
   </data>
-  <data name="Email.InnerText" xml:space="preserve">
-    <value>E-mailadres:</value>
+  <data name="HelpDescription" xml:space="preserve">
+    <value>Help bij het spelen van Stockplay</value>
   </data>
-  <data name="EmailInvalid.ErrorMessage" xml:space="preserve">
-    <value>Je moet een geldig e-mailadres opgeven</value>
+  <data name="Orders" xml:space="preserve">
+    <value>Orders</value>
   </data>
-  <data name="EmailMissing.ErrorMessage" xml:space="preserve">
-    <value>Je moet een e-mailadres opgeven</value>
+  <data name="OrdersDescription" xml:space="preserve">
+    <value>Bekijk uw actieve orders</value>
   </data>
-  <data name="ErrorLabel.Text" xml:space="preserve">
-    <value>Zorg ervoor dat u een unieke gebruikersnaam hebt opgegeven</value>
+  <data name="Overview" xml:space="preserve">
+    <value>Overzicht</value>
   </data>
-  <data name="FinishRegistration.Text" xml:space="preserve">
-    <value>Uw account is nu geregistreerd! Je zal binnen enkele momenten een e-mail in uw inbox ontvangen met daarin een kopie van uw inloginformatie. Ga naar de &lt;a href="Login.aspx"&gt;loginpagina&lt;/a&gt; om in te loggen en deel te nemen aan Stockplay.</value>
+  <data name="OverviewDescription" xml:space="preserve">
+    <value>Bekijk uw accountoverzicht</value>
   </data>
-  <data name="Firstname.InnerText" xml:space="preserve">
-    <value>Voornaam:</value>
+  <data name="Portfolio" xml:space="preserve">
+    <value>Portfolio</value>
   </data>
-  <data name="FirstnameError.ErrorMessage" xml:space="preserve">
-    <value>Je moet een voornaam invullen</value>
+  <data name="PortfolioDescription" xml:space="preserve">
+    <value>Bekijk uw portfolio</value>
   </data>
-  <data name="Lastname.InnerText" xml:space="preserve">
-    <value>Achternaam:</value>
+  <data name="Ranking" xml:space="preserve">
+    <value>Ranking</value>
   </data>
-  <data name="LastnameError.ErrorMessage" xml:space="preserve">
-    <value>Je moet een achternaam invullen</value>
+  <data name="RankingDescription" xml:space="preserve">
+    <value>Ranking van de Stockplay gebruikers</value>
   </data>
-  <data name="Nickname.InnerText" xml:space="preserve">
-    <value>Gebruikersnaam:</value>
+  <data name="SecuritiesOverview" xml:space="preserve">
+    <value>Effectenoverzicht</value>
   </data>
-  <data name="Page.Title" xml:space="preserve">
-    <value>Registratie</value>
+  <data name="SecuritiesOverviewBSE" xml:space="preserve">
+    <value>Euronext Brussel</value>
   </data>
-  <data name="Password.InnerText" xml:space="preserve">
-    <value>Paswoord:</value>
+  <data name="SecuritiesOverviewBSEDescription" xml:space="preserve">
+    <value>Effecten van Euronext Brussel</value>
   </data>
-  <data name="PasswordError.ErrorMessage" xml:space="preserve">
-    <value>Vul alstublieft een paswoord in</value>
+  <data name="SecuritiesOverviewDescription" xml:space="preserve">
+    <value>Overzicht van de beschikbare effecten</value>
   </data>
-  <data name="RegisterButton.Text" xml:space="preserve">
-    <value>Registreer</value>
+  <data name="SecuritiesOverviewPA" xml:space="preserve">
+    <value>Euronext Parijs</value>
   </data>
-  <data name="TableHeader.InnerText" xml:space="preserve">
-    <value>Registreer een nieuwe account</value>
+  <data name="SecuritiesOverviewPADescription" xml:space="preserve">
+    <value>Effecten van Euronext Parijs</value>
   </data>
-  <data name="UsernameError.ErrorMessage" xml:space="preserve">
-    <value>Je moet een gebruikersnaam opgeven</value>
+  <data name="TransactionHistory" xml:space="preserve">
+    <value>Transactiegeschiedenis</value>
+  </data>
+  <data name="TransactionHistoryDescription" xml:space="preserve">
+    <value>Bekijk de volledige historiek van uw transacties</value>
   </data>
 </root>

@@ -117,61 +117,79 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="CancelButton.InnerText" xml:space="preserve">
-    <value>Annuleren</value>
+  <data name="Balance.InnerText" xml:space="preserve">
+    <value>Account balance</value>
   </data>
   <data name="ConfirmPassword.InnerText" xml:space="preserve">
-    <value>Paswoord bevestigen:</value>
-  </data>
-  <data name="ConfirmPasswordError.ErrorMessage" xml:space="preserve">
-    <value>Het ingevulde paswoord komt niet overeen</value>
+    <value>Confirm Password:</value>
   </data>
   <data name="Email.InnerText" xml:space="preserve">
-    <value>E-mailadres:</value>
+    <value>E-mail</value>
   </data>
-  <data name="EmailInvalid.ErrorMessage" xml:space="preserve">
-    <value>Je moet een geldig e-mailadres opgeven</value>
-  </data>
-  <data name="EmailMissing.ErrorMessage" xml:space="preserve">
-    <value>Je moet een e-mailadres opgeven</value>
-  </data>
-  <data name="ErrorLabel.Text" xml:space="preserve">
-    <value>Zorg ervoor dat u een unieke gebruikersnaam hebt opgegeven</value>
-  </data>
-  <data name="FinishRegistration.Text" xml:space="preserve">
-    <value>Uw account is nu geregistreerd! Je zal binnen enkele momenten een e-mail in uw inbox ontvangen met daarin een kopie van uw inloginformatie. Ga naar de &lt;a href="Login.aspx"&gt;loginpagina&lt;/a&gt; om in te loggen en deel te nemen aan Stockplay.</value>
+  <data name="EmailError.ErrorMessage" xml:space="preserve">
+    <value>You have to enter a valid e-mail address</value>
   </data>
   <data name="Firstname.InnerText" xml:space="preserve">
-    <value>Voornaam:</value>
+    <value>Firstname</value>
   </data>
-  <data name="FirstnameError.ErrorMessage" xml:space="preserve">
-    <value>Je moet een voornaam invullen</value>
+  <data name="GotoOrders.InnerText" xml:space="preserve">
+    <value>Go to your orders...</value>
+  </data>
+  <data name="GotoPortfolio.InnerText" xml:space="preserve">
+    <value>Go to your portfolio...</value>
   </data>
   <data name="Lastname.InnerText" xml:space="preserve">
-    <value>Achternaam:</value>
+    <value>Lastname</value>
   </data>
-  <data name="LastnameError.ErrorMessage" xml:space="preserve">
-    <value>Je moet een achternaam invullen</value>
+  <data name="NewEmail.InnerText" xml:space="preserve">
+    <value>E-mail adress:</value>
   </data>
-  <data name="Nickname.InnerText" xml:space="preserve">
-    <value>Gebruikersnaam:</value>
+  <data name="NewFistname.InnerText" xml:space="preserve">
+    <value>First name:</value>
+  </data>
+  <data name="NewLastname.InnerText" xml:space="preserve">
+    <value>Last name:</value>
+  </data>
+  <data name="NewPassword.InnerText" xml:space="preserve">
+    <value>New Password:</value>
+  </data>
+  <data name="NewPasswordError.ErrorMessage" xml:space="preserve">
+    <value>Please enter your old password</value>
+  </data>
+  <data name="NewPasswordMissing.Text" xml:space="preserve">
+    <value>Please enter a new password</value>
+  </data>
+  <data name="OldPassword.InnerText" xml:space="preserve">
+    <value>Old password:</value>
+  </data>
+  <data name="OldPasswordError.ErrorMessage" xml:space="preserve">
+    <value>Please enter your old password</value>
+  </data>
+  <data name="Orders.InnerText" xml:space="preserve">
+    <value>Orders</value>
   </data>
   <data name="Page.Title" xml:space="preserve">
-    <value>Registratie</value>
+    <value>Account overview</value>
   </data>
-  <data name="Password.InnerText" xml:space="preserve">
-    <value>Paswoord:</value>
+  <data name="Para1.InnerText" xml:space="preserve">
+    <value>Here you can view your general account information. If you want to change your account data, you can fill in the form below.</value>
   </data>
-  <data name="PasswordError.ErrorMessage" xml:space="preserve">
-    <value>Vul alstublieft een paswoord in</value>
+  <data name="Para2.InnerText" xml:space="preserve">
+    <value>Fill out the following form if you want to update your account information:</value>
   </data>
-  <data name="RegisterButton.Text" xml:space="preserve">
-    <value>Registreer</value>
+  <data name="Portfolio.InnerText" xml:space="preserve">
+    <value>Portfolio</value>
   </data>
-  <data name="TableHeader.InnerText" xml:space="preserve">
-    <value>Registreer een nieuwe account</value>
+  <data name="Title.InnerText" xml:space="preserve">
+    <value>Account overview</value>
   </data>
-  <data name="UsernameError.ErrorMessage" xml:space="preserve">
-    <value>Je moet een gebruikersnaam opgeven</value>
+  <data name="Update.Text" xml:space="preserve">
+    <value>Update</value>
+  </data>
+  <data name="UpdateError.Text" xml:space="preserve">
+    <value>Old password is not correct</value>
+  </data>
+  <data name="Username.InnerText" xml:space="preserve">
+    <value>Username</value>
   </data>
 </root>

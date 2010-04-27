@@ -124,7 +124,7 @@
     <value>Stockplay is an online browser game where you trade stocks and other securities. It works with live data straight from the most popular exchanges around the world.</value>
   </data>
   <data name="Para2.Text" xml:space="preserve">
-    <value>Visit the &lt;a runat="server" href="~/Register.aspx"&gt;registration page&lt;/a&gt; to register a free account and start playing immediately! Currently the game is still in beta, so not all functionality is ready yet, and you may encounter some problems. If you want more information on how to play the game and the current status of the project, you can visit the &lt;a runat="server" href="~/Help.aspx"&gt;help page&lt;/a&gt;.</value>
+    <value>Visit the &lt;a href="Register.aspx"&gt;registration page&lt;/a&gt; to register a free account and start playing immediately! Currently the game is still in beta, so not all functionality is ready yet, and you may encounter some problems. If you want more information on how to play the game and the current status of the project, you can visit the &lt;a href="Help.aspx"&gt;help page&lt;/a&gt;.</value>
   </data>
   <data name="Title.Text" xml:space="preserve">
     <value>Welcome to Stockplay!</value>

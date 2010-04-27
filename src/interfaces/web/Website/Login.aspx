@@ -8,7 +8,7 @@
     <p><asp:Literal runat="server" Text="<%$ Resources:Password %>" /> <asp:TextBox ID="txtPassword" runat="server" TextMode="Password"></asp:TextBox></p>
     <p>
         <asp:CheckBox ID="chkRememberMe" runat="server" Text="<%$ Resources:RememberMe %>"/>
-        <a href="ForgotPassword.aspx" meta:resourcekey="ForgotPassword"></a>
+        <a href="ForgotPassword.aspx" meta:resourcekey="ForgotPassword" runat="server"></a>
     </p>
     <asp:Button ID="btnLogin" runat="server" Text="Login" onclick="btnLogin_Click" meta:resourcekey="LoginButton" />
 </asp:Content>

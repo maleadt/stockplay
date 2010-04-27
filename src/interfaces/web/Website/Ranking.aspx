@@ -4,8 +4,8 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder" Runat="Server">
-    <h1 meta:resourcekey="Title"></h1>
+    <h1 runat="server" meta:resourcekey="Title"></h1>
     
-    <p class="para" meta:resourcekey="Notification"></p>
+    <p class="para" runat="server" meta:resourcekey="Notification"></p>
 </asp:Content>
 

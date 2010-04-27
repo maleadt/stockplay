@@ -45,11 +45,11 @@
     <asp:GridView ID="HistoryGridView" runat="server" AutoGenerateColumns="False" 
     onrowdatabound="HistoryGridView_RowDataBound" GridLines="None"  CellSpacing="-1">
         <Columns>
-            <asp:BoundField DataField="Date" HtmlEncode="false" DataFormatString="{0:dd/MM/yyyy}" meta:resourcekey="Date" />
-            <asp:BoundField DataField="Change" meta:resourcekey="Change" />
-            <asp:BoundField DataField="Open" meta:resourcekey="Open" />
-            <asp:BoundField DataField="Low" meta:resourcekey="Low" />
-            <asp:BoundField DataField="High" meta:resourcekey="High" />
+            <asp:BoundField DataField="Date" HtmlEncode="false" DataFormatString="{0:dd/MM/yyyy}" meta:resourcekey="DateField" />
+            <asp:BoundField DataField="Change" meta:resourcekey="ChangeField" />
+            <asp:BoundField DataField="Open" meta:resourcekey="OpenField" />
+            <asp:BoundField DataField="Low" meta:resourcekey="LowField" />
+            <asp:BoundField DataField="High" meta:resourcekey="HighField" />
         </Columns>
     </asp:GridView>
 

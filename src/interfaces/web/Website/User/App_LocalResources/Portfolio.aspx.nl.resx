@@ -117,61 +117,49 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="CancelButton.InnerText" xml:space="preserve">
+  <data name="Amount.HeaderText" xml:space="preserve">
+    <value>Hoeveelheid</value>
+  </data>
+  <data name="AmountError.ErrorMessage" xml:space="preserve">
+    <value>Vul een hoeveelheid in die kleiner dan of gelijk is aan de totale hoeveelheid aandelen die zich in uw portfolio bevinden.</value>
+  </data>
+  <data name="Cancel.Text" xml:space="preserve">
     <value>Annuleren</value>
   </data>
-  <data name="ConfirmPassword.InnerText" xml:space="preserve">
-    <value>Paswoord bevestigen:</value>
+  <data name="Confirm.Text" xml:space="preserve">
+    <value>Bevestigen</value>
   </data>
-  <data name="ConfirmPasswordError.ErrorMessage" xml:space="preserve">
-    <value>Het ingevulde paswoord komt niet overeen</value>
-  </data>
-  <data name="Email.InnerText" xml:space="preserve">
-    <value>E-mailadres:</value>
-  </data>
-  <data name="EmailInvalid.ErrorMessage" xml:space="preserve">
-    <value>Je moet een geldig e-mailadres opgeven</value>
-  </data>
-  <data name="EmailMissing.ErrorMessage" xml:space="preserve">
-    <value>Je moet een e-mailadres opgeven</value>
-  </data>
-  <data name="ErrorLabel.Text" xml:space="preserve">
-    <value>Zorg ervoor dat u een unieke gebruikersnaam hebt opgegeven</value>
-  </data>
-  <data name="FinishRegistration.Text" xml:space="preserve">
-    <value>Uw account is nu geregistreerd! Je zal binnen enkele momenten een e-mail in uw inbox ontvangen met daarin een kopie van uw inloginformatie. Ga naar de &lt;a href="Login.aspx"&gt;loginpagina&lt;/a&gt; om in te loggen en deel te nemen aan Stockplay.</value>
-  </data>
-  <data name="Firstname.InnerText" xml:space="preserve">
-    <value>Voornaam:</value>
-  </data>
-  <data name="FirstnameError.ErrorMessage" xml:space="preserve">
-    <value>Je moet een voornaam invullen</value>
-  </data>
-  <data name="Lastname.InnerText" xml:space="preserve">
-    <value>Achternaam:</value>
-  </data>
-  <data name="LastnameError.ErrorMessage" xml:space="preserve">
-    <value>Je moet een achternaam invullen</value>
-  </data>
-  <data name="Nickname.InnerText" xml:space="preserve">
-    <value>Gebruikersnaam:</value>
+  <data name="Isin.HeaderText" xml:space="preserve">
+    <value>Isin</value>
   </data>
   <data name="Page.Title" xml:space="preserve">
-    <value>Registratie</value>
+    <value>Portfolio</value>
   </data>
-  <data name="Password.InnerText" xml:space="preserve">
-    <value>Paswoord:</value>
+  <data name="Para1.InnerText" xml:space="preserve">
+    <value>Hier krijg je een overzicht te zien van al de effecten die zich momenteel in je portfolio bevinden. Als je een effect wil verkopen, dan kan je op de 'Verkoop effect' link klikken die rechts in de tabel staat.</value>
   </data>
-  <data name="PasswordError.ErrorMessage" xml:space="preserve">
-    <value>Vul alstublieft een paswoord in</value>
+  <data name="Para2.InnerText" xml:space="preserve">
+    <value>Bent u zeker dat u een verkoopsorder wilt plaatsen voor effect &lt;b id="SecurityName" runat="server"&gt;&lt;/b&gt; voor een prijs van &lt;b id="Price" runat="server"&gt;&lt;/b&gt;?</value>
   </data>
-  <data name="RegisterButton.Text" xml:space="preserve">
-    <value>Registreer</value>
+  <data name="Para31" xml:space="preserve">
+    <value>Hoeveel aandelen wilt u verkopen?</value>
   </data>
-  <data name="TableHeader.InnerText" xml:space="preserve">
-    <value>Registreer een nieuwe account</value>
+  <data name="Para32" xml:space="preserve">
+    <value>Vraagprijs per aandeel?</value>
   </data>
-  <data name="UsernameError.ErrorMessage" xml:space="preserve">
-    <value>Je moet een gebruikersnaam opgeven</value>
+  <data name="PriceError.ErrorMessage" xml:space="preserve">
+    <value>Vul een positief getal in.</value>
+  </data>
+  <data name="Quote.HeaderText" xml:space="preserve">
+    <value>Laatste Koers</value>
+  </data>
+  <data name="Security.HeaderText" xml:space="preserve">
+    <value>Effect</value>
+  </data>
+  <data name="Sell.Text" xml:space="preserve">
+    <value>Plaats verkoopsorder</value>
+  </data>
+  <data name="Title.InnerText" xml:space="preserve">
+    <value>Portfolio</value>
   </data>
 </root>

@@ -120,35 +120,35 @@
   <data name="Buy.InnerText" xml:space="preserve">
     <value>Koop dit effect</value>
   </data>
-  <data name="Change.HeaderText" xml:space="preserve">
+  <data name="ChangeField.HeaderText" xml:space="preserve">
     <value>Open</value>
   </data>
-  <data name="Date.HeaderText" xml:space="preserve">
+  <data name="DateField.HeaderText" xml:space="preserve">
     <value>Datum</value>
   </data>
   <data name="Exchange.InnerText" xml:space="preserve">
     <value>Beurs</value>
   </data>
-  <data name="High.HeaderText" xml:space="preserve">
+  <data name="High.InnerText" xml:space="preserve">
     <value>Hoog</value>
   </data>
-  <data name="High.InnerText" xml:space="preserve">
+  <data name="HighField.HeaderText" xml:space="preserve">
     <value>Hoog</value>
   </data>
   <data name="ISIN.InnerText" xml:space="preserve">
     <value>ISIN</value>
   </data>
-  <data name="Low.HeaderText" xml:space="preserve">
-    <value>Laag</value>
-  </data>
   <data name="Low.InnerText" xml:space="preserve">
     <value>Laag</value>
   </data>
-  <data name="Open.HeaderText" xml:space="preserve">
-    <value>Wijziging</value>
+  <data name="LowField.HeaderText" xml:space="preserve">
+    <value>Laag</value>
   </data>
   <data name="Open.InnerText" xml:space="preserve">
     <value>Open</value>
+  </data>
+  <data name="OpenField.HeaderText" xml:space="preserve">
+    <value>Wijziging</value>
   </data>
   <data name="Page.Title" xml:space="preserve">
     <value>Detail van effect</value>

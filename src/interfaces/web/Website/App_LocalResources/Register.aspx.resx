@@ -138,8 +138,8 @@
   <data name="ErrorLabel.Text" xml:space="preserve">
     <value>Make sure you have entered a unique username.</value>
   </data>
-  <data name="FinishRegistration.InnerText" xml:space="preserve">
-    <value>Your account has now been registered! You will receive a copy of your login information in your inbox shortly. Go to the &lt;a runat="server" href="~/Login.aspx"&gt;login page&lt;/a&gt; to login and participate in StockPlay.</value>
+  <data name="FinishRegistration.Text" xml:space="preserve">
+    <value>Your account has now been registered! You will receive a copy of your login information in your inbox shortly. Go to the &lt;a href="Login.aspx"&gt;login page&lt;/a&gt; to login and participate in StockPlay.</value>
   </data>
   <data name="Firstname.InnerText" xml:space="preserve">
     <value>First name:</value>
@@ -165,7 +165,7 @@
   <data name="PasswordError.ErrorMessage" xml:space="preserve">
     <value>Please enter a password</value>
   </data>
-  <data name="RegisterButton.InnerText" xml:space="preserve">
+  <data name="RegisterButton.Text" xml:space="preserve">
     <value>Register</value>
   </data>
   <data name="TableHeader.InnerText" xml:space="preserve">

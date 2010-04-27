@@ -18,32 +18,29 @@
     <form id="form1" runat="server">
     <div id="container">
         <div id="header">
-            <h1>StockPlay</h1>
+            <h1 runat="server" meta:resourcekey="Title"></h1>
         </div>
         
         <div id="content">
             <div id="menu">            
                 <div id="left">
-                    <input id="search" name="search" type="text" value="Effect zoeken.." />
+                    <input id="search" name="search" type="text" runat="server" meta:resourcekey="SearchBox" />
 
-                    <asp:SiteMapDataSource ID="SiteMapSource" runat="server" 
-                        ShowStartingNode="False" />
+                    <asp:SiteMapDataSource ID="SiteMapSource" runat="server" ShowStartingNode="False" />
                     <asp:TreeView CssClass="menu" ID="TreeView1" runat="server" 
-                        ShowExpandCollapse="False" DataSourceID="SiteMapSource" 
-                        meta:resourcekey="TreeView1Resource1">
+                        ShowExpandCollapse="False" DataSourceID="SiteMapSource">
                     </asp:TreeView>
                 </div>
                 
                 <div id="leftBottom">
-                    <asp:SiteMapPath ID="SiteMapPath1" runat="server" 
-                        meta:resourcekey="SiteMapPath1Resource1"></asp:SiteMapPath>
+                    <asp:SiteMapPath ID="SiteMapPath1" runat="server"></asp:SiteMapPath>
                     <asp:LoginView ID="LoginView1" runat="server">
                         <AnonymousTemplate>
-                            <p>Welcome to Stockplay: <a href="Login.aspx">Login</a> or <a href="Register.aspx">Register</a></p>
+                            <p><asp:Literal meta:resourcekey="LoginBox" runat="server" /></p>
                         </AnonymousTemplate>
                         <LoggedInTemplate>
                             <p>
-                                Welcome
+                                <asp:Literal runat="server" Text="<%$ Resources:LoggedInBox %>" />
                                 <asp:LoginName ID="LoginName1" runat="server" 
                                     meta:resourcekey="LoginName1Resource1" />
                                 <asp:LoginStatus ID="LoginStatus2" runat="server" 

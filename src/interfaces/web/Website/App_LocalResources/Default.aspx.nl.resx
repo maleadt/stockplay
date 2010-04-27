@@ -124,9 +124,9 @@
     <value>Stockplay is een online browserspel waar je aandelen en adere effecten verhandelt. Het werkt met live gegevens rechtstreeks van de populairste beurzen van over de hele wereld.</value>
   </data>
   <data name="Para2.Text" xml:space="preserve">
-    <value>Bezoek de &lt;a runat="server" href="~/Register.aspx"&gt;registratie pagina&lt;/a&gt; om een gratis account te registreren en begin onmiddellijk te spelen! Momenteel bevindt het spel zich nog in beta, dus nog niet all functionaliteit is aanwezig, en je kan mogelijks enkele problemen tegenkomen. Alsj e meer informatie wil over hoe je het spel moet spelen en de huidige status van het Stockplay project, dan kan je de &lt;a runat="server" href="~/Help.aspx"&gt;helppagina&lt;/a&gt; bezoeken.</value>
+    <value>Bezoek de &lt;a href="Register.aspx"&gt;registratie pagina&lt;/a&gt; om een gratis account te registreren en begin onmiddellijk te spelen! Momenteel bevindt het spel zich nog in beta, dus nog niet all functionaliteit is aanwezig, en je kan mogelijks enkele problemen tegenkomen. Alsj e meer informatie wil over hoe je het spel moet spelen en de huidige status van het Stockplay project, dan kan je de &lt;a href="Help.aspx"&gt;helppagina&lt;/a&gt; bezoeken.</value>
   </data>
   <data name="Title.Text" xml:space="preserve">
-    <value>Welkom bij Stockplay!</value>
+    <value>Welkom bij StockPlay!</value>
   </data>
 </root>

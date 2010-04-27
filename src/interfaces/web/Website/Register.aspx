@@ -5,7 +5,9 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder" Runat="Server">
 
-    <p class="para" id="FinishRegistration" runat="server" visible="false" meta:resourcekey="FinishRegistration"></p>
+    <p class="para" id="FinishRegistration" visible="false" runat="server">
+        <asp:Literal runat="server" meta:resourcekey="FinishRegistration" />
+    </p>
     <table id="TableRegister" runat="server">
         <tr>
             <td colspan="2" meta:resourcekey="TableHeader"></td>
