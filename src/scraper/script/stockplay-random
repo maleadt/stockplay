@@ -24,14 +24,9 @@ use strict;
 #
 # Setup
 #
-
-# Get a logger
-StockPlay::Logger->setup("random");
-my $logger = StockPlay::Logger->logger;
-$logger->info("bootstrapping scraper");
-
-my $stockplay = new StockPlay();
+my $stockplay = new StockPlay(app => "random");
 my $factory = $stockplay->getFactory();
+my $logger = $stockplay->getLogger();
 
 
 #

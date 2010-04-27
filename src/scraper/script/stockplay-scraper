@@ -18,14 +18,10 @@ use strict;
 # Main
 #
 
-# Get a logger
-StockPlay::Logger->setup("scraper");
-my $logger = StockPlay::Logger->logger;
-$logger->info("bootstrapping scraper");
-
-my $stockplay = new StockPlay();
+my $stockplay = new StockPlay(app => "scraper");
 my $factory = $stockplay->getFactory();
 my $scraper = $stockplay->getScraper();
+my $logger = $stockplay->getLogger();
 
 $scraper->run();
 

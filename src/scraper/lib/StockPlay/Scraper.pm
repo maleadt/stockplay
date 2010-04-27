@@ -28,9 +28,11 @@ use StockPlay::Index;
 use StockPlay::Security;
 use StockPlay::Quote;
 use StockPlay::PluginManager;
+use File::Path;
 
 # Roles
 with 'StockPlay::Logger';
+with 'StockPlay::Configurable';
 
 # Write nicely
 use strict;
@@ -75,8 +77,8 @@ sub _build_plugins {
 	my @infohashes = $self->pluginmanager->get_group('StockPlay::Scraper::Source');
 
 	# Check homefolder
-	my $dumpfolder = $ENV{'HOME'} . '/dumps/';
-	mkdir $dumpfolder unless (-d $dumpfolder);
+	my $dumpfolder = $self->config->get('dump_folder') . '/';
+	mkpath $dumpfolder unless (-d $dumpfolder);
 
 	# Load plugins
 	my @plugins;
@@ -98,15 +100,13 @@ sub _build_plugins {
 			
 			# Instantiate a plugin, if neccesary
 			if (not defined $plugin) {
-				$self->logger->debug("creating new dump");
+				$self->logger->debug("instantiating plugin");
 				$plugin = $self->pluginmanager->instantiate($infohash);
-				$plugin->clean();
-				store $plugin, $dumpfolder . $infohash->{name} . '.dump';
 			}
 			
 			# Check roles	
 			if (not $plugin->does('StockPlay::Scraper::Source')) {
-				die("passed plugin doesn't implement correct coles");
+				die("passed plugin doesn't implement correct roles");
 			}
 			
 			# Check exchanges
@@ -162,6 +162,11 @@ sub _build_plugins {
 				}
 			}
 			
+			# Update the dump
+			$self->logger->debug("updating dump");
+			$plugin->clean();
+			store $plugin, $dumpfolder . $infohash->{name} . '.dump';
+			
 			push(@plugins, $plugin);
 		};
 		if ($@) {
@@ -200,6 +205,9 @@ passed by constructor.
 
 sub BUILD {
 	my ($self) = @_;
+	
+	# Default configuration
+	$self->config->set_default('dump_folder', $ENV{'HOME'} . '/.stockplay/dumps');
 	
 	# Build lazy attributes which depend on passed values
 	$self->plugins;

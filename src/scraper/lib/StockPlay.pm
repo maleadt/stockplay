@@ -26,6 +26,7 @@ use StockPlay::Configuration;
 use StockPlay::PluginManager;
 use StockPlay::AI;
 use StockPlay::Scraper;
+use StockPlay::Logger;
 
 # Roles
 with 'StockPlay::Logger';
@@ -62,12 +63,30 @@ sub _build_config {
 	return $config;
 }
 
+has 'app' => (
+	is		=> 'ro',
+	isa		=> 'Str',
+	required	=> 1
+);
+
 ################################################################################
 # Methods
 
 =pod
 
 =head1 METHODS
+
+=cut
+
+sub BUILD {
+	my ($self) = @_;
+	
+	StockPlay::Logger->setup($self->app);
+	
+	$self->logger->info("initialising " . $self->app);
+}
+
+=pod
 
 =head2 C<$stockplay->getFactory(@params)>
 
@@ -118,7 +137,8 @@ sub getScraper {
 	$self->logger->info('loading scraper');
 	return new StockPlay::Scraper(
 		config		=> $self->config->get_section("scraper"),
-		pluginmanager	=> getPluginManager(),
+		pluginmanager	=> $self->getPluginManager(),
+		factory		=> $self->getFactory(),
 		@params
 	);
 }
@@ -138,9 +158,25 @@ sub getAI {
 	$self->logger->info('loading artificial intelligence');
 	return new StockPlay::AI(
 		config		=> $self->config->get_section("ai"),
-		pluginmanager	=> getPluginManager(),
+		pluginmanager	=> $self->getPluginManager(),
+		factory		=> $self->getFactory(),
 		@params
 	);
+}
+
+=pod
+
+=head2 C<$stockplay->getLogger>
+
+Instantiate a new C<Log::Log4perl> logger. This logger is guaranteed to be
+properly set up and ready for use.
+
+=cut
+
+sub getLogger {
+	my ($self) = @_;
+	
+	return $self->logger;
 }
 	
 

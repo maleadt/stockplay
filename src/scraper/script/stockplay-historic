@@ -28,13 +28,10 @@ use strict;
 # Setup
 #
 
-# Get a logger
-StockPlay::Logger->setup("historic");
-my $logger = StockPlay::Logger->logger;
-$logger->info("bootstrapping historic data loader");
-
-my $stockplay = new StockPlay();
+my $stockplay = new StockPlay(app => "historic");
 my $factory = $stockplay->getFactory();
+my $logger = $stockplay->getLogger();
+
 
 
 #

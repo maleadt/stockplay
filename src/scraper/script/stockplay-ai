@@ -18,14 +18,10 @@ use strict;
 # Main
 #
 
-# Get a logger
-StockPlay::Logger->setup("ai");
-my $logger = StockPlay::Logger->logger;
-$logger->info("bootstrapping ai");
-
-my $stockplay = new StockPlay();
+my $stockplay = new StockPlay(app => "ai");
 my $factory = $stockplay->getFactory();
 my $ai = $stockplay->getAI();
+my $logger = $stockplay->getLogger();
 
 $ai->run();
 

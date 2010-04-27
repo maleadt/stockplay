@@ -24,12 +24,9 @@ use strict;
 # Setup
 #
 
-# Get a logger
-StockPlay::Logger->setup("test");
-my $logger = StockPlay::Logger->logger;
-$logger->info("bootstrapping test client");
-my $stockplay = new StockPlay();
+my $stockplay = new StockPlay(app => "test");
 my $factory = $stockplay->getFactory();
+my $logger = $stockplay->getLogger();
 
 
 #

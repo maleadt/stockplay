@@ -35,13 +35,9 @@ my $PLUGIN_MAX_AGE = 3600*24*7;
 # Setup
 #
 
-# Get a logger
-StockPlay::Logger->setup("chart");
-my $logger = StockPlay::Logger->logger;
-$logger->info("bootstrapping charter");
-
-my $stockplay = new StockPlay();
+my $stockplay = new StockPlay(app => "charter");
 my $factory = $stockplay->getFactory();
+my $logger = $stockplay->getLogger();
 
 my $choice;
 
