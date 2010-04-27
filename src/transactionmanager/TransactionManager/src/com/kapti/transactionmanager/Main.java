@@ -45,6 +45,6 @@ public class Main {
 
         daemonService = Executors.newSingleThreadScheduledExecutor();
         //we voeren elke minuut een controle van de orders uit
-        daemonService.scheduleAtFixedRate(new CheckOrdersTask(), 0, 30, TimeUnit.SECONDS);
+        daemonService.scheduleAtFixedRate(new CheckOrdersTask(), 0, 5, TimeUnit.SECONDS);
     }
 }

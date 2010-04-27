@@ -66,6 +66,7 @@ public class CheckOrdersTask implements Runnable {
             logger.error("Failed to fetch pending orders", ex);
         }
 
+
         // En we halen alle laatste quotes op
         HashMap<Security, Quote> currentQuotes = new HashMap<Security, Quote>();
         try {
