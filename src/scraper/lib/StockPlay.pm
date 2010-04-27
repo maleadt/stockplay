@@ -76,6 +76,11 @@ has 'app' => (
 
 =head1 METHODS
 
+=head2 C<$stockplay->BUILD>
+
+Object constructor, loads lazy attributes, connects to the server, and sends
+an initial HELLO message.
+
 =cut
 
 sub BUILD {
