@@ -1,4 +1,5 @@
-﻿<%@ Page Language="C#" MasterPageFile="~/MasterPage.master" AutoEventWireup="true" CodeFile="SecurityDetail.aspx.cs" Inherits="SecurityDetail" Title="Security Detail" %>
+﻿<%@ Page Language="C#" MasterPageFile="~/MasterPage.master" AutoEventWireup="true" CodeFile="SecurityDetail.aspx.cs" Inherits="SecurityDetail"
+    UICulture="auto" Culture="auto" meta:resourcekey="Page" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
 </asp:Content>
@@ -8,35 +9,35 @@
     <h2 ID="Change" runat="server"></h2>
     
     <ul class="actions"> 
-        <asp:HyperLink ID="BuyHyperlink" runat="server"><li class="action buy">Buy this security</li></asp:HyperLink>
+        <asp:HyperLink ID="BuyHyperlink" runat="server"><li class="action buy" runat="server" meta:resourcekey="Buy"></li></asp:HyperLink>
     </ul> 
     
     <table class="table" id="general">
         <tr>
-            <td class="col">Exchange</td>
+            <td class="col" runat="server" meta:resourcekey="Exchange"></td>
             <td><p ID="Exchange" runat="server"></p></td>
         </tr>
         <tr>
-            <td class="col">ISIN</td>
+            <td class="col" runat="server" meta:resourcekey="ISIN"></td>
             <td><p ID="ISIN" runat="server"></p></td>
         </tr>
         <tr>
-            <td class="col">Symbol</td>
+            <td class="col" runat="server" meta:resourcekey="Symbol"></td>
             <td><p ID="Symbol" runat="server"></p></td>
         </tr>
     </table>
     
     <table class="table" id="data">
         <tr>
-            <td class="col">Open</td>
+            <td class="col" runat="server" meta:resourcekey="Open"></td>
             <td><p ID="Open" runat="server"></p></td>
         </tr>
         <tr>
-            <td class="col">High</td>
+            <td class="col" runat="server" meta:resourcekey="High"></td>
             <td><p ID="High" runat="server"></p></td>
         </tr>
         <tr>
-            <td class="col">Low</td>
+            <td class="col" runat="server" meta:resourcekey="Low"></td>
             <td><p ID="Low" runat="server"></p></td>
         </tr>
     </table>
@@ -44,11 +45,11 @@
     <asp:GridView ID="HistoryGridView" runat="server" AutoGenerateColumns="False" 
     onrowdatabound="HistoryGridView_RowDataBound" GridLines="None"  CellSpacing="-1">
         <Columns>
-            <asp:BoundField DataField="Date" HeaderText="Date" HtmlEncode="false" DataFormatString="{0:dd/MM/yyyy}" />
-            <asp:BoundField DataField="Change" HeaderText="Change" />
-            <asp:BoundField DataField="Open" HeaderText="Open" />
-            <asp:BoundField DataField="Low" HeaderText="Low" />
-            <asp:BoundField DataField="High" HeaderText="High" />
+            <asp:BoundField DataField="Date" HtmlEncode="false" DataFormatString="{0:dd/MM/yyyy}" meta:resourcekey="Date" />
+            <asp:BoundField DataField="Change" meta:resourcekey="Change" />
+            <asp:BoundField DataField="Open" meta:resourcekey="Open" />
+            <asp:BoundField DataField="Low" meta:resourcekey="Low" />
+            <asp:BoundField DataField="High" meta:resourcekey="High" />
         </Columns>
     </asp:GridView>
 

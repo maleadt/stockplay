@@ -1,74 +1,71 @@
-﻿<%@ Page Language="C#" MasterPageFile="~/MasterPage.master" AutoEventWireup="true" CodeFile="Register.aspx.cs" Inherits="Register" Title="Register" %>
+﻿<%@ Page Language="C#" MasterPageFile="~/MasterPage.master" AutoEventWireup="true" CodeFile="Register.aspx.cs" Inherits="Register" Title="Register"
+    UICulture="auto" Culture="auto" meta:resourcekey="Page" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder" Runat="Server">
 
-    <p class="para" id="FinishRegistration" runat="server" visible="false">Your account has now been registered! You will receive a copy of your login information in your inbox shortly.
-    Go to the <a runat="server" href="~/Login.aspx">login page</a> to login and participate in StockPlay</p>
+    <p class="para" id="FinishRegistration" runat="server" visible="false" meta:resourcekey="FinishRegistration"></p>
     <table id="TableRegister" runat="server">
         <tr>
-            <td colspan="2">Register a new account</td>
+            <td colspan="2" meta:resourcekey="TableHeader"></td>
         </tr>
         <tr>
-            <td>Nickname:</td>
+            <td runat="server" meta:resourcekey="Nickname"></td>
             <td>
                 <asp:TextBox ID="UserName" runat="server"></asp:TextBox>
                 <asp:RequiredFieldValidator ID="NicknameRequired" runat="server" ValidationGroup="CreateUser1"
-                ControlToValidate="UserName" ErrorMessage="You have to enter a nickname">*</asp:RequiredFieldValidator>
+                ControlToValidate="UserName" meta:resourcekey="UsernameError">*</asp:RequiredFieldValidator>
             </td>
         </tr>
         <tr>
-            <td>Password:</td>
+            <td  runat="server" meta:resourcekey="Password"></td>
             <td>
                 <asp:TextBox ID="Password" runat="server" TextMode="Password"></asp:TextBox>
                 <asp:RequiredFieldValidator ID="PasswordRequired" runat="server" ValidationGroup="CreateUser1"
-                ControlToValidate="Password" ErrorMessage="Please enter a password">*</asp:RequiredFieldValidator>
+                ControlToValidate="Password" meta:resourcekey="PasswordError">*</asp:RequiredFieldValidator>
             </td>
         </tr>
         <tr>
-            <td>Confirm Password:</td>
+            <td runat="server" meta:resourcekey="ConfirmPassword"></td>
             <td>
                 <asp:TextBox ID="txtPasswordConfirm" runat="server" TextMode="Password"></asp:TextBox>
                 <asp:CompareValidator runat="server" ID="PasswordCompare" ControlToValidate="txtPasswordConfirm" ValidationGroup="CreateUser1"
-                ControlToCompare="Password" Text="The entered password does not match">*</asp:CompareValidator>
+                ControlToCompare="Password" meta:resourcekey="ConfirmPasswordError">*</asp:CompareValidator>
             </td>
         </tr>
         <tr>
-            <td>Last name:</td>
+            <td runat="server" meta:resourcekey="Lastname"></td>
             <td>
                 <asp:TextBox ID="txtLastname" runat="server"></asp:TextBox>
                 <asp:RequiredFieldValidator ID="LastnameRequired" runat="server" ValidationGroup="CreateUser1"
-                ControlToValidate="txtLastname" ErrorMessage="You need to enter a last name">*</asp:RequiredFieldValidator>
+                ControlToValidate="txtLastname" meta:resourcekey="LastnameError">*</asp:RequiredFieldValidator>
             </td>
         </tr>
         <tr>
-            <td>First name:</td>
+            <td runat="server" meta:resourcekey="Firstname"></td>
             <td>
                 <asp:TextBox ID="txtFirstname" runat="server"></asp:TextBox>
                 <asp:RequiredFieldValidator ID="FirstnameRequired" runat="server" ValidationGroup="CreateUser1"
-                ControlToValidate="txtFirstname" ErrorMessage="You need to enter a first name">*</asp:RequiredFieldValidator>
+                ControlToValidate="txtFirstname" meta:resourcekey="FirstnameError">*</asp:RequiredFieldValidator>
             </td>
         </tr>
         <tr>
-            <td>E-mail adress:</td>
+            <td runat="server" meta:resourcekey="Email"></td>
             <td>
                 <asp:TextBox ID="Email" runat="server"></asp:TextBox>
                 <asp:RequiredFieldValidator ID="EmailRequired" runat="server" ValidationGroup="CreateUser1"
-                ControlToValidate="Email" ErrorMessage="You need to your e-mail adress">*</asp:RequiredFieldValidator>
+                ControlToValidate="Email" ErrorMessage="You need to your e-mail adress" meta:resourcekey="EmailMissing">*</asp:RequiredFieldValidator>
                 <asp:RegularExpressionValidator ID="RegularExpressionValidator1" runat="server" 
-                    ControlToValidate="Email" ValidationGroup="CreateUser1" Display="Dynamic"
-                    ErrorMessage="You have to enter a valid e-mail address" 
+                    ControlToValidate="Email" ValidationGroup="CreateUser1" Display="Dynamic" meta:resourcekey="EmailInvalid"
                     ValidationExpression="\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*"></asp:RegularExpressionValidator>
             </td>
         </tr>
         <tr>
             <td></td>
-            <td><asp:Button ID="btnRegister" Text="Register" runat="server" /> 
-                <asp:Button ID="btnCancel" Text="Cancel" runat="server" 
-                    onclick="btnCancel_Click" />
-                <asp:Label ID="ErrorLabel" runat="server" ForeColor="Red" 
-                    Text="Make sure you have entered a unique username." Visible="False"></asp:Label>
+            <td><asp:Button ID="btnRegister" runat="server" meta:resourcekey="RegisterButton" /> 
+                <asp:Button ID="btnCancel" Text="Cancel" runat="server" meta:resourcekey="CancelButton" onclick="btnCancel_Click" />
+                <asp:Label ID="ErrorLabel" runat="server" ForeColor="Red" Visible="False" meta:resourcekey="ErrorLabel"></asp:Label>
             </td>
         </tr>
     </table>

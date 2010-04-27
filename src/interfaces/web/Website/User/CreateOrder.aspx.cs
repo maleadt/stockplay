@@ -79,7 +79,7 @@ public partial class User_CreateOrder : System.Web.UI.Page
 
                 StockplayMembershipUser user = (StockplayMembershipUser)Membership.GetUser(User.Identity.Name);
 
-                data.CreateOrder(user.ID, security.Isin, Convert.ToInt32(txtAmount.Text), Convert.ToInt32(txtQuote.Text), "BUY");
+                data.CreateOrder(user.ID, security.Isin, Convert.ToInt32(txtAmount.Text), Convert.ToDouble(txtQuote.Text), "BUY");
 
                 Response.Redirect("~/User/OrdersOverview.aspx");
             }

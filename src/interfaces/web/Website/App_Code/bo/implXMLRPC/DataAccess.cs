@@ -180,7 +180,7 @@ namespace implXMLRPC
                 isins.Add("ISIN == '" + security.Isin + "'");
             }
 
-            XmlRpcStruct[] queries = securityHandler.LatestQuotes(string.Join(" && ", isins));
+            XmlRpcStruct[] queries = securityHandler.LatestQuotes(string.Join(" && ", isins.ToArray()));
             foreach (XmlRpcStruct query in queries)
             {
                 quotes.Add(new Quote(query));

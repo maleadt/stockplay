@@ -26,13 +26,17 @@
                 <div id="left">
                     <input id="search" name="search" type="text" value="Effect zoeken.." />
 
-                    <asp:SiteMapDataSource ID="SiteMapSource" runat="server" ShowStartingNode="false" />
-                    <asp:TreeView CssClass="menu" ID="TreeView1" runat="server" ShowExpandCollapse="False" DataSourceID="SiteMapSource">
+                    <asp:SiteMapDataSource ID="SiteMapSource" runat="server" 
+                        ShowStartingNode="False" />
+                    <asp:TreeView CssClass="menu" ID="TreeView1" runat="server" 
+                        ShowExpandCollapse="False" DataSourceID="SiteMapSource" 
+                        meta:resourcekey="TreeView1Resource1">
                     </asp:TreeView>
                 </div>
                 
                 <div id="leftBottom">
-                    <asp:SiteMapPath ID="SiteMapPath1" runat="server"></asp:SiteMapPath>
+                    <asp:SiteMapPath ID="SiteMapPath1" runat="server" 
+                        meta:resourcekey="SiteMapPath1Resource1"></asp:SiteMapPath>
                     <asp:LoginView ID="LoginView1" runat="server">
                         <AnonymousTemplate>
                             <p>Welcome to Stockplay: <a href="Login.aspx">Login</a> or <a href="Register.aspx">Register</a></p>
@@ -40,8 +44,10 @@
                         <LoggedInTemplate>
                             <p>
                                 Welcome
-                                <asp:LoginName ID="LoginName1" runat="Server" />
-                                <asp:LoginStatus ID="LoginStatus2" runat="server" />
+                                <asp:LoginName ID="LoginName1" runat="server" 
+                                    meta:resourcekey="LoginName1Resource1" />
+                                <asp:LoginStatus ID="LoginStatus2" runat="server" 
+                                    meta:resourcekey="LoginStatus2Resource1" />
                             </p>
                         </LoggedInTemplate>
                     </asp:LoginView>
