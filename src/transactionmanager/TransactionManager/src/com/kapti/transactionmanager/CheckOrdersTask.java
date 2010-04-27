@@ -1,7 +1,25 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * CheckOrdersTask.java
+ * StockPlay - Controleer of aan de voorwaarde van een order voldaan is en voert het dan uit.
+ *
+ * Copyright (c) 2010 StockPlay development team
+ * All rights reserved.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
+
 package com.kapti.transactionmanager;
 
 import com.kapti.client.finance.FinanceFactory;
@@ -21,8 +39,10 @@ import org.apache.log4j.Logger;
 
 /**
  *
- * @author Laurens
+ * \brief   Controleer of aan de voorwaarde van een order voldaan is en voert het dan uit.
+ *
  */
+
 public class CheckOrdersTask implements Runnable {
 
     private static Logger logger = Logger.getLogger(CheckOrdersTask.class);
@@ -34,46 +54,39 @@ public class CheckOrdersTask implements Runnable {
     public CheckOrdersTask() {
     }
 
-
     public void run() {
     try {
         logger.info("Starting Orderprocessing");
-
         
-        //we halen alle pending orders op
+        // We halen alle pending orders op
         Collection<Order> currentOrders = null;
         try {
             currentOrders = orderFactory.getAllPendingOrders();
-
         } catch (StockPlayException ex) {
             logger.error("Failed to fetch pending orders", ex);
         }
 
-        //en we halen alle laatste quotes op
+        // En we halen alle laatste quotes op
         HashMap<Security, Quote> currentQuotes = new HashMap<Security, Quote>();
         try {
             Collection<Quote> latestQuotes = financeFactory.getAllLatestQuotes();
-            for (Quote q : latestQuotes) {
+            for (Quote q : latestQuotes)
                 currentQuotes.put(q.getSecurity(), q);
-            }
-
         } catch (StockPlayException ex) {
             logger.error("Failed to fetch the latest quotes", ex);
         }
 
-        //we testen nu een voor een elk order of het voldoet, en voeren het zoja uit
-
+        // We testen nu een voor een elk order of het voldoet, en voeren het uit indien dat het geval is
         for (Order order : currentOrders) {
             logger.info("Verifying order " + order.getId());
             OrderVerifier verifier = orderVerifierFactory.getOrderVerifierByType(order.getType());
             Quote quote = currentQuotes.get(order.getSecurity());
 
-          
-              
-
             if (verifier != null && verifier.verifyOrder(order, quote) &&
-                    (((order.getType() != Order.Type.BUY || order.getType() != Order.Type.IMMEDIATE_BUY)) &&  order.getUser().getCash() > quote.getPrice() * order.getAmount())) {
-                // de voorwaarden om het order te kunnen uitvoeren zijn voldaan, we voeren het uit!
+                (((order.getType() != Order.Type.BUY || order.getType() != Order.Type.IMMEDIATE_BUY)) &&
+                order.getUser().getCash() > quote.getPrice() * order.getAmount())) {
+
+                // De voorwaarden om het order te kunnen uitvoeren zijn voldaan, we voeren het uit!
                 Transaction transaction = transactionFactory.createTransaction();
                 transaction.setUser(order.getUser());
                 transaction.setAmount(order.getAmount());
@@ -81,18 +94,10 @@ public class CheckOrdersTask implements Runnable {
                 transaction.setTime(new Date());
                 transaction.setComment("Execution of order " + order.getId());
                 transaction.setPrice(quote.getPrice());
-                if (order.getType() == Order.Type.BUY
-                        || order.getType() == Order.Type.IMMEDIATE_BUY) {
-
+                if (order.getType() == Order.Type.BUY || order.getType() == Order.Type.IMMEDIATE_BUY)
                     transaction.setType(Transaction.Type.BUY);
-                    //transaction.setPrice(quote.getAsk());
-
-
-                } else if (order.getType() == Order.Type.SELL
-                        || order.getType() == Order.Type.IMMEDIATE_SELL) {
+                else
                     transaction.setType(Transaction.Type.SELL);
-                    //transaction.setPrice(quote.getBid());
-                }
                 try {
                     if (transactionFactory.execute(transaction)) {
                         logger.info("Order " + order.getId() + " was executed with transaction " + transaction.getId());
@@ -103,19 +108,16 @@ public class CheckOrdersTask implements Runnable {
                     }
                     orderFactory.makePersistent(order);
 
-                    //we passen de user aan in onze cache
+                    // We passen de user aan in onze cache
                     order.getUser().setCash(order.getUser().getCash() - quote.getPrice() * order.getAmount());
-                    
                 } catch (StockPlayException ex) {
                     logger.error("Exception occured while executing order " + order.getId(), ex);
                 }
-
             }
         }
 
         logger.info("Orderprocessing ended -- waiting for new call");
-
-    }catch(Exception ex){
+    } catch(Exception ex) {
         logger.error("Error while processings orders", ex);
     }
     }
