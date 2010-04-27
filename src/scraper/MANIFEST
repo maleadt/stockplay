@@ -33,7 +33,9 @@ script/stockplay-random
 script/stockplay-scraper
 script/stockplay-test
 t/00-load.t
+t/01-manifest.t
+t/02-pod.t
+t/03-pod-coverage.t
+t/04-critic.t
 t/boilerplate.t
-t/manifest.t
-t/pod-coverage.t
-t/pod.t
+t/perlcriticrc

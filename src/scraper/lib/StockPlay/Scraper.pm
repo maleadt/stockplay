@@ -211,6 +211,8 @@ sub BUILD {
 	
 	# Build lazy attributes which depend on passed values
 	$self->plugins;
+	
+	return;
 }
 
 =pod
@@ -323,6 +325,8 @@ sub run {
 		$self->logger->debug("sleeping $delay seconds");
 		sleep($delay);
 	}
+	
+	return;
 }
 
 ################################################################################

@@ -51,16 +51,16 @@ sub _build_exchanges {
 	my ($self) = @_;
 	
 	# Euronext Brussel
-	my $brussel = new StockPlay::Exchange(
+	my $brussel = StockPlay::Exchange->new(
 		symbol		=> "BSE",
 		name		=> "Euronext Brussels",
 		location	=> "Brussel",
 		private => {
-			time_zone	=> new DateTime::TimeZone(name => "Europe/Brussels")
+			time_zone	=> DateTime::TimeZone(name => "Europe/Brussels")->new
 		}
 	);
 	$self->_addSecurities($brussel, 'http://www.tijd.be/beurzen/euronext-brussel/continumarkt');
-	my $bel20 = new StockPlay::Index(
+	my $bel20 = StockPlay::Index->new(
 		name		=> "bel20",
 		symbol		=> "BEL20",
 		isin		=> "BE0389555039",
@@ -72,18 +72,18 @@ sub _build_exchanges {
 	push(@{$brussel->indexes}, $bel20);
 	
 	# Euronext Parijs
-	my $parijs = new StockPlay::Exchange(
+	my $parijs = StockPlay::Exchange->new(
 		symbol		=> "PA",
 		name		=> "Euronext Paris",
 		location	=> "Parijs",
 		private => {
-			time_zone	=> new DateTime::TimeZone(name => "Europe/Paris")
+			time_zone	=> DateTime::TimeZone(name => "Europe/Paris")->new
 		}
 	);
 	$self->_addSecurities($parijs, 'http://www.tijd.be/beurzen/euronext-parijs/frencha');
 	$self->_addSecurities($parijs, 'http://www.tijd.be/beurzen/euronext-parijs/frenchb');
 	$self->_addSecurities($parijs, 'http://www.tijd.be/beurzen/euronext-parijs/frenchc');
-	my $cac40 = new StockPlay::Index(
+	my $cac40 = StockPlay::Index->new(
 		name		=> "cac40",
 		symbol		=> "PX1",
 		isin		=> "FR0003500008",
@@ -178,6 +178,7 @@ sub _addSecuritiesIndex {
 	}
 	
 	push(@{$index->securities}, @securities);
+	return scalar @securities;
 	
 }
 
@@ -260,7 +261,7 @@ sub _addSecurities {
 					$tree2->delete();
 					
 					return unless (defined $isin and defined $symbol);
-					push(@securities, new StockPlay::Security({
+					push(@securities, StockPlay::Security->new({
 						symbol		=> $symbol,
 						isin		=> $isin,
 						name		=> $name,
@@ -280,6 +281,7 @@ sub _addSecurities {
 	}
 	
 	push(@{$exchange->securities}, @securities);
+	return scalar @securities;
 }
 
 =pod
@@ -325,7 +327,7 @@ sub getLatestQuotes {
 		eval {
 			my $datetime = _parse_datetime($exchange->get('time_zone'), $data{time});
 			die("could not parse time") unless $datetime;
-			push(@quotes, new StockPlay::Quote({
+			push(@quotes, StockPlay::Quote->new({
 				time		=> $datetime,
 				security	=> $security->isin,
 				price		=> $data{last},
@@ -418,7 +420,7 @@ sub _parse_datetime {
 	# Create a new datetime object with all parameters filled in
 	my @items = split(/:/, $string);
 	die("invalid time specification") unless $#items == 2;
-	my $datetime = new DateTime (
+	my $datetime = DateTime->new(
 		time_zone	=> $timezone,
 		year		=> $datetime_reference->year,
 		month		=> $datetime_reference->month,

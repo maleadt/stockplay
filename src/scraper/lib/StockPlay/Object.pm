@@ -64,6 +64,7 @@ sub set {
 	my ($self, $key, $value) = @_;
 	
 	$self->private->{$key} = $value;
+	return 1;
 }
 
 =pod

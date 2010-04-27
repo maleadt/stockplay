@@ -75,7 +75,7 @@ sub _build_xmlrpc {
 	# Disable compression with
 	#$RPC::XML::Client::COMPRESSION_AVAILABLE = "";
 	
-	my $xmlrpc = new RPC::XML::Client(
+	my $xmlrpc = RPC::XML::Client->new(
 		$self->config->get('server'),
 		error_handler	=> \&doError,
 		fault_handler	=> \&doFault
@@ -197,7 +197,7 @@ sub getExchanges {
 	# Build StockPlay::Exchange objects
 	my @exchanges;
 	foreach my $s_exchange (@s_exchanges) {
-		my $exchange = new StockPlay::Exchange(
+		my $exchange = StockPlay::Exchange->new(
 			symbol		=> $s_exchange->{SYMBOL}
 		);
 		if (defined $s_exchange->{NAME}) {
@@ -234,7 +234,7 @@ sub getIndexes {
 	# Build StockPlay::Index objects
 	my @indexes;
 	foreach my $s_index (@s_indexes) {
-		my $index = new StockPlay::Index(
+		my $index = StockPlay::Index->new(
 			isin		=> $s_index->{ISIN},
 			symbol		=> $s_index->{SYMBOL}
 		);
@@ -267,7 +267,7 @@ sub getSecurities {
 	# Build StockPlay::Security objects
 	my @securities;
 	foreach my $s_security (@s_securities) {
-		my $security = new StockPlay::Security(
+		my $security = StockPlay::Security->new(
 			isin		=> $s_security->{ISIN},
 			symbol		=> $s_security->{SYMBOL}
 		);
@@ -340,7 +340,7 @@ sub getLatestQuotes {
 	# Build StockPlay::Quote objects
 	my @quotes;
 	foreach my $s_quote (@s_quotes) {
-		my $quote = new StockPlay::Quote(
+		my $quote = StockPlay::Quote->new(
 			security	=> $s_quote->{ISIN},
 			time		=> DateTime::Format::ISO8601->parse_datetime($s_quote->{TIME}),
 			volume		=> $s_quote->{VOLUME},
@@ -404,7 +404,7 @@ sub getQuotes {
 	# Build StockPlay::Quote objects
 	my @quotes;
 	foreach my $s_quote (@s_quotes) {
-		my $quote = new StockPlay::Quote(
+		my $quote = StockPlay::Quote->new(
 			security	=> $s_quote->{ISIN},
 			time		=> DateTime::Format::ISO8601->parse_datetime($s_quote->{TIME}),
 			volume		=> $s_quote->{VOLUME},
@@ -455,7 +455,9 @@ sub createQuotes {
 	}
 	
 	# Send the quotes to the server
-	$self->xmlrpc->send_request('Finance.Security.UpdateBulk', \@s_quotes);	
+	$self->xmlrpc->send_request('Finance.Security.UpdateBulk', \@s_quotes);
+	
+	return 1;
 }
 
 =pod
@@ -478,6 +480,8 @@ sub createExchange {
 	
 	# Send the exchange to the server
 	$self->xmlrpc->send_request('Finance.Exchange.Create', \%s_exchange);
+	
+	return 1;
 }
 
 =pod
@@ -500,7 +504,9 @@ sub createIndex {
 	$s_index{name} = RPC_STRING($index->name) if $index->has_name;
 	
 	# Send the index to the server
-	$self->xmlrpc->send_request('Finance.Index.Create', \%s_index);		
+	$self->xmlrpc->send_request('Finance.Index.Create', \%s_index);
+	
+	return 1;
 }
 
 =pod
@@ -522,6 +528,8 @@ sub createIndexSecurity {
 	
 	# Send the index to the server
 	$self->xmlrpc->send_request('Finance.IndexSecurity.Create', \%s_indexsecurity);
+	
+	return 1;
 }
 
 =pod
@@ -545,6 +553,8 @@ sub createSecurity {
 	
 	# Send the security to the server
 	$self->xmlrpc->send_request('Finance.Security.Create', \%s_security);
+	
+	return 1;
 }
 
 

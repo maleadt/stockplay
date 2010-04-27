@@ -166,6 +166,8 @@ sub set_default {
 	
 	# Update the default value
 	$self->items->{$key}->{default} = $value;
+	
+	return;
 }
 
 =pod
@@ -337,6 +339,7 @@ sub file_read {
 		}
 	}
 	close($file);
+	return;
 }
 
 =pod
@@ -364,7 +367,7 @@ sub get_section {
 	return error("can only split section from top-level configuration object") if ($self->has_parent);
 	
 	# Extract subsection
-	my $configsection = new StockPlay::Configuration(
+	my $configsection = StockPlay::Configuration->new(
 		parent	=> $self,
 		section	=> $section
 	);

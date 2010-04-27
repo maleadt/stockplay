@@ -5,7 +5,7 @@ use Module::Build;
 my $builder = Module::Build->new (
     module_name         => 'StockPlay',
     dist_name           => 'StockPlay',
-    dist_version        => '0.1',
+    dist_version_from   => 'lib/StockPlay.pm',
     dist_author         => 'The StockPlay team <http://code.google.com/p/stockplay/>',
     dist_abstract       => 'The StockPlay framework',
     license             => 'gpl',

@@ -35,6 +35,12 @@ with 'StockPlay::Logger';
 use strict;
 use warnings;
 
+# Specify version
+use vars qw($VERSION);
+$VERSION = '0.01';
+
+
+
 
 ################################################################################
 # Attributes
@@ -55,7 +61,7 @@ has 'config' => (
 sub _build_config {
 	my ($self) = @_;
 	
-	my $config = new StockPlay::Configuration;
+	my $config = StockPlay::Configuration->new;
 	if (-f '~/.stockplay/config') {
 		$config->file_read('~/.stockplay/config');
 	}
@@ -89,6 +95,8 @@ sub BUILD {
 	StockPlay::Logger->setup($self->app);
 	
 	$self->logger->info("initialising " . $self->app);
+	
+	return;
 }
 
 =pod
@@ -103,7 +111,7 @@ sub getFactory {
 	my ($self, @params) = @_;
 	
 	$self->logger->info('loading factory');
-	return new StockPlay::Factory(
+	return StockPlay::Factory->new(
 		config		=> $self->config->get_section("factory"),
 		@params
 	);
@@ -121,7 +129,7 @@ sub getPluginManager {
 	my ($self, @params) = @_;
 	
 	$self->logger->info('loading plugin manager');
-	return new StockPlay::PluginManager(
+	return StockPlay::PluginManager->new(
 		config		=> $self->config->get_section("pluginmanager"),
 		@params
 	);
@@ -140,7 +148,7 @@ sub getScraper {
 	my ($self, @params) = @_;
 	
 	$self->logger->info('loading scraper');
-	return new StockPlay::Scraper(
+	return StockPlay::Scraper->new(
 		config		=> $self->config->get_section("scraper"),
 		pluginmanager	=> $self->getPluginManager(),
 		factory		=> $self->getFactory(),
@@ -161,7 +169,7 @@ sub getAI {
 	my ($self, @params) = @_;
 	
 	$self->logger->info('loading artificial intelligence');
-	return new StockPlay::AI(
+	return StockPlay::AI->new(
 		config		=> $self->config->get_section("ai"),
 		pluginmanager	=> $self->getPluginManager(),
 		factory		=> $self->getFactory(),

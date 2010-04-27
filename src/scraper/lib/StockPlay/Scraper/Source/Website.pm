@@ -66,7 +66,7 @@ Private method, builds the browser attribute.
 sub _build_browser {
 	my ($self) = @_;
 	
-	my $browser = new WWW::Mechanize;
+	my $browser = WWW::Mechanize->new();
 	$browser->agent('StockPlay/0.1');
 	
 	return $browser;

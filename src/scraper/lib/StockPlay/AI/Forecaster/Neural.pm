@@ -93,7 +93,9 @@ sub BUILD {
 	my ($self) = @_;
 	
 	# Build lazy attributes
-	$self->network;	
+	$self->network;
+	
+	return;
 }
 
 =pod
@@ -179,7 +181,7 @@ sub postprocess_output {
 	# Implode
 	my @outputs;
 	foreach my $output_proc (@outputs_proc) {
-		push(@outputs, new StockPlay::AI::Data::Output(
+		push(@outputs, StockPlay::AI::Data::Output->new(
 			closing	=> $output_proc->[0]
 		));
 	}
@@ -220,6 +222,9 @@ sub train {
 		0.0001	# Desired rate of error
 	);
 	$self->network->print_connections();
+	
+	# TODO: maybe return MSE?
+	return;
 }
 
 =pod
@@ -264,6 +269,8 @@ sub _scale {
 	
 	$self->scales->{$tag.$index."min"} = $min;
 	$self->scales->{$tag.$index."max"} = $max;
+	
+	return;
 }
 
 sub _descale {
@@ -274,6 +281,8 @@ sub _descale {
 	for (my $i = 0; $i < @$arrayref; $i++) {
 		$arrayref->[$i]->[$index] = ($max - $min) * $arrayref->[$i]->[$index] + $min;
 	}
+	
+	return;
 }
 
 1;

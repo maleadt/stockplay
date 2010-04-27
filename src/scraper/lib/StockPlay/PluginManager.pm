@@ -120,6 +120,8 @@ sub load_group {
 			if (defined $self->plugins->{$package});
 		$self->plugins->{$package} = \%infohash;
 	}
+	
+	return scalar (keys %plugins);
 }
 
 ################################################################################
@@ -184,7 +186,7 @@ sub instantiate {
 	my ($self, $infohash, @params) = @_;
 	my $package = $infohash->{package};
 	$infohash->{time} = time;
-	new $package (infohash => $infohash, @params);
+	return new $package (infohash => $infohash, @params);
 }
 
 ################################################################################

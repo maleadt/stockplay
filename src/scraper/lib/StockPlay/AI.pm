@@ -126,6 +126,8 @@ sub BUILD {
 	
 	# Build lazy attributes which depend on passed values
 	$self->forecasters;
+	
+	return;
 }
 
 =pod
@@ -175,7 +177,7 @@ sub run {
 		}
 		
 		# Generate inputs
-		push(@inputs, new StockPlay::AI::Data::Input(
+		push(@inputs, StockPlay::AI::Data::Input->new(
 			closing		=> $quotes[$i+1]->open,
 			low		=> $quote->low,
 			high		=> $quote->high,
@@ -185,13 +187,13 @@ sub run {
 		));
 		
 		# Generate outputs
-		push(@outputs, new StockPlay::AI::Data::Output(
+		push(@outputs, StockPlay::AI::Data::Output->new(
 			closing		=> $quotes[$i+2]->open
 		));
 	}
 	
 	# Pass data to forecaster
-	my $forecaster = new StockPlay::AI::Forecaster::Neural;
+	my $forecaster = StockPlay::AI::Forecaster::Neural->new;
 	my @inputs_proc = $forecaster->preprocess_input(@inputs);
 	my @outputs_proc = $forecaster->preprocess_output(@outputs);
 	my (@inputs_test, @outputs_test);
@@ -210,6 +212,7 @@ sub run {
 		print "Forecasted ", $forecast->closing, " while expected ", $output->closing, "\n";
 	}
 	
+	return;	
 }
 
 ################################################################################
