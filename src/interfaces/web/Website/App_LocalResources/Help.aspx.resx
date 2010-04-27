@@ -117,13 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Item1.InnerText" xml:space="preserve">
+  <data name="Item1.Text" xml:space="preserve">
     <value>&lt;b&gt;Mobile client&lt;/b&gt;: You will be able to manage your portfolio from your cellphone, with a Java application.</value>
   </data>
-  <data name="Item2.InnerText" xml:space="preserve">
+  <data name="Item2.Text" xml:space="preserve">
     <value>&lt;b&gt;Ranking&lt;/b&gt;: A ranking page where you can find the best stock traders.</value>
   </data>
-  <data name="Item3.InnerText" xml:space="preserve">
+  <data name="Item3.Text" xml:space="preserve">
     <value>&lt;b&gt;Complex orders&lt;/b&gt;: You will be able to apply extensive rules to the orders you place.</value>
   </data>
   <data name="Page.Title" xml:space="preserve">

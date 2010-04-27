@@ -16,9 +16,9 @@
     <h2 meta:resourcekey="Subtitle2" runat="server"></h2>
     <p class="para" meta:resourcekey="Para21" runat="server"></p>
     <ul>
-        <li meta:resourcekey="Item1" runat="server"></li>
-        <li meta:resourcekey="Item2" runat="server"></li>
-        <li meta:resourcekey="Item3" runat="server"></li>
+        <li><asp:Literal meta:resourcekey="Item1" runat="server" /></li>
+        <li><asp:Literal meta:resourcekey="Item2" runat="server" /></li>
+        <li><asp:Literal meta:resourcekey="Item3" runat="server" /></li>
     </ul>
 </asp:Content>
 
