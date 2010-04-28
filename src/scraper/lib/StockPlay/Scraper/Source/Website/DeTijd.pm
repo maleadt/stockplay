@@ -56,7 +56,7 @@ sub _build_exchanges {
 		name		=> "Euronext Brussels",
 		location	=> "Brussel",
 		private => {
-			time_zone	=> DateTime::TimeZone(name => "Europe/Brussels")->new
+			time_zone	=> DateTime::TimeZone->new(name => "Europe/Brussels")
 		}
 	);
 	$self->_addSecurities($brussel, 'http://www.tijd.be/beurzen/euronext-brussel/continumarkt');
@@ -77,7 +77,7 @@ sub _build_exchanges {
 		name		=> "Euronext Paris",
 		location	=> "Parijs",
 		private => {
-			time_zone	=> DateTime::TimeZone(name => "Europe/Paris")->new
+			time_zone	=> DateTime::TimeZone->new(name => "Europe/Paris")
 		}
 	);
 	$self->_addSecurities($parijs, 'http://www.tijd.be/beurzen/euronext-parijs/frencha');

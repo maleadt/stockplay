@@ -1,3 +1,9 @@
+bin/stockplay-ai
+bin/stockplay-chart
+bin/stockplay-historic
+bin/stockplay-random
+bin/stockplay-scraper
+bin/stockplay-test
 Build.PL
 Changes
 lib/StockPlay.pm
@@ -26,12 +32,6 @@ lib/StockPlay/Security.pm
 MANIFEST
 META.yml
 README
-script/stockplay-ai
-script/stockplay-chart
-script/stockplay-historic
-script/stockplay-random
-script/stockplay-scraper
-script/stockplay-test
 t/00-load.t
 t/01-manifest.t
 t/02-pod.t
