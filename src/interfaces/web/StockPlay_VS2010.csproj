@@ -1,0 +1,352 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{B0D61229-F653-4ADD-AD13-49E41284A3DE}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>web</RootNamespace>
+    <AssemblyName>web</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="Default.aspx" />
+    <Content Include="ForgotPassword.aspx" />
+    <Content Include="Global.asax" />
+    <Content Include="Help.aspx" />
+    <Content Include="Login.aspx" />
+    <Content Include="MasterPage.master" />
+    <Content Include="Ranking.aspx" />
+    <Content Include="Register.aspx" />
+    <Content Include="Restart.aspx" />
+    <Content Include="SecuritiesOverview.aspx" />
+    <Content Include="SecurityDetail.aspx" />
+    <Content Include="User\CreateOrder.aspx" />
+    <Content Include="User\OrdersOverview.aspx" />
+    <Content Include="User\Overview.aspx" />
+    <Content Include="User\Portfolio.aspx" />
+    <Content Include="User\TransactionHistory.aspx" />
+    <Content Include="Web.config" />
+    <Content Include="Web.sitemap">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="WebService.asmx" />
+    <Content Include="App_Browsers\RenderAdapters.browser" />
+    <Content Include="App_Themes\StockPlay\dynamiek\taalbestanden\nl-be.js" />
+    <Content Include="App_Themes\StockPlay\dynamiek\algemeen.js" />
+    <Content Include="App_Themes\StockPlay\afbeeldingen\chart_line.png" />
+    <Content Include="App_Themes\StockPlay\afbeeldingen\logo.png" />
+    <Content Include="App_Themes\StockPlay\afbeeldingen\magnifier.png" />
+    <Content Include="App_Themes\StockPlay\afbeeldingen\money_add.png" />
+    <Content Include="App_Themes\StockPlay\afbeeldingen\money_delete.png" />
+    <Content Include="App_Themes\StockPlay\StockPlay.skin" />
+    <Content Include="App_Themes\StockPlay\grafiek\images\arrow_undo.png" />
+    <Content Include="App_Themes\StockPlay\grafiek\images\arrow_undo_disabled.png" />
+    <Content Include="App_Themes\StockPlay\grafiek\images\brick_add.png" />
+    <Content Include="App_Themes\StockPlay\grafiek\images\brick_add_disabled.png" />
+    <Content Include="App_Themes\StockPlay\grafiek\images\lightning.png" />
+    <Content Include="App_Themes\StockPlay\grafiek\images\lightning_disabled.png" />
+    <Content Include="App_Themes\StockPlay\grafiek\images\magnifier_zoom_in.png" />
+    <Content Include="App_Themes\StockPlay\grafiek\images\magnifier_zoom_out.png" />
+    <Content Include="App_Themes\StockPlay\grafiek\images\plot.gif" />
+    <Content Include="App_Themes\StockPlay\grafiek\images\plugin.png" />
+    <Content Include="App_Themes\StockPlay\grafiek\images\tag.png" />
+    <Content Include="App_Themes\StockPlay\grafiek\flot\excanvas.js" />
+    <Content Include="App_Themes\StockPlay\grafiek\flot\excanvas.min.js" />
+    <Content Include="App_Themes\StockPlay\grafiek\flot\jquery.colorhelpers.js" />
+    <Content Include="App_Themes\StockPlay\grafiek\flot\jquery.colorhelpers.min.js" />
+    <Content Include="App_Themes\StockPlay\grafiek\flot\jquery.flot.crosshair.js" />
+    <Content Include="App_Themes\StockPlay\grafiek\flot\jquery.flot.crosshair.min.js" />
+    <Content Include="App_Themes\StockPlay\grafiek\flot\jquery.flot.image.js" />
+    <Content Include="App_Themes\StockPlay\grafiek\flot\jquery.flot.image.min.js" />
+    <Content Include="App_Themes\StockPlay\grafiek\flot\jquery.flot.js" />
+    <Content Include="App_Themes\StockPlay\grafiek\flot\jquery.flot.min.js" />
+    <Content Include="App_Themes\StockPlay\grafiek\flot\jquery.flot.navigate.js" />
+    <Content Include="App_Themes\StockPlay\grafiek\flot\jquery.flot.navigate.min.js" />
+    <Content Include="App_Themes\StockPlay\grafiek\flot\jquery.flot.selection.js" />
+    <Content Include="App_Themes\StockPlay\grafiek\flot\jquery.flot.selection.min.js" />
+    <Content Include="App_Themes\StockPlay\grafiek\flot\jquery.flot.stack.js" />
+    <Content Include="App_Themes\StockPlay\grafiek\flot\jquery.flot.stack.min.js" />
+    <Content Include="App_Themes\StockPlay\grafiek\flot\jquery.flot.threshold.js" />
+    <Content Include="App_Themes\StockPlay\grafiek\flot\jquery.flot.threshold.min.js" />
+    <Content Include="App_Themes\StockPlay\grafiek\flot\jquery.js" />
+    <Content Include="App_Themes\StockPlay\grafiek\flot\jquery.min.js" />
+    <Content Include="App_Themes\StockPlay\grafiek\grafiek.css" />
+    <Content Include="App_Themes\StockPlay\grafiek\grafiek.html" />
+    <Content Include="App_Themes\StockPlay\grafiek\grafiek.js" />
+    <Content Include="App_Themes\StockPlay\grafiek\options.js" />
+    <Content Include="App_Themes\StockPlay\vormgeving\ie.css" />
+    <Content Include="App_Themes\StockPlay\vormgeving\style.css" />
+    <Content Include="grafiek\images\arrow_undo.png" />
+    <Content Include="grafiek\images\arrow_undo_disabled.png" />
+    <Content Include="grafiek\images\brick_add.png" />
+    <Content Include="grafiek\images\brick_add_disabled.png" />
+    <Content Include="grafiek\images\lightning.png" />
+    <Content Include="grafiek\images\lightning_disabled.png" />
+    <Content Include="grafiek\images\magnifier_zoom_in.png" />
+    <Content Include="grafiek\images\magnifier_zoom_out.png" />
+    <Content Include="grafiek\images\plot.gif" />
+    <Content Include="grafiek\images\plugin.png" />
+    <Content Include="grafiek\images\tag.png" />
+    <Content Include="grafiek\flot\excanvas.js" />
+    <Content Include="grafiek\flot\excanvas.min.js" />
+    <Content Include="grafiek\flot\jquery.colorhelpers.js" />
+    <Content Include="grafiek\flot\jquery.colorhelpers.min.js" />
+    <Content Include="grafiek\flot\jquery.flot.crosshair.js" />
+    <Content Include="grafiek\flot\jquery.flot.crosshair.min.js" />
+    <Content Include="grafiek\flot\jquery.flot.image.js" />
+    <Content Include="grafiek\flot\jquery.flot.image.min.js" />
+    <Content Include="grafiek\flot\jquery.flot.js" />
+    <Content Include="grafiek\flot\jquery.flot.min.js" />
+    <Content Include="grafiek\flot\jquery.flot.navigate.js" />
+    <Content Include="grafiek\flot\jquery.flot.navigate.min.js" />
+    <Content Include="grafiek\flot\jquery.flot.selection.js" />
+    <Content Include="grafiek\flot\jquery.flot.selection.min.js" />
+    <Content Include="grafiek\flot\jquery.flot.stack.js" />
+    <Content Include="grafiek\flot\jquery.flot.stack.min.js" />
+    <Content Include="grafiek\flot\jquery.flot.threshold.js" />
+    <Content Include="grafiek\flot\jquery.flot.threshold.min.js" />
+    <Content Include="grafiek\flot\jquery.js" />
+    <Content Include="grafiek\flot\jquery.min.js" />
+    <Content Include="grafiek\data.js" />
+    <Content Include="grafiek\grafiek.css" />
+    <Content Include="grafiek\grafiek.html" />
+    <Content Include="grafiek\grafiek.js" />
+    <Content Include="grafiek\options.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ForgotPassword.aspx.designer.cs">
+      <DependentUpon>ForgotPassword.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ForgotPassword.aspx.cs">
+      <DependentUpon>ForgotPassword.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Help.aspx.designer.cs">
+      <DependentUpon>Help.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Help.aspx.cs">
+      <DependentUpon>Help.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Login.aspx.designer.cs">
+      <DependentUpon>Login.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Login.aspx.cs">
+      <DependentUpon>Login.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="MasterPage.master.cs">
+      <DependentUpon>MasterPage.master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Ranking.aspx.designer.cs">
+      <DependentUpon>Ranking.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Ranking.aspx.cs">
+      <DependentUpon>Ranking.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Register.aspx.designer.cs">
+      <DependentUpon>Register.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Register.aspx.cs">
+      <DependentUpon>Register.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Restart.aspx.designer.cs">
+      <DependentUpon>Restart.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Restart.aspx.cs">
+      <DependentUpon>Restart.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SecuritiesOverview.aspx.designer.cs">
+      <DependentUpon>SecuritiesOverview.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SecuritiesOverview.aspx.cs">
+      <DependentUpon>SecuritiesOverview.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SecurityDetail.aspx.designer.cs">
+      <DependentUpon>SecurityDetail.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SecurityDetail.aspx.cs">
+      <DependentUpon>SecurityDetail.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="bo\implXMLRPC\handlers\ExchangeHandler.cs" />
+    <Compile Include="bo\implXMLRPC\handlers\IndexHandler.cs" />
+    <Compile Include="bo\implXMLRPC\handlers\OrderHandler.cs" />
+    <Compile Include="bo\implXMLRPC\handlers\PortfolioHandler.cs" />
+    <Compile Include="bo\implXMLRPC\handlers\SecurityHandler.cs" />
+    <Compile Include="bo\implXMLRPC\handlers\TransactionHandler.cs" />
+    <Compile Include="bo\implXMLRPC\handlers\UserHandler.cs" />
+    <Compile Include="bo\implXMLRPC\DataAccess.cs" />
+    <Compile Include="bo\implXMLRPC\Exchange.cs" />
+    <Compile Include="bo\implXMLRPC\Order.cs" />
+    <Compile Include="bo\implXMLRPC\Plot.cs" />
+    <Compile Include="bo\implXMLRPC\Quote.cs" />
+    <Compile Include="bo\implXMLRPC\Security.cs" />
+    <Compile Include="bo\implXMLRPC\Transaction.cs" />
+    <Compile Include="bo\implXMLRPC\User.cs" />
+    <Compile Include="bo\implXMLRPC\UserSecurity.cs" />
+    <Compile Include="bo\interfaces\IDataAccess.cs" />
+    <Compile Include="bo\interfaces\IExchange.cs" />
+    <Compile Include="bo\interfaces\IOrder.cs" />
+    <Compile Include="bo\interfaces\IQuote.cs" />
+    <Compile Include="bo\interfaces\ISecurity.cs" />
+    <Compile Include="bo\interfaces\ITransaction.cs" />
+    <Compile Include="bo\interfaces\IUser.cs" />
+    <Compile Include="bo\interfaces\IUserSecurity.cs" />
+    <Compile Include="bo\DataAccessFactory.cs" />
+    <Compile Include="bo\Helpers.cs" />
+    <Compile Include="membership\StockplayMembershipProvider.cs" />
+    <Compile Include="membership\StockplayMembershipUser.cs" />
+    <Compile Include="renderers\SiteMapPathCustomAdapter.cs" />
+    <Compile Include="renderers\TreeViewCustomAdapter.cs" />
+    <Compile Include="User\CreateOrder.aspx.cs">
+      <DependentUpon>CreateOrder.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="User\CreateOrder.aspx.designer.cs">
+      <DependentUpon>CreateOrder.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="User\OrdersOverview.aspx.cs">
+      <DependentUpon>OrdersOverview.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="User\OrdersOverview.aspx.designer.cs">
+      <DependentUpon>OrdersOverview.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="User\Overview.aspx.cs">
+      <DependentUpon>Overview.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="User\Overview.aspx.designer.cs">
+      <DependentUpon>Overview.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="User\Portfolio.aspx.cs">
+      <DependentUpon>Portfolio.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="User\Portfolio.aspx.designer.cs">
+      <DependentUpon>Portfolio.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="User\TransactionHistory.aspx.cs">
+      <DependentUpon>TransactionHistory.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="User\TransactionHistory.aspx.designer.cs">
+      <DependentUpon>TransactionHistory.aspx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App_GlobalResources\Sitemap.nl.resx" />
+    <None Include="App_GlobalResources\Sitemap.resx" />
+    <None Include="App_LocalResources\Default.aspx.nl.resx" />
+    <None Include="App_LocalResources\Default.aspx.resx" />
+    <None Include="App_LocalResources\ForgotPassword.aspx.nl.resx" />
+    <None Include="App_LocalResources\ForgotPassword.aspx.resx" />
+    <None Include="App_LocalResources\Help.aspx.nl.resx" />
+    <None Include="App_LocalResources\Help.aspx.resx" />
+    <None Include="App_LocalResources\Login.aspx.nl.resx" />
+    <None Include="App_LocalResources\Login.aspx.resx" />
+    <None Include="App_LocalResources\Masterpage.Master.resx" />
+    <None Include="App_LocalResources\MasterPage.Master.nl.resx" />
+    <None Include="App_LocalResources\Ranking.aspx.nl.resx" />
+    <None Include="App_LocalResources\Ranking.aspx.resx" />
+    <None Include="App_LocalResources\Register.aspx.nl.resx" />
+    <None Include="App_LocalResources\Register.aspx.resx" />
+    <None Include="App_LocalResources\SecuritiesOverview.aspx.nl.resx" />
+    <None Include="App_LocalResources\SecuritiesOverview.aspx.resx" />
+    <None Include="App_LocalResources\SecurityDetail.aspx.nl.resx" />
+    <None Include="App_LocalResources\SecurityDetail.aspx.resx" />
+    <None Include="grafiek\flot\API.txt" />
+    <None Include="grafiek\flot\PLUGINS.txt" />
+    <None Include="grafiek\flot\README.txt" />
+    <None Include="User\App_LocalResources\CreateOrder.aspx.nl.resx" />
+    <None Include="User\App_LocalResources\CreateOrder.aspx.resx" />
+    <None Include="User\App_LocalResources\OrdersOverview.aspx.nl.resx" />
+    <None Include="User\App_LocalResources\OrdersOverview.aspx.resx" />
+    <None Include="User\App_LocalResources\Overview.aspx.nl.resx" />
+    <None Include="User\App_LocalResources\Overview.aspx.resx" />
+    <None Include="User\App_LocalResources\Portfolio.aspx.nl.resx" />
+    <None Include="User\App_LocalResources\Portfolio.aspx.resx" />
+    <None Include="User\App_LocalResources\TransactionHistory.aspx.nl.resx" />
+    <None Include="User\App_LocalResources\TransactionHistory.aspx.resx" />
+    <Content Include="User\Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="CookComputing.XmlRpcV2">
+      <HintPath>..\..\..\lib\dotnet\CookComputing.XmlRpcV2.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>..\..\..\lib\dotnet\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.XML" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>1041</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>
+          </IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

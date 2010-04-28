@@ -1,42 +1,18 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "web", ".", "{4918FEC4-A0BA-42CD-975D-CE981BC1BCC5}"
-	ProjectSection(WebsiteProperties) = preProject
-		SccProjectName = "Svn"
-		SccAuxPath = "Svn"
-		SccLocalPath = "Svn"
-		SccProvider = "SubversionScc"
-		TargetFrameworkMoniker = ".NETFramework,Version%3Dv3.5"
-		Debug.AspNetCompiler.VirtualPath = "/Website"
-		Debug.AspNetCompiler.PhysicalPath = "."
-		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\Website\"
-		Debug.AspNetCompiler.Updateable = "true"
-		Debug.AspNetCompiler.ForceOverwrite = "true"
-		Debug.AspNetCompiler.FixedNames = "false"
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.VirtualPath = "/Website"
-		Release.AspNetCompiler.PhysicalPath = "."
-		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\Website\"
-		Release.AspNetCompiler.Updateable = "true"
-		Release.AspNetCompiler.ForceOverwrite = "true"
-		Release.AspNetCompiler.FixedNames = "false"
-		Release.AspNetCompiler.Debug = "False"
-		VWDPort = "64926"
-		DefaultWebSiteLanguage = "Visual C#"
-	EndProjectSection
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StockPlay_VS2010", "StockPlay_VS2010.csproj", "{B0D61229-F653-4ADD-AD13-49E41284A3DE}"
 EndProject
 Global
-	GlobalSection(SubversionScc) = preSolution
-		Svn-Managed = True
-		Manager = AnkhSVN - Subversion Support for Visual Studio
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|.NET = Debug|.NET
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{4918FEC4-A0BA-42CD-975D-CE981BC1BCC5}.Debug|.NET.ActiveCfg = Debug|.NET
-		{4918FEC4-A0BA-42CD-975D-CE981BC1BCC5}.Debug|.NET.Build.0 = Debug|.NET
+		{B0D61229-F653-4ADD-AD13-49E41284A3DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B0D61229-F653-4ADD-AD13-49E41284A3DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B0D61229-F653-4ADD-AD13-49E41284A3DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B0D61229-F653-4ADD-AD13-49E41284A3DE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

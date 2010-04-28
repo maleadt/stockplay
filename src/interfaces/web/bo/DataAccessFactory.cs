@@ -8,7 +8,6 @@ using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
-using System.Xml.Linq;
 
 /// <summary>
 /// Heeft slechts één statische methode die een referentie teruggeeft naar een instantie van een IDataAccess afgeleide.
