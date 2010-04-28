@@ -12,7 +12,7 @@ using System.Web.UI.WebControls.WebParts;
 using StockPlay;
 
 namespace StockPlay.Web
-	{
+{
 	public partial class User_CreateOrder : System.Web.UI.Page
 	{
 	    protected void Page_Load(object sender, EventArgs e)
