@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Web.Services.Protocols;
 using System.Web.Script.Services;
 using System.Web.Script.Serialization;
+using StockPlay;
+using StockPlay.implXMLRPC; // TODO: ook interface voor maken?
 
 [WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
 [ScriptService]
