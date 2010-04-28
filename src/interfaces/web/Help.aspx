@@ -10,7 +10,7 @@
     
     <h2 meta:resourcekey="Subtitle1" runat="server"></h2>
     <p class="para" meta:resourcekey="Para11" runat="server"></p>
-    <p class="para" meta:resourcekey="Para12" runat="server"></p>
+    <p class="para" runat="server"><asp:Literal meta:resourcekey="Para12" runat="server" /></p>
     <p class="para" meta:resourcekey="Para13" runat="server"></p>
     
     <h2 meta:resourcekey="Subtitle2" runat="server"></h2>

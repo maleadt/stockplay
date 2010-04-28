@@ -135,4 +135,7 @@
   <data name="RememberMe" xml:space="preserve">
     <value>Onthoud mijn gegevens</value>
   </data>
+  <data name="Title.InnerText" xml:space="preserve">
+    <value>Inloggen</value>
+  </data>
 </root>

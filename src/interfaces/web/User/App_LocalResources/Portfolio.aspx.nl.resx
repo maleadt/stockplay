@@ -138,8 +138,11 @@
   <data name="Para1.InnerText" xml:space="preserve">
     <value>Hier krijg je een overzicht te zien van al de effecten die zich momenteel in je portfolio bevinden. Als je een effect wil verkopen, dan kan je op de 'Verkoop effect' link klikken die rechts in de tabel staat.</value>
   </data>
-  <data name="Para2.InnerText" xml:space="preserve">
-    <value>Bent u zeker dat u een verkoopsorder wilt plaatsen voor effect &lt;b id="SecurityName" runat="server"&gt;&lt;/b&gt; voor een prijs van &lt;b id="Price" runat="server"&gt;&lt;/b&gt;?</value>
+  <data name="Para21" xml:space="preserve">
+    <value>Bent u zeker dat u een verkoopsorder wilt plaatsen voor effect</value>
+  </data>
+  <data name="Para22" xml:space="preserve">
+    <value>voor een prijs van</value>
   </data>
   <data name="Para31" xml:space="preserve">
     <value>Hoeveel aandelen wilt u verkopen?</value>

@@ -135,4 +135,7 @@
   <data name="RememberMe" xml:space="preserve">
     <value>Remember me?</value>
   </data>
+  <data name="Title.InnerText" xml:space="preserve">
+    <value>Login</value>
+  </data>
 </root>

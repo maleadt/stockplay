@@ -66,7 +66,7 @@
         <tr>
             <td></td>
             <td><asp:Button ID="btnRegister" runat="server" meta:resourcekey="RegisterButton" /> 
-                <asp:Button ID="btnCancel" Text="Cancel" runat="server" meta:resourcekey="CancelButton" onclick="btnCancel_Click" />
+                <asp:Button ID="btnCancel" runat="server" meta:resourcekey="CancelButton" onclick="btnCancel_Click" />
                 <asp:Label ID="ErrorLabel" runat="server" ForeColor="Red" Visible="False" meta:resourcekey="ErrorLabel"></asp:Label>
             </td>
         </tr>

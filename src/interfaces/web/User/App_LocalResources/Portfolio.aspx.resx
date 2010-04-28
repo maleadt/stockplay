@@ -138,8 +138,11 @@
   <data name="Para1.InnerText" xml:space="preserve">
     <value>Here you can view all of the securities you currently have in your portfolio. If you want to sell one of your securities, you can click the 'Place sell order' link next to the security.</value>
   </data>
-  <data name="Para2.InnerText" xml:space="preserve">
-    <value>Are you sure you want to place an order to sell stocks of security &lt;b id="SecurityName" runat="server"&gt;&lt;/b&gt; for &lt;b id="Price" runat="server"&gt;&lt;/b&gt;?</value>
+  <data name="Para21" xml:space="preserve">
+    <value>Are you sure you want to place an order to sell stocks of security</value>
+  </data>
+  <data name="Para22" xml:space="preserve">
+    <value>for</value>
   </data>
   <data name="Para31" xml:space="preserve">
     <value>How many stocks do you want to sell?</value>

@@ -9,7 +9,7 @@
     <p class="para" runat="server" meta:resourcekey="Para1"></p>
 
     <div id="SellMessage" runat="server" visible="false">
-        <p class="para" runat="server" meta:resourcekey="Para2">Are you sure you want to place an order to sell stocks of security <b id="SecurityName" runat="server"></b> for <b id="Price" runat="server"></b>?</p>
+        <p class="para"><asp:Literal runat="server" Text="<%$ Resources:Para21 %>" /> <b id="SecurityName" runat="server"></b> <asp:Literal runat="server" Text="<%$ Resources:Para22 %>" /> <b id="Price" runat="server"></b>?</p>
         <p>
             <asp:Literal runat="server" Text="<%$ Resources:Para31 %>" /> <asp:TextBox ID="txtAmount" runat="server" /> / 
             <asp:TextBox ID="txtTotalAmount" runat="server" Enabled="False"></asp:TextBox><br />

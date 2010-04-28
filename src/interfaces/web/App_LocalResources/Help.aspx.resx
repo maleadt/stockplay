@@ -132,8 +132,8 @@
   <data name="Para11.InnerText" xml:space="preserve">
     <value>Stockplay is a stock market competition where you trade virtual securities. The Stockplay exchange contains exchanges from around the world and works with live quotes, straight from the exchange.</value>
   </data>
-  <data name="Para12.InnerText" xml:space="preserve">
-    <value>In order to play you need to register an account through the &lt;a runat="server" href="~/Register.aspx"&gt;registration page&lt;/a&gt;. You only have to supply is with your name and e-mail address in order to start playing. You will then get a starting capital which you can use to trade securities. For an overview of the avaiable securities, you can go to the &lt;a runat="server" href="SecuritiesOverview.aspx"&gt;securities overview page&lt;/a&gt;.</value>
+  <data name="Para12.Text" xml:space="preserve">
+    <value>In order to play you need to register an account through the &lt;a runat="server" href="Register.aspx"&gt;registration page&lt;/a&gt;. You only have to supply is with your name and e-mail address in order to start playing. You will then get a starting capital which you can use to trade securities. For an overview of the avaiable securities, you can go to the &lt;a runat="server" href="SecuritiesOverview.aspx"&gt;securities overview page&lt;/a&gt;.</value>
   </data>
   <data name="Para13.InnerText" xml:space="preserve">
     <value>Once you have found a security that you want to buy, just click the  'Buy Security' button in order to go to the order page. Here you can specify how much stocks you want to buy. Currently Stockplay only supports regular orders which are executed immediately, but in the future you will be able to place more complex orders.</value>

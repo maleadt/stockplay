@@ -4,6 +4,8 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder" Runat="Server">
+    <h1 runat="server" meta:resourcekey="Title"></h1>
+
     <p><asp:Literal runat="server" Text="<%$ Resources:Nickname %>" /> <asp:TextBox ID="txtUsername" runat="server"></asp:TextBox></p>
     <p><asp:Literal runat="server" Text="<%$ Resources:Password %>" /> <asp:TextBox ID="txtPassword" runat="server" TextMode="Password"></asp:TextBox></p>
     <p>

@@ -1,15 +1,21 @@
 ﻿<%@ Application Language="C#" %>
+<%@ Import Namespace="log4net" %>
+<%@ Import Namespace="log4net.Config" %>
 
 <script runat="server">
 
     void Application_Start(object sender, EventArgs e) 
     {
         // Code that runs on application startup
+        
+        ILog sysLog = LogManager.GetLogger("Application");
+        XmlConfigurator.Configure();
+        sysLog.Info("Website startup");
 
         SiteMap.SiteMapResolve += new SiteMapResolveEventHandler(HandleUnknownSiteMapNode);
     }
 
-    //Verwerkt de event die wordt opgeroepen als een pagina niet in de SiteMap staat (bijvoorbeeld voor SecurityDetails.aspx)
+    //Voegt paginas toe die niet in de SiteMap staan (bijvoorbeeld voor SecurityDetails.aspx)
     //Zie: http://msdn.microsoft.com/en-us/magazine/cc163598.aspx
     public static SiteMapNode HandleUnknownSiteMapNode(object sender, SiteMapResolveEventArgs e)
     {
@@ -43,12 +49,21 @@
     void Application_End(object sender, EventArgs e) 
     {
         //  Code that runs on application shutdown
+        ILog sysLog = LogManager.GetLogger("Application");
+        XmlConfigurator.Configure();
+        sysLog.Info("Website is going down...");
     }
         
     void Application_Error(object sender, EventArgs e) 
     { 
         // Code that runs when an unhandled error occurs
 
+        //Niet opgevangen excepties doorspelen aan de logger
+        Exception lastException = Server.GetLastError().GetBaseException();
+
+        ILog sysLog = LogManager.GetLogger("Application");
+        XmlConfigurator.Configure();
+        sysLog.Fatal("Fatal error occured in ASP.NET website", lastException);
     }
 
     void Session_Start(object sender, EventArgs e) 

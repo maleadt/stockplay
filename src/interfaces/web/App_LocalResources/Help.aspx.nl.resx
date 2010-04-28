@@ -132,8 +132,8 @@
   <data name="Para11.InnerText" xml:space="preserve">
     <value>Stockplay is een beursspel waar je fictieve aandelen aankoopt. De beurs van Stockplay omvat verschillende beursen van de hele wereld en werkt met live koersen, rechtstreeks van de beurs.</value>
   </data>
-  <data name="Para12.InnerText" xml:space="preserve">
-    <value>Om mee te spelen kan je een account registreren op de &lt;a runat="server" href="~/Register.aspx"&gt;registratie pagina&lt;/a&gt;. Je hoeft enkel je naam en e-mail op te geven om te beginnen spelen. Vervolgens krijg je een startbedrag toegewezen waarmee je kunt kopen op de beurs. Voor een overzicht van de beschikbare effecten ga je naar het &lt;a runat="server" href="SecuritiesOverview.aspx"&gt;effectenoverzicht.&lt;/a&gt;</value>
+  <data name="Para12.Text" xml:space="preserve">
+    <value>Om mee te spelen kan je een account registreren op de &lt;a href="Register.aspx"&gt;registratie pagina&lt;/a&gt;. Je hoeft enkel je naam en e-mail op te geven om te beginnen spelen. Vervolgens krijg je een startbedrag toegewezen waarmee je kunt kopen op de beurs. Voor een overzicht van de beschikbare effecten ga je naar het &lt;a href="SecuritiesOverview.aspx"&gt;effectenoverzicht.&lt;/a&gt;</value>
   </data>
   <data name="Para13.InnerText" xml:space="preserve">
     <value>Eenmaal je een aandeel gevonden hebt dat je wilt kopen, klik je op de 'Buy Security' knop om naar de orderpagina te gaan. Hier kan je opgeven hoeveel aandelen je wilt kopen. Momenteel ondersteunt Stockplay enkel gewone orders die onmiddellijk uitgevoerd worden, maar in de toekomst zal je complexere orders kunnen plaatsen.</value>

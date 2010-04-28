@@ -142,7 +142,7 @@
     <value>Op deze pagina kan je jouw openstaande orders bekijken. Actieve orders kunnen nog altijd geannuleerd worden. Al de lopende orders kun je hier bekijken, maar de geannuleerde orders blijven slechts 7 dagen zichtbaar. Momenteel ondersteunt StockPlay enkel orders die onmiddellijk uitgevoerd worden, in de toekomst zul je orders kunnen plaatsen met complexere voorwaarden.</value>
   </data>
   <data name="Para21" xml:space="preserve">
-    <value>Bent u zeker dat u order met ordernummer</value>
+    <value>Hiermee verwijdert u het order met ordernummer</value>
   </data>
   <data name="Para22" xml:space="preserve">
     <value>voor het effect</value>
