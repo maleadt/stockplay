@@ -421,6 +421,18 @@ sub getQuotes {
 	return @quotes;
 }
 
+sub getQuoteRange {
+	my ($self, $security) = @_;
+	
+	# Request range from the server
+	my @s_range = @{$self->xmlrpc->send_request(
+		'Finance.Security.QuoteRange',
+		RPC_STRING($security->isin)
+	)->value};
+	
+	return (DateTime::Format::ISO8601->parse_datetime($s_range[0]), DateTime::Format::ISO8601->parse_datetime($s_range[1]));	
+}
+
 =pod
 
 =head2 C<$factory->createQuotes(@quotes)>

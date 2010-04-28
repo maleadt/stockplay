@@ -211,9 +211,6 @@ sub train {
 	}
 	
 	# Create training data
-	use Data::Dumper;
-	print Dumper(\@dataset);
-	exit;
 	my $train = AI::FANN::TrainData->new(@dataset);
 	$self->network->cascadetrain_on_data(
 		$train,
@@ -221,7 +218,6 @@ sub train {
 		1,	# Neurons between information prints
 		0.0001	# Desired rate of error
 	);
-	$self->network->print_connections();
 	
 	# TODO: maybe return MSE?
 	return;
@@ -241,7 +237,7 @@ sub run {
 	
 	my @outputs;
 	foreach my $input (@inputs) {
-		push @outputs, $self->network->run($input);
+		push (@outputs, $self->network->run($input));
 	}
 	
 	return @outputs;

@@ -59,7 +59,7 @@ $logger->info("fetching historic data");
 # Process all securities (per exchange)
 # TODO: Move to a plugin
 foreach my $exchange (@exchanges) {
-	foreach my $security (@{$exchange->securities}) {
+	foreach my $security (@{$exchange->securities}) {	# FIXME: run again for indexes
 		# Fetch historic data
 		$logger->debug("processing " . $security->name, " (ISIN " . $security->isin . ")");
 		my ($d1, $d2) = (UnixDate("2 year ago", "%d\/%m\/%Y"), UnixDate("1 day ago", "%d\/%m\/%Y"));
