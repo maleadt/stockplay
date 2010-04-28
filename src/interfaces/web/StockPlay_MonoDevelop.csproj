@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{B0D61229-F653-4ADD-AD13-49E41284A3DE}</ProjectGuid>
+    <ProjectTypeGuids>{349C5851-65DF-11DA-9384-00065B846F21};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>web</RootNamespace>
+    <AssemblyName>web</AssemblyName>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\Default.aspx" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\ForgotPassword.aspx" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\Global.asax" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\Help.aspx" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\Login.aspx" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\MasterPage.master" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\Ranking.aspx" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\Register.aspx" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\Restart.aspx" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\SecuritiesOverview.aspx" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\SecurityDetail.aspx" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\User\CreateOrder.aspx" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\User\OrdersOverview.aspx" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\User\Overview.aspx" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\User\Portfolio.aspx" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\User\TransactionHistory.aspx" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\Web.config" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\Web.sitemap">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\WebService.asmx" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\App_Browsers\RenderAdapters.browser" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\App_Themes\StockPlay\dynamiek\taalbestanden\nl-be.js" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\App_Themes\StockPlay\dynamiek\algemeen.js" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\App_Themes\StockPlay\afbeeldingen\chart_line.png" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\App_Themes\StockPlay\afbeeldingen\logo.png" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\App_Themes\StockPlay\afbeeldingen\magnifier.png" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\App_Themes\StockPlay\afbeeldingen\money_add.png" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\App_Themes\StockPlay\afbeeldingen\money_delete.png" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\App_Themes\StockPlay\StockPlay.skin" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\App_Themes\StockPlay\grafiek\images\arrow_undo.png" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\App_Themes\StockPlay\grafiek\images\arrow_undo_disabled.png" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\App_Themes\StockPlay\grafiek\images\brick_add.png" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\App_Themes\StockPlay\grafiek\images\brick_add_disabled.png" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\App_Themes\StockPlay\grafiek\images\lightning.png" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\App_Themes\StockPlay\grafiek\images\lightning_disabled.png" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\App_Themes\StockPlay\grafiek\images\magnifier_zoom_in.png" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\App_Themes\StockPlay\grafiek\images\magnifier_zoom_out.png" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\App_Themes\StockPlay\grafiek\images\plot.gif" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\App_Themes\StockPlay\grafiek\images\plugin.png" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\App_Themes\StockPlay\grafiek\images\tag.png" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\App_Themes\StockPlay\grafiek\flot\excanvas.js" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\App_Themes\StockPlay\grafiek\flot\excanvas.min.js" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\App_Themes\StockPlay\grafiek\flot\jquery.colorhelpers.js" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\App_Themes\StockPlay\grafiek\flot\jquery.colorhelpers.min.js" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\App_Themes\StockPlay\grafiek\flot\jquery.flot.crosshair.js" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\App_Themes\StockPlay\grafiek\flot\jquery.flot.crosshair.min.js" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\App_Themes\StockPlay\grafiek\flot\jquery.flot.image.js" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\App_Themes\StockPlay\grafiek\flot\jquery.flot.image.min.js" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\App_Themes\StockPlay\grafiek\flot\jquery.flot.js" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\App_Themes\StockPlay\grafiek\flot\jquery.flot.min.js" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\App_Themes\StockPlay\grafiek\flot\jquery.flot.navigate.js" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\App_Themes\StockPlay\grafiek\flot\jquery.flot.navigate.min.js" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\App_Themes\StockPlay\grafiek\flot\jquery.flot.selection.js" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\App_Themes\StockPlay\grafiek\flot\jquery.flot.selection.min.js" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\App_Themes\StockPlay\grafiek\flot\jquery.flot.stack.js" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\App_Themes\StockPlay\grafiek\flot\jquery.flot.stack.min.js" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\App_Themes\StockPlay\grafiek\flot\jquery.flot.threshold.js" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\App_Themes\StockPlay\grafiek\flot\jquery.flot.threshold.min.js" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\App_Themes\StockPlay\grafiek\flot\jquery.js" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\App_Themes\StockPlay\grafiek\flot\jquery.min.js" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\App_Themes\StockPlay\grafiek\grafiek.css" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\App_Themes\StockPlay\grafiek\grafiek.html" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\App_Themes\StockPlay\grafiek\grafiek.js" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\App_Themes\StockPlay\grafiek\options.js" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\App_Themes\StockPlay\vormgeving\ie.css" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\App_Themes\StockPlay\vormgeving\style.css" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\grafiek\images\arrow_undo.png" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\grafiek\images\arrow_undo_disabled.png" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\grafiek\images\brick_add.png" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\grafiek\images\brick_add_disabled.png" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\grafiek\images\lightning.png" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\grafiek\images\lightning_disabled.png" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\grafiek\images\magnifier_zoom_in.png" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\grafiek\images\magnifier_zoom_out.png" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\grafiek\images\plot.gif" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\grafiek\images\plugin.png" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\grafiek\images\tag.png" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\grafiek\flot\excanvas.js" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\grafiek\flot\excanvas.min.js" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\grafiek\flot\jquery.colorhelpers.js" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\grafiek\flot\jquery.colorhelpers.min.js" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\grafiek\flot\jquery.flot.crosshair.js" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\grafiek\flot\jquery.flot.crosshair.min.js" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\grafiek\flot\jquery.flot.image.js" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\grafiek\flot\jquery.flot.image.min.js" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\grafiek\flot\jquery.flot.js" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\grafiek\flot\jquery.flot.min.js" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\grafiek\flot\jquery.flot.navigate.js" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\grafiek\flot\jquery.flot.navigate.min.js" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\grafiek\flot\jquery.flot.selection.js" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\grafiek\flot\jquery.flot.selection.min.js" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\grafiek\flot\jquery.flot.stack.js" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\grafiek\flot\jquery.flot.stack.min.js" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\grafiek\flot\jquery.flot.threshold.js" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\grafiek\flot\jquery.flot.threshold.min.js" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\grafiek\flot\jquery.js" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\grafiek\flot\jquery.min.js" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\grafiek\data.js" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\grafiek\grafiek.css" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\grafiek\grafiek.html" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\grafiek\grafiek.js" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\grafiek\options.js" />
+    <Content Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\User\Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\Default.aspx.designer.cs">
+      <DependentUpon>..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\Default.aspx.cs">
+      <DependentUpon>..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\ForgotPassword.aspx.designer.cs">
+      <DependentUpon>..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\ForgotPassword.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\ForgotPassword.aspx.cs">
+      <DependentUpon>..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\ForgotPassword.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\Help.aspx.designer.cs">
+      <DependentUpon>..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\Help.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\Help.aspx.cs">
+      <DependentUpon>..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\Help.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\Login.aspx.designer.cs">
+      <DependentUpon>..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\Login.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\Login.aspx.cs">
+      <DependentUpon>..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\Login.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\MasterPage.master.cs">
+      <DependentUpon>..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\MasterPage.master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\Ranking.aspx.designer.cs">
+      <DependentUpon>..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\Ranking.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\Ranking.aspx.cs">
+      <DependentUpon>..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\Ranking.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\Register.aspx.designer.cs">
+      <DependentUpon>..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\Register.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\Register.aspx.cs">
+      <DependentUpon>..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\Register.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\Restart.aspx.designer.cs">
+      <DependentUpon>..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\Restart.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\Restart.aspx.cs">
+      <DependentUpon>..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\Restart.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\SecuritiesOverview.aspx.designer.cs">
+      <DependentUpon>..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\SecuritiesOverview.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\SecuritiesOverview.aspx.cs">
+      <DependentUpon>..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\SecuritiesOverview.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\SecurityDetail.aspx.designer.cs">
+      <DependentUpon>..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\SecurityDetail.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\SecurityDetail.aspx.cs">
+      <DependentUpon>..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\SecurityDetail.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\bo\implXMLRPC\handlers\ExchangeHandler.cs" />
+    <Compile Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\bo\implXMLRPC\handlers\IndexHandler.cs" />
+    <Compile Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\bo\implXMLRPC\handlers\OrderHandler.cs" />
+    <Compile Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\bo\implXMLRPC\handlers\PortfolioHandler.cs" />
+    <Compile Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\bo\implXMLRPC\handlers\SecurityHandler.cs" />
+    <Compile Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\bo\implXMLRPC\handlers\TransactionHandler.cs" />
+    <Compile Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\bo\implXMLRPC\handlers\UserHandler.cs" />
+    <Compile Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\bo\implXMLRPC\DataAccess.cs" />
+    <Compile Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\bo\implXMLRPC\Exchange.cs" />
+    <Compile Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\bo\implXMLRPC\Order.cs" />
+    <Compile Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\bo\implXMLRPC\Plot.cs" />
+    <Compile Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\bo\implXMLRPC\Quote.cs" />
+    <Compile Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\bo\implXMLRPC\Security.cs" />
+    <Compile Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\bo\implXMLRPC\Transaction.cs" />
+    <Compile Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\bo\implXMLRPC\User.cs" />
+    <Compile Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\bo\implXMLRPC\UserSecurity.cs" />
+    <Compile Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\bo\interfaces\IDataAccess.cs" />
+    <Compile Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\bo\interfaces\IExchange.cs" />
+    <Compile Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\bo\interfaces\IOrder.cs" />
+    <Compile Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\bo\interfaces\IQuote.cs" />
+    <Compile Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\bo\interfaces\ISecurity.cs" />
+    <Compile Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\bo\interfaces\ITransaction.cs" />
+    <Compile Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\bo\interfaces\IUser.cs" />
+    <Compile Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\bo\interfaces\IUserSecurity.cs" />
+    <Compile Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\bo\DataAccessFactory.cs" />
+    <Compile Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\bo\Helpers.cs" />
+    <Compile Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\membership\StockplayMembershipProvider.cs" />
+    <Compile Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\membership\StockplayMembershipUser.cs" />
+    <Compile Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\renderers\SiteMapPathCustomAdapter.cs" />
+    <Compile Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\renderers\TreeViewCustomAdapter.cs" />
+    <Compile Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\User\CreateOrder.aspx.cs">
+      <DependentUpon>..\..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\User\CreateOrder.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\User\CreateOrder.aspx.designer.cs">
+      <DependentUpon>..\..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\User\CreateOrder.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\User\OrdersOverview.aspx.cs">
+      <DependentUpon>..\..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\User\OrdersOverview.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\User\OrdersOverview.aspx.designer.cs">
+      <DependentUpon>..\..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\User\OrdersOverview.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\User\Overview.aspx.cs">
+      <DependentUpon>..\..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\User\Overview.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\User\Overview.aspx.designer.cs">
+      <DependentUpon>..\..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\User\Overview.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\User\Portfolio.aspx.cs">
+      <DependentUpon>..\..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\User\Portfolio.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\User\Portfolio.aspx.designer.cs">
+      <DependentUpon>..\..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\User\Portfolio.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\User\TransactionHistory.aspx.cs">
+      <DependentUpon>..\..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\User\TransactionHistory.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\User\TransactionHistory.aspx.designer.cs">
+      <DependentUpon>..\..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\User\TransactionHistory.aspx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\App_GlobalResources\Sitemap.nl.resx" />
+    <None Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\App_GlobalResources\Sitemap.resx" />
+    <None Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\App_LocalResources\Default.aspx.nl.resx" />
+    <None Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\App_LocalResources\Default.aspx.resx" />
+    <None Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\App_LocalResources\ForgotPassword.aspx.nl.resx" />
+    <None Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\App_LocalResources\ForgotPassword.aspx.resx" />
+    <None Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\App_LocalResources\Help.aspx.nl.resx" />
+    <None Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\App_LocalResources\Help.aspx.resx" />
+    <None Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\App_LocalResources\Login.aspx.nl.resx" />
+    <None Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\App_LocalResources\Login.aspx.resx" />
+    <None Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\App_LocalResources\Masterpage.Master.resx" />
+    <None Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\App_LocalResources\MasterPage.Master.nl.resx" />
+    <None Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\App_LocalResources\Ranking.aspx.nl.resx" />
+    <None Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\App_LocalResources\Ranking.aspx.resx" />
+    <None Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\App_LocalResources\Register.aspx.nl.resx" />
+    <None Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\App_LocalResources\Register.aspx.resx" />
+    <None Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\App_LocalResources\SecuritiesOverview.aspx.nl.resx" />
+    <None Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\App_LocalResources\SecuritiesOverview.aspx.resx" />
+    <None Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\App_LocalResources\SecurityDetail.aspx.nl.resx" />
+    <None Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\App_LocalResources\SecurityDetail.aspx.resx" />
+    <None Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\grafiek\flot\API.txt" />
+    <None Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\grafiek\flot\PLUGINS.txt" />
+    <None Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\grafiek\flot\README.txt" />
+    <None Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\User\App_LocalResources\CreateOrder.aspx.nl.resx" />
+    <None Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\User\App_LocalResources\CreateOrder.aspx.resx" />
+    <None Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\User\App_LocalResources\OrdersOverview.aspx.nl.resx" />
+    <None Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\User\App_LocalResources\OrdersOverview.aspx.resx" />
+    <None Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\User\App_LocalResources\Overview.aspx.nl.resx" />
+    <None Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\User\App_LocalResources\Overview.aspx.resx" />
+    <None Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\User\App_LocalResources\Portfolio.aspx.nl.resx" />
+    <None Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\User\App_LocalResources\Portfolio.aspx.resx" />
+    <None Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\User\App_LocalResources\TransactionHistory.aspx.nl.resx" />
+    <None Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\User\App_LocalResources\TransactionHistory.aspx.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Web" />
+    <Reference Include="CookComputing.XmlRpcV2, Version=2.4.0.0, Culture=neutral, PublicKeyToken=a7d6e17aa302004d">
+      <HintPath>..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\lib\dotnet\CookComputing.XmlRpcV2.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821">
+      <HintPath>..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\lib\dotnet\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v8.0\WebApplications\Microsoft.WebApplication.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>1041</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>
+          </IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+    <MonoDevelop>
+      <Properties VerifyCodeBehindFields="true" VerifyCodeBehindEvents="true" InternalTargetFrameworkVersion="3.5">
+        <XspParameters Port="8080" Address="127.0.0.1" SslMode="None" SslProtocol="Default" KeyType="None" CertFile="" KeyFile="" PasswordOptions="None" Password="" Verbose="true" />
+      </Properties>
+    </MonoDevelop>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
