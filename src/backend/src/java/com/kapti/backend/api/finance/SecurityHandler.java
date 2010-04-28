@@ -296,6 +296,7 @@ public class SecurityHandler extends MethodClass {
         // Get DAO reference
         
         QuoteDAO tQuoteDAO = getDAO().getQuoteDAO();
+        System.err.println("DEPRECATED: use QuoteRange instead");
 
         return tQuoteDAO.getFirstTime(isin);
     }
@@ -312,8 +313,16 @@ public class SecurityHandler extends MethodClass {
     public Timestamp getLatestTime(String isin) throws StockPlayException {
         // Get DAO reference
         QuoteDAO tQuoteDAO = getDAO().getQuoteDAO();
+        System.err.println("DEPRECATED: use QuoteRange instead");
 
         return tQuoteDAO.getLatestTime(isin);
+    }
+
+    public List<Timestamp> QuoteRange(String isin) throws StockPlayException {
+        // Get DAO reference
+        QuoteDAO tQuoteDAO = getDAO().getQuoteDAO();
+
+        return tQuoteDAO.getRange(isin);
     }
 
     public int Update(Hashtable<String, Object> iDetails) throws StockPlayException {

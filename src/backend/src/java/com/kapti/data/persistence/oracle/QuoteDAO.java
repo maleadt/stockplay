@@ -39,6 +39,7 @@ public class QuoteDAO implements com.kapti.data.persistence.QuoteDAO {
     private static final String SELECT_LATEST_QUOTES = "with x as (select isin, max(timestamp)  latesttime from quotes group by isin) select isin, timestamp, price, volume, bid, ask, low, high, open from quotes q where timestamp = (select latesttime from x where q.isin=x.isin)";
     private static final String MIN_QUOTE = "SELECT MAX(TIMESTAMP) timestamp FROM quotes WHERE isin = ?";
     private static final String MAX_QUOTE = "SELECT MIN(TIMESTAMP) timestamp FROM quotes WHERE isin = ?";
+    private static final String QUOTE_RANGE = "SELECT MIN(TIMESTAMP) min, MAX(TIMESTAMP) max FROM quotes WHERE isin = ?";
     private static final String SELECT_LATEST_QUOTE_FILTER =    "SELECT  ISIN, TIMESTAMP, PRICE, VOLUME, BID, ASK, LOW, HIGH, OPEN"
                                                                 + " FROM ( SELECT  QUOTES.*, MAX(TIMESTAMP) OVER (PARTITION BY ISIN) AS MAX_TIMESTAMP FROM QUOTES ) WHERE TIMESTAMP = MAX_TIMESTAMP AND ( $filter )";
     private static final String SELECT_SPAN_QUOTE =         "select isin, ? + batch*?/(24*60*60) as timestamp, avg(price) as price, max(volume) as volume, avg(bid) as bid, avg(ask) as ask, min(low) as low, max(high) as high, max(open) KEEP (DENSE_RANK FIRST ORDER BY timestamp) as open"
@@ -367,6 +368,42 @@ public class QuoteDAO implements com.kapti.data.persistence.QuoteDAO {
                 rs = stmt.executeQuery();
                 if (rs.next()) {
                     return rs.getTimestamp("timestamp");
+                } else {
+                    return null;
+                }
+            } finally {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            }
+        } catch (SQLException ex) {
+            throw new DBException(ex);
+        }
+    }
+
+    public List<Timestamp> getRange(String isin) throws StockPlayException {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            try {
+                conn = OracleConnection.getConnection();
+                stmt = conn.prepareStatement(QUOTE_RANGE);
+
+                stmt.setString(1, isin);
+
+                rs = stmt.executeQuery();
+                if (rs.next()) {
+                    List<Timestamp> tRange = new ArrayList<Timestamp>();
+                    tRange.add(rs.getTimestamp("min"));
+                    tRange.add(rs.getTimestamp("max"));
+                    return tRange;
                 } else {
                     return null;
                 }

@@ -33,8 +33,9 @@ import java.util.List;
 public interface QuoteDAO extends GenericDAO<Quote, Quote.QuotePK> {
     boolean createBulk(List<Quote> iQuotes) throws StockPlayException;
 
-    Timestamp getFirstTime(String symbol) throws StockPlayException;
-    Timestamp getLatestTime(String symbol) throws StockPlayException;
+    Timestamp getFirstTime(String isin) throws StockPlayException;
+    Timestamp getLatestTime(String isin) throws StockPlayException;
+    List<Timestamp> getRange(String isin) throws StockPlayException;
 
     Collection<Quote> findLatestByFilter(Filter iFilter) throws StockPlayException, FilterException;
     Collection<Quote> findSpanByFilter(Date iStart, Date iStop, int iSpan, Filter iFilter) throws StockPlayException, FilterException;
