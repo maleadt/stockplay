@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" MasterPageFile="~/MasterPage.master" AutoEventWireup="true" CodeFile="Login.aspx.cs" Inherits="Login"
+<%@ Page Language="C#" MasterPageFile="~/MasterPage.master" AutoEventWireup="true" CodeFile="Login.aspx.cs" Inherits="StockPlay.Web.Login"
     culture="auto" uiculture="auto" meta:resourcekey="Page"%>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">

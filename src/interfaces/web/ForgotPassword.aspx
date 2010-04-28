@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#"  MasterPageFile="~/MasterPage.master" AutoEventWireup="true" CodeFile="ForgotPassword.aspx.cs" Inherits="ForgotPassword"
+<%@ Page Language="C#"  MasterPageFile="~/MasterPage.master" AutoEventWireup="true" CodeFile="ForgotPassword.aspx.cs" Inherits="StockPlay.Web.ForgotPassword"
     Culture="auto" UICulture="auto" meta:resourcekey="Page"%>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">

@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" MasterPageFile="~/MasterPage.master" AutoEventWireup="true" CodeFile="OrdersOverview.aspx.cs" Inherits="User_OrdersOverview"
+<%@ Page Language="C#" MasterPageFile="~/MasterPage.master" AutoEventWireup="true" CodeFile="OrdersOverview.aspx.cs" Inherits="StockPlay.Web.User_OrdersOverview"
     UICulture="auto" Culture="auto" meta:resourcekey="Page"%>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">

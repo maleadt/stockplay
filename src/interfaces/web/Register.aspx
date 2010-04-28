@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" MasterPageFile="~/MasterPage.master" AutoEventWireup="true" CodeFile="Register.aspx.cs" Inherits="Register" Title="Register"
+<%@ Page Language="C#" MasterPageFile="~/MasterPage.master" AutoEventWireup="true" CodeFile="Register.aspx.cs" Inherits="StockPlay.Web.Register" Title="Register"
     UICulture="auto" Culture="auto" meta:resourcekey="Page" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">

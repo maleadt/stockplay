@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data;
 using System.Configuration;
 using System.Linq;
@@ -13,10 +13,10 @@ using System.Collections.Generic;
 using CookComputing.XmlRpc;
 using log4net;
 using System.Text;
+using StockPlay;
 
-namespace implXMLRPC
+namespace StockPlay.implXMLRPC
 {
-
     /// <summary>
     /// Summary description for DataAccess
     /// </summary>

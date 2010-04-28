@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" MasterPageFile="~/MasterPage.master" AutoEventWireup="true" CodeFile="Ranking.aspx.cs" Inherits="Ranking" Title="Ranking"
+<%@ Page Language="C#" MasterPageFile="~/MasterPage.master" AutoEventWireup="true" CodeFile="Ranking.aspx.cs" Inherits="StockPlay.Web.Ranking" Title="Ranking"
     UICulture="auto" Culture="auto" meta:resourcekey="Page" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">

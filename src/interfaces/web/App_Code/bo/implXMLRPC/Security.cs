@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data;
 using System.Configuration;
 using System.Linq;
@@ -11,8 +11,9 @@ using System.Web.UI.WebControls.WebParts;
 using System.Xml.Linq;
 using System.Collections.Generic;
 using CookComputing.XmlRpc;
+using StockPlay;
 
-namespace implXMLRPC
+namespace StockPlay.implXMLRPC
 {
 
     /// <summary>
