@@ -22,6 +22,10 @@ namespace implXMLRPC
     /// </summary>
     public class DataAccess : IDataAccess
     {
+        //
+        // Member data
+        //
+
         private static DataAccess instance;
 
         private static readonly ILog sysLog = LogManager.GetLogger(typeof(DataAccess));
@@ -40,6 +44,11 @@ namespace implXMLRPC
         private Dictionary<string, IExchange> exchangeCache;
 
         private static object lockSingleton = new object(); //Object om dubbele locking te voorzien voor de instance
+
+
+        //
+        // Constructie
+        //
 
         private DataAccess()
         {
@@ -88,6 +97,7 @@ namespace implXMLRPC
         /**
          * SECURITIES
          */
+
         public List<ISecurity> GetSecuritiesList()
         {
             return GetSecuritiesList("");
@@ -102,7 +112,7 @@ namespace implXMLRPC
             if (searchterm == "")
                 querySecurities = securityHandler.List();
             else
-                querySecurities = securityHandler.List("(ISIN =~ '" + searchterm + "'ri) OR (NAME =~ '" + searchterm + "'ri) OR (EXCHANGE =~ '" + searchterm + "'ri) OR (SYMBOL =~ '" + searchterm + "'ri)");
+                querySecurities = securityHandler.List("ISIN =~ '" + searchterm + "'ri || NAME =~ '" + searchterm + "'ri || EXCHANGE =~ '" + searchterm + "'ri || SYMBOL =~ '" + searchterm + "'ri");
             
             XmlRpcStruct[] queryQuotes = securityHandler.LatestQuotes("");
 
@@ -127,9 +137,9 @@ namespace implXMLRPC
 
             StringBuilder parameters = new StringBuilder();
             for (int i = 0; i < isin.Length-1 ; i++)
-                parameters.Append("(ISIN == '" + isin[i] + "') OR ");
+                parameters.Append("ISIN == '" + isin[i] + "' || ");
 
-            parameters.Append("(ISIN == '" + isin[isin.Length-1] + "')");
+            parameters.Append("ISIN == '" + isin[isin.Length-1] + "'");
 
             //XmlRpcStruct[] query = securityHandler.List("ISIN EQUALS '" + isin + "'");
             //if(query.Length>0)
@@ -149,7 +159,7 @@ namespace implXMLRPC
         {
             List<ISecurity> securities = new List<ISecurity>();
 
-            XmlRpcStruct[] query = securityHandler.List("EXCHANGE EQUALS '" + id + "'");
+            XmlRpcStruct[] query = securityHandler.List("EXCHANGE == '" + id + "'");
             foreach (XmlRpcStruct security in query)
                 securities.Add(new Security(security));
 
@@ -159,11 +169,12 @@ namespace implXMLRPC
         /**
          * QUOTES
          */
+
         public IQuote GetLatestQuoteFromSecurity(string isin)
         {
             IQuote quote = null;
 
-            XmlRpcStruct[] query = securityHandler.LatestQuotes("ISIN EQUALS '" + isin + "'");
+            XmlRpcStruct[] query = securityHandler.LatestQuotes("ISIN == '" + isin + "'");
             if(query.Length>0)
                 quote = new Quote(query[0]);
 
@@ -180,7 +191,7 @@ namespace implXMLRPC
                 isins.Add("ISIN == '" + security.Isin + "'");
             }
 
-            XmlRpcStruct[] queries = securityHandler.LatestQuotes(string.Join(" && ", isins.ToArray()));
+            XmlRpcStruct[] queries = securityHandler.LatestQuotes(string.Join(" || ", isins.ToArray()));
             foreach (XmlRpcStruct query in queries)
             {
                 quotes.Add(new Quote(query));
@@ -199,7 +210,7 @@ namespace implXMLRPC
         {
             IQuote quote = null;
 
-            XmlRpcStruct[] query = securityHandler.Quotes("(ISIN EQUALS '" + isin + "') AND (TIMESTAMP EQUALS " + time + ")");
+            XmlRpcStruct[] query = securityHandler.Quotes("ISIN == '" + isin + "' AND TIMESTAMP EQUALS " + time);
             if (query.Length > 0)
                 quote = new Quote(query[0]);
 
@@ -212,7 +223,7 @@ namespace implXMLRPC
             string from = iFrom.Year + "-" + iFrom.Month + "-" + iFrom.Day + "T" + iFrom.Hour + ":" + iFrom.Minute + "Z";
             string to = iTo.Year + "-" + iTo.Month + "-" + iTo.Day + "T" + iTo.Hour + ":" + iTo.Minute + "Z";
 
-            XmlRpcStruct[] query = securityHandler.Quotes("(ISIN EQUALS '" + isin + "') AND ((TIMESTAMP LESSTHAN '" + to + "'d) AND (TIMESTAMP GREATERTHAN '" + from + "'d))");
+            XmlRpcStruct[] query = securityHandler.Quotes("ISIN == '" + isin + "' && TIMESTAMP <= '" + to + "'d && TIMESTAMP > '" + from + "'d");
             foreach(XmlRpcStruct quote in query)
                 quotes.Add(new Quote(quote));
 
@@ -235,6 +246,7 @@ namespace implXMLRPC
         /**
          * EXCHANGE
          */
+
         public IExchange GetExchangeBySymbol(string symbol)
         {
             IExchange exchange = null;
@@ -243,7 +255,7 @@ namespace implXMLRPC
                 exchange = exchangeCache[symbol];
             else
             {
-                XmlRpcStruct[] query = exchangeHandler.List("SYMBOL EQUALS '" + symbol + "'");
+                XmlRpcStruct[] query = exchangeHandler.List("SYMBOL == '" + symbol + "'");
                 exchange = new Exchange(query[0]);
                 exchangeCache.Add(symbol, exchange);
             }
@@ -266,6 +278,7 @@ namespace implXMLRPC
         /**
          * USERS
          */
+
         public void CreateUser(int id, string nickname, string password, string email, bool isAdmin, string lastname, string firstname, DateTime regTime,
                                 long rrn, int points, double startAmount, double cash)
         {
@@ -278,7 +291,7 @@ namespace implXMLRPC
         {
             try
             {
-                userHandler.Remove("NICKNAME EQUALS '" + nickname + "'");
+                userHandler.Remove("NICKNAME == '" + nickname + "'");
             }
             catch (Exception e)
             {
@@ -293,7 +306,7 @@ namespace implXMLRPC
 
             try
             {
-                userHandler.Modify("NICKNAME EQUALS '" + user.Nickname + "'", userStruct);
+                userHandler.Modify("NICKNAME == '" + user.Nickname + "'", userStruct);
             }
             catch (Exception e)
             {
@@ -307,7 +320,7 @@ namespace implXMLRPC
         {
             IUser user = null;
 
-            XmlRpcStruct[] userStruct = userHandler.List("NICKNAME EQUALS '" + nickname + "'");
+            XmlRpcStruct[] userStruct = userHandler.List("NICKNAME == '" + nickname + "'");
             if (userStruct.Length > 0)
                 user = new User(userStruct[0]);
 
@@ -323,7 +336,7 @@ namespace implXMLRPC
         {
             List<IUserSecurity> userSecurities = new List<IUserSecurity>();
 
-            XmlRpcStruct[] portfolioStruct = portfolioHandler.List("USERID EQUALS '" + id + "'");
+            XmlRpcStruct[] portfolioStruct = portfolioHandler.List("USERID == '" + id + "'");
 
             foreach (XmlRpcStruct userSecurity in portfolioStruct)
                 userSecurities.Add(new UserSecurity(userSecurity));
@@ -335,7 +348,7 @@ namespace implXMLRPC
         {
             List<ITransaction> userTransactions = new List<ITransaction>();
 
-            XmlRpcStruct[] transactionStruct = transactionHandler.List("USERID EQUALS '" + id + "'");
+            XmlRpcStruct[] transactionStruct = transactionHandler.List("USERID == '" + id + "'");
 
             foreach(XmlRpcStruct userTransaction in userTransactions)
                 userTransactions.Add(new Transaction(userTransaction));
@@ -353,7 +366,7 @@ namespace implXMLRPC
         {
             List<IOrder> userOrders = new List<IOrder>();
 
-            XmlRpcStruct[] orderStruct = orderHandler.List("USERID EQUALS '" + id + "'");
+            XmlRpcStruct[] orderStruct = orderHandler.List("USERID == '" + id + "'");
 
             foreach (XmlRpcStruct userOrder in orderStruct)
                 userOrders.Add(new Order(userOrder));
@@ -363,7 +376,7 @@ namespace implXMLRPC
 
         public void CancelOrder(int orderId)
         {
-            orderHandler.Cancel("ID EQUALS '" + orderId + "'");
+            orderHandler.Cancel("ID == '" + orderId + "'");
         }
 
         #endregion

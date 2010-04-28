@@ -20,13 +20,13 @@ public class DataAccessFactory
     public static IDataAccess GetDataAccess()
     {
         string dataAccessType = ConfigurationManager.AppSettings["DATA_ACCESS_TYPE"];
-        if (dataAccessType.Equals("ADO"))
-        {
-            return implADO.DataAccess.GetInstance();
-        }
-        else //Instelling "XML-RPC"
+        if (dataAccessType.Equals("XMLRPC"))
         {
             return implXMLRPC.DataAccess.GetInstance();
+        }
+        else
+        {
+            throw new Exception("unknown data access type specified");
         }
     }
 
