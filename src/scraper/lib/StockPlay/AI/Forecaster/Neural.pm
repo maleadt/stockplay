@@ -216,7 +216,7 @@ sub train {
 		$train,
 		40,	# Amount of neurons
 		1,	# Neurons between information prints
-		0.0001	# Desired rate of error
+		0.01	# Desired rate of error
 	);
 	
 	# TODO: maybe return MSE?

@@ -102,9 +102,17 @@ has 'pluginmanager' => (
 	required	=> 1
 );
 
+# Session-wide cache, needs incremental data fetching
 has 'quotes' => (
 	is		=> 'ro',
 	isa		=> 'HashRef[ArrayRef[StockPlay::Quote]]',
+	default		=> sub { {} }
+);
+
+# Per-session cache
+has 'latestquote' => (
+	is		=> 'ro',
+	isa		=> 'HashRef[StockPlay::Quote]',
 	default		=> sub { {} }
 );
 
@@ -162,37 +170,46 @@ sub run {
 		# Check if we got up-to-date data
 		my ($start, $end) = $self->factory->getQuoteRange($security);
 		my $time_ago = DateTime->now->subtract_datetime($end);
-		if ($time_ago->delta_days > 1) {
+		if ($time_ago->delta_days > 1) {	# TODO: check if after weekend (or dont run saturday/sunday)
 			$self->logger->warn("most recent quote was too long ago, skipping");
 			next;
-		}	
+		}
+		$start = $start->truncate(to => 'day');
 		
-		my ($input, $output) = $self->forecast($exchange, $index, $security);
+		my ($input, $output) = $self->forecast($exchange, $index, $security, $start, $end);
 		push(@forecasts, {
 			security	=> $security,
 			input		=> $input,
-			output		=> $output
+			output		=> $output,
+			delta		=> $output->closing - $input->closing
 		});
 	}
+	
+	# Select optimal portfolio
+	my @portfolio = (
+		sort { $a->delta / $a->input->closing  <=>  $b->delta / $b->input->closing }
+		@forecasts
+	)[1..5];
 	
 	return;	
 }
 
 sub forecast {
-	my ($self, $exchange, $index, $security) = @_;
+	my ($self, $exchange, $index, $security, $start, $end) = @_;
 	
-	# Get data
-	my ($inputs, $outputs) = $self->get_data($index, $security);
-	die("weird amount of data received") unless (scalar @{$inputs} == 1 + scalar @{$outputs});
+	# Get historic data
+	my ($inputs, $outputs) = $self->get_data_historic($index, $security, $start, $end);
+	die("weird amount of data received") unless (scalar @{$inputs} == scalar @{$outputs});
+	
+	# Get todays data
+	my ($input_today) = $self->get_data_today($index, $security);
 	
 	# Check all available forecasters
-	my ($input_today, $output_today, $mse);
-	
+	my ($output_today, $mse);	
 	foreach my $forecaster (@{$self->forecasters}) {	
 		# Pass data to forecaster
-		my @inputs_proc = $forecaster->preprocess_input(@{$inputs});
+		my @inputs_proc = $forecaster->preprocess_input(@{$inputs}, $input_today);
 		my @outputs_proc = $forecaster->preprocess_output(@{$outputs});
-		$input_today = $inputs->[-1];
 		my $input_today_proc = pop(@inputs_proc);
 		$forecaster->train(\@inputs_proc, \@outputs_proc);
 		
@@ -208,18 +225,14 @@ sub forecast {
 	return ($input_today, $output_today);
 }
 
-sub get_data {
-	my ($self, $index, $security) = @_;
-	$self->logger->debug("generating dataset for " . $security->name);
-
-	# Get range of quotes
-	my ($date_start, $date_end) = $self->factory->getQuoteRange($security);
-	$date_start = $date_start->truncate(to => 'day');
+sub get_data_historic {
+	my ($self, $index, $security, $start, $end) = @_;
+	$self->logger->debug("generating training data for " . $security->name);
 	
 	# Load the quotes
 	unless (defined $self->quotes->{$security->isin}) {
 		$self->logger->debug("fetching quotes for security");
-		my @temp = $self->factory->getQuotes($date_start, $date_end, $security, 60*60*24);
+		my @temp = $self->factory->getQuotes($start, $end, $security, 60*60*24);
 		$self->quotes->{$security->isin} = \@temp;
 	}
 	my @quotes = @{$self->quotes->{$security->isin}};
@@ -228,16 +241,16 @@ sub get_data {
 	# Load the index quotes
 	unless (defined $self->quotes->{$index->isin}) {
 		$self->logger->debug("fetching quotes for index");
-		my @temp = $self->factory->getQuotes($date_start, $date_end, $index, 60*60*24);
+		my @temp = $self->factory->getQuotes($start, $end, $index, 60*60*24);
 		$self->quotes->{$index->isin} = \@temp;
 	}
 	my @quotes_index = @{$self->quotes->{$index->isin}};
-	die("could not find any quotes for index") unless (@quotes);
+	die("could not find any quotes for index") unless (@quotes_index);
 
 	# Build a set of training data
 	my $index_closing = 0;
 	my (@inputs, @outputs);
-	for (my $i = 0; $i < @quotes-1; $i++) {
+	for (my $i = 0; $i < @quotes-2; $i++) {
 		my $quote = $quotes[$i];
 		
 		# Look for index closing price
@@ -257,15 +270,44 @@ sub get_data {
 			closing_index	=> $index_closing,
 			date		=> $quote->time
 		));
-		if ($i < @quotes-2) {		
-			# Generate outputs
-			push(@outputs, StockPlay::AI::Data::Output->new(
-				closing		=> $quotes[$i+2]->open
-			));
-		}
+		
+		# Generate outputs
+		push(@outputs, StockPlay::AI::Data::Output->new(
+			closing		=> $quotes[$i+2]->open
+		));
 	}
 	
 	return (\@inputs, \@outputs);
+}
+
+sub get_data_today {
+	my ($self, $index, $security) = @_;
+	$self->logger->debug("generating latest data for " . $security->name);
+	
+	# Load the latest quote
+	unless (defined $self->latestquote->{$security->isin}) {
+		$self->logger->debug("fetching latest quote for security");
+		($self->latestquote->{$security->isin}) = $self->factory->getLatestQuotes($security);
+	}
+	my ($quote) = $self->latestquote->{$security->isin};
+	die("could not find latest quote for security") unless ($quote);
+
+	# Load the latest index quote
+	unless (defined $self->latestquote->{$index->isin}) {
+		$self->logger->debug("fetching latest quote for index");
+		($self->latestquote->{$index->isin}) = $self->factory->getLatestQuotes($index);
+	}
+	my ($quote_index) = $self->latestquote->{$index->isin};
+	die("could not find latest quote for index") unless ($quote_index);
+	
+	return StockPlay::AI::Data::Input->new(
+			closing		=> $quote->price,
+			low		=> $quote->low,
+			high		=> $quote->high,
+			volume		=> $quote->volume,
+			closing_index	=> $quote_index->price,
+			date		=> $quote->time
+	);
 }
 
 ################################################################################
@@ -283,6 +325,12 @@ __END__
 
 =pod
 
+=head1 TODO
+
+- Cache fetched quotes between sessions
+- Only fetch newest quotes since most recent fetch
+- Calculate input value from LatestQuote
+
 =head1 COPYRIGHT
 
 Copyright 2010 The StockPlay development team as listed in the AUTHORS file.
@@ -295,5 +343,3 @@ The full text of the license can be found in the
 LICENSE file included with this module.
 
 =cut
-
-
