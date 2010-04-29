@@ -235,12 +235,14 @@ L<StockPlay::AI::Forecaster> package for documentation.
 sub run {
 	my ($self, @inputs) = @_;
 	
+	$self->network->reset_MSE;
 	my @outputs;
 	foreach my $input (@inputs) {
 		push (@outputs, $self->network->run($input));
 	}
+	my $mse = $self->network->MSE;
 	
-	return @outputs;
+	return ($mse, @outputs);
 }
 
 

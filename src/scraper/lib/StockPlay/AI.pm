@@ -155,8 +155,24 @@ sub run {
 	push(@{$index->securities}, $self->factory->getIndexSecurities($exchange, $index));
 	
 	# Process all securities
+	my @forecasts;
 	foreach my $security (@{$index->securities}) {
-		my $quote = $self->forecast($exchange, $index, $security);
+		$self->logger->info("processing " . $security->name);
+		
+		# Check if we got up-to-date data
+		my ($start, $end) = $self->factory->getQuoteRange($security);
+		my $time_ago = DateTime->now->subtract_datetime($end);
+		if ($time_ago->delta_days > 1) {
+			$self->logger->warn("most recent quote was too long ago, skipping");
+			next;
+		}	
+		
+		my ($input, $output) = $self->forecast($exchange, $index, $security);
+		push(@forecasts, {
+			security	=> $security,
+			input		=> $input,
+			output		=> $output
+		});
 	}
 	
 	return;	
@@ -167,19 +183,29 @@ sub forecast {
 	
 	# Get data
 	my ($inputs, $outputs) = $self->get_data($index, $security);
+	die("weird amount of data received") unless (scalar @{$inputs} == 1 + scalar @{$outputs});
 	
-	# Pass data to forecaster
-	my $forecaster = $self->forecasters->[0];
-	my @inputs_proc = $forecaster->preprocess_input(@{$inputs});
-	my @outputs_proc = $forecaster->preprocess_output(@{$outputs});
-	my $input_today_proc = pop(@inputs_proc);
-	$forecaster->train(\@inputs_proc, \@outputs_proc);
+	# Check all available forecasters
+	my ($input_today, $output_today, $mse);
 	
-	# Forecast a value for tomorrow
-	my ($output_today_proc) = ($forecaster->run($input_today_proc))[0];
-	my $output_today = ($forecaster->postprocess_output($output_today_proc))[0];
+	foreach my $forecaster (@{$self->forecasters}) {	
+		# Pass data to forecaster
+		my @inputs_proc = $forecaster->preprocess_input(@{$inputs});
+		my @outputs_proc = $forecaster->preprocess_output(@{$outputs});
+		$input_today = $inputs->[-1];
+		my $input_today_proc = pop(@inputs_proc);
+		$forecaster->train(\@inputs_proc, \@outputs_proc);
+		
+		# Forecast a value for tomorrow
+		my ($mse_forecaster, @outputs_today_proc) = $forecaster->run($input_today_proc);
+		if (not defined $mse or $mse_forecaster < $mse) {
+			my @outputs_today = $forecaster->postprocess_output($outputs_today_proc[0]);
+			$output_today = $outputs_today[0];
+			$mse = $mse_forecaster;			
+		}
+	}
 	
-	return $output_today;
+	return ($input_today, $output_today);
 }
 
 sub get_data {
@@ -219,7 +245,7 @@ sub get_data {
 		if (defined $index_quote) {
 			$index_closing = $index_quote->open;
 		} else {
-			$self->logger->warning("could not find index quote for " . $quote->time->ymd);
+			$self->logger->warn("could not find index quote for " . $quote->time->ymd);
 		}
 		
 		# Generate inputs

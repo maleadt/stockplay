@@ -97,7 +97,8 @@ requires 'train';
 =head2 C<$forecaster->run(@inputs)>
 
 This method runs (but does not train) the network against unknown values.
-Predicted output values are calculated and returned as an array.
+Predicted output values are calculated and returned as an array. The first
+returned value is the mean square error of the output values.
 
 =cut
 

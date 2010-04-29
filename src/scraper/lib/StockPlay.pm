@@ -62,8 +62,8 @@ sub _build_config {
 	my ($self) = @_;
 	
 	my $config = StockPlay::Configuration->new;
-	if (-f '~/.stockplay/config') {
-		$config->file_read('~/.stockplay/config');
+	if (-f $ENV{'HOME'} . '/.stockplay/config') {
+		$config->file_read($ENV{'HOME'} . '/.stockplay/config');
 	}
 	
 	return $config;
