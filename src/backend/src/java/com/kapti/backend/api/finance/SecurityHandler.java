@@ -83,9 +83,9 @@ public class SecurityHandler extends MethodClass {
         Filter filter = parser.parse(iFilter);
 
         // Fetch and convert all Indexs
-        Collection<com.kapti.data.Security> tIndexs = tSecurityDAO.findByFilter(filter);
+        Collection<com.kapti.data.Security> tSecurities = tSecurityDAO.findByFilter(filter);
         Vector<Map<String, Object>> oVector = new Vector<Map<String, Object>>();
-        for (com.kapti.data.Security tIndex : tIndexs) {
+        for (com.kapti.data.Security tIndex : tSecurities) {
             oVector.add(tIndex.toStruct(
                     com.kapti.data.Security.Fields.ISIN,
                     com.kapti.data.Security.Fields.SYMBOL,

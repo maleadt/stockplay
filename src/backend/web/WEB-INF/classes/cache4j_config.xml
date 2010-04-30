@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="Windows-1251"?>
+<cache-factory clean-interval="30s">>
+     <cache id="com.kapti.data.persistence.oracle.SecurityDAO" desc="test cache"
+            ttl="1h"
+            idle="30m"
+            max-size="10000"
+            max-memory-size="50m" />
+</cache-factory>

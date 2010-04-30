@@ -28,7 +28,6 @@ import com.kapti.filter.Filter;
 import java.util.Collection;
 
 public interface GenericDAO<T, ID> {
-
     T findById(ID id) throws StockPlayException;
     Collection<T> findByFilter(Filter iFilter) throws StockPlayException, FilterException;
     Collection<T> findAll() throws StockPlayException;
