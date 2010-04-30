@@ -1,0 +1,118 @@
+#!/usr/bin/env perl
+
+################################################################################
+# Configuration
+#
+
+# Packages
+use StockPlay;
+use StockPlay::Factory;
+use Benchmark::Timer;
+
+# Write nicely
+use warnings;
+use strict;
+
+
+
+################################################################################
+# Main
+#
+
+#
+# Setup
+#
+
+my $stockplay = new StockPlay(app => "benchmark");
+my $factory = $stockplay->getFactory();
+my $logger = $stockplay->getLogger();
+
+
+#
+# Benchmark
+#
+
+$logger->debug("benchmarking");
+
+my @exchanges;
+test('getExchanges', sub {
+	@exchanges = $factory->getExchanges();
+});
+die unless (@exchanges);
+
+my @indexes;
+test('getIndexes (' . $exchanges[0]->name . ')', sub {
+	@indexes = $factory->getIndexes($exchanges[0]);
+});
+die unless (@indexes);
+
+my @securities;
+test('getSecurities (' . $exchanges[0]->name . ')', sub {
+	@securities = $factory->getSecurities($exchanges[0]);
+});
+die unless(@securities);
+
+my @indexsecurities;
+test('getIndexSecurities (' . $exchanges[0]->name . ', ' . $indexes[0]->name . ')', sub {
+	@indexsecurities = $factory->getSecurities($exchanges[0], $indexes[0]);
+});
+die unless(@indexsecurities);
+
+my @latestquotes;
+test('getLatestQuotes (' . $exchanges[0]->name . ')', sub {
+	@latestquotes = $factory->getLatestQuotes(@securities);
+});
+die unless(@latestquotes);
+
+
+exit(0);
+
+
+
+################################################################################
+# Routines
+#
+
+sub test {
+	my ($name, $subroutine) = @_;
+	print "* Testing method '$name': ";
+	my $t = Benchmark::Timer->new(skip => 1, confidence => 97.5, error => 2);
+	my @output;
+	while($t->need_more_samples($name)) {
+		$t->start($name);
+		$subroutine->();
+		$t->stop($name);
+	}
+	print $t->result($name)*1000, " ms per request\n";
+}
+
+__END__
+
+
+
+################################################################################
+# Documentation
+#
+
+=pod
+
+=head1 NAME
+
+stockplay-benchmark - StockPlay benchmark client.
+
+=head1 DESCRIPTION
+
+This client is used to quickly verify backend functionality.
+
+=head1 COPYRIGHT
+
+Copyright 2010 The StockPlay development team as listed in the AUTHORS file.
+
+This software is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public Licence (GPL) as published by the
+Free Software Foundation (FSF).
+
+The full text of the license can be found in the
+LICENSE file included with this module.
+
+=cut
