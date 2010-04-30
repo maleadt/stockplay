@@ -69,4 +69,15 @@ public abstract class Data extends Convertable {
 
         return tNodeSelf;
     }
+
+    @Override
+    public int hashCode() {
+        // Hash the type of data
+        int code = this.getClass().hashCode();
+
+        // Hash the inner data object
+        code = (31 * code) + mData.hashCode();
+
+        return code;
+    }
 }

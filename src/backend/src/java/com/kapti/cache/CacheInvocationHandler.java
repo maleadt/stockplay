@@ -31,6 +31,7 @@ public class CacheInvocationHandler implements InvocationHandler {
         // Generate a hashcode
         CallKey callKey = null;
         callKey = new CallKey(method.getName(), args);
+        mLogger.debug("callkey of object: " + callKey);
 
         // Load the annotations
         Annotation tCachable = method.getAnnotation(GenericDAO.Cachable.class);
@@ -123,4 +124,11 @@ class CallKey {
 
         return true;
     }
+
+    @Override
+    public String toString() {
+        return Integer.toString(hashCode());
+    }
+
+
 }
