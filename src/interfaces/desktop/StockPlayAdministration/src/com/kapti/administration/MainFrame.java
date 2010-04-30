@@ -4,23 +4,10 @@
  */
 package com.kapti.administration;
 
-import com.kapti.client.finance.Exchange;
-import com.kapti.client.finance.FinanceFactory;
-import com.kapti.exceptions.StockPlayException;
-import java.awt.event.ActionEvent;
-import java.beans.PropertyChangeEvent;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.ResourceBundle;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
-import java.beans.PropertyChangeListener;
-import java.util.Collection;
-import org.jdesktop.swingx.*;
-import org.jdesktop.swingx.JXLoginPane.Status;
-import org.jdesktop.swingx.JXTaskPane;
-import org.jdesktop.swingx.auth.LoginService;
-import org.jdesktop.swingx.auth.UserNameStore;
+import java.util.Locale;
 
 /**
  *
@@ -35,6 +22,8 @@ public class MainFrame extends JFrame {
     private JPanel mainParentPanel = new JPanel();
 
     private static MainFrame instance = new MainFrame();
+    private final ResourceBundle translations = ResourceBundle.getBundle("com/kapti/administration/translations");
+
 
     public static MainFrame getInstance() {
         return instance;
@@ -55,11 +44,12 @@ public class MainFrame extends JFrame {
             // handle exception
         }
 
+        System.out.println("Gevonden taal: " + Locale.getDefault());
 
         setLayout(new BorderLayout());
-        setTitle("Stockplay administratie");
+        setTitle(translations.getString("MAINTITLE"));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+        setJMenuBar(new MenuBar());
 
 
         add(new Menu(this), BorderLayout.WEST);

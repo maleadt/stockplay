@@ -16,6 +16,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.util.ResourceBundle;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -35,23 +36,22 @@ public class StatusOverviewPanel extends JPanel implements ActionListener, Compo
     public static StatusOverviewPanel getInstance() {
         return instance;
     }
-    private StatusObject databaseStatus = new StatusObject("Database", "System.Database.Status");
+    private final ResourceBundle translations = ResourceBundle.getBundle("com/kapti/administration/translations");
+    private StatusObject databaseStatus;
     private JLabel uptimeLabel;
     private JLabel loggedInUsersLabel;
     private JLabel processedRequestsLabel;
     private Timer updateTimer;
-    private StatusObject scraperStatus = new StatusObject("Scraper", "System.Scraper.Status");
-    private StatusObject backendStatus = new StatusObject("Backend", "System.Backend.Status");
+    private StatusObject scraperStatus;
+    private StatusObject backendStatus;
 
     private StatusOverviewPanel() {
         this.addComponentListener(this);
 
-
-
         this.setLayout(new GridBagLayout());
         setBorder(BorderFactory.createEmptyBorder(20, 30, 20, 30));
 
-        JLabel titel = new JLabel("Overzicht");
+        JLabel titel = new JLabel(translations.getString("OVERVIEW"));
         titel.setFont(titel.getFont().deriveFont(Font.BOLD, 30));
 
         GridBagConstraints c = new GridBagConstraints();
@@ -63,7 +63,7 @@ public class StatusOverviewPanel extends JPanel implements ActionListener, Compo
         c.gridy = 0;
         add(titel, c);
 
-        JXTitledSeparator componentsLabel = new JXTitledSeparator("Componenten");
+        JXTitledSeparator componentsLabel = new JXTitledSeparator(translations.getString("COMPONENTS"));
         componentsLabel.setFont(componentsLabel.getFont().deriveFont(Font.BOLD, 20));
         c.ipadx = 0;
 
@@ -72,13 +72,18 @@ public class StatusOverviewPanel extends JPanel implements ActionListener, Compo
 
         //We maken hier de componenten-start-stop-dingen aan
 
+        scraperStatus = new StatusObject(translations.getString("SCRAPER"), "System.Scraper.Status");
         StatusView scraperView = new StatusView(this, 3, scraperStatus);
+
+        backendStatus= new StatusObject(translations.getString("BACKEND"), "System.Backend.Status");
         StatusView backendView = new StatusView(this, 4, backendStatus);
+
+        databaseStatus = new StatusObject(translations.getString("DATABASE"), "System.Database.Status");
         StatusView Database = new StatusView(this, 5, databaseStatus);
         //StatusView Webserver = new StatusView(this, 6, new StatusObject("Webserver", "System.Scraper.Status"));
 
 
-        JXTitledSeparator statsLabel = new JXTitledSeparator("Statistieken");
+        JXTitledSeparator statsLabel = new JXTitledSeparator(translations.getString("STATISTICS"));
         statsLabel.setFont(statsLabel.getFont().deriveFont(Font.BOLD, 20));
         c.gridy = 10;
         add(statsLabel, c);
@@ -90,7 +95,7 @@ public class StatusOverviewPanel extends JPanel implements ActionListener, Compo
         cStats.gridx = 2;
 
 
-        JLabel statLoggedInUsersLabel = new JLabel("Aantal ingelogd gebruikers: ", JLabel.RIGHT);
+        JLabel statLoggedInUsersLabel = new JLabel(translations.getString("LOGGEDIN_USERS_COUNT"), JLabel.RIGHT);
         add(statLoggedInUsersLabel, cStats);
 
         cStats.gridx = 3;
@@ -102,7 +107,7 @@ public class StatusOverviewPanel extends JPanel implements ActionListener, Compo
         cStats.gridy++;
         cStats.gridx = 2;
         cStats.gridwidth = 1;
-        JLabel statUptimeLabel = new JLabel("Uptime backend: ", JLabel.RIGHT);
+        JLabel statUptimeLabel = new JLabel(translations.getString("BACKEND_UPTIME"), JLabel.RIGHT);
         add(statUptimeLabel, cStats);
 
         cStats.gridx = 3;
@@ -113,7 +118,7 @@ public class StatusOverviewPanel extends JPanel implements ActionListener, Compo
         cStats.gridy++;
         cStats.gridx = 2;
         cStats.gridwidth = 1;
-        JLabel statProcessedRequestsLabel = new JLabel("Aantal verwerkte requests: ", JLabel.RIGHT);
+        JLabel statProcessedRequestsLabel = new JLabel(translations.getString("PROCESSED_REQUESTS"), JLabel.RIGHT);
         add(statProcessedRequestsLabel, cStats);
 
         cStats.gridx = 3;
@@ -151,7 +156,7 @@ public class StatusOverviewPanel extends JPanel implements ActionListener, Compo
         int days = (int) uptime;
 
 
-        uptimeLabel.setText(days + " dagen, " + hours + " uren, " + minutes + " minuten en " + seconds + " seconden");
+        uptimeLabel.setText(days + translations.getString("DAYS") + ", " + hours + translations.getString("HOURS") + ", " + minutes + translations.getString("MINUTES") + ", " + seconds + translations.getString("SECONDS"));
     }
 
     public void componentResized(ComponentEvent e) {
@@ -217,17 +222,17 @@ public class StatusOverviewPanel extends JPanel implements ActionListener, Compo
             //buttons
             cStatus.insets = new Insets(5, 10, 5, 10);
 
-            startButton = new JButton("Start");
+            startButton = new JButton(translations.getString("START"));
 
             cStatus.gridx = 3;
             add(startButton, cStatus);
 
-            stopButton = new JButton("Stop");
+            stopButton = new JButton(translations.getString("STOP"));
 
             cStatus.gridx = 4;
             add(stopButton, cStatus);
 
-            restartButton = new JButton("Herstarten");
+            restartButton = new JButton(translations.getString("RESTART"));
             cStatus.gridx = 5;
             add(restartButton, cStatus);
 
@@ -246,22 +251,22 @@ public class StatusOverviewPanel extends JPanel implements ActionListener, Compo
         private void updateView() {
 
             if (statObj.getStatus() == StatusObject.Status.STARTED) {
-                statusLabel.setText("Gestart");
+                statusLabel.setText(translations.getString("STARTED"));
                 statusLabel.setForeground(Color.GREEN);
             } else if (statObj.getStatus() == StatusObject.Status.STOPPED) {
-                statusLabel.setText("Gestopt");
+                statusLabel.setText(translations.getString("STOPPED"));
                 statusLabel.setForeground(Color.RED);
             } else if (statObj.getStatus() == StatusObject.Status.STARTING) {
-                statusLabel.setText("Bezig met starten...");
+                statusLabel.setText(translations.getString("STARTING"));
                 statusLabel.setForeground(Color.ORANGE);
             } else if (statObj.getStatus() == StatusObject.Status.STOPPING) {
-                statusLabel.setText("Bezig met stoppen...");
+                statusLabel.setText(translations.getString("STOPPED"));
                 statusLabel.setForeground(Color.ORANGE);
             } else if (statObj.getStatus() == StatusObject.Status.ERROR) {
-                statusLabel.setText("FOUT");
+                statusLabel.setText(translations.getString("ERROR"));
                 statusLabel.setForeground(Color.RED);
             } else { //(statObj.getStatus() == StatusObject.Status.UNKNOWN) {
-                statusLabel.setText("Status onbekend");
+                statusLabel.setText(translations.getString("STATUS_UNKNOWN"));
                 statusLabel.setForeground(Color.ORANGE);
             }
 

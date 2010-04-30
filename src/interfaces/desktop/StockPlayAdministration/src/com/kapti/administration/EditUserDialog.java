@@ -23,6 +23,7 @@ import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Calendar;
+import java.util.ResourceBundle;
 import java.util.regex.Pattern;
 import javax.swing.BorderFactory;
 import javax.swing.InputVerifier;
@@ -50,6 +51,7 @@ public class EditUserDialog extends JDialog implements ActionListener {
     private static Logger logger = Logger.getLogger(EditUserDialog.class);
     private static final String SAVE_ACTION = "SAVE";
     private static final String CANCEL_ACTION = "CANCEL";
+    private static final ResourceBundle translations = ResourceBundle.getBundle("com/kapti/administration/translations");
     private UserFactory userFactory = UserFactory.getInstance();
     private String title;
     private User user;
@@ -133,7 +135,7 @@ public class EditUserDialog extends JDialog implements ActionListener {
         cButton.gridwidth = 1;
         cButton.gridx += 3;
 
-        JLabel nicknameLabel = new JLabel("Nickname:");
+        JLabel nicknameLabel = new JLabel(translations.getString("NICKNAME"));
         add(nicknameLabel, cItemLabel);
 
 
@@ -144,14 +146,14 @@ public class EditUserDialog extends JDialog implements ActionListener {
         cItem.gridy++;
         cButton.gridy++;
 
-        JLabel passwordLabel = new JLabel("Paswoord:");
+        JLabel passwordLabel = new JLabel(translations.getString("PASSWORD"));
         add(passwordLabel, cItemLabel);
 
         passwordField = new JPasswordField("********");
         passwordField.setEditable(false);
         add(passwordField, cItem);
 
-        changePasswordButton = new JButton("Verander paswoord");
+        changePasswordButton = new JButton(translations.getString("CHANGE_PASSWORD"));
         changePasswordButton.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
@@ -177,7 +179,7 @@ public class EditUserDialog extends JDialog implements ActionListener {
         cItem.gridy++;
         cButton.gridy++;
 
-        JLabel lastnameLabel = new JLabel("Achternaam:");
+        JLabel lastnameLabel = new JLabel(translations.getString("LASTNAME"));
         add(lastnameLabel, cItemLabel);
 
         lastnameField = new JTextField(user.getLastname());
@@ -187,7 +189,7 @@ public class EditUserDialog extends JDialog implements ActionListener {
         cItem.gridy++;
         cButton.gridy++;
 
-        JLabel firstnameLabel = new JLabel("Voornaam:");
+        JLabel firstnameLabel = new JLabel(translations.getString("FIRSTNAME"));
         add(firstnameLabel, cItemLabel);
 
         firstnameField = new JTextField(user.getFirstname());
@@ -197,7 +199,7 @@ public class EditUserDialog extends JDialog implements ActionListener {
         cItem.gridy++;
         cButton.gridy++;
 
-        JLabel emailLabel = new JLabel("Emailadres:");
+        JLabel emailLabel = new JLabel(translations.getString("EMAIL"));
         add(emailLabel, cItemLabel);
 
         emailField = new JTextField(user.getEmail());
@@ -219,7 +221,7 @@ public class EditUserDialog extends JDialog implements ActionListener {
         cItem.gridy++;
         cButton.gridy++;
 
-        JLabel roleLabel = new JLabel("Rol:");
+        JLabel roleLabel = new JLabel(translations.getString("ROLE"));
         add(roleLabel, cItemLabel);
 
         roleField = new JComboBox(User.Role.values());
@@ -230,7 +232,7 @@ public class EditUserDialog extends JDialog implements ActionListener {
         cItem.gridy++;
         cButton.gridy++;
 
-        JLabel rrnLabel = new JLabel("Rijksregisternummer:");
+        JLabel rrnLabel = new JLabel(translations.getString("SSN"));
         add(rrnLabel, cItemLabel);
         try {
             rrnMask = new MaskFormatter("##.##.##-###.##");
@@ -252,7 +254,7 @@ public class EditUserDialog extends JDialog implements ActionListener {
         cItem.gridy++;
         cButton.gridy++;
 
-        JLabel regdateLabel = new JLabel("Registratiedatum:");
+        JLabel regdateLabel = new JLabel(translations.getString("REGDATE"));
         add(regdateLabel, cItemLabel);
 
         regdateField = new JFormattedTextField(DateFormat.getDateInstance());
@@ -266,7 +268,7 @@ public class EditUserDialog extends JDialog implements ActionListener {
         cItem.gridy++;
         cButton.gridy++;
 
-        JLabel startamountLabel = new JLabel("Startbedrag:");
+        JLabel startamountLabel = new JLabel(translations.getString("STARTAMOUNT"));
         add(startamountLabel, cItemLabel);
 
         startamountField = new JFormattedTextField(NumberFormat.getCurrencyInstance());
@@ -278,7 +280,7 @@ public class EditUserDialog extends JDialog implements ActionListener {
         cItem.gridy++;
         cButton.gridy++;
 
-        JLabel cashLabel = new JLabel("Cash:");
+        JLabel cashLabel = new JLabel(translations.getString("CASH"));
         add(cashLabel, cItemLabel);
 
         cashField = new JFormattedTextField(NumberFormat.getCurrencyInstance());
@@ -290,12 +292,12 @@ public class EditUserDialog extends JDialog implements ActionListener {
 
 
 
-        changeCashButton = new JButton("Verander cash");
+        changeCashButton = new JButton(translations.getString("CHANGE_CASH"));
 
         changeCashButton.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
-                ValueChangeWithReasonDialog dialog = new ValueChangeWithReasonDialog<Double>("Cash", user.getCash(), NumberFormat.getInstance(), new SpinnerNumberModel(0.0, -1000000, 1000000, 0.1), new ComputeChange<Double>() {
+                ValueChangeWithReasonDialog dialog = new ValueChangeWithReasonDialog<Double>(translations.getString("CASH"), user.getCash(), NumberFormat.getInstance(), new SpinnerNumberModel(0.0, -1000000, 1000000, 0.1), new ComputeChange<Double>() {
 
                     public Double sum(Double t1, Double t2) {
                         return t1 + t2;
@@ -319,7 +321,7 @@ public class EditUserDialog extends JDialog implements ActionListener {
         cItem.gridy++;
         cButton.gridy++;
 
-        JLabel pointsLabel = new JLabel("Punten:");
+        JLabel pointsLabel = new JLabel(translations.getString("POINTS"));
         add(pointsLabel, cItemLabel);
 
 
@@ -332,12 +334,12 @@ public class EditUserDialog extends JDialog implements ActionListener {
 
         cItem.gridx++;
 
-        changePointsButton = new JButton("Verander punten");
+        changePointsButton = new JButton(translations.getString("CHANGE_POINTS"));
 
         changePointsButton.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
-                ValueChangeWithReasonDialog dialog = new ValueChangeWithReasonDialog<Integer>("Punten", user.getPoints(), NumberFormat.getInstance(), new SpinnerNumberModel(0, -10000, 10000, 1), new ComputeChange<Integer>() {
+                ValueChangeWithReasonDialog dialog = new ValueChangeWithReasonDialog<Integer>(translations.getString("POINTS"), user.getPoints(), NumberFormat.getInstance(), new SpinnerNumberModel(0, -10000, 10000, 1), new ComputeChange<Integer>() {
 
                     public Integer sum(Integer t1, Integer t2) {
                         return t1 + t2;
@@ -360,7 +362,7 @@ public class EditUserDialog extends JDialog implements ActionListener {
         cItem.gridwidth = 1;
         cItem.gridy++;
 
-        saveButton = new JButton("Opslaan");
+        saveButton = new JButton(translations.getString("SAVE"));
         saveButton.setActionCommand(SAVE_ACTION);
         saveButton.addActionListener(this);
 
@@ -370,7 +372,7 @@ public class EditUserDialog extends JDialog implements ActionListener {
 
         cItem.gridx++;
 
-        cancelButton = new JButton("Annuleren");
+        cancelButton = new JButton(translations.getString("CANCEL"));
         cancelButton.setActionCommand(CANCEL_ACTION);
         cancelButton.addActionListener(this);
         add(cancelButton, cItem);
@@ -443,7 +445,7 @@ public class EditUserDialog extends JDialog implements ActionListener {
                 success = true;
             } catch (StockPlayException ex) {
                 logger.error(ex);
-                JXErrorPane.showDialog(this, new ErrorInfo("Error while saving changes to user", "An exception occured while saving the changes to user " + user.getId(), null, null, ex, null, null));
+                JXErrorPane.showDialog(this, new ErrorInfo(translations.getString("ERROR_SAVING_USER_CHANGES_TITLE"), translations.getString("ERROR_SAVING_USER_CHANGES") + user.getId(), null, null, ex, null, null));
             } 
         }
 

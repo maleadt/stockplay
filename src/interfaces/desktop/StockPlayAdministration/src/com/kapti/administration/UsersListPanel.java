@@ -149,7 +149,7 @@ public class UsersListPanel extends JPanel implements TableModelListener, ListSe
 
     }
 
-    void removeFilter() {
+    public void removeFilter() {
         usersTable.setRowFilter(null);
     }
 

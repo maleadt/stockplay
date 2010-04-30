@@ -8,6 +8,7 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.Format;
+import java.util.ResourceBundle;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -21,6 +22,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 public class ValueChangeWithReasonDialog<T extends Number> extends JDialog implements ActionListener, ChangeListener {
+    private static final ResourceBundle translations = ResourceBundle.getBundle("com/kapti/administration/translations");
 
     private ComputeChange changeComputer;
     private SpinnerModel valueSpinnerModel;
@@ -62,7 +64,7 @@ public class ValueChangeWithReasonDialog<T extends Number> extends JDialog imple
         cTitel.gridx = 0;
         cTitel.gridy = 0;
 
-        JLabel titelLabel = new JLabel("Verander waarde van " + valueName);
+        JLabel titelLabel = new JLabel(translations.getString("CHANGE_VALUE_OF") + valueName);
         titelLabel.setFont(titelLabel.getFont().deriveFont(Font.BOLD, 17));
         add(titelLabel, cTitel);
 
@@ -78,7 +80,7 @@ public class ValueChangeWithReasonDialog<T extends Number> extends JDialog imple
         cItem.gridy = 1;
         cItem.insets = new Insets(5, 0, 0, 0);
 
-        JLabel currentValueLabel = new JLabel("Huidige waarde:");
+        JLabel currentValueLabel = new JLabel(translations.getString("CURRENT_VALUE"));
         add(currentValueLabel, cLabel);
 
         currentValueField = new JFormattedTextField(valueFormatter);
@@ -89,7 +91,7 @@ public class ValueChangeWithReasonDialog<T extends Number> extends JDialog imple
         cLabel.gridy++;
         cItem.gridy++;
 
-        JLabel changeLabel = new JLabel("Verandering:");
+        JLabel changeLabel = new JLabel(translations.getString("CHANGE"));
         add(changeLabel, cLabel);
 
         changeSpinner = new JSpinner(valueSpinnerModel);
@@ -101,7 +103,7 @@ public class ValueChangeWithReasonDialog<T extends Number> extends JDialog imple
         cLabel.gridy++;
         cItem.gridy++;
 
-        JLabel newValueLabel = new JLabel("Nieuwe waarde:");
+        JLabel newValueLabel = new JLabel(translations.getString("NEW_VALUE"));
         add(newValueLabel, cLabel);
 
         newValueField = new JFormattedTextField(valueFormatter);
@@ -115,7 +117,7 @@ public class ValueChangeWithReasonDialog<T extends Number> extends JDialog imple
         cLabel.gridy++;
         cItem.gridy++;
 
-        JLabel reasonLabel = new JLabel("Reden:");
+        JLabel reasonLabel = new JLabel(translations.getString("REASON"));
         add(reasonLabel, cLabel);
 
         cItem.insets = new Insets(15, 0, 0, 0);
@@ -128,7 +130,7 @@ public class ValueChangeWithReasonDialog<T extends Number> extends JDialog imple
 
 
         cItem.gridy++;
-        saveButton = new JButton("Save");
+        saveButton = new JButton(translations.getString("SAVE"));
 
         saveButton.addActionListener(this);
         add(saveButton, cItem);
@@ -148,7 +150,7 @@ public class ValueChangeWithReasonDialog<T extends Number> extends JDialog imple
         //we controleren of de vleden correct zijn ingevuld
         if (reasonField.getText().length() < 5) {
 
-            JOptionPane.showMessageDialog(reasonField, "Gelieve een (voldoende lange) reden van de wijziging in te geven!", "Fout: reden te kort", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(reasonField, translations.getString("ERROR_REASON_TO_SHORT"), translations.getString("ERROR_REASON_TO_SHORT_TITLE"), JOptionPane.WARNING_MESSAGE);
             reasonField.requestFocus();
 
         }

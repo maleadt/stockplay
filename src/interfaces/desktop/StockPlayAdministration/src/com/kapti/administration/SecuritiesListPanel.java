@@ -15,6 +15,7 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collection;
+import java.util.ResourceBundle;
 import java.util.Stack;
 import java.util.concurrent.ExecutionException;
 import javax.swing.*;
@@ -42,16 +43,17 @@ public class SecuritiesListPanel extends JPanel implements TableModelListener, L
     private JLabel selectedLabel = new JLabel();
 
     private LockableUI lockUI = null;
+    private final ResourceBundle translations = ResourceBundle.getBundle("com/kapti/administration/translations");
     private JXLayer<JComponent> busyLayer = null;
 
     private JXTable securitiesTable = null;
     private SecuritiesTableModel securitiesTableModel = null;
-    private JButton showSecurity = new JButton("Toon effect");
-    private JButton hideSecurity = new JButton("Verberg effect");
-    private JButton resumeSecurity = new JButton("Herstel effect");
-    private JButton suspendSecurity = new JButton("Schors effect");
-    private JButton saveButton = new JButton("Opslaan");
-    private JButton undoButton = new JButton("Ongedaan maken");
+    private JButton showSecurity = new JButton(translations.getString("SHOW_SECURITY"));
+    private JButton hideSecurity = new JButton(translations.getString("HIDE_SECURITY"));
+    private JButton resumeSecurity = new JButton(translations.getString("RESUME_SECURITY"));
+    private JButton suspendSecurity = new JButton(translations.getString("SUSPEND_SECURITY"));
+    private JButton saveButton = new JButton(translations.getString("SAVE"));
+    private JButton undoButton = new JButton(translations.getString("UNDO"));
     private Stack<SecurityState> undoStack = new Stack<SecurityState>();
 
     public static SecuritiesListPanel getInstance() {
@@ -70,7 +72,7 @@ public class SecuritiesListPanel extends JPanel implements TableModelListener, L
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-        JLabel titel = new JLabel("Overzicht");
+        JLabel titel = new JLabel(translations.getString("OVERVIEW"));
         titel.setFont(titel.getFont().deriveFont(Font.BOLD, 30));
         add(titel, BorderLayout.NORTH);
 
@@ -108,7 +110,7 @@ public class SecuritiesListPanel extends JPanel implements TableModelListener, L
                 exchangesComboBox.addItem(exch);
             }
         } catch (StockPlayException ex) {
-            JXErrorPane.showDialog(new Exception("An exception occured while rendering the exchanges-combobox", ex));
+            JXErrorPane.showDialog(new Exception(translations.getString("ERROR_RENDERING_SECURITIESCOMBOBOX"), ex));
         }
 
         exchangeColumn.setCellEditor(new DefaultCellEditor(exchangesComboBox));
@@ -193,7 +195,7 @@ public class SecuritiesListPanel extends JPanel implements TableModelListener, L
                         }
 
                     } catch (StockPlayException ex) {
-                        logger.error("Error while saving changes to security", ex);
+                        logger.error(translations.getString("ERROR_SAVING_SECURITY"), ex);
                         success = false;
                     }
                 }
@@ -203,7 +205,7 @@ public class SecuritiesListPanel extends JPanel implements TableModelListener, L
                     undoButton.setEnabled(false);
                     saveButton.setEnabled(false);
                 } else {
-                    JXErrorPane.showDialog(null, new ErrorInfo("Error", "Error while saving changes to securities", "", "", null, null, null));
+                    JXErrorPane.showDialog(null, new ErrorInfo(translations.getString("ERROR"), translations.getString("ERROR_SAVING_SECURITIES"), "", "", null, null, null));
                 }
             }
         });
@@ -240,9 +242,9 @@ public class SecuritiesListPanel extends JPanel implements TableModelListener, L
                     lockUI.setLocked(false);
 
                 } catch (InterruptedException ex) {
-                    JXErrorPane.showDialog(new Exception("An error occured while fetching the securities: the thread got interrupted", ex));
+                    JXErrorPane.showDialog(new Exception(translations.getString("ERROR_SAVING_SECURITIES_THREAD_INTERRUPTED"), ex));
                 } catch (ExecutionException ex) {
-                    JXErrorPane.showDialog(new Exception("An error occured while fetching the securities: execution exception", ex));
+                    JXErrorPane.showDialog(new Exception(translations.getString("ERROR_SAVING_SECURITIES_EXECUTION_EXCEPTION"), ex));
                 }
             }
         };
@@ -256,7 +258,7 @@ public class SecuritiesListPanel extends JPanel implements TableModelListener, L
     }
 
     public void valueChanged(ListSelectionEvent e) {
-        selectedLabel.setText("Aantal geselecteerde effecten: " + securitiesTable.getSelectedRowCount());
+        selectedLabel.setText(translations.getString("SELECTED_SECURITIES_COUNT") + securitiesTable.getSelectedRowCount());
         checkButtons();
 
     }
