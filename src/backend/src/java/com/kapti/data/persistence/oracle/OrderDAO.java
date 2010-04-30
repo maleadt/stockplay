@@ -31,6 +31,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class OrderDAO implements GenericDAO<Order, Integer> {
+    //
+    // Member data
+    //
 
     private static final String SELECT_ORDER_LASTID = "select orderid_seq.currval from dual";
     private static final String SELECT_ORDER = "SELECT userid, isin, limit, amount, type, status, creationtime, expirationtime, executiontime FROM orders WHERE id = ?";
@@ -38,6 +41,12 @@ public class OrderDAO implements GenericDAO<Order, Integer> {
     private static final String INSERT_ORDER = "INSERT INTO orders(id, userid, isin, limit, amount, type, status, creationtime, expirationtime, executiontime) VALUES(orderid_seq.nextval, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String UPDATE_ORDER = "UPDATE orders SET userid = ?, isin = ?, limit = ?, amount = ?, type = ?, status = ?, creationtime = ?, expirationtime = ?, executiontime = ? WHERE id = ?";
     private static final String DELETE_ORDER = "DELETE FROM orders WHERE id = ?";
+
+
+    //
+    // Construction
+    //
+    
     private static OrderDAO instance = new OrderDAO();
 
     private OrderDAO() {
@@ -46,6 +55,12 @@ public class OrderDAO implements GenericDAO<Order, Integer> {
     public static OrderDAO getInstance() {
         return instance;
     }
+
+
+    //
+    // Methods
+    //
+
 
     public Order findById(Integer id) throws StockPlayException {
         Connection conn = null;

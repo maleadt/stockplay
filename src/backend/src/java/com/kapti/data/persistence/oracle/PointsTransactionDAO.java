@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.kapti.data.persistence.oracle;
 
 import com.kapti.data.PointsTransaction;
@@ -26,13 +25,22 @@ import java.util.Date;
  * @author Thijs
  */
 public class PointsTransactionDAO implements GenericDAO<PointsTransaction, PointsTransaction.PointsTransactionPK> {
+    //
+    // Member data
+    //
 
-  private static final String SELECT_POINTSTRANSACTION = "SELECT delta, comments FROM pointstransactions WHERE userid = ? AND timest = ?";
+    private static final String SELECT_POINTSTRANSACTION = "SELECT delta, comments FROM pointstransactions WHERE userid = ? AND timest = ?";
     private static final String SELECT_POINTSTRANSACTIONS = "SELECT userid, timest, delta, comments FROM pointstransactions";
     private static final String INSERT_POINTSTRANSACTION = "INSERT INTO pointstransactions(userid, timest, delta, comments) "
             + "VALUES(?, ?, ?, ?)";
     private static final String UPDATE_POINTSTRANSACTION = "UPDATE pointstransactions SET delta = ?, comments = ? WHERE userid = ? AND timest = ?";
     private static final String DELETE_POINTSTRANSACTION = "DELETE FROM pointstransactions WHERE userid = ? AND timest = ?";
+
+
+    //
+    // Construction
+    //
+    
     private static PointsTransactionDAO instance = new PointsTransactionDAO();
 
     private PointsTransactionDAO() {
@@ -41,6 +49,11 @@ public class PointsTransactionDAO implements GenericDAO<PointsTransaction, Point
     public static PointsTransactionDAO getInstance() {
         return instance;
     }
+
+
+    //
+    // Methods
+    //
 
     public PointsTransaction findById(PointsTransactionPK pk) throws StockPlayException {
         Connection conn = null;
@@ -89,8 +102,9 @@ public class PointsTransactionDAO implements GenericDAO<PointsTransaction, Point
                 conn = OracleConnection.getConnection();
 
                 StringBuilder tQuery = new StringBuilder(SELECT_POINTSTRANSACTIONS);
-                if (!iFilter.empty())
-                    tQuery.append(" WHERE " + (String)iFilter.compile());
+                if (!iFilter.empty()) {
+                    tQuery.append(" WHERE " + (String) iFilter.compile());
+                }
                 stmt = conn.prepareStatement(tQuery.toString());
 
                 rs = stmt.executeQuery();
@@ -118,6 +132,7 @@ public class PointsTransactionDAO implements GenericDAO<PointsTransaction, Point
         }
 
     }
+
     /**
      * Geeft alle gebruikers in het systeem terug.
      * @return

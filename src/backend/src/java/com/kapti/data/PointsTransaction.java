@@ -7,6 +7,7 @@ package com.kapti.data;
 import com.kapti.exceptions.InvocationException;
 import com.kapti.exceptions.ServiceException;
 import com.kapti.exceptions.StockPlayException;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -16,7 +17,7 @@ import java.util.Map;
  *
  * @author Thijs
  */
-public class PointsTransaction {
+public class PointsTransaction implements Serializable {
     //
     // Member data
     //
@@ -146,7 +147,7 @@ public class PointsTransaction {
     // Classes
     //
 
-    public class PointsTransactionPK {
+    public class PointsTransactionPK implements Serializable {
 
         private int user;
         private Date timestamp;

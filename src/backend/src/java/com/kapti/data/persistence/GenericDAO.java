@@ -25,15 +25,39 @@ package com.kapti.data.persistence;
 import com.kapti.exceptions.FilterException;
 import com.kapti.exceptions.StockPlayException;
 import com.kapti.filter.Filter;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.util.Collection;
 
 public interface GenericDAO<T, ID> {
-    T findById(ID id) throws StockPlayException;
-    Collection<T> findByFilter(Filter iFilter) throws StockPlayException, FilterException;
-    Collection<T> findAll() throws StockPlayException;
+    //
+    // Methods
+    //
 
-    boolean update(T entity) throws StockPlayException;
-    int create(T entity) throws StockPlayException;
-    boolean delete(T entity) throws StockPlayException;
+    @Cachable T findById(ID id) throws StockPlayException;
+    @Cachable Collection<T> findByFilter(Filter iFilter) throws StockPlayException, FilterException;
+    @Cachable Collection<T> findAll() throws StockPlayException;
+
+    @Invalidates boolean update(T entity) throws StockPlayException;
+    @Invalidates int create(T entity) throws StockPlayException;
+    @Invalidates boolean delete(T entity) throws StockPlayException;
+
+
+    //
+    // Annotations
+    //
+
+    @Target({ElementType.METHOD})
+    @Retention(RetentionPolicy.RUNTIME)
+    public @interface Cachable {
+
+    }
+
+    @Target({ElementType.METHOD})
+    @Retention(RetentionPolicy.RUNTIME)
+    public @interface Invalidates {
+    }
 
 }

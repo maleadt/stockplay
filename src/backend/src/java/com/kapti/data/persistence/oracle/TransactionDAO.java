@@ -31,7 +31,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class TransactionDAO implements GenericDAO<Transaction, Integer> {
-
+    //
+    // Member data
+    //
 
     private static final String SELECT_TRANSACTION_LASTID = "select transactionid_seq.currval from dual";
     private static final String SELECT_TRANSACTION = "SELECT userid, timest, isin, type, amount, price, comments FROM transactions WHERE id = ?";
@@ -39,6 +41,12 @@ public class TransactionDAO implements GenericDAO<Transaction, Integer> {
     private static final String INSERT_TRANSACTION = "INSERT INTO transactions(id, userid, timest, isin, type, amount, price, comments) VALUES(transactionid_seq.nextval, ?, ?, ?, ?, ?, ?,?)";
     private static final String UPDATE_TRANSACTION = "UPDATE transactions SET userid = ?, timest = ?, isin = ?, type = ?, amount = ?, price = ?, comments = ? WHERE id = ?";
     private static final String DELETE_TRANSACTION = "DELETE FROM transactions WHERE id = ?";
+
+
+    //
+    // Construction
+    //
+    
     private static TransactionDAO instance = new TransactionDAO();
 
     private TransactionDAO() {
@@ -47,6 +55,11 @@ public class TransactionDAO implements GenericDAO<Transaction, Integer> {
     public static TransactionDAO getInstance() {
         return instance;
     }
+
+
+    //
+    // Methods
+    //
 
     public Transaction findById(Integer id) throws StockPlayException {
         Connection conn = null;
@@ -131,7 +144,7 @@ public class TransactionDAO implements GenericDAO<Transaction, Integer> {
 
     }
 
-     public Collection<Transaction> findAll() throws StockPlayException {
+    public Collection<Transaction> findAll() throws StockPlayException {
         return findByFilter(new Filter());
     }
 

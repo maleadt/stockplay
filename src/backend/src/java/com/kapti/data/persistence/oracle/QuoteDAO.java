@@ -23,13 +23,17 @@ package com.kapti.data.persistence.oracle;
 
 import com.kapti.exceptions.*;
 import com.kapti.data.*;
+import com.kapti.data.persistence.GenericQuoteDAO;
 import com.kapti.filter.Filter;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class QuoteDAO implements com.kapti.data.persistence.QuoteDAO {
+public class QuoteDAO implements GenericQuoteDAO {
+    //
+    // Member data
+    //
 
     private static final String SELECT_QUOTE = "SELECT price, volume, bid, ask, low, high, open FROM quotes WHERE isin = ? AND timestamp = ?";
     private static final String SELECT_QUOTES = "SELECT isin, timestamp, price, volume, bid, ask, low, high, open FROM quotes";
@@ -52,11 +56,26 @@ public class QuoteDAO implements com.kapti.data.persistence.QuoteDAO {
                                                             + " trunc(abs(extract(second from timestamp-?) + extract(minute from timestamp-?)*60 + extract(hour from timestamp-?)*60*60 + extract(day from timestamp-?)*24*60*60)/(?) ) as batch"
                                                             + " from quotes )"
                                                             + " WHERE (timestamp between ? and ?) and ($filter) group by isin, batch";
-    private static QuoteDAO instance = new QuoteDAO();
 
-    public static QuoteDAO getInstance() {
+
+    //
+    // Construction
+    //
+    
+    private static GenericQuoteDAO instance = new QuoteDAO();
+
+    private QuoteDAO() {
+        
+    }
+
+    public static GenericQuoteDAO getInstance() {
         return instance;
     }
+
+
+    //
+    // Methods
+    //
 
     public Quote findById(Quote.QuotePK pk) throws StockPlayException {
         Connection conn = null;
@@ -144,7 +163,7 @@ public class QuoteDAO implements com.kapti.data.persistence.QuoteDAO {
 
     }
 
-     public Collection<Quote> findAll() throws StockPlayException {
+    public Collection<Quote> findAll() throws StockPlayException {
         return findByFilter(new Filter());
     }
 
@@ -422,7 +441,6 @@ public class QuoteDAO implements com.kapti.data.persistence.QuoteDAO {
             throw new DBException(ex);
         }
     }
-
 
     public Collection<Quote> findLatestByFilter(Filter iFilter) throws StockPlayException, FilterException {
         Connection conn = null;

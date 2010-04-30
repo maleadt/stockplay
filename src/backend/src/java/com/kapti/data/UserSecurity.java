@@ -25,11 +25,12 @@ package com.kapti.data;
 import com.kapti.exceptions.InvocationException;
 import com.kapti.exceptions.ServiceException;
 import com.kapti.exceptions.StockPlayException;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 
-public class UserSecurity {
+public class UserSecurity implements Serializable {
     //
     // Member data
     //
@@ -145,7 +146,7 @@ public class UserSecurity {
     // Subclasses
     //
 
-    public class UserSecurityPK {
+    public class UserSecurityPK implements Serializable {
         private int user;
         private String isin;
 

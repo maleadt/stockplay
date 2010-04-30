@@ -31,11 +31,20 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class ExchangeDAO implements GenericDAO<Exchange, String> {
+    //
+    // Member data
+    //
+
     private static final String SELECT_EXCHANGE = "SELECT name, location FROM exchanges WHERE symbol = ?";
     private static final String SELECT_EXCHANGES = "SELECT symbol, name, location FROM exchanges";
     private static final String INSERT_EXCHANGE = "INSERT INTO exchanges(symbol, name, location) VALUES(?, ?, ?)";
     private static final String UPDATE_EXCHANGE = "UPDATE exchanges SET name = ?, location = ? WHERE symbol = ?";
     private static final String DELETE_EXCHANGE = "DELETE FROM exchanges WHERE symbol = ?";
+
+
+    //
+    // Construction
+    //
 
     private static ExchangeDAO instance = new ExchangeDAO();
 
@@ -44,7 +53,11 @@ public class ExchangeDAO implements GenericDAO<Exchange, String> {
     public static ExchangeDAO getInstance() {
         return instance;
     }
-    
+
+
+    //
+    // Methods
+    //
 
     public Exchange findById(String symbol) throws StockPlayException {
         Connection conn = null;

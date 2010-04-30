@@ -22,7 +22,9 @@
 
 package com.kapti.data;
 
-public abstract class Instruction {
+import java.io.Serializable;
+
+public abstract class Instruction implements Serializable {
     //
     // Member data
     //

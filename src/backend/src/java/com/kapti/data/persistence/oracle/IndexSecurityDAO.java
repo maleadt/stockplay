@@ -32,11 +32,20 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class IndexSecurityDAO implements GenericDAO<IndexSecurity, IndexSecurityPK> {
+    //
+    // Member data
+    //
 
     private static final String SELECT_INDEXSECURITY = "SELECT null FROM index_securities WHERE index_isin = ? AND security_isin = ?";
     private static final String SELECT_INDEXSECURITIES = "SELECT index_isin, security_isin FROM index_securities";
     private static final String INSERT_INDEXSECURITY = "INSERT INTO index_securities(index_isin, security_isin) VALUES(?, ?)";
     private static final String DELETE_INDEXSECURITY = "DELETE FROM index_securities WHERE index_isin = ? AND security_isin = ?";
+
+
+    //
+    // Construction
+    //
+    
     private static IndexSecurityDAO instance = new IndexSecurityDAO();
 
     private IndexSecurityDAO() {
@@ -46,9 +55,13 @@ public class IndexSecurityDAO implements GenericDAO<IndexSecurity, IndexSecurity
         return instance;
     }
 
+
+    //
+    // Methods
+    //
+
+
     public IndexSecurity findById(IndexSecurityPK pk) throws StockPlayException {
-
-
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;

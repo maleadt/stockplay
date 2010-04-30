@@ -25,12 +25,13 @@ package com.kapti.data;
 import com.kapti.exceptions.InvocationException;
 import com.kapti.exceptions.ServiceException;
 import com.kapti.exceptions.StockPlayException;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 
-public class Order extends Instruction {
+public class Order extends Instruction implements Serializable {
 
     //
     // Member data

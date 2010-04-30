@@ -22,7 +22,6 @@
 package com.kapti.filter;
 
 import com.kapti.exceptions.FilterException;
-import com.kapti.exceptions.InternalException;
 import com.kapti.exceptions.StockPlayException;
 import com.kapti.filter.graph.Graph;
 import com.kapti.filter.condition.Condition;
@@ -128,5 +127,36 @@ public class Filter {
      */
     public boolean empty() {
         return mRoot == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int code = 1;
+        
+        if (!empty()) {
+            code = (31 * code) + mRoot.hashCode();
+        }
+
+        return code;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        // Compare memory address
+        if (this == o) {
+            return true;
+        }
+
+        // Check if types match
+        if (!(o instanceof Filter)) {
+            return false;
+        }
+
+        // Check the hashcode
+        final Filter filter = (Filter) o;
+        if (filter.hashCode() != this.hashCode())
+            return false;
+
+        return true;
     }
 }

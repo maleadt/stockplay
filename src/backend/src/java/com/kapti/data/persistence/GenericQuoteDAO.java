@@ -30,13 +30,13 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-public interface QuoteDAO extends GenericDAO<Quote, Quote.QuotePK> {
-    boolean createBulk(List<Quote> iQuotes) throws StockPlayException;
+public interface GenericQuoteDAO extends GenericDAO<Quote, Quote.QuotePK> {
+    @Invalidates boolean createBulk(List<Quote> iQuotes) throws StockPlayException;
 
-    Timestamp getFirstTime(String isin) throws StockPlayException;
-    Timestamp getLatestTime(String isin) throws StockPlayException;
-    List<Timestamp> getRange(String isin) throws StockPlayException;
+    @Cachable Timestamp getFirstTime(String isin) throws StockPlayException;
+    @Cachable Timestamp getLatestTime(String isin) throws StockPlayException;
+    @Cachable List<Timestamp> getRange(String isin) throws StockPlayException;
 
-    Collection<Quote> findLatestByFilter(Filter iFilter) throws StockPlayException, FilterException;
-    Collection<Quote> findSpanByFilter(Date iStart, Date iStop, int iSpan, Filter iFilter) throws StockPlayException, FilterException;
+    @Cachable Collection<Quote> findLatestByFilter(Filter iFilter) throws StockPlayException, FilterException;
+    @Cachable Collection<Quote> findSpanByFilter(Date iStart, Date iStop, int iSpan, Filter iFilter) throws StockPlayException, FilterException;
 }

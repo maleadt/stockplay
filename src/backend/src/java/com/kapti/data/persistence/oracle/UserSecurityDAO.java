@@ -32,12 +32,21 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class UserSecurityDAO implements GenericDAO<UserSecurity, UserSecurityPK> {
+    //
+    // Member data
+    //
 
     private static final String SELECT_USERSECURITY = "SELECT amount FROM user_securities WHERE userid = ? AND isin = ?";
     private static final String SELECT_USERSECURITIES = "SELECT userid, isin, amount FROM user_securities";
     private static final String INSERT_USERSECURITY = "INSERT INTO user_securties(userid, isin, amount) VALUES(?, ?, ?)";
     private static final String UPDATE_USERSECURITY = "UPDATE user_securities SET amount = ? WHERE userid = ? AND isin = ?";
     private static final String DELETE_USERSECURITY = "DELETE FROM user_securities WHERE userid = ? AND isin = ?";
+
+
+    //
+    // Construction
+    //
+    
     private static UserSecurityDAO instance = new UserSecurityDAO();
 
     private UserSecurityDAO() {
@@ -46,6 +55,11 @@ public class UserSecurityDAO implements GenericDAO<UserSecurity, UserSecurityPK>
     public static UserSecurityDAO getInstance() {
         return instance;
     }
+
+
+    //
+    // Methods
+    //
 
     public UserSecurity findById(UserSecurityPK pk) throws StockPlayException {
         Connection conn = null;

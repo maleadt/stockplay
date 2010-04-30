@@ -25,12 +25,13 @@ package com.kapti.data;
 import com.kapti.exceptions.InvocationException;
 import com.kapti.exceptions.ServiceException;
 import com.kapti.exceptions.StockPlayException;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 
-public class Quote {
+public class Quote implements Serializable {
     //
     // Member data
     //
@@ -248,7 +249,7 @@ public class Quote {
     // Subclasses
     //
 
-    public class QuotePK {
+    public class QuotePK implements Serializable {
 
         private String isin = null;
         private Date time = null;

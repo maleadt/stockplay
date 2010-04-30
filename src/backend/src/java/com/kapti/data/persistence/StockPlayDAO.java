@@ -30,7 +30,7 @@ public interface StockPlayDAO {
     public GenericDAO<Exchange, String> getExchangeDAO();
     public GenericDAO<Index, String> getIndexDAO();
     public GenericDAO<Order, Integer> getOrderDAO();
-    public QuoteDAO getQuoteDAO();
+    public GenericQuoteDAO getQuoteDAO();
     public GenericDAO<Security, String> getSecurityDAO();
     public GenericDAO<Transaction, Integer> getTransactionDAO();
     public GenericDAO<User, Integer> getUserDAO();

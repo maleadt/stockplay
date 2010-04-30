@@ -120,6 +120,19 @@ public abstract class Convertable {
         return getConverter().compile();
     }
 
+    @Override
+    public int hashCode() {
+        // Hash the type of data
+        int code = this.getClass().hashCode();
+
+        // Hash all children
+        for (Convertable c : mParameters) {
+            code = (31 * code) + c.hashCode();
+        }
+
+        return code;
+    }
+
 
     //
     // Interface

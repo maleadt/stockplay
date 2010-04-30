@@ -4,12 +4,13 @@
  */
 package com.kapti.cache;
 
+import com.kapti.data.persistence.GenericDAO;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import net.sf.cache4j.Cache;
 import net.sf.cache4j.CacheException;
-import net.sf.cache4j.impl.Utils;
 import org.apache.log4j.Logger;
 
 /**
@@ -27,17 +28,23 @@ public class CacheInvocationHandler implements InvocationHandler {
     }
 
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        Throwable throwable = null;
-
+        // Generate a hashcode
         CallKey callKey = null;
         callKey = new CallKey(method.getName(), args);
-        mLogger.error("Hashkey is " + callKey.hashCode());
-        // TODO: filter HashCode
+
+        // Load the annotations
+        Annotation tCachable = method.getAnnotation(GenericDAO.Cachable.class);
+        Annotation tInvalidates = method.getAnnotation(GenericDAO.Invalidates.class);
+
+        // Invalidate
+        if (cache != null && tInvalidates != null) {
+            mLogger.debug("clearing cache");
+            cache.clear();
+        }
 
         // Look in cache
         Object result = null;
-        if (cache != null) {
-            mLogger.error("looking in cache");
+        if (cache != null && tCachable != null) {
             try {
                 result = cache.get(callKey);
             } catch (CacheException ce) {
@@ -47,21 +54,22 @@ public class CacheInvocationHandler implements InvocationHandler {
 
         // Return if found
         if (result != null) {
-            mLogger.error("found in cache");
+            mLogger.debug("cache hit");
             return result;
         }
 
         // Instantiate
-            mLogger.error("instantiating");
+        mLogger.debug("cache miss");
         result = method.invoke(target, args);
 
         // Save
-        try {
-            mLogger.error("saving in cache");
-            cache.put(callKey, result);
-        } catch (CacheException ce) {
-            mLogger.error("Object size is " + Utils.size(result));
-            mLogger.error("could not save cache entry", ce);
+        if (cache != null && tCachable != null) {
+            try {
+                mLogger.debug("updating cache");
+                cache.put(callKey, result);
+            } catch (CacheException ce) {
+                mLogger.error("could not save cache entry", ce);
+            }
         }
 
         return result;
@@ -80,8 +88,6 @@ class CallKey {
 
     @Override
     public int hashCode() {
-        // TODO: hashcode for filter
-        
         // Hash method name
         int code = methodName.hashCode();
 
@@ -97,7 +103,6 @@ class CallKey {
 
     @Override
     public boolean equals(Object o) {
-
         if (this == o) {
             return true;
         }

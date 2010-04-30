@@ -22,7 +22,9 @@
 
 package com.kapti.data;
 
-public enum OrderStatus {
+import java.io.Serializable;
+
+public enum OrderStatus implements Serializable {
     ACCEPTED,
     EXECUTED,
     CANCELLED,

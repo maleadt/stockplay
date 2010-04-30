@@ -22,8 +22,6 @@
 
 package com.kapti.data.persistence.oracle;
 
-import com.kapti.cache.CacheManager;
-import com.kapti.cache.CacheProxy;
 import com.kapti.exceptions.*;
 import com.kapti.data.*;
 import com.kapti.data.persistence.GenericDAO;
@@ -31,22 +29,37 @@ import com.kapti.filter.Filter;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
-import net.sf.cache4j.Cache;
 
 public class SecurityDAO implements GenericDAO<Security, String> {
+    //
+    // Member data
+    //
 
     private static final String SELECT_SECURITY = "SELECT symbol, name, exchange, visible, suspended FROM securities WHERE isin = ?";
     private static final String SELECT_SECURITIES = "SELECT isin, symbol, name, exchange, visible, suspended FROM securities";
     private static final String INSERT_SECURITY = "INSERT INTO securities(isin, symbol, name, exchange, visible, suspended) VALUES(?, ?, ?, ?, ?, ?)";
     private static final String UPDATE_SECURITY = "UPDATE securities SET symbol = ?, exchange = ?, name = ?, visible = ?, suspended = ? WHERE isin = ?";
     private static final String DELETE_SECURITY = "DELETE FROM securities WHERE isin = ?";
+
+
+    //
+    // Construction
+    //
+    
     private static GenericDAO instance = new SecurityDAO();
-    private static Cache mCache = CacheManager.getCache(SecurityDAO.class);
-    private static GenericDAO cachedinstance = (GenericDAO)CacheProxy.newProxyInstance(instance, GenericDAO.class, mCache);
+
+    private SecurityDAO() {
+        
+    }
 
     public static GenericDAO getInstance() {
-        return cachedinstance;
+        return instance;
     }
+
+
+    //
+    // Methods
+    //
 
     public Security findById(String isin) throws StockPlayException {
         Connection conn = null;

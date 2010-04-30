@@ -23,7 +23,7 @@ package com.kapti.backend.api.finance;
 
 import com.kapti.backend.api.MethodClass;
 import com.kapti.data.persistence.GenericDAO;
-import com.kapti.data.persistence.QuoteDAO;
+import com.kapti.data.persistence.GenericQuoteDAO;
 
 import com.kapti.exceptions.StockPlayException;
 import com.kapti.filter.Filter;
@@ -150,7 +150,7 @@ public class SecurityHandler extends MethodClass {
 
     public List<Map<String, Object>> Details(String iFilter) throws StockPlayException {
         // Get DAO reference
-        QuoteDAO tQuoteDAO = getDAO().getQuoteDAO();
+        GenericQuoteDAO tQuoteDAO = getDAO().getQuoteDAO();
 
         Parser parser = Parser.getInstance();
         Filter filter = parser.parse(iFilter);
@@ -186,7 +186,7 @@ public class SecurityHandler extends MethodClass {
      */
     public List<Map<String, Object>> Quotes(String iFilter) throws StockPlayException {
         // Get DAO reference
-        QuoteDAO tQuoteDAO = getDAO().getQuoteDAO();
+        GenericQuoteDAO tQuoteDAO = getDAO().getQuoteDAO();
 
         Parser parser = Parser.getInstance();
         Filter filter = parser.parse(iFilter);
@@ -224,7 +224,7 @@ public class SecurityHandler extends MethodClass {
      */
     public List<Map<String, Object>> Quotes(Date iStart, Date iEnd, int iSpan, String iFilter) throws StockPlayException {
         // Get DAO reference
-        QuoteDAO tQuoteDAO = getDAO().getQuoteDAO();
+        GenericQuoteDAO tQuoteDAO = getDAO().getQuoteDAO();
 
         Parser parser = Parser.getInstance();
         Filter filter = parser.parse(iFilter);
@@ -259,7 +259,7 @@ public class SecurityHandler extends MethodClass {
      */
     public List<Map<String, Object>> LatestQuotes(String iFilter) throws StockPlayException {
         // Get DAO reference
-        QuoteDAO tQuoteDAO = getDAO().getQuoteDAO();
+        GenericQuoteDAO tQuoteDAO = getDAO().getQuoteDAO();
 
         Parser parser = Parser.getInstance();
         Filter filter = parser.parse(iFilter);
@@ -295,7 +295,7 @@ public class SecurityHandler extends MethodClass {
     public Timestamp getFirstTime(String isin) throws StockPlayException {
         // Get DAO reference
         
-        QuoteDAO tQuoteDAO = getDAO().getQuoteDAO();
+        GenericQuoteDAO tQuoteDAO = getDAO().getQuoteDAO();
         System.err.println("DEPRECATED: use QuoteRange instead");
 
         return tQuoteDAO.getFirstTime(isin);
@@ -312,7 +312,7 @@ public class SecurityHandler extends MethodClass {
      */
     public Timestamp getLatestTime(String isin) throws StockPlayException {
         // Get DAO reference
-        QuoteDAO tQuoteDAO = getDAO().getQuoteDAO();
+        GenericQuoteDAO tQuoteDAO = getDAO().getQuoteDAO();
         System.err.println("DEPRECATED: use QuoteRange instead");
 
         return tQuoteDAO.getLatestTime(isin);
@@ -320,14 +320,14 @@ public class SecurityHandler extends MethodClass {
 
     public List<Timestamp> QuoteRange(String isin) throws StockPlayException {
         // Get DAO reference
-        QuoteDAO tQuoteDAO = getDAO().getQuoteDAO();
+        GenericQuoteDAO tQuoteDAO = getDAO().getQuoteDAO();
 
         return tQuoteDAO.getRange(isin);
     }
 
     public int Update(Hashtable<String, Object> iDetails) throws StockPlayException {
         // Get DAO reference
-        QuoteDAO tQuoteDAO = getDAO().getQuoteDAO();
+        GenericQuoteDAO tQuoteDAO = getDAO().getQuoteDAO();
 
         // Instantiate a new quote
         Quote tQuote = Quote.fromStruct(iDetails);
@@ -340,7 +340,7 @@ public class SecurityHandler extends MethodClass {
 
     public int UpdateBulk(Vector<HashMap<String, Object>> iQuotes) throws StockPlayException {
         // Get DAO reference
-        QuoteDAO tQuoteDAO = getDAO().getQuoteDAO();
+        GenericQuoteDAO tQuoteDAO = getDAO().getQuoteDAO();
 
         List<Quote> tQuotes = new ArrayList<Quote>();
         for (HashMap<String, Object> iDetails : iQuotes) {

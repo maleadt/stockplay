@@ -31,7 +31,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class UserDAO implements GenericDAO<User, Integer> {
-
+    //
+    // Member data
+    //
 
     private static final String SELECT_USER_LASTID = "select userid_seq.currval from dual";
     private static final String SELECT_USER = "SELECT nickname, password, email, lastname, firstname, is_admin, regtime, rrn, points, startamount, cash FROM users WHERE id = ?";
@@ -40,6 +42,12 @@ public class UserDAO implements GenericDAO<User, Integer> {
             + "VALUES(userid_seq.nextval, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String UPDATE_USER = "UPDATE users SET nickname = ?, password = ?, email = ?, lastname = ?, firstname = ?, is_admin = ?, regtime = ?, rrn = ?, points = ?, startamount = ?, cash = ?  WHERE id = ?";
     private static final String DELETE_USER = "DELETE FROM users WHERE id = ?";
+
+
+    //
+    // Construction
+    //
+    
     private static UserDAO instance = new UserDAO();
 
     private UserDAO() {
@@ -48,6 +56,11 @@ public class UserDAO implements GenericDAO<User, Integer> {
     public static UserDAO getInstance() {
         return instance;
     }
+
+
+    //
+    // Methods
+    //
 
     public User findById(Integer id) throws StockPlayException {
         Connection conn = null;

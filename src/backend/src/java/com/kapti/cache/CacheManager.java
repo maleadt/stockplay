@@ -4,10 +4,7 @@
  */
 package com.kapti.cache;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.net.URL;
 import net.sf.cache4j.Cache;
 import net.sf.cache4j.CacheException;
 import net.sf.cache4j.CacheFactory;
@@ -38,19 +35,19 @@ public class CacheManager {
         return tFactory;
     }
 
-    public static Cache getCache(Class iClass) {
+    public static Cache getCache(String iCache) {
         Cache oCache = null;
         if (mFactory == null) {
-            mLogger.error("factory not ready for usage, cannot instantiate cache " + iClass.getName());
+            mLogger.error("factory not ready for usage, cannot instantiate cache '" + iCache + "'");
             return null;
         }
         try {
-            oCache = mFactory.getCache(iClass.getName());
+            oCache = mFactory.getCache(iCache);
             if (oCache == null)
                 throw new CacheException("cache is null!");
         }
         catch (CacheException e) {
-            mLogger.error("could not load cache " + iClass.getName(), e);
+            mLogger.error("could not load cache '" + iCache + "'", e);
         }
         return oCache;
     }

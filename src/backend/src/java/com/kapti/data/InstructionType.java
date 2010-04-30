@@ -22,7 +22,9 @@
 
 package com.kapti.data;
 
-public enum InstructionType {
+import java.io.Serializable;
+
+public enum InstructionType implements Serializable {
     BUY,
     SELL,
     CANCEL,

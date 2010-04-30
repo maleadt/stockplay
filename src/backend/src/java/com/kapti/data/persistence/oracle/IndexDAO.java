@@ -31,12 +31,20 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class IndexDAO implements GenericDAO<Index, String> {
+    //
+    // Member data
+    //
     
     private static final String SELECT_INDEX = "SELECT name, exchange, symbol FROM indexes WHERE isin = ?";
     private static final String SELECT_INDEXES = "SELECT name, exchange, isin, symbol FROM indexes";
     private static final String INSERT_INDEX = "INSERT INTO indexes(name, exchange, isin, symbol) VALUES(?, ?, ?, ?)";
     private static final String UPDATE_INDEX = "UPDATE indexes SET name = ?, exchange = ?, symbol = ? WHERE isin = ?";
     private static final String DELETE_INDEX = "DELETE FROM indexes WHERE isin = ?";
+
+
+    //
+    // Construction
+    //
 
     private static IndexDAO instance = new IndexDAO();
 
@@ -45,6 +53,12 @@ public class IndexDAO implements GenericDAO<Index, String> {
     public static IndexDAO getInstance() {
         return instance;
     }
+
+
+    //
+    // Methods
+    //
+
 
     public Index findById(String isin) throws StockPlayException {
         Connection conn = null;

@@ -22,6 +22,8 @@
 
 package com.kapti.data.persistence.oracle;
 
+import com.kapti.cache.CacheManager;
+import com.kapti.cache.CacheProxy;
 import com.kapti.data.Exchange;
 import com.kapti.data.Index;
 import com.kapti.data.IndexSecurity;
@@ -35,6 +37,7 @@ import com.kapti.data.User;
 import com.kapti.data.UserSecurity;
 import com.kapti.data.UserSecurity.UserSecurityPK;
 import com.kapti.data.persistence.GenericDAO;
+import com.kapti.data.persistence.GenericQuoteDAO;
 import com.kapti.data.persistence.StockPlayDAO;
 import com.kapti.exceptions.DBException;
 import com.kapti.exceptions.ServiceException;
@@ -45,44 +48,85 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class OracleStockPlayDAO implements StockPlayDAO {
+    //
+    // Member data
+    //
+
     // Granted via 'grant select on sys.v_$instance to stockplay'
     private static final String SELECT_UPTIME = "SELECT (sysdate - startup_time)*24*60*60 FROM sys.v_$instance";
     private static final String SELECT_RATE = "SELECT MAX(VALUE) FROM sys.v_$sysmetric WHERE METRIC_NAME = 'User Transaction Per Sec' GROUP BY METRIC_NAME";
 
+    // Caches
+    
+    private final static boolean mCache = true;
+    GenericDAO<Exchange, String> mExchangeDAO;
+    GenericDAO<Security, String> mSecurityDAO;
+    GenericQuoteDAO mQuoteDAO;
+    GenericDAO<User, Integer> mUserDAO;
+    GenericDAO<Index, String> mIndexDAO;
+    GenericDAO<Order, Integer> mOrderDAO;
+    GenericDAO<Transaction, Integer> mTransactionDAO;
+    GenericDAO<IndexSecurity, IndexSecurityPK> mIndexSecurityDAO;
+    GenericDAO<UserSecurity, UserSecurityPK> mUserSecurityDAO;
+
+    public OracleStockPlayDAO() {
+        mExchangeDAO = ExchangeDAO.getInstance();
+        mSecurityDAO = SecurityDAO.getInstance();
+        mQuoteDAO = QuoteDAO.getInstance();
+        mUserDAO = UserDAO.getInstance();
+        mIndexDAO = IndexDAO.getInstance();
+        mOrderDAO = OrderDAO.getInstance();
+        mTransactionDAO = TransactionDAO.getInstance();
+        mIndexSecurityDAO = IndexSecurityDAO.getInstance();
+        mUserSecurityDAO = UserSecurityDAO.getInstance();
+
+        if (mCache) {
+            mExchangeDAO = (GenericDAO<Exchange, String>) CacheProxy.newProxyInstance(mExchangeDAO, GenericDAO.class, CacheManager.getCache("exchanges"));
+            mSecurityDAO = (GenericDAO<Security, String>) CacheProxy.newProxyInstance(mSecurityDAO, GenericDAO.class, CacheManager.getCache("securities"));
+            mQuoteDAO = (GenericQuoteDAO) CacheProxy.newProxyInstance(mQuoteDAO, GenericQuoteDAO.class, CacheManager.getCache("quotes"));
+            mUserDAO = (GenericDAO<User, Integer>) CacheProxy.newProxyInstance(mUserDAO, GenericDAO.class, CacheManager.getCache("users"));
+            mIndexDAO = (GenericDAO<Index, String>) CacheProxy.newProxyInstance(mIndexDAO, GenericDAO.class, CacheManager.getCache("indexes"));
+            mOrderDAO = (GenericDAO<Order, Integer>) CacheProxy.newProxyInstance(mOrderDAO, GenericDAO.class, CacheManager.getCache("orders"));
+            mTransactionDAO = (GenericDAO<Transaction, Integer>) CacheProxy.newProxyInstance(mTransactionDAO, GenericDAO.class, CacheManager.getCache("transactions"));
+            mIndexSecurityDAO = (GenericDAO<IndexSecurity, IndexSecurityPK>) CacheProxy.newProxyInstance(mIndexSecurityDAO, GenericDAO.class, CacheManager.getCache("indexsecurities"));
+            mUserSecurityDAO = (GenericDAO<UserSecurity, UserSecurityPK>) CacheProxy.newProxyInstance(mUserSecurityDAO, GenericDAO.class, CacheManager.getCache("usersecurities"));
+        }
+    }
+
     public GenericDAO<Exchange, String> getExchangeDAO() {
-        return ExchangeDAO.getInstance();
+        return mExchangeDAO;
     }
 
     public GenericDAO<Security, String> getSecurityDAO() {
-        return SecurityDAO.getInstance();
+        return mSecurityDAO;
     }
 
-    public QuoteDAO getQuoteDAO() {
-        return QuoteDAO.getInstance();
+    public GenericQuoteDAO getQuoteDAO() {
+        return mQuoteDAO;
     }
 
     public GenericDAO<User, Integer> getUserDAO() {
-        return UserDAO.getInstance();
+        return mUserDAO;
     }
 
     public GenericDAO<Index, String> getIndexDAO() {
-        return IndexDAO.getInstance();
+        return mIndexDAO;
     }
 
     public GenericDAO<Order, Integer> getOrderDAO() {
-        return OrderDAO.getInstance();
+        return mOrderDAO;
     }
 
     public GenericDAO<Transaction, Integer> getTransactionDAO() {
-       return TransactionDAO.getInstance();
+       return mTransactionDAO;
     }
 
     public GenericDAO<IndexSecurity, IndexSecurityPK> getIndexSecurityDAO() {
-        return IndexSecurityDAO.getInstance();
+        return mIndexSecurityDAO;
     }
 
     public GenericDAO<UserSecurity, UserSecurityPK> getUserSecurityDAO() {
-        return UserSecurityDAO.getInstance();
+        return mUserSecurityDAO;
     }
 
     public long getUptime() throws StockPlayException {
