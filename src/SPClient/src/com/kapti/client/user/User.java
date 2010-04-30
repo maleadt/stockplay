@@ -8,15 +8,12 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.ResourceBundle;
 
 /**
  *
  * @author Thijs
  */
 public class User implements Cloneable {
-
-    private static final ResourceBundle translations = ResourceBundle.getBundle("com/kapti/administration/translations");
 
     public static enum Fields {
 
@@ -48,20 +45,6 @@ public class User implements Cloneable {
             return id;
         }
 
-        @Override
-        public String toString() {
-            if (this == Role.USER) {
-                return translations.getString("USER");
-            } else if (this == Role.ADMIN) {
-                return translations.getString("ADMINISTRATOR");
-            } else if (this == Role.SCRAPER) {
-                return translations.getString("SCRAPER");
-            } else if (this == Role.AI) {
-                return translations.getString("AI");
-            } else {
-                return translations.getString("UNKNOWN");
-            }
-        }
     }
     /**
      * Deze variabele geeft aan of de waarden van het object werden gewijzigd

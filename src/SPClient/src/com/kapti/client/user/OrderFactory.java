@@ -46,7 +46,7 @@ public class OrderFactory {
         ArrayList<Order> result = new ArrayList<Order>();
         try {
             XmlRpcClient client = XmlRpcClientFactory.getXmlRpcClient();
-
+            
             Object[] users = (Object[]) client.execute("User.Order.List", new Object[]{filter});
 
             for (Object obj : users)

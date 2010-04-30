@@ -300,7 +300,6 @@ public class Transaction {
     }
 
     public HashMap toStruct() {
-
         HashMap h = new HashMap();
 
         h.put(Fields.ID.toString(), getId());
@@ -315,7 +314,5 @@ public class Transaction {
         h.put(Fields.COMMENTS.toString(), getComment());
 
         return h;
-
-
     }
 }

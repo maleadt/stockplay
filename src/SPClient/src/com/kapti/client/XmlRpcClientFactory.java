@@ -23,18 +23,15 @@ public class XmlRpcClientFactory {
         try {
 
             ResourceBundle settings = ResourceBundle.getBundle("com/kapti/client/settings");
-
             XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
             config.setServerURL(new URL(settings.getString("server")));
             config.setGzipCompressing(settings.getString("gzip").equals("1"));
             config.setGzipRequesting(settings.getString("gzip").equals("1"));
             config.setEnabledForExtensions(true);
 
-
             XmlRpcClient client = new XmlRpcClient();
 
             client.setConfig(config);
-
 
 
             return client;

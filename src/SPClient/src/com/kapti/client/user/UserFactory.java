@@ -40,10 +40,8 @@ public class UserFactory {
             XmlRpcClient client = XmlRpcClientFactory.getXmlRpcClient();
             Object[] users = (Object[]) client.execute("User.List", new Object[]{filter});
 
-            for (Object obj : users) {
+            for (Object obj : users)
                 result.add(User.fromStruct((HashMap) obj));
-
-            }
             return result;
 
         } catch (XmlRpcException ex) {
