@@ -83,9 +83,12 @@ public class CheckOrdersTask implements Runnable {
             OrderVerifier verifier = orderVerifierFactory.getOrderVerifierByType(order.getType());
             Quote quote = currentQuotes.get(order.getSecurity());
 
-            if (verifier != null && verifier.verifyOrder(order, quote) &&
-                (((order.getType() != Order.Type.BUY || order.getType() != Order.Type.IMMEDIATE_BUY)) &&
-                order.getUser().getCash() > quote.getPrice() * order.getAmount())) {
+//            if (verifier != null && verifier.verifyOrder(order, quote) &&
+//                (((order.getType() != Order.Type.BUY || order.getType() != Order.Type.IMMEDIATE_BUY)) &&
+//                order.getUser().getCash() > quote.getPrice() * order.getAmount())) {
+
+                if ((verifier != null) && (verifier.verifyOrder(order, quote))) {
+
 
                 // De voorwaarden om het order te kunnen uitvoeren zijn voldaan, we voeren het uit!
                 Transaction transaction = transactionFactory.createTransaction();
