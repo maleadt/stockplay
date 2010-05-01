@@ -31,6 +31,7 @@ import com.kapti.data.IndexSecurity.IndexSecurityPK;
 import com.kapti.data.Order;
 import com.kapti.data.PointsTransaction;
 import com.kapti.data.PointsTransaction.PointsTransactionPK;
+import com.kapti.data.Role;
 import com.kapti.data.Security;
 import com.kapti.data.Transaction;
 import com.kapti.data.User;
@@ -68,6 +69,7 @@ public class OracleStockPlayDAO implements StockPlayDAO {
     GenericDAO<Transaction, Integer> mTransactionDAO;
     GenericDAO<IndexSecurity, IndexSecurityPK> mIndexSecurityDAO;
     GenericDAO<UserSecurity, UserSecurityPK> mUserSecurityDAO;
+    GenericDAO<Role, Integer> mRoleDAO;
 
     public OracleStockPlayDAO() {
         mExchangeDAO = ExchangeDAO.getInstance();
@@ -79,6 +81,7 @@ public class OracleStockPlayDAO implements StockPlayDAO {
         mTransactionDAO = TransactionDAO.getInstance();
         mIndexSecurityDAO = IndexSecurityDAO.getInstance();
         mUserSecurityDAO = UserSecurityDAO.getInstance();
+        mRoleDAO = RoleDAO.getInstance();
 
         if (mCache) {
             mExchangeDAO = (GenericDAO<Exchange, String>) CacheProxy.newProxyInstance(mExchangeDAO, GenericDAO.class, CacheManager.getCache("exchanges"));
@@ -90,6 +93,7 @@ public class OracleStockPlayDAO implements StockPlayDAO {
             mTransactionDAO = (GenericDAO<Transaction, Integer>) CacheProxy.newProxyInstance(mTransactionDAO, GenericDAO.class, CacheManager.getCache("transactions"));
             mIndexSecurityDAO = (GenericDAO<IndexSecurity, IndexSecurityPK>) CacheProxy.newProxyInstance(mIndexSecurityDAO, GenericDAO.class, CacheManager.getCache("indexsecurities"));
             mUserSecurityDAO = (GenericDAO<UserSecurity, UserSecurityPK>) CacheProxy.newProxyInstance(mUserSecurityDAO, GenericDAO.class, CacheManager.getCache("usersecurities"));
+            mRoleDAO = (GenericDAO<Role, Integer>)CacheProxy.newProxyInstance(mRoleDAO, GenericDAO.class, CacheManager.getCache("roles"));
         }
     }
 
@@ -127,6 +131,10 @@ public class OracleStockPlayDAO implements StockPlayDAO {
 
     public GenericDAO<UserSecurity, UserSecurityPK> getUserSecurityDAO() {
         return mUserSecurityDAO;
+    }
+
+    public GenericDAO<Role, Integer> getRolesDAO() {
+        return mRoleDAO;
     }
 
     public long getUptime() throws StockPlayException {
@@ -196,5 +204,6 @@ public class OracleStockPlayDAO implements StockPlayDAO {
     public GenericDAO<PointsTransaction, PointsTransactionPK> getPointsTransactionDAO() {
         return PointsTransactionDAO.getInstance();
     }
+
 
 }

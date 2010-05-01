@@ -29,6 +29,9 @@ import java.net.URL;
 import java.util.Date;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.server.AbstractReflectiveHandlerMapping.AuthenticationHandler;
@@ -48,23 +51,25 @@ import org.apache.xmlrpc.webserver.XmlRpcServletServer;
  *  - Flexibele method mapping via property-file
  *  - Gebruik van customized XML-RPC server voor exception trapping
  */
-public class Servlet extends XmlRpcServlet {
+public class PrivateServlet extends XmlRpcServlet {
     //
     // Dataleden
     //
 
     private StockPlayDAO mDAO;
-    static Logger mLogger = Logger.getLogger(Servlet.class);
+    private SessionsHandler mSessions;
+    static Logger mLogger = Logger.getLogger(PrivateServlet.class);
     private static Date mDateStart = new Date();
 
     //
     // Constructie
     //
 
-    public Servlet() throws XmlRpcException {
+    public PrivateServlet() throws XmlRpcException {
         super();
         try {
             mDAO = StockPlayDAOFactory.getDAO();
+            mSessions = SessionsHandler.getInstance();
         }
         catch (StockPlayException e) {
             mLogger.error("Can't start StockPlayDAOFactory");
@@ -120,11 +125,12 @@ public class Servlet extends XmlRpcServlet {
         }
 
         // Authenticatie-handler registreren
-//        AuthenticationHandler tHandler = new AuthHandler(mDAO);
-//        oMapping.setAuthenticationHandler(tHandler);
+        AuthenticationHandler tHandler = new AuthHandler(mDAO, mSessions);
+        oMapping.setAuthenticationHandler(tHandler);
 
         return oMapping;
     }
+
 
 
     /**
@@ -150,6 +156,8 @@ public class Servlet extends XmlRpcServlet {
         return oMapping;
     }
 
+
+
     /**
      * Ophalen van uptime.
      * 
@@ -158,4 +166,5 @@ public class Servlet extends XmlRpcServlet {
     public static long getUptime() {
         return (long)(((new Date()).getTime() - mDateStart.getTime())/1000.0);
     }
+
 }

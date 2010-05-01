@@ -36,15 +36,17 @@ public class AuthHandler implements AuthenticationHandler {
     //
     
     private StockPlayDAO mDAO;
+    private SessionsHandler mSessions;
     
     
     //
     // Constructie
     //
 
-    public AuthHandler(StockPlayDAO iDAO) {
+    public AuthHandler(StockPlayDAO iDAO, SessionsHandler iSessions) {
         super();
         mDAO = iDAO;
+        mSessions = iSessions;
     }
 
 
@@ -54,12 +56,14 @@ public class AuthHandler implements AuthenticationHandler {
 
     public boolean isAuthorized(XmlRpcRequest pRequest) {
         // Haal credentials op
-        XmlRpcHttpRequestConfig config = (XmlRpcHttpRequestConfig) pRequest.getConfig();
-        String tUsername = config.getBasicUserName();
-        String tPassword = config.getBasicPassword();
 
+
+        XmlRpcHttpRequestConfig config = (XmlRpcHttpRequestConfig) pRequest.getConfig();
+
+        String sessionid = config.getBasicUserName();
         String tMethod = pRequest.getMethodName();
-        // Verifieer ze
-        return true;
+
+
+        return mSessions.verifyRequest(sessionid, tMethod);
     }
 }

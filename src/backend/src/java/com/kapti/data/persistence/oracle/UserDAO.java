@@ -187,7 +187,7 @@ public class UserDAO implements GenericDAO<User, Integer> {
                 stmt.setString(3, entity.getEmail());
                 stmt.setString(4, entity.getLastname());
                 stmt.setString(5, entity.getFirstname());
-                stmt.setInt(6, entity.getRole());
+                stmt.setInt(6, entity.getRole().getId());
                 stmt.setTimestamp(7, new Timestamp(entity.getRegdate().getTime()));
                 stmt.setLong(8, entity.getRijksregisternummer());
                 stmt.setInt(9, entity.getPoints());
@@ -254,7 +254,7 @@ public class UserDAO implements GenericDAO<User, Integer> {
                 stmt.setString(3, entity.getEmail());
                 stmt.setString(4, entity.getLastname());
                 stmt.setString(5, entity.getFirstname());
-                stmt.setInt(6, entity.getRole());
+                stmt.setInt(6, entity.getRole().getId());
                 stmt.setTimestamp(7, new Timestamp(entity.getRegdate().getTime()));
                 stmt.setLong(8, entity.getRijksregisternummer());
                 stmt.setInt(9, entity.getPoints());

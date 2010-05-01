@@ -65,7 +65,7 @@ public class User implements Serializable {
     private String lastname = "";
     private String firstname = "";
     private Date regdate = null;
-    private int role = 0;
+    private Role role = Role.USER;
     private int points = 0;
     private double startamount = 0;
     private double cash = 0;
@@ -159,11 +159,14 @@ public class User implements Serializable {
         return firstname;
     }
 
-    public int getRole() {
+    public Role getRole() {
         return role;
     }
 
     public void setRole(int role) {
+        this.role = Role.fromId(role);
+    }
+    public void setRole(Role role){
         this.role = role;
     }
 
@@ -370,5 +373,33 @@ public class User implements Serializable {
 //        } else {
 //            throw new ServiceException(ServiceException.Type.NOT_ENOUGH_INFORMATION);
 //        }
+    }
+
+
+        public enum Role {
+
+        USER(0),
+        ADMIN(1),
+        SCRAPER(2),
+        AI(3);
+        int id;
+
+        private Role(int id) {
+            this.id = id;
+        }
+
+        public static Role fromId(int id) {
+            for (Role r : Role.values()) {
+                if (r.id == id) {
+                    return r;
+                }
+            }
+            return null;
+        }
+
+        public int getId() {
+            return id;
+        }
+
     }
 }

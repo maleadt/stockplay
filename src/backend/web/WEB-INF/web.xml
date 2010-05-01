@@ -6,9 +6,17 @@
         <servlet-class>com.kapti.backend.xmlrpc.Servlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
+    <servlet>
+        <servlet-name>XmlRpcPrivate</servlet-name>
+        <servlet-class>com.kapti.backend.xmlrpc.PrivateServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>XmlRpc</servlet-name>
         <url-pattern>/public</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>XmlRpcPrivate</servlet-name>
+        <url-pattern>/private</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
