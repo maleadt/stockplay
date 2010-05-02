@@ -45,12 +45,13 @@ public class UserFactory {
             return result;
 
         } catch (XmlRpcException ex) {
+            System.out.println("Filter: " + filter);
             throw new RequestError(ex);
         }
     }
 
     public User getUserById(int id) throws StockPlayException {
-        Collection<User> users = getUsersByFilter("id == '" + id + "'");
+        Collection<User> users = getUsersByFilter("id == " + id);
         Iterator<User> it = users.iterator();
 
         if (it.hasNext()) {
