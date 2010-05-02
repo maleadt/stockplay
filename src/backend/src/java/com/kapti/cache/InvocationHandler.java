@@ -37,14 +37,13 @@ public class InvocationHandler implements java.lang.reflect.InvocationHandler {
 
         // Invalidate
         if (cache != null && tInvalidates != null) {
-            mLogger.debug("clearing cache entries @ cache " + cache.getCacheConfig().getCacheId());
+            mLogger.debug("invalidating " + cache.getCacheConfig().getCacheId() + ".*");
             cache.clear();
         }
 
         // Look in cache
         Object result = null;
         if (cache != null && tCachable != null) {
-            Monitor.add(cache, callKey);
             try {
                 result = cache.get(callKey);
             } catch (CacheException ce) {
@@ -54,7 +53,7 @@ public class InvocationHandler implements java.lang.reflect.InvocationHandler {
 
         // Return if found
         if (result != null) {
-            mLogger.debug("cache hit on entry " + cache.getCacheConfig().getCacheId() + "." + method.getName());
+            Monitor.hit(cache, callKey);
             return result;
         }
 
@@ -63,8 +62,8 @@ public class InvocationHandler implements java.lang.reflect.InvocationHandler {
 
         // Save
         if (cache != null && tCachable != null) {
+            Monitor.miss(cache, callKey);
             try {
-                mLogger.debug("cache miss on entry " + cache.getCacheConfig().getCacheId() + "." + method.getName());
                 cache.put(callKey, result);
             } catch (CacheException ce) {
                 mLogger.error("could not save cache entry", ce);

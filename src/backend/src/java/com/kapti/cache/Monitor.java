@@ -30,21 +30,30 @@ public class Monitor extends TimerTask {
         mCaches.put(cache, proxy);
     }
 
-    public static void add(Cache cache, final CallKey callKey) {
+    public static void miss(Cache cache, final CallKey callKey) {
+        mLogger.debug("cache miss on entry " + cache.getCacheConfig().getCacheId() + "." + callKey.method.getName());
         mCacheMisses++;
         if (! mCacheStats.containsKey(cache)) {
             return;
         }
+        mCacheStats.get(cache).add(callKey);
+    }
 
+    public static void hit(Cache cache, final CallKey callKey) {
+        mLogger.debug("cache hit on entry " + cache.getCacheConfig().getCacheId() + "." + callKey.method.getName());
+        if (! mCacheStats.containsKey(cache)) {
+            return;
+        }
         mCacheStats.get(cache).add(callKey);
     }
 
     public static void clear() {
+        mLogger.info("clearing cache");
         for (Cache cache : mCacheStats.keySet()) {
             try {
                 cache.clear();
             } catch (CacheException ce) {
-                mLogger.error("could not clear cache " + cache.getCacheConfig().getCacheId());
+                mLogger.error("could not clear cache " + cache.getCacheConfig().getCacheId(), ce);
             }
             mCacheStats.get(cache).clear();
         }
@@ -57,6 +66,7 @@ public class Monitor extends TimerTask {
         mCacheMisses = 0;
 
         // Process all caches
+        int tRefreshCount = 0;
         for (Cache cache : mCaches.keySet()) {
             Object target = mCaches.get(cache);
             Map<CallKey, Entry> tEntries = mCacheStats.get(cache).entries;
@@ -93,6 +103,7 @@ public class Monitor extends TimerTask {
                             try {
                                 mLogger.debug("refreshing cache entry " + cache.getCacheConfig().getCacheId() + "." + callKey.method.getName());
                                 cache.put(callKey, result);
+                                tRefreshCount++;
                             } catch (CacheException ce) {
                                 mLogger.error("could not refresh cache entry", ce);
                             }
@@ -109,6 +120,9 @@ public class Monitor extends TimerTask {
                     }
                 }
             }
+        }
+        if (tRefreshCount > 0) {
+            mLogger.debug("refreshed " + tRefreshCount + " cache entrie while the backend was idle");
         }
     }
 }
