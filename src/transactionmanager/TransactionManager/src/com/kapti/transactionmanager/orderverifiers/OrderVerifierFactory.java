@@ -38,9 +38,6 @@ public class OrderVerifierFactory {
         return instance;
     }
 
-    private OrderVerifierFactory() {
-    }
-
     public OrderVerifier getOrderVerifierByType(Order.Type type){
         switch(type){
             case BUY:
@@ -48,8 +45,11 @@ public class OrderVerifierFactory {
             case SELL:
                 return new SellVerifier();
             case IMMEDIATE_BUY:
+                return new ImmediateOrderVerifier();
             case IMMEDIATE_SELL:
                 return new ImmediateOrderVerifier();
+            case STOP_LOSS_BUY:
+                return new StopLossBuy();
             default:
                 return null;
         }

@@ -103,6 +103,8 @@ public class Order {
         BUY,
         SELL,
         IMMEDIATE_BUY,
+        STOP_LOSS_BUY,
+        STOP_LOSS_SELL,
         IMMEDIATE_SELL,
         MANUAL;
     }

@@ -22,9 +22,7 @@
 
 package com.kapti.transactionmanager;
 
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import org.apache.log4j.Logger;
 
 /**
@@ -50,4 +48,5 @@ public class Main {
         //we voeren elke minuut een controle van de orders uit
 //        daemonService.scheduleAtFixedRate(new CheckOrdersTask(), 0, 5, TimeUnit.SECONDS);
     }
+
 }

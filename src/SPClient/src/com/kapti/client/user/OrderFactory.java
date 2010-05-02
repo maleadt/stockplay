@@ -82,8 +82,8 @@ public class OrderFactory {
         if (t.getId() > 0) {
             h.remove(Order.Fields.USER.name());
             h.remove(Order.Fields.ISIN.name());
-      
-            return (Boolean) client.execute("User.Order.Modify", new Object[]{"id == '" + t.getId() + "'", h});
+     
+            return (Boolean) client.execute("User.Order.Modify", new Object[]{"id == " + t.getId(), h});
         }else {
             Integer id = (Integer) client.execute("User.Order.Create", new Object[]{h});
             if (id > 0) {

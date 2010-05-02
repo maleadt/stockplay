@@ -22,7 +22,6 @@
 
 package com.kapti.transactionmanager.orderverifiers;
 
-import com.kapti.client.finance.Quote;
 import com.kapti.client.user.Order;
 import com.kapti.client.user.Order.Type;
 
@@ -38,7 +37,7 @@ public class ImmediateOrderVerifier implements OrderVerifier {
         return new Type[] { Order.Type.IMMEDIATE_BUY, Order.Type.IMMEDIATE_SELL };
     }
 
-    public boolean verifyOrder(Order order, Quote latestQuote) {
+    public boolean verifyOrder(Order order) {
         return true;
     }
 

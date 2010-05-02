@@ -22,7 +22,6 @@
 
 package com.kapti.transactionmanager;
 
-import com.kapti.client.finance.FinanceFactory;
 import com.kapti.client.finance.Quote;
 import com.kapti.client.finance.Security;
 import com.kapti.client.user.Order;
@@ -30,6 +29,7 @@ import com.kapti.client.user.OrderFactory;
 import com.kapti.client.user.Transaction;
 import com.kapti.client.user.TransactionFactory;
 import com.kapti.exceptions.StockPlayException;
+import com.kapti.transactionmanager.orderverifiers.Data;
 import com.kapti.transactionmanager.orderverifiers.OrderVerifier;
 import com.kapti.transactionmanager.orderverifiers.OrderVerifierFactory;
 import java.util.Collection;
@@ -46,10 +46,10 @@ import org.apache.log4j.Logger;
 public class CheckOrdersTask implements Runnable {
 
     private static Logger logger = Logger.getLogger(CheckOrdersTask.class);
-    private static OrderFactory orderFactory = OrderFactory.getInstance();
     private static TransactionFactory transactionFactory = TransactionFactory.getInstance();
-    private static FinanceFactory financeFactory = FinanceFactory.getInstance();
     private static OrderVerifierFactory orderVerifierFactory = OrderVerifierFactory.getInstance();
+    private OrderFactory orderFactory = OrderFactory.getInstance();
+    private static Data data = Data.getReference();
 
     public CheckOrdersTask() {
     }
@@ -57,25 +57,10 @@ public class CheckOrdersTask implements Runnable {
     public void run() {
     try {
         logger.info("Starting Orderprocessing");
-        
-        // We halen alle pending orders op
-        Collection<Order> currentOrders = null;
-        try {
-            currentOrders = orderFactory.getAllPendingOrders();
-        } catch (StockPlayException ex) {
-            logger.error("Failed to fetch pending orders", ex);
-        }
 
-
-        // En we halen alle laatste quotes op
-        HashMap<Security, Quote> currentQuotes = new HashMap<Security, Quote>();
-        try {
-            Collection<Quote> latestQuotes = financeFactory.getAllLatestQuotes();
-            for (Quote q : latestQuotes)
-                currentQuotes.put(q.getSecurity(), q);
-        } catch (StockPlayException ex) {
-            logger.error("Failed to fetch the latest quotes", ex);
-        }
+        // Data verkrijgen
+        Collection<Order> currentOrders = data.getCurrentOrders();
+        HashMap<Security, Quote> currentQuotes = data.getCurrentQuotes();
 
         // We testen nu een voor een elk order of het voldoet, en voeren het uit indien dat het geval is
         for (Order order : currentOrders) {
@@ -87,7 +72,7 @@ public class CheckOrdersTask implements Runnable {
 //                (((order.getType() != Order.Type.BUY || order.getType() != Order.Type.IMMEDIATE_BUY)) &&
 //                order.getUser().getCash() > quote.getPrice() * order.getAmount())) {
 
-                if ((verifier != null) && (verifier.verifyOrder(order, quote))) {
+                if ((verifier != null) && (verifier.verifyOrder(order))) {
 
 
                 // De voorwaarden om het order te kunnen uitvoeren zijn voldaan, we voeren het uit!

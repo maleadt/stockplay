@@ -22,7 +22,6 @@
 
 package com.kapti.transactionmanager.orderverifiers;
 
-import com.kapti.client.finance.Quote;
 import com.kapti.client.user.Order;
 
 /**
@@ -33,5 +32,5 @@ import com.kapti.client.user.Order;
 
 public interface OrderVerifier {
     public Order.Type[] getOrderTypes();
-    public boolean verifyOrder(Order order, Quote latestQuote);
+    public boolean verifyOrder(Order order);
 }

@@ -38,7 +38,8 @@ public class BuyVerifier implements OrderVerifier {
         return new Type[] { Type.BUY };
     }
 
-    public boolean verifyOrder(Order order, Quote latestQuote) {
+    public boolean verifyOrder(Order order) {
+        Quote latestQuote = Data.getReference().getCurrentQuotes().get(order.getSecurity());
         return order.getPrice() >= latestQuote.getPrice();    
     }
 
