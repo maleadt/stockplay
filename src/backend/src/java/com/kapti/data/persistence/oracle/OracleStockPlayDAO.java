@@ -22,8 +22,9 @@
 
 package com.kapti.data.persistence.oracle;
 
-import com.kapti.cache.CacheManager;
-import com.kapti.cache.CacheProxy;
+import com.kapti.cache.Manager;
+import com.kapti.cache.Monitor;
+import com.kapti.cache.Proxy;
 import com.kapti.data.Exchange;
 import com.kapti.data.Index;
 import com.kapti.data.IndexSecurity;
@@ -47,6 +48,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
+import java.util.Timer;
 
 public class OracleStockPlayDAO implements StockPlayDAO {
     //
@@ -84,16 +87,19 @@ public class OracleStockPlayDAO implements StockPlayDAO {
         mRoleDAO = RoleDAO.getInstance();
 
         if (mCache) {
-            mExchangeDAO = (GenericDAO<Exchange, String>) CacheProxy.newProxyInstance(mExchangeDAO, GenericDAO.class, CacheManager.getCache("exchanges"));
-            mSecurityDAO = (GenericDAO<Security, String>) CacheProxy.newProxyInstance(mSecurityDAO, GenericDAO.class, CacheManager.getCache("securities"));
-            mQuoteDAO = (GenericQuoteDAO) CacheProxy.newProxyInstance(mQuoteDAO, GenericQuoteDAO.class, CacheManager.getCache("quotes"));
-            mUserDAO = (GenericDAO<User, Integer>) CacheProxy.newProxyInstance(mUserDAO, GenericDAO.class, CacheManager.getCache("users"));
-            mIndexDAO = (GenericDAO<Index, String>) CacheProxy.newProxyInstance(mIndexDAO, GenericDAO.class, CacheManager.getCache("indexes"));
-            mOrderDAO = (GenericDAO<Order, Integer>) CacheProxy.newProxyInstance(mOrderDAO, GenericDAO.class, CacheManager.getCache("orders"));
-            mTransactionDAO = (GenericDAO<Transaction, Integer>) CacheProxy.newProxyInstance(mTransactionDAO, GenericDAO.class, CacheManager.getCache("transactions"));
-            mIndexSecurityDAO = (GenericDAO<IndexSecurity, IndexSecurityPK>) CacheProxy.newProxyInstance(mIndexSecurityDAO, GenericDAO.class, CacheManager.getCache("indexsecurities"));
-            mUserSecurityDAO = (GenericDAO<UserSecurity, UserSecurityPK>) CacheProxy.newProxyInstance(mUserSecurityDAO, GenericDAO.class, CacheManager.getCache("usersecurities"));
-            mRoleDAO = (GenericDAO<Role, Integer>)CacheProxy.newProxyInstance(mRoleDAO, GenericDAO.class, CacheManager.getCache("roles"));
+            mExchangeDAO = (GenericDAO<Exchange, String>) Proxy.newProxyInstance(mExchangeDAO, GenericDAO.class, Manager.getCache("exchanges"));
+            mSecurityDAO = (GenericDAO<Security, String>) Proxy.newProxyInstance(mSecurityDAO, GenericDAO.class, Manager.getCache("securities"));
+            mQuoteDAO = (GenericQuoteDAO) Proxy.newProxyInstance(mQuoteDAO, GenericQuoteDAO.class, Manager.getCache("quotes"));
+            mUserDAO = (GenericDAO<User, Integer>) Proxy.newProxyInstance(mUserDAO, GenericDAO.class, Manager.getCache("users"));
+            mIndexDAO = (GenericDAO<Index, String>) Proxy.newProxyInstance(mIndexDAO, GenericDAO.class, Manager.getCache("indexes"));
+            mOrderDAO = (GenericDAO<Order, Integer>) Proxy.newProxyInstance(mOrderDAO, GenericDAO.class, Manager.getCache("orders"));
+            mTransactionDAO = (GenericDAO<Transaction, Integer>) Proxy.newProxyInstance(mTransactionDAO, GenericDAO.class, Manager.getCache("transactions"));
+            mIndexSecurityDAO = (GenericDAO<IndexSecurity, IndexSecurityPK>) Proxy.newProxyInstance(mIndexSecurityDAO, GenericDAO.class, Manager.getCache("indexsecurities"));
+            mUserSecurityDAO = (GenericDAO<UserSecurity, UserSecurityPK>) Proxy.newProxyInstance(mUserSecurityDAO, GenericDAO.class, Manager.getCache("usersecurities"));
+            mRoleDAO = (GenericDAO<Role, Integer>)Proxy.newProxyInstance(mRoleDAO, GenericDAO.class, Manager.getCache("roles"));
+            
+            Timer t=new Timer();
+            t.scheduleAtFixedRate(new Monitor(), new Date(), 10000);
         }
     }
 

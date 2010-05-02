@@ -21,6 +21,8 @@
  */
 package com.kapti.data.persistence;
 
+import com.kapti.cache.Annotations.Cachable;
+import com.kapti.cache.Annotations.Invalidates;
 import com.kapti.data.Quote;
 import com.kapti.exceptions.FilterException;
 import com.kapti.exceptions.StockPlayException;

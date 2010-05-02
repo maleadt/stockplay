@@ -33,6 +33,9 @@
                 <library dirs="200">
                     <file>${file.reference.cache4j_0.4.jar}</file>
                 </library>
+                <library dirs="200">
+                    <file>${file.reference.ojdbc14.jar}</file>
+                </library>
             </web-module-libraries>
             <web-module-additional-libraries/>
             <source-roots>

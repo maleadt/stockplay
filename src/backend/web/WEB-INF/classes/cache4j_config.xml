@@ -45,4 +45,9 @@
             idle="30m"
             max-size="10000"
             max-memory-size="50m" />
+     <cache id="roles" desc=""
+            ttl="1h"
+            idle="30m"
+            max-size="10000"
+            max-memory-size="50m" />
 </cache-factory>
