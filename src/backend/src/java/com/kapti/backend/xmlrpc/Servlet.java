@@ -21,7 +21,7 @@
  */
 package com.kapti.backend.xmlrpc;
 
-import com.kapti.cache.Monitor;
+import com.kapti.cache.Manager;
 import com.kapti.data.persistence.StockPlayDAO;
 import com.kapti.data.persistence.StockPlayDAOFactory;
 import com.kapti.exceptions.StockPlayException;
@@ -171,7 +171,7 @@ public class Servlet extends XmlRpcServlet {
         super.init();
 
         // Initialise the cache monitor
-        mTimer.scheduleAtFixedRate(new Monitor(), new Date(), 10000);
+        mTimer.scheduleAtFixedRate(new Manager(), new Date(), 10000);
     }
 
     /**

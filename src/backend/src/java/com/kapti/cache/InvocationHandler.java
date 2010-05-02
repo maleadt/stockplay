@@ -53,7 +53,7 @@ public class InvocationHandler implements java.lang.reflect.InvocationHandler {
 
         // Return if found
         if (result != null) {
-            Monitor.hit(cache, callKey);
+            Manager.hit(cache, callKey);
             return result;
         }
 
@@ -62,7 +62,7 @@ public class InvocationHandler implements java.lang.reflect.InvocationHandler {
 
         // Save
         if (cache != null && tCachable != null) {
-            Monitor.miss(cache, callKey);
+            Manager.miss(cache, callKey);
             try {
                 cache.put(callKey, result);
             } catch (CacheException ce) {

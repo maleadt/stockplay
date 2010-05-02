@@ -24,7 +24,7 @@ package com.kapti.backend.api.system;
 import com.kapti.backend.api.MethodClass;
 import com.kapti.backend.xmlrpc.Servlet;
 import com.kapti.backend.xmlrpc.ServletServer;
-import com.kapti.cache.Monitor;
+import com.kapti.cache.Manager;
 import com.kapti.exceptions.StockPlayException;
 import java.util.Hashtable;
 import org.apache.xmlrpc.XmlRpcException;
@@ -63,7 +63,7 @@ public class BackendHandler extends MethodClass {
     }
 
     public boolean ClearCache() {
-        Monitor.clear();
+        Manager.clear();
         return true;
     }
 }

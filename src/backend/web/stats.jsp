@@ -71,9 +71,50 @@
             <b>Uptime</b>: <%=seconds2readable(Long.parseLong((String)tStatsDatabase.get("uptime")))%>.<br />
         </p>
 
-        <h2>Scraper</h2>
+        <h2>Cache</h2>
+        <table border="1">
+            <tr>
+                <th>Cache</th>
+                <th>Hits</th>
+                <th>Misses</th>
+                <th>Memory size</th>
+                <th>Total puts</th>
+                <th>Total removes</th>
+            </tr>
+        <% for (Object tCacheId : net.sf.cache4j.CacheFactory.getInstance().getCacheIds()) {
+            net.sf.cache4j.CacheInfo tCacheInfo = net.sf.cache4j.CacheFactory.getInstance().getCache(tCacheId).getCacheInfo();
+            %>
+            <tr>
+                <td><%=net.sf.cache4j.CacheFactory.getInstance().getCache(tCacheId).getCacheConfig().getCacheId()%></td>
+                <td><%= tCacheInfo.getCacheHits() %></td>
+                <td><%= tCacheInfo.getCacheMisses() %></td>
+                <td><%= tCacheInfo.getMemorySize() %></td>
+                <td><%= tCacheInfo.getTotalPuts() %></td>
+                <td><%= tCacheInfo.getTotalRemoves() %></td>
+            </tr>
+        <%
+        }
+        %>
+        </table>
+
+        <h2>Cache manager</h2>
         <p>
-            <i>Not implemented.</i>
+            <font color="RED"><b>Cache clears</b>: <%= com.kapti.cache.Manager.getManagerClears() %></font>
         </p>
+        <table border="1">
+            <tr>
+                <th>Cache</th>
+                <th>Managed calls</th>
+            </tr>
+        <% java.util.Map<net.sf.cache4j.Cache, com.kapti.cache.Manager.ManagerInfo> tManagerInfoMap = com.kapti.cache.Manager.getManagerInfo();
+        for (net.sf.cache4j.Cache tCache : tManagerInfoMap.keySet()) {
+            %><tr>
+                <td><%= tCache.getCacheConfig().getCacheId() %></td>
+                <td><%= tManagerInfoMap.get(tCache).keys %></td>
+            </tr>
+            <%
+        }
+        %>
+        </table>
     </body>
 </html>

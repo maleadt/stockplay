@@ -21,7 +21,7 @@ public class Proxy {
 
         handler = new InvocationHandler(target, cache);
 
-        Monitor.setup(cache, target);
+        Manager.setup(cache, target);
         Object proxy = java.lang.reflect.Proxy.newProxyInstance(CLASS_LOADER, ifaces, handler);
         return proxy;
     }
