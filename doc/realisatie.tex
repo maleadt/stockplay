@@ -807,8 +807,9 @@ Ronde haakjes zijn nodig wanneer precedentie onduidelijk is. Aangezien er geen n
 
 \begin{code}
 \begin{verbatim}
--- door de impliciete linkse-precedentie wordt eerst de id-expressie ge\"evalueerd,
--- vervolgens de age-expressie en tenslotte de name-expressie.
+-- door de impliciete linkse-precedentie wordt eerst de
+-- id-expressie gevalueerd, vervolgens de age-expressie en
+-- tenslotte de name-expressie.
 id >= 5 && age >= 10 && name != 'Jan's
 
 \end{verbatim}
@@ -874,7 +875,7 @@ cash EQUALS '123.45'f
 Dit is een voorbeeld van een complex type dat enkel kan geconstrueerd worden via de indirecte methode, gebruik makend van modifier 'd'. Aangezien datums op verschillende manieren kunnen voorgesteld worden, accepteren we enkel volgende methoden (gestandaardiseerd in ISO 8601):
 \begin{itemize}
 \item{YYYY-MM-DD: 2010-04-07}
-\item{YYYY-MM-DD'T'HH:MM'Z': 2010-04-07 05:56Z}
+\item{YYYY-MM-DD'T'HH:MM'Z': 2010-04-07T05:56Z}
 \end{itemize}
 
 Uren zijn steeds in 24-uurs formaat, gespecifi\"eerd in de UTC-tijdzone. Bij afwezigheid van het uur (vb. in YYYY-MM-DD), wordt dit impliciet ingesteld op '00:00' (middernacht), en zal ook zo in de database-backend verwerkt worden. De converters hebben dus geen weet van de manier waarop de datum ingegeven is (al dan niet met gespecifieerd uur).
@@ -922,7 +923,7 @@ Een conditie wordt gebruikt om een specifieke vergelijkingsoperatie toe te passe
 Relaties dienen om verschillende condities aan elkaar te schakelen, en het resultaat op een specifieke wijze te interpreteren.
 
 \begin{itemize}
-\item && of AND
+\item \&\& of AND
 \item || of OR
 \end{itemize}
 
