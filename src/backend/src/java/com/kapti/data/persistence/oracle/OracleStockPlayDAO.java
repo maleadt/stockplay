@@ -23,7 +23,6 @@
 package com.kapti.data.persistence.oracle;
 
 import com.kapti.cache.Manager;
-import com.kapti.cache.Monitor;
 import com.kapti.cache.Proxy;
 import com.kapti.data.Exchange;
 import com.kapti.data.Index;
@@ -48,8 +47,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Date;
-import java.util.Timer;
 
 public class OracleStockPlayDAO implements StockPlayDAO {
     //
@@ -99,9 +96,6 @@ public class OracleStockPlayDAO implements StockPlayDAO {
             mIndexSecurityDAO = (GenericDAO<IndexSecurity, IndexSecurityPK>) Proxy.newProxyInstance(mIndexSecurityDAO, GenericDAO.class, Manager.getCache("indexsecurities"));
             mUserSecurityDAO = (GenericDAO<UserSecurity, UserSecurityPK>) Proxy.newProxyInstance(mUserSecurityDAO, GenericDAO.class, Manager.getCache("usersecurities"));
             mRoleDAO = (GenericDAO<Role, Integer>)Proxy.newProxyInstance(mRoleDAO, GenericDAO.class, Manager.getCache("roles"));
-            
-            Timer t=new Timer();
-            t.scheduleAtFixedRate(new Monitor(), new Date(), 10000);
         }
     }
 

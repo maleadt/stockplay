@@ -65,6 +65,10 @@ public class Monitor extends TimerTask {
         boolean isIdle = (mCacheMisses == 0);
         mCacheMisses = 0;
 
+        // Only run if we got caches registered
+        if (mCaches.size() == 0)
+            return;
+
         // Process all caches
         int tRefreshCount = 0;
         for (Cache cache : mCaches.keySet()) {

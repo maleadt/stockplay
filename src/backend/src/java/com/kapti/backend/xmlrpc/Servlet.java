@@ -21,17 +21,18 @@
  */
 package com.kapti.backend.xmlrpc;
 
+import com.kapti.cache.Monitor;
 import com.kapti.data.persistence.StockPlayDAO;
 import com.kapti.data.persistence.StockPlayDAOFactory;
 import com.kapti.exceptions.StockPlayException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Date;
+import java.util.Timer;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import org.apache.log4j.Logger;
 import org.apache.xmlrpc.XmlRpcException;
-import org.apache.xmlrpc.server.AbstractReflectiveHandlerMapping.AuthenticationHandler;
 import org.apache.xmlrpc.server.PropertyHandlerMapping;
 import org.apache.xmlrpc.server.XmlRpcHandlerMapping;
 import org.apache.xmlrpc.server.XmlRpcServerConfigImpl;
@@ -56,6 +57,7 @@ public class Servlet extends XmlRpcServlet {
     private StockPlayDAO mDAO;
     static Logger mLogger = Logger.getLogger(Servlet.class);
     private static Date mDateStart = new Date();
+    private final static Timer mTimer = new Timer();
 
     //
     // Constructie
@@ -157,5 +159,30 @@ public class Servlet extends XmlRpcServlet {
      */
     public static long getUptime() {
         return (long)(((new Date()).getTime() - mDateStart.getTime())/1000.0);
+    }
+
+    /**
+     * Initialisatiemethode.
+     * 
+     * @throws ServletException
+     */
+    @Override
+    public void init() throws ServletException {
+        super.init();
+
+        // Initialise the cache monitor
+        mTimer.scheduleAtFixedRate(new Monitor(), new Date(), 10000);
+    }
+
+    /**
+     * Opruimingsmethode.
+     * 
+     */
+    @Override
+    public void destroy() {
+        super.destroy();
+
+        // Stop the timer
+        mTimer.cancel();
     }
 }
