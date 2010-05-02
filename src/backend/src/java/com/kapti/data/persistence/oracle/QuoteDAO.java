@@ -43,6 +43,8 @@ public class QuoteDAO implements GenericQuoteDAO {
     private static final String SELECT_LATEST_QUOTES = "with x as (select isin, max(timestamp)  latesttime from quotes group by isin) select isin, timestamp, price, volume, bid, ask, low, high, open from quotes q where timestamp = (select latesttime from x where q.isin=x.isin)";
     private static final String MIN_QUOTE = "SELECT MAX(TIMESTAMP) timestamp FROM quotes WHERE isin = ?";
     private static final String MAX_QUOTE = "SELECT MIN(TIMESTAMP) timestamp FROM quotes WHERE isin = ?";
+    private static final String SELECT_LOWEST = "SELECT MIN(PRICE) lowest FROM quotes";
+    private static final String SELECT_HIGHEST = "SELECT MAX(PRICE) highest FROM quotes";
     private static final String QUOTE_RANGE = "SELECT MIN(TIMESTAMP) min, MAX(TIMESTAMP) max FROM quotes WHERE isin = ?";
     private static final String SELECT_LATEST_QUOTE_FILTER =    "SELECT  ISIN, TIMESTAMP, PRICE, VOLUME, BID, ASK, LOW, HIGH, OPEN"
                                                                 + " FROM ( SELECT  QUOTES.*, MAX(TIMESTAMP) OVER (PARTITION BY ISIN) AS MAX_TIMESTAMP FROM QUOTES ) WHERE TIMESTAMP = MAX_TIMESTAMP AND ( $filter )";
@@ -65,7 +67,6 @@ public class QuoteDAO implements GenericQuoteDAO {
     private static GenericQuoteDAO instance = new QuoteDAO();
 
     private QuoteDAO() {
-        
     }
 
     public static GenericQuoteDAO getInstance() {
@@ -425,6 +426,78 @@ public class QuoteDAO implements GenericQuoteDAO {
                     return tRange;
                 } else {
                     return null;
+                }
+            } finally {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            }
+        } catch (SQLException ex) {
+            throw new DBException(ex);
+        }
+    }
+
+    public double getLowest(Filter iFilter) throws StockPlayException, FilterException {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            try {
+                conn = OracleConnection.getConnection();
+
+                StringBuilder tQuery = new StringBuilder(SELECT_LOWEST);
+                if (!iFilter.empty())
+                    tQuery.append(" WHERE " + (String)iFilter.compile());
+                stmt = conn.prepareStatement(tQuery.toString());
+
+                rs = stmt.executeQuery();
+                if (rs.next()) {
+                    return rs.getDouble("lowest");
+                } else {
+                    return 0;
+                }
+            } finally {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            }
+        } catch (SQLException ex) {
+            throw new DBException(ex);
+        }
+
+    }
+
+
+    public double getHighest(Filter iFilter) throws StockPlayException, FilterException {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            try {
+                conn = OracleConnection.getConnection();
+
+                StringBuilder tQuery = new StringBuilder(SELECT_HIGHEST);
+                if (!iFilter.empty())
+                    tQuery.append(" WHERE " + (String)iFilter.compile());
+                stmt = conn.prepareStatement(tQuery.toString());
+
+                rs = stmt.executeQuery();
+                if (rs.next()) {
+                    return rs.getDouble("highest");
+                } else {
+                    return 0;
                 }
             } finally {
                 if (rs != null) {

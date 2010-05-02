@@ -38,6 +38,8 @@ public interface GenericQuoteDAO extends GenericDAO<Quote, Quote.QuotePK> {
     @Cachable Timestamp getFirstTime(String isin) throws StockPlayException;
     @Cachable Timestamp getLatestTime(String isin) throws StockPlayException;
     @Cachable List<Timestamp> getRange(String isin) throws StockPlayException;
+    @Cachable double getHighest(Filter iFilter) throws StockPlayException;
+    @Cachable double getLowest(Filter iFilter) throws StockPlayException;
 
     @Cachable Collection<Quote> findLatestByFilter(Filter iFilter) throws StockPlayException, FilterException;
     @Cachable Collection<Quote> findSpanByFilter(Date iStart, Date iStop, int iSpan, Filter iFilter) throws StockPlayException, FilterException;

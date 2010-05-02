@@ -172,6 +172,4 @@ public class UserHandler extends MethodClass {
         boolean resultaat = user.checkPassword(password);
         return user.checkPassword(password);
     }
-
-
 }

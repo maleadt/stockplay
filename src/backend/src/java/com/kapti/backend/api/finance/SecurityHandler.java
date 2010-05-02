@@ -325,6 +325,26 @@ public class SecurityHandler extends MethodClass {
         return tQuoteDAO.getRange(isin);
     }
 
+    public double getHighest(String iFilter) throws StockPlayException {
+        // Get DAO reference
+        GenericQuoteDAO tQuoteDAO = getDAO().getQuoteDAO();
+
+        Parser parser = Parser.getInstance();
+        Filter filter = parser.parse(iFilter);
+
+        return tQuoteDAO.getHighest(filter);
+    }
+
+    public double getLowest(String iFilter) throws StockPlayException {
+        // Get DAO reference
+        GenericQuoteDAO tQuoteDAO = getDAO().getQuoteDAO();
+
+        Parser parser = Parser.getInstance();
+        Filter filter = parser.parse(iFilter);
+
+        return tQuoteDAO.getLowest(filter);
+    }
+
     public int Update(Hashtable<String, Object> iDetails) throws StockPlayException {
         // Get DAO reference
         GenericQuoteDAO tQuoteDAO = getDAO().getQuoteDAO();
