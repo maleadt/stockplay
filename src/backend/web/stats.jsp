@@ -75,8 +75,8 @@
         <table border="1">
             <tr>
                 <th>Cache</th>
-                <th>Hits</th>
-                <th>Misses</th>
+                <th>Raw Hits</th>
+                <th>Raw Misses</th>
                 <th>Memory size</th>
                 <th>Total puts</th>
                 <th>Total removes</th>
@@ -105,12 +105,16 @@
             <tr>
                 <th>Cache</th>
                 <th>Managed calls</th>
+                <th>Hits</th>
+                <th>Misses</th>
             </tr>
         <% java.util.Map<net.sf.cache4j.Cache, com.kapti.cache.Manager.ManagerInfo> tManagerInfoMap = com.kapti.cache.Manager.getManagerInfo();
         for (net.sf.cache4j.Cache tCache : tManagerInfoMap.keySet()) {
             %><tr>
                 <td><%= tCache.getCacheConfig().getCacheId() %></td>
                 <td><%= tManagerInfoMap.get(tCache).keys %></td>
+                <td><%= tManagerInfoMap.get(tCache).hits %></td>
+                <td><%= tManagerInfoMap.get(tCache).misses %></td>
             </tr>
             <%
         }

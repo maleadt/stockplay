@@ -29,8 +29,8 @@ public class Manager extends TimerTask {
     private static CacheFactory mFactory = getFactory();
     private static Map<Cache, Object> mCaches = new HashMap<Cache, Object>();
     private static Map<Cache, Stats> mCacheStats = new HashMap<Cache, Stats>();
-    private static int mCacheMisses = 0;
-    private static int mCacheClears = 0;
+    private static int mManagerMisses = 0;
+    private static int mManagerClears = 0;
 
 
     //
@@ -83,10 +83,11 @@ public class Manager extends TimerTask {
 
     public static void miss(Cache cache, final CallKey callKey) {
         mLogger.debug("cache miss on entry " + cache.getCacheConfig().getCacheId() + "." + callKey.method.getName());
-        mCacheMisses++;
+        mManagerMisses++;
         if (! mCacheStats.containsKey(cache)) {
             return;
         }
+        mCacheStats.get(cache).misses++;
         mCacheStats.get(cache).add(callKey);
     }
 
@@ -95,12 +96,13 @@ public class Manager extends TimerTask {
         if (! mCacheStats.containsKey(cache)) {
             return;
         }
+        mCacheStats.get(cache).hits++;
         mCacheStats.get(cache).add(callKey);
     }
 
     public static void clear() {
         mLogger.info("clearing cache");
-        mCacheClears++;
+        mManagerClears++;
         for (Cache cache : mCacheStats.keySet()) {
             try {
                 cache.clear();
@@ -114,8 +116,8 @@ public class Manager extends TimerTask {
 
     public void run() {
         // Check if the backend is idle
-        boolean isIdle = (mCacheMisses == 0);
-        mCacheMisses = 0;
+        boolean isIdle = (mManagerMisses == 0);
+        mManagerMisses = 0;
 
         // Only run if we got caches registered
         if (mCaches.size() == 0)
@@ -188,7 +190,9 @@ public class Manager extends TimerTask {
         for (Cache tCache : mCacheStats.keySet()) {
             Stats tStat = mCacheStats.get(tCache);
             ManagerInfo tInfo = new ManagerInfo(
-                    tStat.entries.size()
+                    tStat.entries.size(),
+                    tStat.hits,
+                    tStat.misses
             );
 
             oStats.put(tCache, tInfo);
@@ -198,7 +202,7 @@ public class Manager extends TimerTask {
     }
 
     public static int getManagerClears() {
-        return mCacheClears;
+        return mManagerClears;
     }
     
     
@@ -208,16 +212,22 @@ public class Manager extends TimerTask {
 
     public static class ManagerInfo {
         final public int keys;
-        public ManagerInfo(int keys) {
+        final public int hits, misses;
+        public ManagerInfo(int keys, int hits, int misses) {
             this.keys = keys;
+            this.hits = hits;
+            this.misses = misses;
         }
     }
 
     private static class Stats {
+        public int hits, misses;
         public Map<CallKey, Entry> entries;
 
         public Stats() {
             entries = new HashMap<CallKey, Entry>();
+            hits = 0;
+            misses = 0;
         }
 
         public void add(final CallKey callkey) {
