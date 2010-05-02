@@ -5,6 +5,7 @@
 package com.kapti.cache;
 
 import java.io.InputStream;
+import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -14,6 +15,7 @@ import java.util.TimerTask;
 import net.sf.cache4j.Cache;
 import net.sf.cache4j.CacheException;
 import net.sf.cache4j.CacheFactory;
+import net.sf.cache4j.impl.Utils;
 import org.apache.log4j.Logger;
 
 /**
@@ -31,6 +33,7 @@ public class Manager extends TimerTask {
     private static Map<Cache, Stats> mCacheStats = new HashMap<Cache, Stats>();
     private static int mManagerMisses = 0;
     private static int mManagerClears = 0;
+    private final static int LIMIT_KEYS = 25;
 
 
     //
@@ -148,7 +151,7 @@ public class Manager extends TimerTask {
                     return tEntriesFinal.get(b).cycleratio - tEntriesFinal.get(a).cycleratio;
                 }
             });
-            for (int i = 10; i < tCallKeys.length; i++) {
+            for (int i = LIMIT_KEYS; i < tCallKeys.length; i++) {
                 tEntries.remove(tCallKeys[i]);
             }
 
@@ -184,7 +187,7 @@ public class Manager extends TimerTask {
         }
     }
 
-    public static Map<Cache, ManagerInfo> getManagerInfo() {
+    public static Map<Cache, ManagerInfo> getManagerInfo() throws Throwable {
         Map<Cache, ManagerInfo> oStats = new HashMap<Cache, ManagerInfo>();
 
         for (Cache tCache : mCacheStats.keySet()) {
@@ -192,7 +195,9 @@ public class Manager extends TimerTask {
             ManagerInfo tInfo = new ManagerInfo(
                     tStat.entries.size(),
                     tStat.hits,
-                    tStat.misses
+                    tStat.misses,
+                    //Utils.size(mCacheStats.get(tCache))
+                    -1
             );
 
             oStats.put(tCache, tInfo);
@@ -213,14 +218,16 @@ public class Manager extends TimerTask {
     public static class ManagerInfo {
         final public int keys;
         final public int hits, misses;
-        public ManagerInfo(int keys, int hits, int misses) {
+        final public int size;
+        public ManagerInfo(int keys, int hits, int misses, int size) {
             this.keys = keys;
             this.hits = hits;
             this.misses = misses;
+            this.size = size;
         }
     }
 
-    private static class Stats {
+    private static class Stats implements Serializable {
         public int hits, misses;
         public Map<CallKey, Entry> entries;
 
@@ -242,7 +249,7 @@ public class Manager extends TimerTask {
         }
     }
 
-    private static class Entry {
+    private static class Entry implements Serializable {
         public Integer count, cycleratio;
 
         public Entry() {

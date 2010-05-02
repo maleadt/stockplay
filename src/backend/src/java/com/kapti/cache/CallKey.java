@@ -5,6 +5,9 @@
 
 package com.kapti.cache;
 
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
@@ -14,7 +17,7 @@ import java.util.Arrays;
  */
 
 
-public class CallKey {
+public class CallKey implements Serializable {
 
     public final Method method;
     public final Object[] args;
@@ -67,5 +70,9 @@ public class CallKey {
         return Integer.toString(hashCode());
     }
 
-
+    private void writeObject(ObjectOutputStream stream) throws IOException {
+        stream.writeObject(method.getName());
+        //if (args != null)
+        //    stream.writeObject(args);
+    }
 }

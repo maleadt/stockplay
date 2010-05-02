@@ -28,6 +28,7 @@ import com.kapti.filter.condition.Condition;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.io.Serializable;
 import org.apache.log4j.Logger;
 
 /**
@@ -38,7 +39,7 @@ import org.apache.log4j.Logger;
  *
  * @author tim
  */
-public class Filter {
+public class Filter implements Serializable {
     //
     // Member data
     //

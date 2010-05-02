@@ -24,6 +24,7 @@ package com.kapti.filter;
 import com.kapti.exceptions.FilterException;
 import com.kapti.filter.graph.Graph;
 import com.kapti.filter.graph.Node;
+import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -38,7 +39,7 @@ import java.util.ResourceBundle;
  *
  * @author tim
  */
-public abstract class Convertable {
+public abstract class Convertable implements Serializable {
     //
     // Member data
     //
