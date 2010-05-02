@@ -30,5 +30,11 @@ public enum InstructionType implements Serializable {
     CANCEL,
     BUY_IMMIDIATE,
     SELL_IMMIDIATE,
+    STOP_LOSS_BUY,
+    STOP_LOSS_SELL,
+    TRAILING_STOP_BUY,
+    TRAILING_STOP_SELL,
+    BRACKET_LIMIT_BUY,
+    BRACKET_LIMIT_SELL,
     MANUAL
 }

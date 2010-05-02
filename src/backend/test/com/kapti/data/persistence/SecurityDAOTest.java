@@ -60,7 +60,7 @@ public class SecurityDAOTest {
         System.out.println("create");
         Security security = new Security("BE0000000000", "TEST", "TESTSYMBL2");
         security.setName("Test");
-        SecurityDAO instance = SecurityDAO.getInstance();
+        SecurityDAO instance = (SecurityDAO) SecurityDAO.getInstance();
         int expResult = 1;
         int result = instance.create(security);
         assertEquals(expResult, result);
@@ -74,7 +74,7 @@ public class SecurityDAOTest {
     public void testFindById() throws Exception {
         System.out.println("findById");
         String symbol = "BE0000000000";
-        SecurityDAO instance = SecurityDAO.getInstance();
+        SecurityDAO instance = (SecurityDAO) SecurityDAO.getInstance();
         Security result = instance.findById(symbol);
         assertNotNull(result);
         assertEquals("Test", result.getName());
@@ -104,7 +104,7 @@ public class SecurityDAOTest {
         System.out.println("update");
         Security security = new Security("BE0000000000", "TEST", "TESTSYMBL2");
         security.setName("Test om up te daten");
-        SecurityDAO instance = SecurityDAO.getInstance();
+        SecurityDAO instance = (SecurityDAO) SecurityDAO.getInstance();
         boolean expResult = true;
         boolean result = instance.update(security);
         assertEquals(expResult, result);
@@ -117,7 +117,7 @@ public class SecurityDAOTest {
     @Test
     public void testFindAll() throws Exception {
         System.out.println("findAll");
-        SecurityDAO instance = SecurityDAO.getInstance();
+        SecurityDAO instance = (SecurityDAO) SecurityDAO.getInstance();
 
         Collection<Security> result = instance.findAll();
         assertTrue(!result.isEmpty());
@@ -132,7 +132,7 @@ public class SecurityDAOTest {
         System.out.println("delete");
         Security security = new Security("BE0000000000", "TEST", "TESTSYMBL2");
         security.setName("Test");
-        SecurityDAO instance = SecurityDAO.getInstance();
+        SecurityDAO instance = (SecurityDAO) SecurityDAO.getInstance();
         boolean expResult = true;
         boolean result = instance.delete(security);
         assertEquals(expResult, result);
