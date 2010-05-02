@@ -39,6 +39,18 @@ public class Monitor extends TimerTask {
         mCacheStats.get(cache).add(callKey);
     }
 
+    public static void clear() {
+        for (Cache cache : mCacheStats.keySet()) {
+            try {
+                cache.clear();
+            } catch (CacheException ce) {
+                mLogger.error("could not clear cache " + cache.getCacheConfig().getCacheId());
+            }
+            mCacheStats.get(cache).clear();
+        }
+
+    }
+
     public void run() {
         // Check if the backend is idle
         boolean isIdle = (mCacheMisses == 0);
@@ -113,6 +125,10 @@ class Stats {
             entries.put(callkey, new Entry());
         }
         entries.get(callkey).count++;
+    }
+
+    public void clear() {
+        entries.clear();
     }
 }
 
