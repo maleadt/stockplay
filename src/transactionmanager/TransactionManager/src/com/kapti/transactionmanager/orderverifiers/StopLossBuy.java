@@ -1,6 +1,6 @@
 /*
- * SellVerifier.java
- * StockPlay - Gaat een verkooporder verifiëren.
+ * BuyVerifier.java
+ * StockPlay - Stop loss order: Een order wordt omgezet in een effectieve handeling ongeacht de limietwaarde. Het order wordt hierdoor sneller uitgevoerd, maar er is geen minimumprijs (maximumprijs) gegarandeerd.
  *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
@@ -22,25 +22,26 @@
 
 package com.kapti.transactionmanager.orderverifiers;
 
-import com.kapti.client.finance.Quote;
 import com.kapti.client.user.Order;
 import com.kapti.client.user.Order.Type;
 
 /**
  *
- * \brief   Gaat een verkooporder verifiëren.
+ * \brief   Stop loss order: Een order wordt omgezet in een effectieve handeling ongeacht de limietwaarde. Het order wordt hierdoor sneller uitgevoerd, maar er is geen minimumprijs (maximumprijs) gegarandeerd.
  *
  */
 
-public class SellVerifier implements OrderVerifier {
+public class StopLossBuy implements OrderVerifier {
 
     public Type[] getOrderTypes() {
-        return new Type[] { Type.SELL };
+        return new Type[] {
+            Type.BUY
+        };
     }
 
     public boolean verifyOrder(Order order) {
-        Quote latestQuote = Data.getReference().getCurrentQuotes().get(order.getSecurity());
-        return(order.getPrice() <= latestQuote.getPrice());
+        System.out.println("Prijs" + order.getPrice());
+        return false;
     }
 
 }
