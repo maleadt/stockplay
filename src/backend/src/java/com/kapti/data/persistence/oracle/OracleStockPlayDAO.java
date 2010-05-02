@@ -75,6 +75,8 @@ public class OracleStockPlayDAO implements StockPlayDAO {
     GenericDAO<Role, Integer> mRoleDAO;
 
     public OracleStockPlayDAO() {
+        // TODO: deze code hoort ergens anders!
+
         mExchangeDAO = ExchangeDAO.getInstance();
         mSecurityDAO = SecurityDAO.getInstance();
         mQuoteDAO = QuoteDAO.getInstance();
