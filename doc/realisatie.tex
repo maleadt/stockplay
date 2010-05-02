@@ -10,9 +10,9 @@
 	\caption{Entity-relationship model.}
 \end{figure}
 
-\section{Ontwerp backend}
-\todo{dit hoort hier niet}
-De klassen die de persistente data uit de database moeten weergeven staan opgesomd in onderstaand klassendiagram:
+\section{Afscheiding datatoegang}
+
+Door het gebruik van een aparte backend, wordt rechtstreekse toegang tot de effectieve data verhinderd. Zo kunnen we doorgedreven controles en verificatie van de ingegeven data toepassen, alsook eventuele optimalisaties doorvoeren. Onderstaand diagram illustreert de samenwerking van de componenten in kwestie:
 
 \begin{figure}[h!]
 	\centering
@@ -139,6 +139,12 @@ Deze klasse biedt de client mogelijkheden om het systeem te beheren. Zoals het o
 
 \function{Backend.Stop}
 	{ de backend stoppen }
+	{ geen }
+	{ bool die indiceert of de actie succesvol was }
+	{ administrator-rechten }
+
+\function{Backend.ClearCache}
+	{ de backend cache legen }
 	{ geen }
 	{ bool die indiceert of de actie succesvol was }
 	{ administrator-rechten }
@@ -531,7 +537,9 @@ Aangezien deze bron een hele waaier aan aandelen zichtbaar maakt, er veel data o
 
 \subsection{Euronext}
 
-Deze offici\"ele bron biedt via een webinterface heel gedetailleerde informatie over alle aandelen die beschikbaar zijn op de beurs. Hoewel deze data veel beter en hi\"erarchischer georganiseerd is, hebben we besloten deze bron niet te gebruiken en de site van De Tijd eerder te gebruiken. De reden hiervoor is dat de site van De Tijd, die eveneens alle aandelen op de Euronext beurs kan weergeven, realtime data weergeeft en hierbij ook een handigere en compactere interface voor gebruikt.
+Deze offici\"ele bron biedt via een webinterface heel gedetailleerde informatie over alle aandelen die beschikbaar zijn op de beurs. De site biedt ook een ruime blik in het verleden, door de gebruiker toe te laten om 2 jaar aan koersen op te halen. Hoewel deze data veel beter en hi\"erarchischer georganiseerd is, hebben we besloten deze bron niet te gebruiken en de site van De Tijd eerder te gebruiken. De reden hiervoor is dat de site van De Tijd, die eveneens alle aandelen op de Euronext beurs kan weergeven, realtime data weergeeft en hierbij ook een handigere en compactere interface voor gebruikt.
+
+De site bleek echter wel nuttig te zijn bij het ontwerpen van een artifici\"ele intelligentie, waarbij niet zozeer realtime data maar vooral veel historische data benodigd is om het massief-lerende netwerk te trainen.
 
 \subsection{Perl Finance modules}
 
@@ -566,14 +574,59 @@ De uiteindelijke PUSH communicatie zal verlopen over het bestaande XML-RPC proto
 
 \chapter{Artifici\"ele intelligentie}
 
+Als illustratie van de modulariteit van de backend, hebben we ook een artifici\"ele intelligentie aangemaakt die het spel meespeelt zoals een reguliere speler dat doet. Dit was echter geen evidente opdracht, en er was flink wat opzoekingswerk benodigd om dit tot een goed einde te brengen.
+
+\section{Intelligentie}
+
+Prioritair om aan de implementatie te kunnen beginnen, was het vinden van een geschikt algoritme die de intelligentie van de speler zou drijven. Hiervoor hebben we verschillende opties overwogen, gaande van expertsystemen zoals regelbanken, tot meer massief-lerende systemen zoals genetische algoritmes of neurle netwerken. Expertsystemen zijn vrij snel afgevoerd, ze werken misschien wel nauwkeurig maar hebben nood aan een uitgebreide set (moeilijk kwantificeerbare) regels die bovendien voor het opstellen een expertise vereisen die geen van ons hebben. Om aan deze eis van expertise te ontsnappen, zijn we gaan kijken naar massief lerende systemen die zichzelf kunnen verbeteren aan de hand van een ruime set aan testgegevens. Hierbij zijn genetische algoritmes misschien wel een interessante piste, maar ze vereisen een vrij specifieke implementatie: een library integreren zou veel werk kosten, laat staan het schrijven van een eigen implementatie. Zo zijn we uitgekomen op neurale netwerken, wat uiteindelijk ook eenvoudig integreerbaar bleek te zijn.
+
+Een neuraal netwerk is een populaire methode om artifici\"eel gedrag te bekomen, en baseert zich daarbij op hoe een biologisch brein functioneert. Hierbij wordt dynamisch een gewogen pad gevormd tussen een vast aantal input en output neuronen, en zal via backpropagatie steeds ge\"evolueerd worden in de richting van een correctere oplossing. We hebben er voor gekozen om een aantal gegevens (zoals de koers van het aandeel, de koers van een overkopelende index, de dag van de week, het volume, etc) als inputneuronen te registreren, en een enkel output neuron vast te leggen als de slotkoers van de volgende dag. Moesten we immers de slot van de volgende dag kunnen bepalen aan de hand van gegevens bepaald op de huidige dag, kunnen we steeds een positief-renderende portfolio samenstellen.
+
+Bij het bepalen van de inputneuronen hebben we ons gebaseerd op bestaande kennis die te vinden was in de verschillende papers die we geraadpleegd hebben bij het kiezen van een optimale intelligentie-algoritme. In de uiteindelijke versie van het project worden de volgende inputs gebruikt:
+\begin{itemize}
+\item Slotkoers op dag i
+\item Slotkoers van de meest prominente index op dezelfde beurs op dag i
+\item Laagste koers van het aandeel op dag i
+\item Hoogste koers van het aandeel op dag i
+\item Verkoopsvolume van het aandeel op dag i
+\end{itemize}
+Gebaseerd op dergelijke inputinformatie, zal het neuraal netwerk zich werken naar een set van outputdata die volgende informatie bevat:
+\begin{itemize}
+\item Slotkoers op dag i+1
+\end{itemize}
+
+Hoewel het ontwerpen van een eenvoudig neuraal netwerk misschien niet zoveel tijd kost, hebben we er voor gekozen om een bestaande bibiliotheek te gebruiken. Verschillende belangrijke features (zoals backpropagatie, shortcut-netwerken, of automatisch bepalen van een ideale activatiefunctie) die de performantie van het netwerk serieus verbeteren, zijn te moeilijk om binnen het opgegeven tijdsbestek zelf te implementeren. Bovendien is het enkel te bedoeling om de modulariteit van de backend te demonstreren, waaraan het implementeren van ingewikkelde algoritmen nauwelijks bijdraagt.
+
+
+\section{Omgeving}
+
+Bibliotheken om gebruik te maken van neurale netwerken, zijn wegens performantieredenen meestal geschreven in performante talen zoals C of C++. Dit zou echter betekenen dat we opnieuw een datalaag zouden moeten bouwen in de taal in kwestie, en dit terwijl we reeds functionele datalagen hadden in zowel Java, Perl als C\#. Om toch niet in te boeten aan performantie, hebben we ervoor gekozen om gebruik te maken van een bestaande datalaag, en op zoek te gaan naar een bibliotheek die bindings aanbiedt in de taal in kwestie. Hierdoor is het performantieverlies minimaal, en kunnen we toch het schrijven van nog een datalaag vermijden.
+
+Het in Perl geschreven \makeurl{AI::FANN}{http://search.cpan.org/~salva/AI-FANN-0.10/lib/AI/FANN.pm} pakket voldoet volledig aan deze specificatie: we kunnen gebruik maken van de bestaande datalaag die we reeds geschreven hebben voor de scraper, terwijl de echte performantie gehaald wordt door het interfacen met de in C geschreven bibliotheen \makeurl{FANN}{http://leenissen.dk/fann/}. Deze bibliotheek biedt tevens vele geavanceerde mogelijkheden, zoals het automatisch wijzigen van netwerkparameters via een genetisch algoritme, waarbij zowel activatiefuncties als neuronen dynamisch kunnen gewijzigd worden.
+
+
+\section{Historische data}
+
+Om een massief-lerend systeem te trainen, is er een voldoende hoeveelheid aan historische data nodig. Hierbij moet zowel de input als output waarden bekend zijn, zodat het netwerk via backpropagatie en andere technieken de gewichten van de paden in het netwerk kan bijstellen (of andere structurele veranderingen toevoegen). Die data hebben we kunnen halen bij de site van Euronext, een bron die we initi\"eel afgekeurd hadden wegens het gebrek aan realtime data, maar nu uitermate handig bleek te zijn door zijn eenvoudige interface en dataset die ruim 2 jaar in het verleden teruggaat.
+
+
+\section{Modulariteit}
+
+Om in een eventueel later stadium toe te laten om op een eenvoudige wijze gebruik te maken van alternatieve algoritmes, hebben we gebruik gemaakt van de plugin-infrastructuur ontwikkeld voor de scraper. Het is heel eenvoudig mogelijk om extra intelligentie-algoritmes toe te voegen, die dynamisch en automatisch zullen gebruikt worden bij het samenstellen van de ideale portfolio. Hierbij wordt elk algoritme steeds gebruikt, en diegene met de kleinste voorspelde fout uiteindelijk gebruikt om de slotkoers van de volgende dag te voorspellen.
+
+
+%
+% Cache
+%
+
+\chapter{Cache}
+
 
 %
 % Geavanceerde orders
 %
 
 \chapter{Geavanceerde orders}
-
-\todo{herformuleren, is niet echt een "module"}
 
 In de order module zullen we een extra modulaire functionaliteit voorzien zodat we later extra types van geavanceerde orders kunnen toevoegen.
 Deze modules accepteren twee parameters (limietkoersen), de huidige koers, het type order (aankoop of verkoop) en het tijdstip op wanneer het order aangemaakt is. Elke keer ze opgeroepen worden geven ze terug of aan de voorwaarde al dan niet voldaan is. Is de voorwaarde voldaan dan zal dit tot gevolg hebben dat het order omgezet zal worden in een effectieve aankoop van een effect.
@@ -750,6 +803,18 @@ Zoals reeds beschreven bestaat een filter essenti\"eel uit drie verschillende mo
 \item{Komma: wordt gebruikt om de argumenten die aan een functie doorgegeven worden, te scheiden (momenteel ongebruikt).}
 \end{itemize}
 
+Ronde haakjes zijn nodig wanneer precedentie onduidelijk is. Aangezien er geen niveau's van precendentie gedefini\"eerd zijn tussen verschillende relaties, zullen er altijd haken moeten gebruikt worden wanneer er zich verschillende relaties in eenzelfde filter bevinden. Bij gelijke relaties wordt er echter impliciet linkse-precedentie toegepast, en zijn haken niet vereist.
+
+\begin{code}
+\begin{verbatim}
+-- door de impliciete linkse-precedentie wordt eerst de id-expressie ge\"evalueerd,
+-- vervolgens de age-expressie en tenslotte de name-expressie.
+id >= 5 && age >= 10 && name != 'Jan's
+
+\end{verbatim}
+\caption{Demonstratie van de impliciete linkse-precedentie.}
+\end{code}
+
 \subsection{Datatypes}
 
 De verschillende datatypes kunnen op verschillende manieren opgesteld worden: rechtstreeks, of indirect. De directe manier is echter enkel beschikbaar voor primitieve dataobjecten (integers, floating-point getallen, strings, en sleutels). Hierbij moet de gebruiker louter de waarde van het getal invoegen in de filter, en zal de parser detecteren om welk formaat het gaat.
@@ -806,7 +871,7 @@ cash EQUALS '123.45'f
 
 \subsubsection{Datums -- date}
 
-Dit is een voorbeeld van een complex type dat enkel kan geconstrueerd worden via de indirecte methode, gebruik maken van modifier 'd'. Aangezien datums op verschillende manieren kunnen voorgesteld worden, accepteren we enkel volgende methoden (gestandaardiseerd in ISO 8601):
+Dit is een voorbeeld van een complex type dat enkel kan geconstrueerd worden via de indirecte methode, gebruik makend van modifier 'd'. Aangezien datums op verschillende manieren kunnen voorgesteld worden, accepteren we enkel volgende methoden (gestandaardiseerd in ISO 8601):
 \begin{itemize}
 \item{YYYY-MM-DD: 2010-04-07}
 \item{YYYY-MM-DD'T'HH:MM'Z': 2010-04-07 05:56Z}
@@ -822,19 +887,34 @@ date EQUALS '2010-04-07T16:01Z'd
 \caption{Voorbeeldgebruik van een datum.}
 \end{code}
 
+\subsubsection{Reguliere expressies -- regex}
+
+Dit complex datatype wordt steeds gebruikt in combinatie met de LIKE operator, en kan enkel geconstrueerd worden via de indirecte methode, gebruik makend van de modifier 'r'. Dit datatype ondersteund als enige ook extra modifiers, die het gedrag van de reguliere expressie verfijnen. De volgende extra modifiers worden ondersteund:
+\begin{itemize}
+\item 'i' modifier: zorgt dat de reguliere expressie case-insensitive werkt
+\end{itemize}
+
+\begin{code}
+\begin{verbatim}
+name LIKE '^j*n$'ri
+\end{verbatim}
+\caption{Voorbeeldgebruik van een reguliere expressie.}
+\end{code}
+
+
 \subsection{Condities}
 
 Een conditie wordt gebruikt om een specifieke vergelijkingsoperatie toe te passen op een kolom, zodat er een selectie gebeurd op basis van deze conditie. De mogelije condities (met tussen haken de signatuur) zijn:
 
 \begin{itemize}
-\item EQUALS: vereist dat twee velden identiek zijn [Key, *]
-\item NOT: vereist dat twee velden verschillend zijn [Key, *]
-\item GREATHERTHAN: vereist dat het ene veld groter is dan het andere [Key, *]
-\item LESSTHAN: vereist dat het ene veld kleiner is dan het andere [Key, *]
-\item GREATHERTHANOREQUAL: vereist dat het ene veld strikt groter is dan het andere [Key, *]
-\item LESSTHANOREQUAL: vereist dat het ene veld strikt kleiner is dan het andere [Key, *]
-\item LIKE: vereist dat het ene veld voldoet aan de string (met wildcards) in het tweede veld [Key, String]
-\item NOTLIKE: vereist dat het ene veld verschilt van de string (met wildcards) in het tweede veld [Key, String]
+\item == of EQUALS: vereist dat twee velden identiek zijn [Key, *]
+\item != of NOTEQUALS: vereist dat twee velden verschillend zijn [Key, *]
+\item > of GREATHERTHAN: vereist dat het ene veld groter is dan het andere [Key, *]
+\item < of LESSTHAN: vereist dat het ene veld kleiner is dan het andere [Key, *]
+\item >= of GREATHERTHANOREQUAL: vereist dat het ene veld strikt groter is dan het andere [Key, *]
+\item <= of LESSTHANOREQUAL: vereist dat het ene veld strikt kleiner is dan het andere [Key, *]
+\item =~ of LIKE: vereist dat het ene veld voldoet aan de string (met wildcards) in het tweede veld [Key, String]
+\item !~ of NOTLIKE: vereist dat het ene veld verschilt van de string (met wildcards) in het tweede veld [Key, String]
 \end{itemize}
 
 \subsection{Relaties}
@@ -842,8 +922,8 @@ Een conditie wordt gebruikt om een specifieke vergelijkingsoperatie toe te passe
 Relaties dienen om verschillende condities aan elkaar te schakelen, en het resultaat op een specifieke wijze te interpreteren.
 
 \begin{itemize}
-\item AND
-\item OR
+\item && of AND
+\item || of OR
 \end{itemize}
 
 \subsection{Functies}
