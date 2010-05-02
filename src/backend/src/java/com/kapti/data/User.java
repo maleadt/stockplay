@@ -269,7 +269,7 @@ public class User implements Serializable {
                     oStruct.put(tField.name(), getRegdate());
                     break;
                 case ROLE:
-                    oStruct.put(tField.name(), getRole());
+                    oStruct.put(tField.name(), getRole().getId());
                     break;
                 case POINTS:
                     oStruct.put(tField.name(), getPoints());

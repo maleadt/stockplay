@@ -58,8 +58,8 @@ public class Role implements Serializable {
     public static Map<Fields, Class> Types = new HashMap<Fields, Class>() {
 
         {
-            put(Fields.ID, Integer.class);     // Deel van de
-            put(Fields.NAME, String.class);       // QuotePK
+            put(Fields.ID, Integer.class);
+            put(Fields.NAME, String.class);
             put(Fields.USER_REMOVE, Boolean.class);
             put(Fields.SECURITY_CREATE, Boolean.class);
             put(Fields.SECURITY_MODIFY, Boolean.class);
