@@ -23,7 +23,7 @@ functionality for other modules to never use XML-RPC itself.
 # Packages
 use Moose;
 use RPC::XML qw/:types/;
-use RPC::XML::Client;
+use RPC::XML::GzipClient;
 use StockPlay::Exchange;
 use StockPlay::Index;
 use StockPlay::Security;
@@ -54,7 +54,7 @@ use warnings;
 
 has 'xmlrpc' => (
 	is		=> 'ro',
-	isa		=> 'RPC::XML::Client',
+	isa		=> 'RPC::XML::GzipClient',
 	lazy		=> 1,
 	builder		=> '_build_xmlrpc'
 );
@@ -75,7 +75,7 @@ sub _build_xmlrpc {
 	# Disable compression with
 	#$RPC::XML::Client::COMPRESSION_AVAILABLE = "";
 	
-	my $xmlrpc = RPC::XML::Client->new(
+	my $xmlrpc = RPC::XML::GzipClient->new(
 		$self->config->get('server'),
 		error_handler	=> \&doError,
 		fault_handler	=> \&doFault

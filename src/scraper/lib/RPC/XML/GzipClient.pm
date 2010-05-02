@@ -28,7 +28,7 @@
 #
 ###############################################################################
 
-package RPC::XML::Client;
+package RPC::XML::GzipClient;
 
 use 5.006001;
 use strict;
