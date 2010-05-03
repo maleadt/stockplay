@@ -117,7 +117,7 @@ public class UserDAO implements GenericDAO<User, Integer> {
 
                 StringBuilder tQuery = new StringBuilder(SELECT_USERS);
                 if (!iFilter.empty())
-                    tQuery.append(" WHERE " + (String)iFilter.compile());
+                    tQuery.append(" WHERE " + (String)iFilter.compile("sql"));
                 stmt = conn.prepareStatement(tQuery.toString());
 
                 rs = stmt.executeQuery();

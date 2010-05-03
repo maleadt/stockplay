@@ -107,7 +107,7 @@ public class UserSecurityDAO implements GenericDAO<UserSecurity, UserSecurityPK>
 
                 StringBuilder tQuery = new StringBuilder(SELECT_USERSECURITIES);
                 if (!iFilter.empty())
-                    tQuery.append(" WHERE " + (String)iFilter.compile());
+                    tQuery.append(" WHERE " + (String)iFilter.compile("sql"));
                 stmt = conn.prepareStatement(tQuery.toString());
 
                 rs = stmt.executeQuery();

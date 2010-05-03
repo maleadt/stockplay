@@ -116,7 +116,7 @@ public class RoleDAO implements GenericDAO<Role, Integer> {
 
                 StringBuilder tQuery = new StringBuilder(SELECT_ROLES);
                 if (!iFilter.empty()) {
-                    tQuery.append(" WHERE " + (String) iFilter.compile());
+                    tQuery.append(" WHERE " + (String) iFilter.compile("sql"));
                 }
                 stmt = conn.prepareStatement(tQuery.toString());
 

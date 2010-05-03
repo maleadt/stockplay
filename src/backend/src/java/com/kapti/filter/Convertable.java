@@ -45,6 +45,7 @@ public abstract class Convertable implements Serializable {
     //
     
     protected List<Convertable> mParameters = new ArrayList<Convertable>();
+    private static String mConverterClass;
 
 
     //
@@ -64,6 +65,10 @@ public abstract class Convertable implements Serializable {
     // Methods
     //
 
+    public static void setConverterClass(String iConverterClass) {
+        mConverterClass = iConverterClass;
+    }
+
     /**
      * Deze methode geeft een Convertable terug die de nodige functionaliteit
      * implementeert om het huidige object te compileren. Daarbij wordt
@@ -71,11 +76,12 @@ public abstract class Convertable implements Serializable {
      * worden.
      */
     public final Convertable getConverter() throws FilterException {
-        // Open the property file
-        ResourceBundle rb = ResourceBundle.getBundle("com.kapti.filter.Converters");
+        // Check if the converter class is defined
+        if (mConverterClass == null)
+            throw new FilterException(FilterException.Type.FILTER_FAILURE, "converter class is not defined");
 
         // Get the constructor of a converter
-        String tObjectName = this.getClass().getPackage().getName() + "." + rb.getString("converter") + "." + this.getClass().getSimpleName() + "Converter";
+        String tObjectName = this.getClass().getPackage().getName() + "." + mConverterClass + "." + this.getClass().getSimpleName() + "Converter";
         Constructor<?> tConstructor = null;
         try {
             Class<? extends Convertable> tObjectClass = Class.forName(tObjectName).asSubclass(Convertable.class);

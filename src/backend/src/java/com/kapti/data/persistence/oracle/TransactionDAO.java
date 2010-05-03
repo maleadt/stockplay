@@ -111,7 +111,7 @@ public class TransactionDAO implements GenericDAO<Transaction, Integer> {
 
                 StringBuilder tQuery = new StringBuilder(SELECT_TRANSACTIONS);
                 if (!iFilter.empty())
-                    tQuery.append(" WHERE " + (String)iFilter.compile());
+                    tQuery.append(" WHERE " + (String)iFilter.compile("sql"));
                 stmt = conn.prepareStatement(tQuery.toString());
 
                 rs = stmt.executeQuery();

@@ -15,7 +15,6 @@ import java.util.TimerTask;
 import net.sf.cache4j.Cache;
 import net.sf.cache4j.CacheException;
 import net.sf.cache4j.CacheFactory;
-import net.sf.cache4j.impl.Utils;
 import org.apache.log4j.Logger;
 
 /**
@@ -137,18 +136,16 @@ public class Manager extends TimerTask {
             tEntries.keySet().toArray(tCallKeys);
             for (int i = 0; i < tCallKeys.length; i++) {
                 Entry entry = tEntries.get(tCallKeys[i]);
+                entry.cycleratio *= 0.95;
                 if (entry.count > 0) {
                     entry.count = 0;
-                    entry.cycleratio += 2;
-                } else {
-                    if (entry.cycleratio > 0)
-                        entry.cycleratio -= 1;
+                    entry.cycleratio += 10;
                 }
             }
             final Map<CallKey, Entry> tEntriesFinal = tEntries;
             Arrays.sort(tCallKeys, new Comparator<CallKey>() {
                 public int compare(CallKey a, CallKey b) {
-                    return tEntriesFinal.get(b).cycleratio - tEntriesFinal.get(a).cycleratio;
+                    return (int)(tEntriesFinal.get(b).cycleratio - tEntriesFinal.get(a).cycleratio);
                 }
             });
             for (int i = LIMIT_KEYS; i < tCallKeys.length; i++) {
@@ -197,7 +194,8 @@ public class Manager extends TimerTask {
                     tStat.hits,
                     tStat.misses,
                     //Utils.size(mCacheStats.get(tCache))
-                    -1
+                    -1,
+                    tStat.entries
             );
 
             oStats.put(tCache, tInfo);
@@ -219,11 +217,14 @@ public class Manager extends TimerTask {
         final public int keys;
         final public int hits, misses;
         final public int size;
-        public ManagerInfo(int keys, int hits, int misses, int size) {
+        final public Map<CallKey, Entry> entries;
+
+        public ManagerInfo(int keys, int hits, int misses, int size, Map<CallKey, Entry> entries) {
             this.keys = keys;
             this.hits = hits;
             this.misses = misses;
             this.size = size;
+            this.entries = entries;
         }
     }
 
@@ -249,8 +250,9 @@ public class Manager extends TimerTask {
         }
     }
 
-    private static class Entry implements Serializable {
-        public Integer count, cycleratio;
+    public static class Entry implements Serializable {
+        public int count;
+        public double cycleratio;
 
         public Entry() {
             count = 0;

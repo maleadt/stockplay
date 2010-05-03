@@ -38,7 +38,7 @@ public class OracleConnection {
                 ds = new BasicDataSource();
                 ds.setDriverClassName("oracle.jdbc.driver.OracleDriver");
 
-                ds.setUrl("jdbc:oracle:thin:@//be01.kapti.com:1521/xe");
+                ds.setUrl("jdbc:oracle:thin:@//localhost:1521/xe");
 
                 
                 ds.setUsername("stockplay");

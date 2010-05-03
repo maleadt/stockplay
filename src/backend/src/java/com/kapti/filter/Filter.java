@@ -69,7 +69,8 @@ public class Filter implements Serializable {
      * @return
      * @throws FilterException
      */
-    public Object compile() throws FilterException {
+    public Object compile(String iConverterClass) throws FilterException {
+        Convertable.setConverterClass(iConverterClass);
         if (empty())
             return null;
         
@@ -159,5 +160,14 @@ public class Filter implements Serializable {
             return false;
 
         return true;
+    }
+
+    @Override
+    public String toString() {
+        try {
+            return ((String)this.compile("filter"));
+        } catch (FilterException e) {
+            return e.getMessage();
+        }
     }
 }

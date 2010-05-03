@@ -130,7 +130,7 @@ public class QuoteDAO implements GenericQuoteDAO {
 
                 StringBuilder tQuery = new StringBuilder(SELECT_QUOTES);
                 if (!iFilter.empty())
-                    tQuery.append(" WHERE " + (String)iFilter.compile());
+                    tQuery.append(" WHERE " + (String)iFilter.compile("sql"));
                 stmt = conn.prepareStatement(tQuery.toString());
 
                 rs = stmt.executeQuery();
@@ -453,7 +453,7 @@ public class QuoteDAO implements GenericQuoteDAO {
 
                 StringBuilder tQuery = new StringBuilder(SELECT_LOWEST);
                 if (!iFilter.empty())
-                    tQuery.append(" WHERE " + (String)iFilter.compile());
+                    tQuery.append(" WHERE " + (String)iFilter.compile("sql"));
                 stmt = conn.prepareStatement(tQuery.toString());
 
                 rs = stmt.executeQuery();
@@ -490,7 +490,7 @@ public class QuoteDAO implements GenericQuoteDAO {
 
                 StringBuilder tQuery = new StringBuilder(SELECT_HIGHEST);
                 if (!iFilter.empty())
-                    tQuery.append(" WHERE " + (String)iFilter.compile());
+                    tQuery.append(" WHERE " + (String)iFilter.compile("sql"));
                 stmt = conn.prepareStatement(tQuery.toString());
 
                 rs = stmt.executeQuery();
@@ -523,7 +523,7 @@ public class QuoteDAO implements GenericQuoteDAO {
             try {
                 conn = OracleConnection.getConnection();
                 if(!iFilter.empty())
-                    stmt = conn.prepareStatement(SELECT_LATEST_QUOTE_FILTER.replace("$filter", (String) iFilter.compile()));
+                    stmt = conn.prepareStatement(SELECT_LATEST_QUOTE_FILTER.replace("$filter", (String) iFilter.compile("sql")));
                 else
                     stmt = conn.prepareStatement(SELECT_LATEST_QUOTES);
                 rs = stmt.executeQuery();
@@ -565,7 +565,7 @@ public class QuoteDAO implements GenericQuoteDAO {
             try {
                 conn = OracleConnection.getConnection();
                 if(!iFilter.empty())
-                    stmt = conn.prepareStatement(SELECT_SPAN_QUOTE_FILTER.replace("$filter", (String) iFilter.compile()));
+                    stmt = conn.prepareStatement(SELECT_SPAN_QUOTE_FILTER.replace("$filter", (String) iFilter.compile("sql")));
                 else
                     stmt = conn.prepareStatement(SELECT_SPAN_QUOTE);
                 

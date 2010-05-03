@@ -105,7 +105,7 @@ public class ExchangeDAO implements GenericDAO<Exchange, String> {
 
                 StringBuilder tQuery = new StringBuilder(SELECT_EXCHANGES);
                 if (!iFilter.empty())
-                    tQuery.append(" WHERE " + (String)iFilter.compile());
+                    tQuery.append(" WHERE " + (String)iFilter.compile("sql"));
                 stmt = conn.prepareStatement(tQuery.toString());
 
                 rs = stmt.executeQuery();

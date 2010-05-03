@@ -105,7 +105,7 @@ public class IndexDAO implements GenericDAO<Index, String> {
 
                 StringBuilder tQuery = new StringBuilder(SELECT_INDEXES);
                 if (!iFilter.empty())
-                    tQuery.append(" WHERE " + (String)iFilter.compile());
+                    tQuery.append(" WHERE " + (String)iFilter.compile("sql"));
                 stmt = conn.prepareStatement(tQuery.toString());
 
                 rs = stmt.executeQuery();

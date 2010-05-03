@@ -117,7 +117,7 @@ public class OrderDAO implements GenericDAO<Order, Integer> {
 
                 StringBuilder tQuery = new StringBuilder(SELECT_ORDERS);
                 if (!iFilter.empty())
-                    tQuery.append(" AND (" + (String)iFilter.compile() + ")");
+                    tQuery.append(" AND (" + (String)iFilter.compile("sql") + ")");
                 stmt = conn.prepareStatement(tQuery.toString());
 
                 rs = stmt.executeQuery();

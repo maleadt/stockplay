@@ -122,5 +122,30 @@
         }
         %>
         </table>
+
+        <h3>Managed entries</h3>
+        <table border="1">
+            <tr>
+                <th>Cache</th>
+                <th>Method</th>
+                <th>Arguments</th>
+                <th>Count</th>
+                <th>Cycle ratio</th>
+            </tr>
+        <% for (net.sf.cache4j.Cache tCache : tManagerInfoMap.keySet()) {
+            com.kapti.cache.Manager.ManagerInfo tInfo = tManagerInfoMap.get(tCache);
+            for ( com.kapti.cache.CallKey tCallKey : tInfo.entries.keySet()) {
+                %><tr>
+                    <td><%= tCache.getCacheConfig().getCacheId() %></td>
+                    <td><%= tCallKey.method.getName() %></td>
+                    <td><%= java.util.Arrays.deepToString(tCallKey.args) %></td>
+                    <td><%= tInfo.entries.get(tCallKey).count %></td>
+                    <td><%= tInfo.entries.get(tCallKey).cycleratio %></td>
+                </tr>
+                <%
+            }
+        }
+        %>
+        </table>
     </body>
 </html>

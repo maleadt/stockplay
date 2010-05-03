@@ -108,7 +108,7 @@ public class SecurityDAO implements GenericDAO<Security, String> {
 
                 StringBuilder tQuery = new StringBuilder(SELECT_SECURITIES);
                 if (!iFilter.empty())
-                    tQuery.append(" WHERE " + (String)iFilter.compile());
+                    tQuery.append(" WHERE " + (String)iFilter.compile("sql"));
                 stmt = conn.prepareStatement(tQuery.toString());
 
                 rs = stmt.executeQuery();
