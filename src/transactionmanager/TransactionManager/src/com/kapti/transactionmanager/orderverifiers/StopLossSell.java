@@ -32,16 +32,16 @@ import java.util.Date;
  *
  */
 
-public class StopLossBuy implements OrderVerifier {
+public class StopLossSell implements OrderVerifier {
 
     public Type[] getOrderTypes() {
         return new Type[] {
-            Type.STOP_LOSS_BUY
+            Type.STOP_LOSS_SELL
         };
     }
 
     public boolean verifyOrder(Order order) {
-        return (Data.getReference().getHighest(order.getCreationTime(), new Date(), order.getSecurity().getISIN()) >= order.getPrice());
+        return (Data.getReference().getLowest(order.getCreationTime(), new Date(), order.getSecurity().getISIN()) <= order.getPrice());
     }
 
 }
