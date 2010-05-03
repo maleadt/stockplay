@@ -39,7 +39,7 @@ public class Order extends Instruction implements Serializable {
 
     public static enum Fields {
         ID, USER, ISIN, AMOUNT, PRICE, TYPE,    // Instruction.Fields
-        STATUS, CREATIONTIME, EXPIRATIONTIME, EXECUTIONTIME, PARAMETERS
+        STATUS, CREATIONTIME, EXPIRATIONTIME, EXECUTIONTIME, PARAMETERS, SECONDAIRYLIMIT
     }
     public static Map<Fields, Class> Types = new HashMap<Fields, Class>() { {
             put(Fields.ID, Integer.class);
@@ -47,6 +47,7 @@ public class Order extends Instruction implements Serializable {
             put(Fields.ISIN, String.class);
             put(Fields.AMOUNT, Integer.class);
             put(Fields.PRICE, Double.class);
+            put(Fields.SECONDAIRYLIMIT, Double.class);
             put(Fields.TYPE, String.class); // Wordt ingelezen via InstructionType.valueOf
 
             put(Fields.STATUS, String.class); // Wordt ingelezen via OrderStatus.valueOf
@@ -138,6 +139,9 @@ public class Order extends Instruction implements Serializable {
                 case PRICE:
                     oStruct.put(tField.name(), getPrice());
                     break;
+                case SECONDAIRYLIMIT:
+                    oStruct.put(tField.name(), getSecondairyLimit());
+                    break;
                 case TYPE:
                     if (getType() != null)
                         oStruct.put(tField.name(), getType().name());
@@ -187,6 +191,9 @@ public class Order extends Instruction implements Serializable {
                     break;
                 case PRICE:
                     setPrice((Double)tValue);
+                    break;
+                case SECONDAIRYLIMIT:
+                    setSecondairyLimit((Double)tValue);
                     break;
                 case TYPE:
                     setType(InstructionType.valueOf((String)tValue));

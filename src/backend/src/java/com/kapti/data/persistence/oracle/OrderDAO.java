@@ -36,10 +36,10 @@ public class OrderDAO implements GenericDAO<Order, Integer> {
     //
 
     private static final String SELECT_ORDER_LASTID = "select orderid_seq.currval from dual";
-    private static final String SELECT_ORDER = "SELECT userid, isin, limit, amount, type, status, creationtime, expirationtime, executiontime FROM orders WHERE id = ?";
-    private static final String SELECT_ORDERS = "SELECT id, userid, isin, limit, amount, type, status, creationtime, expirationtime, executiontime FROM orders WHERE ((status <> 'CANCELLED') or (status='CANCELLED' and  sysdate-creationtime < NUMTODSINTERVAL(7, 'day')))";
-    private static final String INSERT_ORDER = "INSERT INTO orders(id, userid, isin, limit, amount, type, status, creationtime, expirationtime, executiontime) VALUES(orderid_seq.nextval, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    private static final String UPDATE_ORDER = "UPDATE orders SET userid = ?, isin = ?, limit = ?, amount = ?, type = ?, status = ?, creationtime = ?, expirationtime = ?, executiontime = ? WHERE id = ?";
+    private static final String SELECT_ORDER = "SELECT userid, isin, limit, amount, type, status, creationtime, expirationtime, executiontime, secondairylimit FROM orders WHERE id = ?";
+    private static final String SELECT_ORDERS = "SELECT id, userid, isin, limit, amount, type, status, creationtime, expirationtime, executiontime, secondairylimit FROM orders WHERE ((status <> 'CANCELLED') or (status='CANCELLED' and  sysdate-creationtime < NUMTODSINTERVAL(7, 'day')))";
+    private static final String INSERT_ORDER = "INSERT INTO orders(id, userid, isin, limit, amount, type, status, creationtime, expirationtime, executiontime, secondairylimit) VALUES(orderid_seq.nextval, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private static final String UPDATE_ORDER = "UPDATE orders SET userid = ?, isin = ?, limit = ?, amount = ?, type = ?, status = ?, creationtime = ?, expirationtime = ?, executiontime = ?, secondairylimit = ? WHERE id = ?";
     private static final String DELETE_ORDER = "DELETE FROM orders WHERE id = ?";
 
 
@@ -56,11 +56,9 @@ public class OrderDAO implements GenericDAO<Order, Integer> {
         return instance;
     }
 
-
     //
     // Methods
     //
-
 
     public Order findById(Integer id) throws StockPlayException {
         Connection conn = null;
@@ -196,6 +194,7 @@ public class OrderDAO implements GenericDAO<Order, Integer> {
                 } else {
                     stmt.setNull(9, Types.TIMESTAMP);
                 }
+                stmt.setDouble(10, entity.getSecondairyLimit());
 
                 if(stmt.executeUpdate() == 1){
                     stmtID = conn.prepareStatement(SELECT_ORDER_LASTID);
@@ -266,7 +265,7 @@ public class OrderDAO implements GenericDAO<Order, Integer> {
                 } else {
                     stmt.setNull(9, Types.TIMESTAMP);
                 }
-
+                stmt.setDouble(10, entity.getSecondairyLimit());
 
                 return stmt.executeUpdate() == 1;
 

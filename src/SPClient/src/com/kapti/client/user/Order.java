@@ -24,7 +24,7 @@ public class Order {
     public static enum Fields {
 
         ID, USER, ISIN, AMOUNT, PRICE, TYPE, // Instruction.Fields
-        STATUS, CREATIONTIME, EXPIRATIONTIME, EXECUTIONTIME, PARAMETERS
+        STATUS, CREATIONTIME, EXPIRATIONTIME, EXECUTIONTIME, PARAMETERS, SECONDAIRYLIMIT
     }
 
     public enum OrderStatus {
@@ -75,6 +75,7 @@ public class Order {
         this.user = user;
         propertyChangeSupport.firePropertyChange(PROP_USER, oldUser, user);
     }
+
     protected Security security;
     public static final String PROP_SECURITY = "security";
 
@@ -106,6 +107,10 @@ public class Order {
         STOP_LOSS_BUY,
         STOP_LOSS_SELL,
         IMMEDIATE_SELL,
+        TRAILING_STOP_BUY,
+        TRAILING_STOP_SELL,
+        BRACKET_LIMIT_BUY,
+        BRACKET_LIMIT_SELL,
         MANUAL;
     }
     protected Type type;
@@ -149,6 +154,7 @@ public class Order {
         this.amount = amount;
         propertyChangeSupport.firePropertyChange(PROP_AMOUNT, oldAmount, amount);
     }
+
     protected double price;
     public static final String PROP_PRICE = "price";
 
@@ -171,6 +177,30 @@ public class Order {
         this.price = price;
         propertyChangeSupport.firePropertyChange(PROP_PRICE, oldPrice, price);
     }
+
+    protected double secondairyLimit;
+    public static final String PROP_SECONDAIRY_LIMIT = "secondairylimit";
+
+    /**
+     * Get the value of price
+     *
+     * @return the value of price
+     */
+    public double getSecondairyLimit() {
+        return secondairyLimit;
+    }
+
+    /**
+     * Set the value of price
+     *
+     * @param price new value of price
+     */
+    public void setSecondairyLimit(double secondairyLimit) {
+        double oldSecondairyLimit = this.secondairyLimit;
+        this.secondairyLimit = secondairyLimit;
+        propertyChangeSupport.firePropertyChange(PROP_SECONDAIRY_LIMIT, oldSecondairyLimit, secondairyLimit);
+    }
+
     protected OrderStatus status;
     public static final String PROP_STATUS = "status";
 
@@ -295,9 +325,15 @@ public class Order {
             logger.error("Error while retrieven security for transaction " + t.getId(), ex);
         }
 
+        //for (Object test : h.keySet().toArray())
+        //    System.out.println(test.toString());
+
+        //System.out.println(h.get("SECONDAIRYLIMIT"));
+
         t.setType(Type.valueOf((String) h.get(Fields.TYPE.toString())));
         t.setAmount((Integer) h.get(Fields.AMOUNT.toString()));
         t.setPrice((Double) h.get(Fields.PRICE.toString()));
+        t.setSecondairyLimit((Double) h.get(Fields.SECONDAIRYLIMIT.toString()));
         t.setCreationTime((Date) h.get(Fields.CREATIONTIME.toString()));
         t.setExecutionTime((Date) h.get(Fields.EXECUTIONTIME.toString()));
         t.setExpirationTime((Date) h.get(Fields.EXPIRATIONTIME.toString()));

@@ -29,9 +29,11 @@ import com.kapti.client.finance.Security;
 import com.kapti.client.user.Order;
 import com.kapti.client.user.OrderFactory;
 import com.kapti.exceptions.StockPlayException;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
-import java.util.logging.Level;
 import org.apache.log4j.Logger;
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
@@ -61,10 +63,10 @@ public class Data {
         // Clear cache
         XmlRpcClient client = XmlRpcClientFactory.getXmlRpcClient();
         try {
-            logger.error("Clearing cache");
+            logger.info("Clearing cache");
             client.execute("System.Backend.ClearCache", (Object[]) null);
         } catch (XmlRpcException ex) {
-            logger.error("Failed to clear cache", ex);
+            logger.error("Failed to clear cache..");
         }
 
         // We halen alle pending orders op
@@ -101,5 +103,35 @@ public class Data {
         return currentQuotes;
     }
 
+    public double getHighest(Date from, Date to, String isin) {
+            XmlRpcClient client = XmlRpcClientFactory.getXmlRpcClient();
 
+            GregorianCalendar startTijd = new GregorianCalendar();
+            startTijd.setTime(new Date());
+            SimpleDateFormat formaat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'");
+            String filter = "ISIN == '" + isin + "' AND TIMESTAMP < '" + formaat.format(to)
+                            + "'d AND TIMESTAMP > '" + formaat.format(from) +"'d";
+        try {
+            return (Double) client.execute("Finance.Security.getHighest", new Object[]{filter});
+        } catch (XmlRpcException ex) {
+            logger.error("Failed to fetch the highest quotes", ex);
+        }
+        return 0;
+    }
+
+    public double getLowest(Date from, Date to, String isin) {
+            XmlRpcClient client = XmlRpcClientFactory.getXmlRpcClient();
+
+            GregorianCalendar startTijd = new GregorianCalendar();
+            startTijd.setTime(new Date());
+            SimpleDateFormat formaat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'");
+            String filter = "ISIN == '" + isin + "' AND TIMESTAMP < '" + formaat.format(to)
+                            + "'d AND TIMESTAMP > '" + formaat.format(from) +"'d";
+        try {
+            return (Double) client.execute("Finance.Security.getLowest", new Object[]{filter});
+        } catch (XmlRpcException ex) {
+            logger.error("Failed to fetch the lowest quotes", ex);
+        }
+        return 0;
+    }
 }

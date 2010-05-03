@@ -104,7 +104,6 @@ public class CheckOrdersTask implements Runnable {
                 }
             }
         }
-
         logger.info("Orderprocessing ended -- waiting for new call");
     } catch(Exception ex) {
         logger.error("Error while processings orders", ex);

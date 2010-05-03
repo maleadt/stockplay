@@ -34,6 +34,7 @@ public abstract class Instruction implements Serializable {
     private String isin = "";
     private int amount;
     private double price;
+    private double secondairyLimit;
     private InstructionType type;
 
     public Instruction(int user) {
@@ -103,5 +104,19 @@ public abstract class Instruction implements Serializable {
 
     public void setIsin(String isin) {
         this.isin = isin;
+    }
+
+    /**
+     * @return the secondairyLimit
+     */
+    public double getSecondairyLimit() {
+        return secondairyLimit;
+    }
+
+    /**
+     * @param secondairyLimit the secondairyLimit to set
+     */
+    public void setSecondairyLimit(double secondairyLimit) {
+        this.secondairyLimit = secondairyLimit;
     }
 }

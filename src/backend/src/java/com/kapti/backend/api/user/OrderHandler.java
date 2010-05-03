@@ -66,6 +66,7 @@ public class OrderHandler extends MethodClass {
                     com.kapti.data.Order.Fields.CREATIONTIME,
                     com.kapti.data.Order.Fields.EXECUTIONTIME,
                     com.kapti.data.Order.Fields.EXPIRATIONTIME,
+                    com.kapti.data.Order.Fields.SECONDAIRYLIMIT,
                     com.kapti.data.Order.Fields.PRICE));
         }
 

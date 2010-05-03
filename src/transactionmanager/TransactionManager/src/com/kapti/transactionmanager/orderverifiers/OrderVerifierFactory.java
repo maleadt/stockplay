@@ -50,6 +50,10 @@ public class OrderVerifierFactory {
                 return new ImmediateOrderVerifier();
             case STOP_LOSS_BUY:
                 return new StopLossBuy();
+            case STOP_LOSS_SELL:
+                return new StopLossSell();
+            case BRACKET_LIMIT_BUY:
+                return new BracketLimitBuy();
             default:
                 return null;
         }
