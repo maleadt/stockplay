@@ -4,7 +4,6 @@
  */
 package com.kapti.data.persistence;
 
-import com.kapti.data.persistence.oracle.ExchangeDAO;
 import com.kapti.data.Exchange;
 import java.util.Collection;
 import org.junit.After;
@@ -20,11 +19,16 @@ import static org.junit.Assert.*;
  */
 public class ExchangeDAOTest {
 
+    private static StockPlayDAO mDAO;
+    private static GenericDAO<Exchange, String> exchDAO;
+
     public ExchangeDAOTest() {
     }
 
     @BeforeClass
     public static void setUpClass() throws Exception {
+        mDAO = StockPlayDAOFactory.getDAO();
+        exchDAO = mDAO.getExchangeDAO();
     }
 
     @AfterClass
@@ -48,9 +52,8 @@ public class ExchangeDAOTest {
         Exchange entity = new Exchange("TESTSYMBOL");
         entity.setName("Test exchange");
         entity.setLocation("Nowhere");
-        ExchangeDAO instance = ExchangeDAO.getInstance();
         int expResult = 1;
-        int result = instance.create(entity);
+        int result = exchDAO.create(entity);
         assertEquals(expResult, result);
     }
 
@@ -61,33 +64,14 @@ public class ExchangeDAOTest {
     public void testFindById() throws Exception {
         System.out.println("findById");
         String symbol = "TESTSYMBOL";
-        ExchangeDAO instance = ExchangeDAO.getInstance();
 
-        Exchange result = instance.findById(symbol);
+        Exchange result = exchDAO.findById(symbol);
         assertNotNull(result);
         assertEquals(result.getSymbol(), "TESTSYMBOL");
 
     }
 
-//    /**
-//     * Test of findByExample method, of class ExchangeDAO.
-//     */
-//    @Test
-//    public void testFindByExample() throws Exception {
-//        System.out.println("findByExample");
-//        Exchange example = new Exchange("DIT MOET EEN SYMBOOL ZIJN");   // findByExample << findByFilter?
-//        example.setLocation("Nowhere");
-//        ExchangeDAO instance = ExchangeDAO.getInstance();
-//
-//        Collection<Exchange> result = instance.findByExample(example);
-//        for (Exchange ex : result) {
-//            System.out.println("\t " + ex.getSymbol() + ": " + ex.getName() + " - "+ ex.getLocation());
-//        }
-//        assertTrue(!result.isEmpty());
-//    }
-
-
-        /**
+    /**
      * Test of update method, of class ExchangeDAO.
      */
     @Test
@@ -96,9 +80,8 @@ public class ExchangeDAOTest {
         Exchange entity = new Exchange("TESTSYMBOL");
         entity.setName("Test exchange");
         entity.setLocation("Elsewhere");
-        ExchangeDAO instance = ExchangeDAO.getInstance();
         boolean expResult = true;
-        boolean result = instance.update(entity);
+        boolean result = exchDAO.update(entity);
         assertEquals(expResult, result);
     }
 
@@ -109,9 +92,8 @@ public class ExchangeDAOTest {
     @Test
     public void testFindAll() throws Exception {
         System.out.println("findAll");
-        ExchangeDAO instance = ExchangeDAO.getInstance();
 
-        Collection<Exchange> result = instance.findAll();
+        Collection<Exchange> result = exchDAO.findAll();
         for (Exchange ex : result) {
             System.out.println("\t " + ex.getSymbol() + ": " + ex.getName() + " - " + ex.getLocation());
         }
@@ -126,9 +108,8 @@ public class ExchangeDAOTest {
     public void testDelete() throws Exception {
         System.out.println("delete");
         Exchange entity = new Exchange("TESTSYMBOL");
-        ExchangeDAO instance = ExchangeDAO.getInstance();
         boolean expResult = true;
-        boolean result = instance.delete(entity);
+        boolean result = exchDAO.delete(entity);
         assertEquals(expResult, result);
     }
 }

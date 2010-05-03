@@ -1,6 +1,6 @@
 /*
- * DataStringConverter.java
- * StockPlay - SQL converter voor string dataobject.
+ * ConditionEqualsConverter.java
+ * StockPlay - Filter converter voor een gelijkheids-conditie.
  *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
@@ -19,42 +19,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.kapti.filter.data.sql;
+package com.kapti.filter.condition.filter;
 
 import com.kapti.exceptions.FilterException;
-import com.kapti.filter.data.DataDate;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import com.kapti.filter.condition.ConditionEquals;
+import com.kapti.filter.data.Data;
+import com.kapti.filter.data.DataKey;
 
-/**
- *
- * @author tim
- */
-public class DataDateConverter extends DataDate {
-    //
-    // Member data
-    //
-
-    private final String mFormat = "YYYY-MM-DD HH24:MI:SS";
-    private final SimpleDateFormat mFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
+public class ConditionEqualsConverter extends ConditionEquals {
 
     //
     // Construction
     //
 
-    public DataDateConverter(DataDate iObject) {
+    public ConditionEqualsConverter(ConditionEquals iObject) {
         super(iObject);
     }
-
 
     //
     // Methods
     //
 
     @Override
-    public Object process(Date d) throws FilterException {
-        return "TO_DATE('" + mFormatter.format(d) + "', '" + mFormat + "')";
+    public Object process(DataKey a, Data b) throws FilterException {
+        return (String)a.compile() + " == " + (String)b.compile();
     }
-
 }

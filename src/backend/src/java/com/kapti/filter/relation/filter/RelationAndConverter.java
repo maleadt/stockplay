@@ -1,6 +1,6 @@
 /*
  * RelationAndConverter.java
- * StockPlay - SQL converter voor OR relatie.
+ * StockPlay - Converter voor AND relatie.
  *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
@@ -19,22 +19,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.kapti.filter.relation.sql;
+package com.kapti.filter.relation.filter;
 
 import com.kapti.exceptions.FilterException;
 import com.kapti.filter.condition.Condition;
-import com.kapti.filter.relation.RelationOr;
+import com.kapti.filter.relation.Relation;
+import com.kapti.filter.relation.RelationAnd;
 
 /**
  *
  * @author tim
  */
-public class RelationOrConverter extends RelationOr {
+public class RelationAndConverter extends RelationAnd {
     //
     // Construction
     //
 
-    public RelationOrConverter(RelationOr iObject) {
+    public RelationAndConverter(RelationAnd iObject) {
         super(iObject);
     }
 
@@ -45,6 +46,26 @@ public class RelationOrConverter extends RelationOr {
 
     @Override
     public Object process(Condition a, Condition b) throws FilterException {
-        return "(" + (String)a.compile() + ") OR (" + (String)b.compile() + ")";
+        StringBuilder tRelation = new StringBuilder();
+
+        // Obey precedence
+        boolean tPrecedenceLeft = (a instanceof Relation && !(a instanceof RelationAnd));
+        boolean tPrecedenceRight = (b instanceof Relation && !(b instanceof RelationAnd));
+
+        if (tPrecedenceLeft)
+            tRelation.append("(");
+        tRelation.append((String)a.compile());
+        if (tPrecedenceLeft)
+            tRelation.append(")");
+
+        tRelation.append(" && ");
+
+        if (tPrecedenceRight)
+            tRelation.append("(");
+        tRelation.append((String)b.compile());
+        if (tPrecedenceRight)
+            tRelation.append(")");
+
+        return tRelation.toString();
     }
 }

@@ -1,6 +1,6 @@
 /*
  * DataStringConverter.java
- * StockPlay - SQL converter voor string dataobject.
+ * StockPlay - Filter converter voor datum dataobject.
  *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.kapti.filter.data.sql;
+package com.kapti.filter.data.filter;
 
 import com.kapti.exceptions.FilterException;
 import com.kapti.filter.data.DataDate;
@@ -34,9 +34,8 @@ public class DataDateConverter extends DataDate {
     //
     // Member data
     //
-
-    private final String mFormat = "YYYY-MM-DD HH24:MI:SS";
-    private final SimpleDateFormat mFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    
+    private final SimpleDateFormat mFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'");
 
 
     //
@@ -54,7 +53,7 @@ public class DataDateConverter extends DataDate {
 
     @Override
     public Object process(Date d) throws FilterException {
-        return "TO_DATE('" + mFormatter.format(d) + "', '" + mFormat + "')";
+        return "'" + mFormatter.format(d) + "'d";
     }
 
 }

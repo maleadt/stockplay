@@ -2,9 +2,10 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.kapti.data.persistence.oracle;
+package com.kapti.data.persistence;
 
 import com.kapti.data.PointsTransaction;
+import com.kapti.data.PointsTransaction.PointsTransactionPK;
 import com.kapti.data.User;
 import com.kapti.filter.Filter;
 import com.kapti.filter.parsing.Parser;
@@ -25,8 +26,9 @@ import static org.junit.Assert.*;
  */
 public class PointsTransactionDAOTest {
 
-    private static UserDAO uDAO;
-    private static PointsTransactionDAO instance;
+    private static StockPlayDAO mDAO;
+    private static GenericDAO<User, Integer> userDAO;
+    private static GenericDAO<PointsTransaction, PointsTransactionPK> pointsDAO;
     private static Date time;
     private static int userid;
 
@@ -35,9 +37,11 @@ public class PointsTransactionDAOTest {
 
     @BeforeClass
     public static void setUpClass() throws Exception {
-        instance = PointsTransactionDAO.getInstance();
+        mDAO = StockPlayDAOFactory.getDAO();
+        pointsDAO = mDAO.getPointsTransactionDAO();
+        userDAO = mDAO.getUserDAO();
+        
         time = Calendar.getInstance().getTime();
-        uDAO = UserDAO.getInstance();
 
         User u = new User(-1);
         u.setNickname("TESTPoints");
@@ -46,7 +50,7 @@ public class PointsTransactionDAOTest {
         u.setLastname("be");
         u.setPassword("test");
         u.setRegdate(Calendar.getInstance().getTime());
-        userid = uDAO.create(u);
+        userid = userDAO.create(u);
 
         System.out.println("Created user " + userid);
 
@@ -56,7 +60,7 @@ public class PointsTransactionDAOTest {
 
     @AfterClass
     public static void tearDownClass() throws Exception {
-        uDAO.delete(uDAO.findById(userid));
+        userDAO.delete(userDAO.findById(userid));
         System.out.println("Deleted user " + userid);
 
     }
@@ -80,23 +84,10 @@ public class PointsTransactionDAOTest {
         entity.setComments("testsuite");
 
         int expResult = 1;
-        int result = instance.create(entity);
+        int result = pointsDAO.create(entity);
         assertEquals(expResult, result);
     }
-
-    /**
-     * Test of findById method, of class PointsTransactionDAO.
-     */
-//    @Test
-//    public void testFindById() throws Exception {
-//        System.out.println("findById");
-//        PointsTransactionPK pk = new PointsTransactionPK(userid,time);
-//        PointsTransaction expResult = null;
-//        PointsTransaction result = instance.findById(pk);
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
+    
     /**
      * Test of findByFilter method, of class PointsTransactionDAO.
      */
@@ -105,7 +96,7 @@ public class PointsTransactionDAOTest {
         System.out.println("findByFilter");
 
         Filter iFilter = Parser.getInstance().parse("userid EQUALS '" + userid + "'");
-        Collection result = instance.findByFilter(iFilter);
+        Collection result = pointsDAO.findByFilter(iFilter);
         assertTrue(!result.isEmpty());
 
         Iterator it = result.iterator();
@@ -122,7 +113,7 @@ public class PointsTransactionDAOTest {
     @Test
     public void testFindAll() throws Exception {
         System.out.println("findAll");
-        Collection result = instance.findAll();
+        Collection result = pointsDAO.findAll();
         assertTrue(!result.isEmpty());
 
         Iterator it = result.iterator();
@@ -144,7 +135,7 @@ public class PointsTransactionDAOTest {
         entity.setDelta(200);
         entity.setComments("testsuite2");
         boolean expResult = true;
-        boolean result = instance.update(entity);
+        boolean result = pointsDAO.update(entity);
         assertEquals(expResult, result);
     }
 
@@ -156,7 +147,7 @@ public class PointsTransactionDAOTest {
         System.out.println("delete");
         PointsTransaction entity = new PointsTransaction(userid, time);
         boolean expResult = true;
-        boolean result = instance.delete(entity);
+        boolean result = pointsDAO.delete(entity);
         assertEquals(expResult, result);
     }
 }

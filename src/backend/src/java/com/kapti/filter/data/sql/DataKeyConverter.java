@@ -1,6 +1,6 @@
 /*
  * DataKeyConverter.java
- * StockPlay - Converter voor key dataobject.
+ * StockPlay - SQL converter voor key dataobject.
  *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
@@ -44,7 +44,7 @@ public class DataKeyConverter extends DataKey {
 
     @Override
     public Object process(String a) throws FilterException {
-        return a.toString();
+        return a;
     }
 
 }

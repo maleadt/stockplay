@@ -1,6 +1,6 @@
 /*
  * DataStringConverter.java
- * StockPlay - Converter voor string dataobject.
+ * StockPlay - SQL converter voor string dataobject.
  *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.

@@ -1,6 +1,6 @@
 /*
  * RelationAndConverter.java
- * StockPlay - Converter voor AND relatie.
+ * StockPlay - SQL converter voor AND relatie.
  *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
