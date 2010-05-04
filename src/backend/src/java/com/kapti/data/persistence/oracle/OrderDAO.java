@@ -247,7 +247,7 @@ public class OrderDAO implements GenericDAO<Order, Integer> {
                 conn = OracleConnection.getConnection();
                 stmt = conn.prepareStatement(UPDATE_ORDER);
 
-                stmt.setInt(10, entity.getId());
+                stmt.setInt(11, entity.getId());
                 stmt.setInt(1, entity.getUser());
                 stmt.setString(2, entity.getIsin());
                 stmt.setDouble(3, entity.getPrice());
