@@ -222,7 +222,12 @@ public class FinanceFactory {
         Collection<Quote> quotes = getLatestQuoteByFilter("isin == '" + sec.getISIN() + "'");
         Iterator<Quote> it = quotes.iterator();
 
-        return quotes.iterator().next();
+        //Controle ofdat er wel een latest quote bestaat
+        Quote quote = null;
+        if(it.hasNext())
+            quote = it.next();
+
+        return quote;
 
     }
 }

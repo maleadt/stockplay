@@ -311,6 +311,7 @@ public class Transaction {
         }
 
         t.setType(Type.valueOf((String) h.get(Fields.TYPE.toString())));
+        t.setTime((Date) h.get(Fields.TIME.toString()));
         t.setAmount((Integer) h.get(Fields.AMOUNT.toString()));
         t.setPrice((Double) h.get(Fields.PRICE.toString()));
         t.setComment((String) h.get(Fields.COMMENTS.toString()));
