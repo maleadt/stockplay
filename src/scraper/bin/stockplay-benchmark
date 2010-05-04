@@ -64,6 +64,10 @@ test('getLatestQuotes (' . $exchanges[0]->name . ')', sub {
 });
 die unless(@latestquotes);
 
+test('buildExchanges', sub {
+	my @exchanges = $factory->buildExchanges();
+});
+
 
 exit(0);
 

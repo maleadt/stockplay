@@ -84,7 +84,7 @@ sub _build_plugins {
 	my @plugins;
 	foreach my $infohash (@infohashes) {
 		$self->logger->info("loading plugin " . $infohash->{name});
-		eval {		
+		eval {
 			# Manage a dump
 			my $plugin;
 			if (-f $dumpfolder . $infohash->{name} . '.dump') {
@@ -236,7 +236,14 @@ sub run {
 			eval {			
 				# Check all exchanges separately
 				foreach my $exchange (@{$plugin->exchanges}) {
-					next unless $plugin->isOpen($exchange, DateTime->now());
+					unless ($plugin->isOpen($exchange, DateTime->now())) {
+						# Remove all quotes (so they can't be used as
+						# time reference the next day)
+						foreach my $security (@{$exchange->securities}) {
+							delete $security->quote;
+						}
+						next;
+					}
 					
 					# Check if the delay has already passed
 					my @securities_local;

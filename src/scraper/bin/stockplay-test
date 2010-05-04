@@ -34,11 +34,12 @@ my $logger = $stockplay->getLogger();
 
 $logger->debug("testing");
 
-my $exchange = (grep { $_->symbol eq "BSE" } $factory->getExchanges())[0] or die();
+my @exchanges = $factory->getExchanges();
+#exit;
 
-$logger->debug("fetching securities");
-my @securities = $factory->getSecurities($exchange);
-$logger->debug("done");
+my $result = $factory->xmlrpc->send_request(
+	'System.Backend.ClearCache'
+);
 
 exit(0);
 

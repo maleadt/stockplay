@@ -73,7 +73,7 @@ sub _build_xmlrpc {
 	my ($self) = @_;
 
 	# Disable compression with
-	#$RPC::XML::Client::COMPRESSION_AVAILABLE = "";
+	#$RPC::XML::GzipClient::COMPRESSION_AVAILABLE = "";
 	
 	my $xmlrpc = RPC::XML::GzipClient->new(
 		$self->config->get('server'),
