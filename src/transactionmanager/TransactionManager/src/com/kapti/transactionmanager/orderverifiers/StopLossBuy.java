@@ -1,5 +1,5 @@
 /*
- * BuyVerifier.java
+ * StopLossBuy.java
  * StockPlay - Stop loss order: Een order wordt omgezet in een effectieve handeling na een trigger op de limietwaarde. Het order wordt hierdoor sneller uitgevoerd, maar er is geen minimumprijs (maximumprijs) gegarandeerd.
  *
  * Copyright (c) 2010 StockPlay development team

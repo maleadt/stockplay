@@ -1,6 +1,6 @@
 /*
- * StopLossSell.java
- * StockPlay - Stop loss order: Een order wordt omgezet in een effectieve handeling na een trigger op de limietwaarde. Het order wordt hierdoor sneller uitgevoerd, maar er is geen minimumprijs (maximumprijs) gegarandeerd.
+ * BracketLimitSell.java
+ * StockPlay - Bracket Limit Order: Als de koers buiten een van de twee limietwaarden valt dan geeft de module een positief antwoord terug.
  *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
@@ -22,26 +22,27 @@
 
 package com.kapti.transactionmanager.orderverifiers;
 
+import com.kapti.client.finance.Quote;
 import com.kapti.client.user.Order;
 import com.kapti.client.user.Order.Type;
-import java.util.Date;
 
 /**
  *
- * \brief   Stop loss order: Een order wordt omgezet in een effectieve handeling na een trigger op de limietwaarde. Het order wordt hierdoor sneller uitgevoerd, maar er is geen minimumprijs (maximumprijs) gegarandeerd.
+ * \brief   Bracket Limit Order: Als de koers buiten een van de twee limietwaarden valt dan geeft de module een positief antwoord terug.
  *
  */
 
-public class StopLossSell implements OrderVerifier {
+public class BracketLimitSell implements OrderVerifier {
 
     public Type[] getOrderTypes() {
         return new Type[] {
-            Type.STOP_LOSS_SELL
+            Type.BRACKET_LIMIT_SELL
         };
     }
 
     public boolean verifyOrder(Order order) {
-        return (Data.getReference().getLowest(order.getCreationTime(), new Date(), order.getSecurity().getISIN()) <= order.getPrice());
+        Quote latestQuote = Data.getReference().getCurrentQuotes().get(order.getSecurity());
+        return (latestQuote.getPrice() <= order.getPrice() && (latestQuote.getPrice() >= order.getSecondairyLimit()));
     }
 
 }

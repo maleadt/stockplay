@@ -1,7 +1,25 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Exchange.java
+ * StockPlay - Beurs object wat we verder kunnen gebruiken in onze Java applicaties.
+ *
+ * Copyright (c) 2010 StockPlay development team
+ * All rights reserved.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
+
 package com.kapti.client.finance;
 
 import java.beans.PropertyChangeListener;
@@ -10,8 +28,10 @@ import java.util.HashMap;
 
 /**
  *
- * @author Thijs
+ * \brief   Beurs object wat we verder kunnen gebruiken in onze Java applicaties.
+ *
  */
+
 public class Exchange {
 
     public static enum Fields {
@@ -114,22 +134,17 @@ public class Exchange {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == null) {
+        if (obj == null)
             return false;
-        }
-        if (getClass() != obj.getClass()) {
+        if (getClass() != obj.getClass())
             return false;
-        }
         final Exchange other = (Exchange) obj;
-        if ((this.symbol == null) ? (other.symbol != null) : !this.symbol.equals(other.symbol)) {
+        if ((this.symbol == null) ? (other.symbol != null) : !this.symbol.equals(other.symbol))
             return false;
-        }
-        if ((this.name == null) ? (other.name != null) : !this.name.equals(other.name)) {
+        if ((this.name == null) ? (other.name != null) : !this.name.equals(other.name))
             return false;
-        }
-        if ((this.location == null) ? (other.location != null) : !this.location.equals(other.location)) {
+        if ((this.location == null) ? (other.location != null) : !this.location.equals(other.location))
             return false;
-        }
         return true;
     }
 

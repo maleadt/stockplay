@@ -1,5 +1,5 @@
 /*
- * BuyVerifier.java
+ * BracketLimitBuy.java
  * StockPlay - Bracket Limit Order: Als de koers buiten een van de twee limietwaarden valt dan geeft de module een positief antwoord terug.
  *
  * Copyright (c) 2010 StockPlay development team
@@ -22,8 +22,10 @@
 
 package com.kapti.transactionmanager.orderverifiers;
 
+import com.kapti.client.finance.Quote;
 import com.kapti.client.user.Order;
 import com.kapti.client.user.Order.Type;
+import java.util.Date;
 
 /**
  *
@@ -40,11 +42,14 @@ public class BracketLimitBuy implements OrderVerifier {
     }
 
     public boolean verifyOrder(Order order) {
-        
-        System.out.println("TEST: " + order.getPrice() + " en " + order.getSecondairyLimit() );
+        Quote latestQuote = Data.getReference().getCurrentQuotes().get(order.getSecurity());
 
-        return false;
-//        return (Data.getReference().getHighest(order.getCreationTime(), new Date(), order.getSecurity().getISIN()) >= order.getPrice());
+//        System.out.println("Limit " + order.getPrice());
+//        System.out.println("Low " + Data.getReference().getLowest(order.getCreationTime(), new Date(), order.getSecurity().getISIN()));
+//        System.out.println("Track " + (order.getPrice() + Data.getReference().getLowest(order.getCreationTime(), new Date(), order.getSecurity().getISIN())));
+//        System.out.println("Current " + latestQuote.getPrice());
+
+        return (latestQuote.getPrice() >= (order.getPrice() + Data.getReference().getLowest(order.getCreationTime(), new Date(), order.getSecurity().getISIN())));
     }
 
 }

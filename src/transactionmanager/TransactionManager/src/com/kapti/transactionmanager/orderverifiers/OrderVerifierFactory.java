@@ -54,6 +54,12 @@ public class OrderVerifierFactory {
                 return new StopLossSell();
             case BRACKET_LIMIT_BUY:
                 return new BracketLimitBuy();
+            case BRACKET_LIMIT_SELL:
+                return new BracketLimitBuy();
+            case TRAILING_STOP_BUY:
+                return new TrailingStopBuy();
+            case TRAILING_STOP_SELL:
+                return new TrailingStopSell();
             default:
                 return null;
         }
