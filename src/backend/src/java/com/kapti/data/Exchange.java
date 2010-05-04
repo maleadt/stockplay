@@ -1,7 +1,4 @@
 /*
- * Exchange.java
- * StockPlay - Beursklasse
- *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
  *
@@ -30,6 +27,15 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 
+/**
+ * \brief   Basisobject voor beurs-gerelateerde data
+ *
+ * Deze klasse wordt gebruikt om alle beurs-gerelateerde data te verpakken
+ * in een object dat dan verder intern gebruikt wordt binnen de backend. Het
+ * biedt ook de nodige functionaliteit om zichzelf terug te converteren naar
+ * een object dat over XML-RPC verstuurd kan worden, of om net zichzelf te
+ * construeren of aan te passen aan de hand van dergelijke data.
+ */
 public class Exchange implements Serializable  {
     //
     // Member data

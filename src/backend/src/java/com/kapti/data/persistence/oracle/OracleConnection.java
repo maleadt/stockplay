@@ -1,7 +1,4 @@
 /*
- * OracleConnectionDAO.java
- * StockPlay - Verbinding met de Oracle database
- *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
  *

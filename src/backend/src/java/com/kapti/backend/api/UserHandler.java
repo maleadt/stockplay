@@ -1,7 +1,4 @@
 /*
- * UserHandler.java
- * StockPlay - Handler van de User klasse.
- *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
  *

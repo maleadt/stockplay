@@ -1,7 +1,4 @@
 /*
- * StockPlayDAOFactory.java
- * StockPlay - Abastracte Data access object laag fabriek
- *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
  *

@@ -1,7 +1,4 @@
 /*
- * DBException.java
- * StockPlay - Database fout
- *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
  *

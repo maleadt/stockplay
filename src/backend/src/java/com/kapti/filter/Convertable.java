@@ -1,7 +1,4 @@
 /*
- * Convertable.java
- * StockPlay - Interface voor converteerbare eenheid.
- *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
  *

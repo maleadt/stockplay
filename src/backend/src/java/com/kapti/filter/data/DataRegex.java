@@ -1,7 +1,4 @@
 /*
- * DataRegex.java
- * StockPlay - Regular expression object.
- *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
  *

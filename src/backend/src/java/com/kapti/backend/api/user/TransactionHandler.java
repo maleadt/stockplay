@@ -1,7 +1,4 @@
 /*
- * TransactionHandler.java
- * StockPlay - Handler van de User.Transaction subklasse.
- *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
  *
@@ -34,6 +31,7 @@ import java.util.Collection;
 import java.util.Hashtable;
 import java.util.TimeZone;
 import java.util.Vector;
+
 /**
  * \brief   Handler van de User.Transaction subklasse.
  *

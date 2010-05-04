@@ -1,7 +1,4 @@
 /*
- * DataStringConverter.java
- * StockPlay - Filter converter voor datum dataobject.
- *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
  *

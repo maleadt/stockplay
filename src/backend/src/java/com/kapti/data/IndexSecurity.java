@@ -1,7 +1,4 @@
 /*
- * IndexSecurity.java
- * StockPlay - Klasse die een index met een effect koppelt
- *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
  *
@@ -30,6 +27,16 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 
+/**
+ * \brief   Basisobject voor koppeling tussen indexen en aandelen
+ *
+ * Deze klasse wordt gebruikt om de koppeling tussen index en aandelen
+ * te modelleren. Deze object wordt dan intern steeds gebruikt om die koppeling
+ * voor te stellen, en linkt via unieke sleutels naar de objecten in kwestie. Het
+ * biedt ook de nodige functionaliteit om zichzelf terug te converteren naar
+ * een object dat over XML-RPC verstuurd kan worden, of om net zichzelf te
+ * construeren of aan te passen aan de hand van dergelijke data.
+ */
 public class IndexSecurity implements Serializable {
     //
     // Member data

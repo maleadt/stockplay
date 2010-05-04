@@ -1,7 +1,4 @@
 /*
- * User.java
- * StockPlay - Gebruikersklasse
- *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
  *
@@ -35,6 +32,15 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * \brief   Basisobject voor gebruiker-gerelateerde data
+ *
+ * Deze klasse wordt gebruikt om gebruiker-gerelateerde data te verpakken
+ * in een object dat dan verder intern gebruikt wordt binnen de backend. Het
+ * biedt ook de nodige functionaliteit om zichzelf terug te converteren naar
+ * een object dat over XML-RPC verstuurd kan worden, of om net zichzelf te
+ * construeren of aan te passen aan de hand van dergelijke data.
+ */
 public class User implements Serializable {
     //
     // Member data

@@ -1,7 +1,4 @@
 /*
- * UserSecurityDAO.java
- * StockPlay - Abastracte Data access object laag voor de koppeling van de gebruikers en de effecten
- *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
  *

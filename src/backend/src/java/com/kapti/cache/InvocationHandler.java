@@ -1,6 +1,20 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (c) 2010 StockPlay development team
+ * All rights reserved.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 package com.kapti.cache;
 
@@ -13,8 +27,15 @@ import net.sf.cache4j.CacheException;
 import org.apache.log4j.Logger;
 
 /**
+ * \brief   InvocationHandler voor objecten beheerd door de caching proxy
  *
- * @author tim
+ * Deze klasse is 1 van de belangrijke pijlers bij het oproepen van een methode
+ * op een object dat geregistreert is bij de proxy cache. Daarbij zal eerst
+ * de cache geraadpleegd worden, waarna eventueel toch een waarde opgevraagd
+ * wordt aan het effectieve object. Die functionaliteit zit vervat in de
+ * invoke() methode van deze klasse, en wordt opgeroepen door het proxyobject,
+ * dat voor de gebruiker als vervanging dient voor het originele object en zo
+ * transparant in gebruik is.
  */
 public class InvocationHandler implements java.lang.reflect.InvocationHandler {
     private static Logger mLogger = Logger.getLogger(InvocationHandler.class);

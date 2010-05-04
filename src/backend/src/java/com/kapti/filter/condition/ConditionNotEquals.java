@@ -1,7 +1,4 @@
 /*
- * ConditionNot.java
- * StockPlay - Verschillend van conditie.
- *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
  *

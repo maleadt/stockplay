@@ -1,7 +1,4 @@
 /*
- * ScraperHandler.java
- * StockPlay - Handler van de System.Scraper subklasse.
- *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
  *

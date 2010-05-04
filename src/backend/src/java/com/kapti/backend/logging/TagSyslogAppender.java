@@ -1,9 +1,4 @@
-package com.kapti.backend.logging;
-
 /*
- * TagSyslogAppender.java
- * StockPlay - Uitbreiding van de SyslogAppender om tagging te ondersteunen.
- *
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -20,6 +15,7 @@ package com.kapti.backend.logging;
  * limitations under the License.
  */
 
+package com.kapti.backend.logging;
 
 import org.apache.log4j.AppenderSkeleton;
 import org.apache.log4j.Layout;
@@ -36,7 +32,13 @@ import java.net.UnknownHostException;
 // Contributors: Yves Bossel <ybossel@opengets.cl>
 //               Christopher Taylor <cstaylor@pacbell.net>
 /**
- * Use SyslogAppender to send log messages to a remote syslog daemon.
+ * \brief   Alternatieve syslogappender met ondersteuning voor multiline messages.
+ *
+ * Deze appender is een alternatief voor de standaard SyslogAppender, die
+ * ook intelligent omgaat met multiline berichten (zoals een Java stacktrace).
+ * De standaard appender prepend immers enkel de eerste lijn van het bericht
+ * met de syslogtag, terwijl dit voor elke lijn van het bericht zou moeten
+ * gebeuren.
  *
  * @author Ceki G&uuml;lc&uuml;
  * @author Anders Kristensen

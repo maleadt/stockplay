@@ -1,7 +1,4 @@
 /*
- * TransactionDAO.java
- * StockPlay - Abastracte Data access object laag voor e transacties
- *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
  *

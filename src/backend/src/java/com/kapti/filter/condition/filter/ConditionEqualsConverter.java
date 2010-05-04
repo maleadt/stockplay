@@ -1,7 +1,4 @@
 /*
- * ConditionEqualsConverter.java
- * StockPlay - Filter converter voor een gelijkheids-conditie.
- *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
  *

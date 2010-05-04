@@ -1,7 +1,4 @@
 /*
- * Data.java
- * StockPlay - Conditie-interface.
- *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
  *

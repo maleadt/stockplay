@@ -1,7 +1,4 @@
 /*
- * Node.java
- * StockPlay - Node-object voor DOT output.
- *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
  *

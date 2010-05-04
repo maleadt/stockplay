@@ -1,7 +1,4 @@
 /*
- * InternalException.java
- * StockPlay - Internal Exception
- *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
  *

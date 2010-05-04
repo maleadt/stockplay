@@ -1,7 +1,4 @@
 /*
- * Servlet.java
- * StockPlay - XML-RPC servletimplementatie.
- *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
  *
@@ -29,9 +26,6 @@ import java.net.URL;
 import java.util.Date;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.server.AbstractReflectiveHandlerMapping.AuthenticationHandler;

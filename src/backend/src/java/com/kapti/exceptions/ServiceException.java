@@ -1,7 +1,4 @@
 /*
- * ServiceException.java
- * StockPlay - Service bezwaren
- *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
  *

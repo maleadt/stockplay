@@ -1,7 +1,4 @@
 /*
- * ConditionNotLikeConverter.java
- * StockPlay - SQL converter voor een gelijkheids-conditie.
- *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
  *

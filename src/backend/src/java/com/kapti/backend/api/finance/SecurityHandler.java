@@ -1,7 +1,4 @@
 /*
- * SecurityHandler.java
- * StockPlay - Handler van de Finance.Security subklasse.
- *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
  *

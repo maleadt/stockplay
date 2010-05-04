@@ -1,7 +1,4 @@
 /*
- * BackendHandler.java
- * StockPlay - Handler van de System.Backend subklasse.
- *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
  *

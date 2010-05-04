@@ -1,7 +1,4 @@
 /*
- * FilterException.java
- * StockPlay - Fout met de filter
- *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
  *

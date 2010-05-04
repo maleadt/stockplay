@@ -1,7 +1,4 @@
 /*
- * OrderStatus.java
- * StockPlay - Mogelijke order statussen
- *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
  *
@@ -24,6 +21,9 @@ package com.kapti.data;
 
 import java.io.Serializable;
 
+/**
+ * \brief   Enumeratietype dat de status van een order voorstelt
+ */
 public enum OrderStatus implements Serializable {
     ACCEPTED,
     EXECUTED,

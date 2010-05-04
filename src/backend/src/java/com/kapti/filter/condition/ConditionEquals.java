@@ -1,7 +1,4 @@
 /*
- * ConditionEquals.java
- * StockPlay - Gelijkheids-conditie.
- *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
  *

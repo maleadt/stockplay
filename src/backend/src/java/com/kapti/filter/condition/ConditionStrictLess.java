@@ -1,7 +1,4 @@
 /*
- * ConditionLessThanOrEqual.java
- * StockPlay - Kleiner dan conditie.
- *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
  *

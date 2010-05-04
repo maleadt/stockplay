@@ -1,7 +1,4 @@
 /*
- * StockPlayDAO.java
- * StockPlay - Abastracte Data access object laag interface
- *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
  *

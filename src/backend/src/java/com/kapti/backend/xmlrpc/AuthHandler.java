@@ -1,7 +1,4 @@
 /*
- * AuthHandler.java
- * StockPlay - Authentication handler.
- *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
  *
@@ -27,8 +24,14 @@ import org.apache.xmlrpc.common.XmlRpcHttpRequestConfig;
 import org.apache.xmlrpc.server.AbstractReflectiveHandlerMapping.AuthenticationHandler;
 
 /**
+ * \brief   Authenticatie-module voor de XML-RPC server.
  *
- * @author tim
+ * Deze module biedt de nodige functionaliteit om verschillende gebruikers
+ * toe te laten op eenzelfde XML-RPC servlet. Daarbij vraagt de server aan
+ * deze AuthHandler of een bepaalde user/password combinatie klopt (en de
+ * gebruiker de correcte rechten heeft om de servlet te benaderen), en gebruikt
+ * de return value van die isAuthorized aanroep om toegang tot de servlet
+ * toe te staan of eventueel te blokkeren.
  */
 public class AuthHandler implements AuthenticationHandler {
     //

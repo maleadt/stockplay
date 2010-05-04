@@ -1,6 +1,20 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (c) 2010 StockPlay development team
+ * All rights reserved.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 package com.kapti.cache;
 
@@ -18,8 +32,15 @@ import net.sf.cache4j.CacheFactory;
 import org.apache.log4j.Logger;
 
 /**
+ * \brief   Cache manager die de cache performantie verhoogt door selectief te refreshen
  *
- * @author tim
+ * Om de performantie van de domme cache (flawed by design, aangezien de backend
+ * geen weet heeft van de selectiecriteria van het object -- zie het verslag)
+ * toch te verhogen, wordt er een aparte entity gebruikt (deze klasse) die zal
+ * inhaken in de Proxy en bijhouden welke queries het meest afgevuurd worden.
+ * Gebaseerd op deze informatie zal wanneer de backend idle is, selectief
+ * nieuwe queries afgevuurd worden waardoor de cache meer relevante data bevat
+ * en de delay voor de eindgebruiker hopelijk geminimaliseerd wordt.
  */
 public class Manager extends TimerTask {
     //
@@ -180,7 +201,7 @@ public class Manager extends TimerTask {
             }
         }
         if (tRefreshCount > 0) {
-            mLogger.debug("refreshed " + tRefreshCount + " cache entrie while the backend was idle");
+            mLogger.debug("refreshed " + tRefreshCount + " cache entries while the backend was idle");
         }
     }
 

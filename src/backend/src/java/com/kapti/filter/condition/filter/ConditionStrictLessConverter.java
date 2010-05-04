@@ -1,7 +1,4 @@
 /*
- * ConditionLessThanConverter.java
- * StockPlay - Filter converter voor een kleiner dan conditie.
- *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
  *

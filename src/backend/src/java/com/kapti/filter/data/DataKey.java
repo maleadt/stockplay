@@ -1,7 +1,4 @@
 /*
- * DataKey.java
- * StockPlay - Key dataobject.
- *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
  *

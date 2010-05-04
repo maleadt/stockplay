@@ -1,7 +1,4 @@
 /*
- * StockPlayException.java
- * StockPlay - Algemene StockPlay foutmelding
- *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
  *

@@ -1,7 +1,4 @@
 /*
- * RelationAndConverter.java
- * StockPlay - Converter voor AND relatie.
- *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
  *

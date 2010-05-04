@@ -1,7 +1,4 @@
 /*
- * Element.java
- * StockPlay - Element-hulpobject voor DOT output.
- *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
  *

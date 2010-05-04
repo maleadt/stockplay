@@ -1,7 +1,4 @@
 /*
- * Token.java
- * StockPlay - Token voor tijdens string-filter conversie.
- *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
  *

@@ -1,7 +1,4 @@
 /*
- * OracleStockPlayDAO.java
- * StockPlay - Oracle implementatie van de Stockplay Data Objects laag
- *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
  *

@@ -1,7 +1,4 @@
 /*
- * ConditionNotLike.java
- * StockPlay - Like conditie.
- *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
  *
@@ -26,7 +23,6 @@ import com.kapti.exceptions.FilterException;
 import com.kapti.filter.Convertable;
 import com.kapti.filter.data.DataKey;
 import com.kapti.filter.data.DataRegex;
-import com.kapti.filter.data.DataString;
 import com.kapti.filter.graph.Edge;
 import com.kapti.filter.graph.Graph;
 import com.kapti.filter.graph.Node;

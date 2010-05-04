@@ -1,7 +1,4 @@
 /*
- * IndexSecurityDAO.java
- * StockPlay - Abastracte Data access object laag voor de effecten en index koppelingen
- *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
  *

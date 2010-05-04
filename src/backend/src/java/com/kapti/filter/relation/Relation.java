@@ -1,7 +1,4 @@
 /*
- * Relation.java
- * StockPlay - Relatie-interface.
- *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
  *

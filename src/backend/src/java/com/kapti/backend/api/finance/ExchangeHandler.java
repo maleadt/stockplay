@@ -1,7 +1,4 @@
 /*
- * ExchangeHandler.java
- * StockPlay - Handler van de Finance.Exchange subklasse.
- *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
  *

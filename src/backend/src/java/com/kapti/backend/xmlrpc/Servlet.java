@@ -1,7 +1,4 @@
 /*
- * Servlet.java
- * StockPlay - XML-RPC servletimplementatie.
- *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
  *

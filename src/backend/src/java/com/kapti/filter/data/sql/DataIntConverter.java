@@ -1,7 +1,4 @@
 /*
- * DataIntConverter.java
- * StockPlay - SQL converter voor integer dataobject.
- *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
  *

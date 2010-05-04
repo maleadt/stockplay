@@ -1,7 +1,4 @@
 /*
- * InvocationException.java
- * StockPlay - Niet gevonden
- *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
  *

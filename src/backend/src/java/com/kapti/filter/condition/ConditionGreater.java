@@ -1,7 +1,4 @@
 /*
- * ConditionGreaterThanOrEqual.java
- * StockPlay - Groter dan of gelijk aan conditie.
- *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
  *

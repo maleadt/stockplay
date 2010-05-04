@@ -1,7 +1,4 @@
 /*
- * Instruction.java
- * StockPlay - Overkoepelende klasse om dubbele code te vermijden
- *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
  *
@@ -24,6 +21,12 @@ package com.kapti.data;
 
 import java.io.Serializable;
 
+/**
+ * \brief   basisklasse voor instructie-gerelateerde data
+ *
+ * Deze klasse vormt de basis voor andere dataobjecten die een instructie vormen
+ * die pas in een later stadium moeten verwerkt worden.
+ */
 public abstract class Instruction implements Serializable {
     //
     // Member data

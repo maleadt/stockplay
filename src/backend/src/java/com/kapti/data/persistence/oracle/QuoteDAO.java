@@ -1,7 +1,4 @@
 /*
- * QuoteDAO.java
- * StockPlay - Abastracte Data access object laag voor de prijsnoteringen
- *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
  *

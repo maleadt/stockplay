@@ -1,7 +1,4 @@
 /*
- * PortfolioHandler.java
- * StockPlay - Handler van de User.Portfolio subklasse.
- *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
  *

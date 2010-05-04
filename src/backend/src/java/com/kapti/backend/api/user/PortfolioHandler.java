@@ -1,7 +1,4 @@
 /*
- * PortfolioHandler.java
- * StockPlay - Handler van de User.Portfolio subklasse.
- *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
  *
@@ -32,6 +29,7 @@ import com.kapti.filter.parsing.Parser;
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Vector;
+
 /**
  * \brief   Handler van de User.Portfolio subklasse.
  *

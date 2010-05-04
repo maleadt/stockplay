@@ -1,7 +1,4 @@
 /*
- * Parser.java
- * StockPlay - Parser voor string-filter conversie.
- *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
  *

@@ -1,7 +1,4 @@
 /*
- * InstructionType.java
- * StockPlay - Mogelijke soorten types
- *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
  *
@@ -24,6 +21,9 @@ package com.kapti.data;
 
 import java.io.Serializable;
 
+/**
+ * \brief   Enumeratietype dat het soort instructie voorstelt
+ */
 public enum InstructionType implements Serializable {
     BUY,
     SELL,

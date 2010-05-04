@@ -1,7 +1,4 @@
 /*
- * MethodClass.java
- * StockPlay - Hoofdklasse voor method handlers.
- *
  * Copyright (c) 2010 StockPlay development team
  * All rights reserved.
  *
