@@ -84,7 +84,7 @@ public class OrderDAO implements GenericDAO<Order, Integer> {
                     o.setCreationTime(rs.getTimestamp(7));
                     o.setExpirationTime(rs.getTimestamp(8));
                     o.setExecutionTime(rs.getTimestamp(9));
-
+                    o.setSecondairyLimit(rs.getDouble(10));
 
                     return o;
 
@@ -133,6 +133,7 @@ public class OrderDAO implements GenericDAO<Order, Integer> {
                     o.setCreationTime(rs.getTimestamp(8));
                     o.setExpirationTime(rs.getTimestamp(9));
                     o.setExecutionTime(rs.getTimestamp(10));
+                    o.setSecondairyLimit(rs.getDouble(11));
 
                     list.add(o);
                 }

@@ -49,7 +49,6 @@ public class Order extends Instruction implements Serializable {
             put(Fields.PRICE, Double.class);
             put(Fields.SECONDAIRYLIMIT, Double.class);
             put(Fields.TYPE, String.class); // Wordt ingelezen via InstructionType.valueOf
-
             put(Fields.STATUS, String.class); // Wordt ingelezen via OrderStatus.valueOf
             put(Fields.CREATIONTIME, Date.class);
             put(Fields.EXPIRATIONTIME, Date.class);
