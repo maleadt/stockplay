@@ -33,8 +33,9 @@ public class UserSecurityDAO implements GenericDAO<UserSecurity, UserSecurityPK>
     // Member data
     //
 
-    private static final String SELECT_USERSECURITY = "SELECT amount FROM user_securities WHERE userid = ? AND isin = ?";
-    private static final String SELECT_USERSECURITIES = "SELECT userid, isin, amount FROM user_securities";
+    private static final String SELECT_USERSECURITY = "SELECT amount FROM user_securities WHERE amount>0 AND userid = ? AND isin = ?";
+    private static final String SELECT_USERSECURITIES = "SELECT userid, isin, amount FROM user_securities WHERE amount>0";
+    private static final String SELECT_USERSECURITIES_FILTER = "SELECT userid, isin, amount FROM user_securities WHERE amount>0 AND ($filter)";
     private static final String INSERT_USERSECURITY = "INSERT INTO user_securties(userid, isin, amount) VALUES(?, ?, ?)";
     private static final String UPDATE_USERSECURITY = "UPDATE user_securities SET amount = ? WHERE userid = ? AND isin = ?";
     private static final String DELETE_USERSECURITY = "DELETE FROM user_securities WHERE userid = ? AND isin = ?";
@@ -102,10 +103,12 @@ public class UserSecurityDAO implements GenericDAO<UserSecurity, UserSecurityPK>
             try {
                 conn = OracleConnection.getConnection();
 
-                StringBuilder tQuery = new StringBuilder(SELECT_USERSECURITIES);
-                if (!iFilter.empty())
-                    tQuery.append(" WHERE " + (String)iFilter.compile("sql"));
-                stmt = conn.prepareStatement(tQuery.toString());
+                if (!iFilter.empty()) {
+                    stmt = conn.prepareStatement(SELECT_USERSECURITIES_FILTER.replace("$filter", (String) iFilter.compile("sql")));
+                }
+                else {
+                    stmt = conn.prepareStatement(SELECT_USERSECURITIES);
+                }
 
                 rs = stmt.executeQuery();
                 ArrayList<UserSecurity> list = new ArrayList<UserSecurity>();
