@@ -239,7 +239,7 @@ sub run {
 					unless ($plugin->isOpen($exchange, DateTime->now())) {
 						# Remove all quotes (so they can't be used as
 						# time reference the next day)
-						foreach my $quotable ((@{$exchange->securities}, @{$plugin->indexes})) {
+						foreach my $quotable ((@{$exchange->securities}, @{$exchange->indexes})) {
 							delete $quotable->{quote};
 						}
 						next;
