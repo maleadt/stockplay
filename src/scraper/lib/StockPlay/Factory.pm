@@ -341,7 +341,7 @@ sub getLatestQuotes {
 	my @quotes;
 	foreach my $s_quote (@s_quotes) {
 		my $quote = StockPlay::Quote->new(
-			security	=> $s_quote->{ISIN},
+			quotable	=> $s_quote->{ISIN},
 			time		=> DateTime::Format::ISO8601->parse_datetime($s_quote->{TIME}),
 			volume		=> $s_quote->{VOLUME},
 			price		=> $s_quote->{PRICE},
@@ -405,7 +405,7 @@ sub getQuotes {
 	my @quotes;
 	foreach my $s_quote (@s_quotes) {
 		my $quote = StockPlay::Quote->new(
-			security	=> $s_quote->{ISIN},
+			quotable	=> $s_quote->{ISIN},
 			time		=> DateTime::Format::ISO8601->parse_datetime($s_quote->{TIME}),
 			volume		=> $s_quote->{VOLUME},
 			price		=> $s_quote->{PRICE},
@@ -453,7 +453,7 @@ sub createQuotes {
 	my @s_quotes;
 	foreach my $quote (@quotes) {
 		my %s_quote = (
-			isin	=> RPC_STRING($quote->security),
+			isin	=> RPC_STRING($quote->quotable),
 			time	=> hack_datetime(RPC_DATETIME_ISO8601($quote->time)),
 			price	=> RPC_DOUBLE($quote->price || 0),
 			low	=> RPC_DOUBLE($quote->low || 0),

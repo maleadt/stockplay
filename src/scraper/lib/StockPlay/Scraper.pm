@@ -155,9 +155,9 @@ sub _build_plugins {
 				$self->logger->debug("fetching latest quotes");
 				my @quotes = $self->factory->getLatestQuotes(@{$exchange->securities});
 				foreach my $quote (@quotes) {
-					my $security = (grep { $_->isin eq $quote->security } @{$exchange->securities})[0];
-					if (defined $security) {
-						$security->quote($quote);
+					my $quotable = (grep { $_->isin eq $quote->quotable } @{$exchange->securities})[0];
+					if (defined $quotable) {
+						$quotable->quote($quote);
 					}				
 				}
 			}
@@ -207,7 +207,7 @@ sub BUILD {
 	my ($self) = @_;
 	
 	# Default configuration
-	$self->config->set_default('dump_folder', $ENV{'HOME'} . '/.stockplay/dumps');
+	$self->config->set_default('dump_folder', $ENV{'HOME'} . '/.stockplay/scraper/dumps');
 	
 	# Build lazy attributes which depend on passed values
 	$self->plugins;
@@ -229,7 +229,7 @@ sub run {
 	
 	while (1) {
 		# Process all plugins
-		my (@quotes, @securities);
+		my (@quotes, @quotables);
 		foreach my $plugin (@{$self->plugins}) {
 			my $pluginname = $plugin->infohash->{name};
 			$self->logger->info("processing plugin $pluginname");
@@ -239,56 +239,56 @@ sub run {
 					unless ($plugin->isOpen($exchange, DateTime->now())) {
 						# Remove all quotes (so they can't be used as
 						# time reference the next day)
-						foreach my $security (@{$exchange->securities}) {
-							delete $security->quote;
+						foreach my $quotable ((@{$exchange->securities}, @{$plugin->indexes})) {
+							delete $quotable->{quote};
 						}
 						next;
 					}
 					
 					# Check if the delay has already passed
-					my @securities_local;
-					foreach my $security (@{$exchange->securities}) {
+					my @quotables_local;
+					foreach my $quotable ((@{$exchange->securities}, @{$exchange->indexes})) {
 						# Don't update securities which error'd before			
-						if ($security->wait != 0) {
-							$security->wait($security->wait-1);
+						if ($quotable->wait != 0) {
+							$quotable->wait($quotable->wait-1);
 							next;
 						}
 
-						if (not $security->has_quote or (time-$security->quote->fetchtime) > $security->quote->delay) {
-							push(@securities_local, $security);
+						if (not $quotable->has_quote or (time-$quotable->quote->fetchtime) > $quotable->quote->delay) {
+							push(@quotables_local, $quotable);
 						}
 					}
 				
 					# Update them
-					$self->logger->debug("fetching " . scalar @securities_local . " quotes from " . $exchange->name . " (plugin " . $plugin->infohash->{name} . ")");
-					my @quotes_local = $plugin->getLatestQuotes($exchange, @securities_local);
+					$self->logger->debug("fetching " . scalar @quotables_local . " quotes from " . $exchange->name . " (plugin " . $plugin->infohash->{name} . ")");
+					my @quotes_local = $plugin->getLatestQuotes($exchange, @quotables_local);
 								
 					# Save them (if no errors && updated)
 					foreach my $quote (@quotes_local) {
-						my $security = (grep { $_->isin eq $quote->security } @securities_local)[0];
-						if (not defined $security) {
-							$self->logger->warn("received non-requested quote for security " . $quote->security);
+						my $quotable = (grep { $_->isin eq $quote->quotable } @quotables_local)[0];
+						if (not defined $quotable) {
+							$self->logger->warn("received non-requested quote for security " . $quote->quotable);
 							next;
 						}
 						
-						if (not $security->has_quote or DateTime->compare($security->quote->time, $quote->time) != 0) {
+						if (not $quotable->has_quote or DateTime->compare($quotable->quote->time, $quote->time) != 0) {
 							push (@quotes, $quote);
-							push(@securities, $security);
+							push(@quotables, $quotable);
 							
 							# All quotes in a single quote fetch have the same delay time, also if some of
 							# those aren't updated nearly that frequently. That's why we don't juse replace
 							# the delay with the new one, but divide it in half. Consistently, when a  quote
 							# didn't seem to be updated, the delay time is doubled.
-							if ($security->has_quote && $security->quote->fetchtime != 0) {
-								my $olddelay = (time-$security->quote->fetchtime);
+							if ($quotable->has_quote && $quotable->quote->fetchtime != 0) {
+								my $olddelay = (time-$quotable->quote->fetchtime);
 								if ($olddelay/2 > $quote->delay) {
 									$quote->delay($olddelay/1.5);
 								}
 							}
 						} else {
 							# Doubling of the delay (see big comment block above)
-							if ($security->quote->fetchtime != 0) {
-								$security->quote->delay((time-$security->quote->fetchtime) * 2);
+							if ($quotable->quote->fetchtime != 0) {
+								$quotable->quote->delay((time-$quotable->quote->fetchtime) * 2);
 							}
 						}
 					}
@@ -314,8 +314,8 @@ sub run {
 						$delay = $quote->delay - (time - $quote->fetchtime);
 					}
 					
-					my $security = (grep { $_->isin eq $quote->security } @securities)[0];
-					$security->quote($quote);
+					my $quotable = (grep { $_->isin eq $quote->quotable } @quotables)[0];
+					$quotable->quote($quote);
 				}
 			};
 			if ($@) {

@@ -294,12 +294,12 @@ L<StockPlay::Scraper::Source> package for documentation.
 =cut
 
 sub getLatestQuotes {
-	my ($self, $exchange, @securities) = @_;
+	my ($self, $exchange, @quotables) = @_;
 	
 	# Query-parameters invullen
 	my %parameters = (
 		reqtype		=> "simple",
-		quotes		=> join(';', map {$_->get('site_id')} @securities),
+		quotes		=> join(';', map {$_->get('site_id')} @quotables),
 		datetime	=> int(Time::HiRes::time*1000)
 	);
 
@@ -322,14 +322,14 @@ sub getLatestQuotes {
 	foreach my $site_id (keys %{$koersen->{stocks}}) {
 		my %data = %{$koersen->{stocks}->{$site_id}};
 		
-		my $security = (grep { $_->get('site_id') == $site_id } @securities)[0]
+		my $quotable = (grep { $_->get('site_id') == $site_id } @quotables)[0]
 			or die("Could not connect data to security");
 		eval {
 			my $datetime = _parse_datetime($exchange->get('time_zone'), $data{time});
 			die("could not parse time") unless $datetime;
 			push(@quotes, StockPlay::Quote->new({
 				time		=> $datetime,
-				security	=> $security->isin,
+				quotable	=> $quotable->isin,
 				price		=> $data{last},
 				bid		=> $data{bid},
 				ask		=> $data{ask},
@@ -340,13 +340,13 @@ sub getLatestQuotes {
 				delay		=> $koersen->{delay},
 				fetchtime	=> time
 			}));
-			$security->errors(0);
+			$quotable->errors(0);
 		};
 		if ($@) {
 			chomp $@;
-			$self->logger->warn("could not create a quote for " . $security->name . " ($@)");
-			$security->errors($security->errors + 1);
-			$security->wait($security->errors);
+			$self->logger->warn("could not create a quote for " . $quotable->name . " ($@)");
+			$quotable->errors($quotable->errors + 1);
+			$quotable->wait($quotable->errors);
 		}		
 	}
 	

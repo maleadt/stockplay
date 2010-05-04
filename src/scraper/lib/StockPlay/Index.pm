@@ -25,6 +25,7 @@ use Moose;
 
 # Consume roles
 with 'StockPlay::Object';
+with 'StockPlay::Quotable';
 
 # Write nicely
 use strict;

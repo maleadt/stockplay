@@ -26,6 +26,7 @@ use DateTime;
 
 # Consume roles
 with 'StockPlay::Object';
+with 'StockPlay::Quotable';
 
 # Write nicely
 use strict;
@@ -60,18 +61,6 @@ has 'name' => (
 	predicate	=> 'has_name'
 );
 
-
-has 'quote' => (
-	is		=> 'rw',
-	isa		=> 'StockPlay::Quote',
-	predicate	=> 'has_quote'
-);
-
-has [qw/errors wait/] => (
-	is		=> 'rw',
-	isa		=> 'Int',
-	default		=> 0
-);
 
 ################################################################################
 # Methods

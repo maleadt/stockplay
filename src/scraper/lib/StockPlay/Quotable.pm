@@ -3,25 +3,25 @@
 #
 
 # Package definition
-package StockPlay::Quote;
+package StockPlay::Quotable;
 
 =pod
 
 =head1 NAME
 
-StockPlay::Quote - StockPlay quote data object
+StockPlay::Security - StockPlay quotable role
 
 =head1 DESCRIPTION
 
-The C<StockPlay::Quote> package contains a container for all quote-related
-data.
+The C<StockPlay::Quotable> package contains a role for objects which can have
+a quote assigned to them.
 
 =head1 SYNPOSIS
 
 =cut
 
 # Packages
-use Moose;
+use Moose::Role;
 use DateTime;
 
 # Write nicely
@@ -39,37 +39,17 @@ use warnings;
 
 =cut
 
-has 'time' => (
-	is		=> 'ro',
-	isa		=> 'DateTime',
-	required	=> 1
-);
+#requires 'isin';
+# TODO: doesn't, work, though the docs say:
+# "Note that attribute accessors also count as methods for the purposes of satisfying the requirements of a role."
 
-# TODO: nodig? Zoja, mss ook in Security & Index
-has 'quotable' => (
-	is		=> 'ro',
-	isa		=> 'Str',
-	required	=> 1,
-);
-
-has [qw/price bid ask low high open/] => (
-	is		=> 'ro',
-	isa		=> 'Num'
-);
-
-has 'volume' => (
-	is		=> 'ro',
-	isa		=> 'Int',
-	required	=> 1
-);
-
-has 'delay' => (
+has 'quote' => (
 	is		=> 'rw',
-	isa		=> 'Num',
-	default		=> 60
+	isa		=> 'StockPlay::Quote',
+	predicate	=> 'has_quote'
 );
 
-has 'fetchtime' => (	# TODO: as private
+has [qw/errors wait/] => (
 	is		=> 'rw',
 	isa		=> 'Int',
 	default		=> 0
