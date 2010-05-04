@@ -70,7 +70,7 @@ namespace StockPlay.implXMLRPC
         {
             get
             {
-                return Math.Round((price - open) / price * 100, 2);
+                return Math.Round((price - open) / open * 100, 2);
             }
             
         }
