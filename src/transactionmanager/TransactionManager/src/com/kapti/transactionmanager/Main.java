@@ -22,7 +22,9 @@
 
 package com.kapti.transactionmanager;
 
+import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import org.apache.log4j.Logger;
 
 /**
@@ -41,12 +43,12 @@ public class Main {
     public static void main(String[] as) {
         logger.info("Starting Transaction Manager..");
 
-        CheckOrdersTask t = new CheckOrdersTask();
-        t.run();
+//        CheckOrdersTask t = new CheckOrdersTask();
+//        t.run();
 
-//        daemonService = Executors.newSingleThreadScheduledExecutor();
+        daemonService = Executors.newSingleThreadScheduledExecutor();
         //we voeren elke minuut een controle van de orders uit
-//        daemonService.scheduleAtFixedRate(new CheckOrdersTask(), 0, 5, TimeUnit.SECONDS);
+        daemonService.scheduleAtFixedRate(new CheckOrdersTask(), 0, 5, TimeUnit.SECONDS);
     }
 
 }
