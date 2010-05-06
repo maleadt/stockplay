@@ -8,7 +8,7 @@ import com.kapti.client.user.User;
  *
  * @author Dieter
  */
-public interface IIndivudualEvent {
+public interface IIndividualEvent {
 
     //Beschrijving van de gebeurtenis waarvoor punten worden uitgedeeld
     public String getDescription();

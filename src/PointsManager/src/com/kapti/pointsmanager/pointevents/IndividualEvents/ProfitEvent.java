@@ -14,7 +14,7 @@ import org.apache.log4j.Logger;
  *
  * @author Dieter
  */
-public class ProfitEvent implements IIndivudualEvent {
+public class ProfitEvent implements IIndividualEvent {
 
     private static Logger logger = Logger.getLogger(ProfitEvent.class);
 

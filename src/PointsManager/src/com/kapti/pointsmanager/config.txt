@@ -1,2 +1,5 @@
 [IndividualEvents]
+ProfitEvent
 [RankingEvents]
+CashRanking
+ProfitRanking
