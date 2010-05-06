@@ -47,8 +47,12 @@ public class FinanceFactory {
         return instance;
     }
 
-    private FinanceFactory() {
-    }
+    private FinanceFactory() {}
+
+    /*
+     * SECURITIES
+     */
+
     private HashMap<String, Security> securities = null;
 
     private void cacheSecurities() throws StockPlayException {
@@ -107,7 +111,39 @@ public class FinanceFactory {
 //            return null;
 //        }
     }
-    // <editor-fold>
+    
+    public boolean makePersistent(Security security) throws StockPlayException {
+        //enkel als er veranderingen zijn moeten ze worden opgeslagen!
+        if (security.isDirty()) {
+            XmlRpcClient client = XmlRpcClientFactory.getXmlRpcClient();
+
+            Vector v = new Vector();
+
+            //we maken de filter aan zodat enkel dit object wordt gewijzigd
+            v.add("isin EQUALS '" + security.getISIN() + "'");
+
+            //we voegen nu de argumenten aan het bericht toe
+
+            v.add(security.toStruct());
+            try{
+            Integer result = (Integer) client.execute("Finance.Security.Modify", v);
+            if (result == 1) {
+                security.setDirty(false);
+                securities.put(security.getISIN(), security);
+                return true;
+            }
+            }catch(XmlRpcException ex ){
+                throw new StockPlayException("Error while saving security", ex);
+            }
+            return false;
+
+        }
+        return true;
+    }
+
+    /*
+     * EXCHANGES
+     */
     private HashMap<String, Exchange> exchanges = null;
 
     private void cacheExchanges() throws StockPlayException {
@@ -164,41 +200,12 @@ public class FinanceFactory {
         return true;
     }
 
-    // </editor-fold>
-    public boolean makePersistent(Security security) throws StockPlayException {
-        //enkel als er veranderingen zijn moeten ze worden opgeslagen!
-        if (security.isDirty()) {
-            XmlRpcClient client = XmlRpcClientFactory.getXmlRpcClient();
-
-            Vector v = new Vector();
-
-            //we maken de filter aan zodat enkel dit object wordt gewijzigd
-            v.add("isin EQUALS '" + security.getISIN() + "'");
-
-            //we voegen nu de argumenten aan het bericht toe
-
-            v.add(security.toStruct());
-            try{
-            Integer result = (Integer) client.execute("Finance.Security.Modify", v);
-            if (result == 1) {
-                security.setDirty(false);
-                securities.put(security.getISIN(), security);
-                return true;
-            }
-            }catch(XmlRpcException ex ){
-                throw new StockPlayException("Error while saving security", ex);
-            }
-            return false;
-
-        }
-        return true;
-    }
+    /*
+     * QUOTES
+     */
 
     public Collection<Quote> getAllLatestQuotes() throws StockPlayException {
         return getLatestQuoteByFilter("");
-
-
-
     }
 
     private Collection<Quote> getLatestQuoteByFilter(String filter) throws StockPlayException {
@@ -229,5 +236,44 @@ public class FinanceFactory {
 
         return quote;
 
+    }
+    
+    /*
+     * INDEXEN
+     */
+    
+    private HashMap<String, Index> indexes = null;
+
+    public Index getIndexById(String isin) throws StockPlayException {
+
+        if(indexes == null)
+            cacheIndexes();
+        return indexes.get(isin);
+    }
+
+    public Quote getLatestQuoteFromIndex(Index index) throws StockPlayException {
+        Collection<Quote> quotes = getLatestQuoteByFilter("isin == '" + index.getISIN() + "'");
+        Iterator<Quote> it = quotes.iterator();
+
+        Quote quote = null;
+        if(it.hasNext())
+            quote = it.next();
+
+        return quote;
+    }
+
+    private void cacheIndexes() throws StockPlayException {
+        indexes = new HashMap<String, Index>();
+        try {
+            XmlRpcClient client = XmlRpcClientFactory.getXmlRpcClient();
+            Object[] obj = (Object[]) client.execute("Finance.Index.List", new Object[]{});
+
+            for (Object i : obj) {
+                Index index = Index.fromStruct((HashMap) i);
+                indexes.put(index.getISIN(), index);
+            }
+        } catch (XmlRpcException ex) {
+            throw new RequestError(ex);
+        }
     }
 }
