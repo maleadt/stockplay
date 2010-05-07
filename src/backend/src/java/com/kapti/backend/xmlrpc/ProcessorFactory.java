@@ -74,6 +74,7 @@ public class ProcessorFactory extends RequestSpecificProcessorFactoryFactory {
         MethodClass proc = (MethodClass) super.getRequestProcessor(iClass, iRequest);
         proc.init(mDAO);
         proc.setUser(SessionsHandler.getInstance().getUser(tSessionID));
+        proc.setRole(SessionsHandler.getInstance().getRole(tSessionID));
         return proc;
     }
 }

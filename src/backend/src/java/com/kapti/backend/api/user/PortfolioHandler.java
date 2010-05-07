@@ -42,22 +42,9 @@ public class PortfolioHandler extends MethodClass {
     //
     // Methodes
     //
-    
+
     public Vector<HashMap<String, Object>> List() throws StockPlayException {
-        // Get DAO reference
-        GenericDAO<com.kapti.data.UserSecurity, UserSecurityPK> tUserSecurityDAO = getDAO().getUserSecurityDAO();
-
-        // Fetch and convert all Indexs
-        Collection<UserSecurity> tUserSecurities = tUserSecurityDAO.findAll();
-        Vector<HashMap<String, Object>> oVector = new Vector<HashMap<String, Object>>();
-        for (com.kapti.data.UserSecurity tUserSecurity : tUserSecurities) {
-            oVector.add(tUserSecurity.toStruct(
-                    com.kapti.data.UserSecurity.Fields.AMOUNT,
-                    com.kapti.data.UserSecurity.Fields.ISIN,
-                    com.kapti.data.UserSecurity.Fields.USER));
-        }
-
-        return oVector;
+        return List("id == '" + getUser().getId() + "'i");
     }
 
     public Vector<HashMap<String, Object>> List(String iFilter) throws StockPlayException {

@@ -22,10 +22,12 @@ import com.kapti.exceptions.FilterException;
 import com.kapti.exceptions.StockPlayException;
 import com.kapti.filter.graph.Graph;
 import com.kapti.filter.condition.Condition;
+import com.kapti.filter.relation.Relation;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.Serializable;
+import java.lang.reflect.Constructor;
 import org.apache.log4j.Logger;
 
 /**
@@ -44,6 +46,19 @@ public class Filter implements Serializable {
     static Logger mLogger = Logger.getLogger(Filter.class);
 
     private Condition mRoot = null;
+
+
+    //
+    // Constructie
+    //
+
+    public Filter() {
+
+    }
+
+    public Filter(Condition iRoot) {
+        mRoot = iRoot;
+    }
 
 
     //
@@ -126,6 +141,21 @@ public class Filter implements Serializable {
      */
     public boolean empty() {
         return mRoot == null;
+    }
+
+    /**
+     * Voeg twee bomen samen.
+     *
+     * @return
+     */
+    public static Filter merge(Filter a, Filter b, Class<? extends Relation> r) throws FilterException {
+        try {
+            Constructor<? extends Condition> c = r.getConstructor(Condition.class, Condition.class);
+            return new Filter( c.newInstance(a, b));
+        }
+        catch (Exception e) {
+            throw new FilterException(FilterException.Type.MERGE_FAILURE, "construction of relation failed", e.getCause());
+        }
     }
 
     @Override

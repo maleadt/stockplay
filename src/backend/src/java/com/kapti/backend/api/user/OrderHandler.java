@@ -23,9 +23,11 @@ import com.kapti.backend.helpers.DateHelper;
 import com.kapti.data.Order;
 import com.kapti.data.OrderStatus;
 import com.kapti.data.persistence.GenericDAO;
+import com.kapti.exceptions.InvocationException;
 import com.kapti.exceptions.StockPlayException;
 import com.kapti.filter.Filter;
 import com.kapti.filter.parsing.Parser;
+import com.kapti.filter.relation.RelationAnd;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashMap;
@@ -46,8 +48,16 @@ public class OrderHandler extends MethodClass {
         // Get DAO reference
         GenericDAO<com.kapti.data.Order, Integer> orDAO = getDAO().getOrderDAO();
 
+        // Create a filter
         Parser parser = Parser.getInstance();
-        Filter filter = parser.parse(iFilter);
+        Filter filter = null;
+        Filter base = parser.parse(iFilter);
+        if (getRole().isBackendAdmin()) {   // TODO: isOrderAdmin
+            filter = base;
+        } else {
+            Filter user = parser.parse("id == '" + getUser().getId() + "'i");
+            filter = Filter.merge(base, user, RelationAnd.class);
+        }
 
         // Fetch and convert all orders
         Collection<com.kapti.data.Order> tOrders = orDAO.findByFilter(filter);
@@ -74,6 +84,17 @@ public class OrderHandler extends MethodClass {
         // Get DAO reference
         GenericDAO<com.kapti.data.Order, Integer> orDAO = getDAO().getOrderDAO();
 
+        // Restrict the input hash
+        if (! getRole().isBackendAdmin()) {   // TODO: isOrderAdmin
+            for (String tKey : iDetails.keySet()) {
+                if (tKey.equalsIgnoreCase(Order.Fields.USER.toString())) {
+                    throw new InvocationException(InvocationException.Type.BAD_REQUEST, "you cannot edit other user's orders");
+                }
+            }
+            iDetails.put(Order.Fields.USER.toString(), getUser().getId());
+        }
+
+
         // Instantiate a new order
         Order tOrder = Order.fromStruct(iDetails);
         tOrder.applyStruct(iDetails);
@@ -87,14 +108,22 @@ public class OrderHandler extends MethodClass {
         // Get DAO reference
         GenericDAO<com.kapti.data.Order, Integer> orDAO = getDAO().getOrderDAO();
 
+        // Create a filter
         Parser parser = Parser.getInstance();
-        Filter filter = parser.parse(iFilter);
+        Filter filter = null;
+        Filter base = parser.parse(iFilter);
+        if (getRole().isBackendAdmin()) {   // TODO: isOrderAdmin
+            filter = base;
+        } else {
+            Filter user = parser.parse("id == '" + getUser().getId() + "'i");
+            filter = Filter.merge(base, user, RelationAnd.class);
+        }
 
         // Get the exchanges we need to modify
         Collection<com.kapti.data.Order> tOrders = orDAO.findByFilter(filter);
 
-        boolean success = true;
         // Now apply the cancelation
+        boolean success = true;
         for (com.kapti.data.Order tOrder : tOrders) {
             tOrder.applyStruct(iDetails);
             if(!orDAO.update(tOrder))
@@ -107,8 +136,16 @@ public class OrderHandler extends MethodClass {
         // Get DAO reference
         GenericDAO<com.kapti.data.Order, Integer> orDAO = getDAO().getOrderDAO();
 
+        // Create a filter
         Parser parser = Parser.getInstance();
-        Filter filter = parser.parse(iFilter);
+        Filter filter = null;
+        Filter base = parser.parse(iFilter);
+        if (getRole().isBackendAdmin()) {   // TODO: isOrderAdmin
+            filter = base;
+        } else {
+            Filter user = parser.parse("id == '" + getUser().getId() + "'i");
+            filter = Filter.merge(base, user, RelationAnd.class);
+        }
 
         // Get the exchanges we need to modify
         Collection<com.kapti.data.Order> tOrders = orDAO.findByFilter(filter);

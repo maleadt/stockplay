@@ -61,7 +61,6 @@ public class SessionsHandler {
     }
 
     private static enum SecurityRoleField {
-
         NONE,
         LOGGEDIN,
         USER_REMOVE,
@@ -127,6 +126,10 @@ public class SessionsHandler {
         } else {
             return null;
         }
+    }
+
+    public Role getRole(String sessionid) {
+        return roles.get(getUser(sessionid).getRole());
     }
 
     //
