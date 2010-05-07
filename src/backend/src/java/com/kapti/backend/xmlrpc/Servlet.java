@@ -118,10 +118,6 @@ public class Servlet extends XmlRpcServlet {
             throw new XmlRpcException("Failed to load resource " + tUrl + ": " + e.getMessage(), e);
         }
 
-        // Authenticatie-handler registreren
-//        AuthenticationHandler tHandler = new AuthHandler(mDAO);
-//        oMapping.setAuthenticationHandler(tHandler);
-
         return oMapping;
     }
 

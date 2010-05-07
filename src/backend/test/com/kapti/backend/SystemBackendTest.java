@@ -79,7 +79,7 @@ public class SystemBackendTest {
             }
 
         } else {
-            throw new Exception("Expected Hashtable, but got an " + obj.getClass());
+            throw new Exception("Expected HashMap, but got an " + obj.getClass());
         }
     }
 }

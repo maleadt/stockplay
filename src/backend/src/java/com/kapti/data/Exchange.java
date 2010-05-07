@@ -24,7 +24,7 @@ import com.kapti.exceptions.ServiceException;
 import com.kapti.exceptions.StockPlayException;
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -114,8 +114,8 @@ public class Exchange implements Serializable  {
         return hash;
     }
 
-    public Hashtable<String, Object> toStruct(Fields... iFields) {
-        Hashtable<String, Object> oStruct = new Hashtable<String, Object>();
+    public HashMap<String, Object> toStruct(Fields... iFields) {
+        HashMap<String, Object> oStruct = new HashMap<String, Object>();
         for (Fields tField : iFields) {
             switch (tField) {
                 case SYMBOL:
@@ -134,7 +134,7 @@ public class Exchange implements Serializable  {
         return oStruct;
     }
 
-    public void applyStruct(Hashtable<String, Object> iStruct) throws StockPlayException {
+    public void applyStruct(HashMap<String, Object> iStruct) throws StockPlayException {
         for (String tKey : iStruct.keySet()) {
             Object tValue = iStruct.get(tKey);
             Fields tField = null;
@@ -160,9 +160,9 @@ public class Exchange implements Serializable  {
         }
     }
 
-    public static Exchange fromStruct(Hashtable<String, Object> iStruct) throws StockPlayException {
+    public static Exchange fromStruct(HashMap<String, Object> iStruct) throws StockPlayException {
         // Create case mapping
-        Hashtable<Fields, String> tStructMap = new Hashtable<Fields, String>();
+        HashMap<Fields, String> tStructMap = new HashMap<Fields, String>();
         for (String tKey : iStruct.keySet()) {
             Fields tField = null;
             try {

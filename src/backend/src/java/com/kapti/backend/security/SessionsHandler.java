@@ -31,7 +31,6 @@ import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.logging.Level;
 import org.apache.log4j.Logger;
 
 // TODO: documentatie
@@ -51,10 +50,12 @@ public class SessionsHandler {
     private Map<User.Role, Role> roles;
     private static SessionsHandler instance = new SessionsHandler();
     private Timer timer;
+    
 
     //
     // Construction
     //
+    
     public static SessionsHandler getInstance() {
         return instance;
     }
@@ -100,7 +101,6 @@ public class SessionsHandler {
         try {
             securityroles = new HashMap<String, SecurityRoleField>();
 
-
             java.util.Properties secProperties = new Properties();
             secProperties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("security.properties"));
 
@@ -114,31 +114,38 @@ public class SessionsHandler {
         } catch (IOException e) {
             logger.fatal("Unable to load resource security.properties", e);
         }
-
-
     }
 
 
-    public void registerSession(String sessionid, User user){
-
+    public void registerSession(String sessionid, User user) {
         sessions.put(sessionid, new Session(sessionid, user));
+    }
 
+    public User getUser(String sessionid) {
+        if (sessions.containsKey(sessionid)) {
+            return sessions.get(sessionid).getUser();
+        } else {
+            return null;
+        }
     }
 
     //
     // Methods
     //
+
+    public boolean containsDefinition(String methodName) {
+        return securityroles.containsKey(methodName);
+    }
+    
     public boolean verifyRequest(String sessionid, String methodName) {
         if (sessions.containsKey(sessionid)) {
             Session s = sessions.get(sessionid);
             s.recordActivity();
 
             User u = s.getUser();
-
-
             Role role = roles.get(u.getRole());
 
-            switch(securityroles.get(methodName)){
+            switch (securityroles.get(methodName)) {
                 case BACKEND_ADMIN:
                     return role.isBackendAdmin();
                 case DATABASE_ADMIN:
@@ -167,7 +174,12 @@ public class SessionsHandler {
 
             }
         } else {
-            return false;
+            switch (securityroles.get(methodName)) {
+                case NONE:
+                    return true;
+                default:
+                    return false;
+            }
         }
     }
 
@@ -181,7 +193,6 @@ public class SessionsHandler {
 
         @Override
         public void run() {
-
             Iterator<Entry<String, Session>> it = sessions.entrySet().iterator();
 
             while (it.hasNext()) {

@@ -27,7 +27,7 @@ import com.kapti.exceptions.StockPlayException;
 import com.kapti.filter.Filter;
 import com.kapti.filter.parsing.Parser;
 import java.util.Collection;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Vector;
 /**
  * \brief   Handler van de User.Portfolio subklasse.
@@ -42,13 +42,13 @@ public class IndexSecurityHandler extends MethodClass {
     // Methodes
     //
 
-    public Vector<Hashtable<String, Object>> List() throws StockPlayException {
+    public Vector<HashMap<String, Object>> List() throws StockPlayException {
         // Get DAO reference
         GenericDAO<com.kapti.data.IndexSecurity, IndexSecurityPK> tIndexSecurityDAO = getDAO().getIndexSecurityDAO();
 
         // Fetch and convert all IndexSecurities
         Collection<IndexSecurity> tIndexSecurities = tIndexSecurityDAO.findAll();
-        Vector<Hashtable<String, Object>> oVector = new Vector<Hashtable<String, Object>>();
+        Vector<HashMap<String, Object>> oVector = new Vector<HashMap<String, Object>>();
         for (com.kapti.data.IndexSecurity tIndexSecurity : tIndexSecurities) {
             oVector.add(tIndexSecurity.toStruct(
                     com.kapti.data.IndexSecurity.Fields.INDEX_ISIN,
@@ -58,7 +58,7 @@ public class IndexSecurityHandler extends MethodClass {
         return oVector;
     }
 
-    public Vector<Hashtable<String, Object>> List(String iFilter) throws StockPlayException {
+    public Vector<HashMap<String, Object>> List(String iFilter) throws StockPlayException {
         // Get DAO reference
         GenericDAO<com.kapti.data.IndexSecurity, IndexSecurityPK> tIndexSecurityDAO = getDAO().getIndexSecurityDAO();
 
@@ -67,7 +67,7 @@ public class IndexSecurityHandler extends MethodClass {
 
         // Fetch and convert all IndexSecurities
         Collection<IndexSecurity> tIndexSecurities = tIndexSecurityDAO.findByFilter(filter);
-        Vector<Hashtable<String, Object>> oVector = new Vector<Hashtable<String, Object>>();
+        Vector<HashMap<String, Object>> oVector = new Vector<HashMap<String, Object>>();
         for (com.kapti.data.IndexSecurity tIndexSecurity : tIndexSecurities) {
             oVector.add(tIndexSecurity.toStruct(
                     com.kapti.data.IndexSecurity.Fields.INDEX_ISIN,
@@ -77,7 +77,7 @@ public class IndexSecurityHandler extends MethodClass {
         return oVector;
     }
 
-    public int Create(Hashtable<String, Object> iDetails) throws StockPlayException {
+    public int Create(HashMap<String, Object> iDetails) throws StockPlayException {
         // Get DAO reference
         GenericDAO<com.kapti.data.IndexSecurity, IndexSecurityPK> tIndexSecurityDAO = getDAO().getIndexSecurityDAO();
 

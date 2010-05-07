@@ -6,7 +6,7 @@ package com.kapti.backend.api;
 
 import java.net.URL;
 import java.util.HashMap;
-import java.util.Hashtable;
+import java.util.HashMap;
 import junit.framework.Assert;
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
@@ -61,7 +61,7 @@ public class UserHandlerTest {
     public void createUser() throws XmlRpcException {
 
 
-        Hashtable<String, Object> hash = new Hashtable<String, Object>();
+        HashMap<String, Object> hash = new HashMap<String, Object>();
         hash.put(Fields.EMAIL.toString(), "test@blaat.com");
         hash.put(Fields.NICKNAME.toString(), "TESTUser2");
         hash.put(Fields.PASSWORD.toString(), "TESTPass");

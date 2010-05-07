@@ -26,7 +26,7 @@ import com.kapti.exceptions.StockPlayException;
 import com.kapti.filter.Filter;
 import com.kapti.filter.parsing.Parser;
 import java.util.Collection;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
@@ -95,7 +95,7 @@ public class SecurityHandler extends MethodClass {
         return oVector;
     }
 
-    public int Modify(String iFilter, Hashtable<String, Object> iDetails) throws StockPlayException {
+    public int Modify(String iFilter, HashMap<String, Object> iDetails) throws StockPlayException {
         // Get DAO reference
         GenericDAO<com.kapti.data.Security, String> tSecurityDAO = getDAO().getSecurityDAO();
 
@@ -118,7 +118,7 @@ public class SecurityHandler extends MethodClass {
         return tIndexs.size();
     }
 
-    public int Create(Hashtable<String, Object> iDetails) throws StockPlayException {
+    public int Create(HashMap<String, Object> iDetails) throws StockPlayException {
         // Get DAO reference
         GenericDAO<com.kapti.data.Security, String> tSecurityDAO = getDAO().getSecurityDAO();
 
@@ -342,7 +342,7 @@ public class SecurityHandler extends MethodClass {
         return tQuoteDAO.getLowest(filter);
     }
 
-    public int Update(Hashtable<String, Object> iDetails) throws StockPlayException {
+    public int Update(HashMap<String, Object> iDetails) throws StockPlayException {
         // Get DAO reference
         GenericQuoteDAO tQuoteDAO = getDAO().getQuoteDAO();
 
@@ -361,7 +361,7 @@ public class SecurityHandler extends MethodClass {
 
         List<Quote> tQuotes = new ArrayList<Quote>();
         for (HashMap<String, Object> iDetails : iQuotes) {
-            Hashtable<String, Object> iDetails2 = new Hashtable<String, Object>(iDetails);
+            HashMap<String, Object> iDetails2 = new HashMap<String, Object>(iDetails);
             
             // Instantiate a new quote
             Quote tQuote = Quote.fromStruct(iDetails2);

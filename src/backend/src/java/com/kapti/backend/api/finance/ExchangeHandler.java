@@ -26,7 +26,7 @@ import com.kapti.exceptions.StockPlayException;
 import com.kapti.filter.Filter;
 import com.kapti.filter.parsing.Parser;
 import java.util.Collection;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Vector;
 
 /**
@@ -42,13 +42,13 @@ public class ExchangeHandler extends MethodClass {
     // Methodes
     //
 
-    public Vector<Hashtable<String, Object>> List() throws StockPlayException {
+    public Vector<HashMap<String, Object>> List() throws StockPlayException {
         // Get DAO reference
         GenericDAO<com.kapti.data.Exchange, String> exDAO = getDAO().getExchangeDAO();
 
         // Fetch and convert all exchanges
         Collection<com.kapti.data.Exchange> tExchanges = exDAO.findAll();
-        Vector<Hashtable<String, Object>> oVector = new Vector<Hashtable<String, Object>>();
+        Vector<HashMap<String, Object>> oVector = new Vector<HashMap<String, Object>>();
         for (com.kapti.data.Exchange tExchange : tExchanges) {
             oVector.add(tExchange.toStruct(
                     com.kapti.data.Exchange.Fields.SYMBOL,
@@ -61,7 +61,7 @@ public class ExchangeHandler extends MethodClass {
 
 
 
-    public Vector<Hashtable<String, Object>> List(String iFilter) throws StockPlayException {
+    public Vector<HashMap<String, Object>> List(String iFilter) throws StockPlayException {
         // Get DAO reference
         GenericDAO<com.kapti.data.Exchange, String> exDAO = getDAO().getExchangeDAO();
 
@@ -70,7 +70,7 @@ public class ExchangeHandler extends MethodClass {
 
         // Fetch and convert all exchanges
         Collection<com.kapti.data.Exchange> tExchanges = exDAO.findByFilter(filter);
-        Vector<Hashtable<String, Object>> oVector = new Vector<Hashtable<String, Object>>();
+        Vector<HashMap<String, Object>> oVector = new Vector<HashMap<String, Object>>();
         for (com.kapti.data.Exchange tExchange : tExchanges) {
             oVector.add(tExchange.toStruct(
                     com.kapti.data.Exchange.Fields.SYMBOL,
@@ -81,7 +81,7 @@ public class ExchangeHandler extends MethodClass {
         return oVector;
     }
 
-    public int Modify(String iFilter, Hashtable<String, Object> iDetails) throws StockPlayException {
+    public int Modify(String iFilter, HashMap<String, Object> iDetails) throws StockPlayException {
         // Get DAO reference
         GenericDAO<com.kapti.data.Exchange, String> exDAO = getDAO().getExchangeDAO();
 
@@ -102,7 +102,7 @@ public class ExchangeHandler extends MethodClass {
         return 1;
     }
     
-    public int Create(Hashtable<String, Object> iDetails) throws StockPlayException {
+    public int Create(HashMap<String, Object> iDetails) throws StockPlayException {
         // Get DAO reference
         GenericDAO<com.kapti.data.Exchange, String> exDAO = getDAO().getExchangeDAO();
 

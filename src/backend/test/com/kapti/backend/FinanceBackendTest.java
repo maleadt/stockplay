@@ -119,7 +119,7 @@ public class FinanceBackendTest {
                 res.setName((String) hashObj.get("NAME"));
                 res.setLocation((String) hashObj.get("LOCATION"));
             } else {
-                throw new Exception("Expected Hashtable, but got an " + exch.getClass());
+                throw new Exception("Expected HashMap, but got an " + exch.getClass());
             }
         }
     }
@@ -139,7 +139,7 @@ public class FinanceBackendTest {
                 res.setName((String) hashObj.get("NAME"));
                 res.setLocation((String) hashObj.get("LOCATION"));
             } else {
-                throw new Exception("Expected Hashtable, but got an " + exch.getClass());
+                throw new Exception("Expected HashMap, but got an " + exch.getClass());
             }
         }
     }

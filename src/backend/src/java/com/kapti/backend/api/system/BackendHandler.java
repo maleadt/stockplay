@@ -23,7 +23,7 @@ import com.kapti.backend.xmlrpc.Servlet;
 import com.kapti.backend.xmlrpc.ServletServer;
 import com.kapti.cache.Manager;
 import com.kapti.exceptions.StockPlayException;
-import java.util.Hashtable;
+import java.util.HashMap;
 import org.apache.xmlrpc.XmlRpcException;
 
 /**
@@ -51,8 +51,8 @@ public class BackendHandler extends MethodClass {
         return true;
     }
 
-    public Hashtable<String, Object> Stats() throws StockPlayException {
-        Hashtable<String, Object> oStats = new Hashtable<String, Object>();
+    public HashMap<String, Object> Stats() throws StockPlayException {
+        HashMap<String, Object> oStats = new HashMap<String, Object>();
         oStats.put("users", 5);
         oStats.put("req", ServletServer.getRequests());
         oStats.put("uptime", Long.toString(Servlet.getUptime()));

@@ -28,7 +28,7 @@ import com.kapti.filter.Filter;
 import com.kapti.filter.parsing.Parser;
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.TimeZone;
 import java.util.Vector;
 
@@ -42,7 +42,7 @@ import java.util.Vector;
  */
 public class OrderHandler extends MethodClass {
 
-    public Vector<Hashtable<String, Object>> List(String iFilter) throws StockPlayException {
+    public Vector<HashMap<String, Object>> List(String iFilter) throws StockPlayException {
         // Get DAO reference
         GenericDAO<com.kapti.data.Order, Integer> orDAO = getDAO().getOrderDAO();
 
@@ -51,7 +51,7 @@ public class OrderHandler extends MethodClass {
 
         // Fetch and convert all orders
         Collection<com.kapti.data.Order> tOrders = orDAO.findByFilter(filter);
-        Vector<Hashtable<String, Object>> oVector = new Vector<Hashtable<String, Object>>();
+        Vector<HashMap<String, Object>> oVector = new Vector<HashMap<String, Object>>();
         for (com.kapti.data.Order tOrder : tOrders) {
             oVector.add(tOrder.toStruct(
                     com.kapti.data.Order.Fields.ID,
@@ -70,7 +70,7 @@ public class OrderHandler extends MethodClass {
         return oVector;
     }
 
-    public int Create(Hashtable<String, Object> iDetails) throws StockPlayException {
+    public int Create(HashMap<String, Object> iDetails) throws StockPlayException {
         // Get DAO reference
         GenericDAO<com.kapti.data.Order, Integer> orDAO = getDAO().getOrderDAO();
 
@@ -83,7 +83,7 @@ public class OrderHandler extends MethodClass {
 
     }
 
-    public boolean Modify(String iFilter, Hashtable<String, Object> iDetails) throws StockPlayException {
+    public boolean Modify(String iFilter, HashMap<String, Object> iDetails) throws StockPlayException {
         // Get DAO reference
         GenericDAO<com.kapti.data.Order, Integer> orDAO = getDAO().getOrderDAO();
 

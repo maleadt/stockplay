@@ -24,7 +24,7 @@ import com.kapti.exceptions.ServiceException;
 import com.kapti.exceptions.StockPlayException;
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -70,8 +70,8 @@ public class IndexSecurity implements Serializable {
         return pk;
     }
 
-    public Hashtable<String, Object> toStruct(Fields... iFields) {
-        Hashtable<String, Object> oStruct = new Hashtable<String, Object>();
+    public HashMap<String, Object> toStruct(Fields... iFields) {
+        HashMap<String, Object> oStruct = new HashMap<String, Object>();
         for (Fields tField : iFields) {
             switch (tField) {
                 case INDEX_ISIN:
@@ -85,14 +85,14 @@ public class IndexSecurity implements Serializable {
         return oStruct;
     }
 
-    public void applyStruct(Hashtable<String, Object> iStruct) throws StockPlayException {
+    public void applyStruct(HashMap<String, Object> iStruct) throws StockPlayException {
         if (iStruct.size() > 0)
             throw new InvocationException(InvocationException.Type.READ_ONLY_KEY, "No keys can be modified");
     }
 
-    public static IndexSecurity fromStruct(Hashtable<String, Object> iStruct) throws StockPlayException {
+    public static IndexSecurity fromStruct(HashMap<String, Object> iStruct) throws StockPlayException {
         // Create case mapping
-        Hashtable<Fields, String> tStructMap = new Hashtable<Fields, String>();
+        HashMap<Fields, String> tStructMap = new HashMap<Fields, String>();
         for (String tKey : iStruct.keySet()) {
             Fields tField = null;
             try {

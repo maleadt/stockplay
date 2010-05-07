@@ -20,7 +20,7 @@ package com.kapti.backend.api.system;
 
 import com.kapti.backend.api.MethodClass;
 import com.kapti.exceptions.StockPlayException;
-import java.util.Hashtable;
+import java.util.HashMap;
 
 /**
  * \brief   Handler van de System.Scraper subklasse.
@@ -47,7 +47,7 @@ public class ScraperHandler extends MethodClass {
         return true;
     }
     
-    public Hashtable<String, Object> Stats() throws StockPlayException {
+    public HashMap<String, Object> Stats() throws StockPlayException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }

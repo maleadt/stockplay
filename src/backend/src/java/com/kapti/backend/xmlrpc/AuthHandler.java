@@ -60,14 +60,30 @@ public class AuthHandler implements AuthenticationHandler {
 
     public boolean isAuthorized(XmlRpcRequest pRequest) {
         // Haal credentials op
-
-
         XmlRpcHttpRequestConfig config = (XmlRpcHttpRequestConfig) pRequest.getConfig();
-
         String sessionid = config.getBasicUserName();
+
+        // Genereer algemene functienaam
         String tMethod = pRequest.getMethodName();
 
+        // Genereer specifieke functienaam
+        StringBuilder tMethodFullBuilder = new StringBuilder(pRequest.getMethodName());
+        tMethodFullBuilder.append('(');
+        for (int i = 0; i < pRequest.getParameterCount(); i++) {
+            tMethodFullBuilder.append(pRequest.getParameter(i).getClass().getName());
+            if (i < pRequest.getParameterCount() - 1)
+                tMethodFullBuilder.append(',');
+        }
+        tMethodFullBuilder.append(')');
+        String tMethodFull = tMethodFullBuilder.toString();
 
-        return mSessions.verifyRequest(sessionid, tMethod);
+        // Controleer
+        if (mSessions.containsDefinition(tMethodFull)) {
+            return mSessions.verifyRequest(sessionid, tMethodFull);
+        } else if (mSessions.containsDefinition(tMethod)) {
+            return mSessions.verifyRequest(sessionid, tMethod);
+        } else {
+            return false;
+        }
     }
 }

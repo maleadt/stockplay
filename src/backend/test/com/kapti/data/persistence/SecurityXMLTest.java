@@ -4,7 +4,7 @@ import com.kapti.data.Exchange;
 import com.kapti.data.Security;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.Hashtable;
+import java.util.HashMap;
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
 import org.junit.After;
@@ -49,7 +49,7 @@ public class SecurityXMLTest {
     @Test
     public void createSecurity() throws Exception {
         //Dummygegevens genereren
-        Hashtable<String, Object> iDetails = new Hashtable<String, Object>();
+        HashMap<String, Object> iDetails = new HashMap<String, Object>();
         iDetails.put(Security.Fields.ISIN.name(), "BE123456789");
         iDetails.put(Security.Fields.SYMBOL.name(), "AAAA");
         iDetails.put(Security.Fields.NAME.name(), "JUnit testaandeel");
@@ -85,7 +85,7 @@ public class SecurityXMLTest {
 
     @Test
     public void modifySecurity() throws Exception {
-        Hashtable<String, Object> iDetails = new Hashtable<String, Object>();
+        HashMap<String, Object> iDetails = new HashMap<String, Object>();
 
         iDetails.put("NAME", "JUnit aangepast testaandeel");
         iDetails.put("VISIBLE", false);

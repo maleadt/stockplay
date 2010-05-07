@@ -20,7 +20,7 @@ package com.kapti.backend.api.system;
 
 import com.kapti.backend.api.MethodClass;
 import com.kapti.exceptions.StockPlayException;
-import java.util.Hashtable;
+import java.util.HashMap;
 
 /**
  * \brief   Handler van de System.Database subklasse.
@@ -39,8 +39,8 @@ public class DatabaseHandler extends MethodClass {
         return 1;
     }
 
-    public Hashtable<String, Object> Stats() throws StockPlayException {
-        Hashtable<String, Object> oStats = new Hashtable<String, Object>();
+    public HashMap<String, Object> Stats() throws StockPlayException {
+        HashMap<String, Object> oStats = new HashMap<String, Object>();
         oStats.put("rate", getDAO().getRate());
         oStats.put("uptime", Long.toString(getDAO().getUptime()));
         return oStats;

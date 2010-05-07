@@ -28,7 +28,7 @@ import com.kapti.filter.Filter;
 import com.kapti.filter.parsing.Parser;
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.TimeZone;
 import java.util.Vector;
 
@@ -41,7 +41,7 @@ import java.util.Vector;
  * op conforme wijze terug te sturen.
  */
 public class TransactionHandler extends MethodClass {
-    public Vector<Hashtable<String, Object>> List(String iFilter) throws StockPlayException {
+    public Vector<HashMap<String, Object>> List(String iFilter) throws StockPlayException {
         // Get DAO reference
         GenericDAO<Transaction, Integer> tTransactionDAO = getDAO().getTransactionDAO();
 
@@ -50,7 +50,7 @@ public class TransactionHandler extends MethodClass {
 
         // Fetch and convert all Indexs
         Collection<Transaction> tTransactions = tTransactionDAO.findByFilter(filter);
-        Vector<Hashtable<String, Object>> oVector = new Vector<Hashtable<String, Object>>();
+        Vector<HashMap<String, Object>> oVector = new Vector<HashMap<String, Object>>();
         for (Transaction tTransaction : tTransactions) {
             oVector.add(tTransaction.toStruct(
                     com.kapti.data.Transaction.Fields.AMOUNT,
@@ -65,7 +65,7 @@ public class TransactionHandler extends MethodClass {
         return oVector;        
     }
     
-        public int Create(Hashtable<String, Object> iDetails) throws StockPlayException {
+        public int Create(HashMap<String, Object> iDetails) throws StockPlayException {
         // Get DAO reference
         GenericDAO<com.kapti.data.Transaction, Integer> tTransactionDAO = getDAO().getTransactionDAO();
 
@@ -78,7 +78,7 @@ public class TransactionHandler extends MethodClass {
 
     }
 
-       public int Modify(String iFilter, Hashtable<String, Object> iDetails) throws StockPlayException {
+       public int Modify(String iFilter, HashMap<String, Object> iDetails) throws StockPlayException {
         // Get DAO reference
         GenericDAO<com.kapti.data.Transaction, Integer> tTransactionDAO = getDAO().getTransactionDAO();
 

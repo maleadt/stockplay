@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.security.MessageDigest;
 import java.util.HashMap;
 import java.util.Map;
@@ -243,13 +243,13 @@ public class User implements Serializable {
 
 
     /**
-     * Geeft het User-object in een generiek hashtable-object terug, zodat het geserialiseerd kan worden voor XML-RPC
+     * Geeft het User-object in een generiek HashMap-object terug, zodat het geserialiseerd kan worden voor XML-RPC
      * @param iFields De velden die moeten worden opgenomen in de struct (Opmerking: een paswoord kan niet worden opgevraagd!)
      * @return
      *
      */
-    public Hashtable<String, Object> toStruct(Fields... iFields) {
-        Hashtable<String, Object> oStruct = new Hashtable<String, Object>();
+    public HashMap<String, Object> toStruct(Fields... iFields) {
+        HashMap<String, Object> oStruct = new HashMap<String, Object>();
         for (Fields tField : iFields) {
             switch (tField) {
                 case ID:
@@ -294,7 +294,7 @@ public class User implements Serializable {
         return oStruct;
     }
 
-    public void applyStruct(Hashtable<String, Object> iStruct) throws StockPlayException {
+    public void applyStruct(HashMap<String, Object> iStruct) throws StockPlayException {
         for (String tKey : iStruct.keySet()) {
             Object tValue = iStruct.get(tKey);
             Fields tField = null;
@@ -346,9 +346,9 @@ public class User implements Serializable {
         }
     }
 
-    public static User fromStruct(Hashtable<String, Object> iStruct) throws StockPlayException {
+    public static User fromStruct(HashMap<String, Object> iStruct) throws StockPlayException {
         // Create case mapping
-        Hashtable<Fields, String> tStructMap = new Hashtable<Fields, String>();
+        HashMap<Fields, String> tStructMap = new HashMap<Fields, String>();
         for (String tKey : iStruct.keySet()) {
             Fields tField = null;
             try {

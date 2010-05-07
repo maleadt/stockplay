@@ -30,7 +30,8 @@ import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.TimeZone;
 import java.util.Vector;
@@ -56,7 +57,7 @@ public class UserHandler extends MethodClass {
         return 1;
     }
 
-    public int Create(Hashtable<String, Object> iDetails) throws StockPlayException {
+    public int Create(HashMap<String, Object> iDetails) throws StockPlayException {
         // Get DAO reference
         GenericDAO<com.kapti.data.User, Integer> tUserDAO = getDAO().getUserDAO();
 
@@ -68,10 +69,13 @@ public class UserHandler extends MethodClass {
         tUser.setRegdate( DateHelper.convertCalendar(Calendar.getInstance(), TimeZone.getTimeZone("GMT")).getTime());
 
         return tUserDAO.create(tUser);
-
     }
 
-    public Vector<Hashtable<String, Object>> Details(String iFilter) throws StockPlayException {
+    public Vector<HashMap<String, Object>> Details() throws StockPlayException {
+        return Details("id == '" + getUser().getId() + "" + "'s");
+    }
+
+    public Vector<HashMap<String, Object>> Details(String iFilter) throws StockPlayException {
         // Get DAO reference
         GenericDAO<com.kapti.data.User, Integer> userDAO = getDAO().getUserDAO();
 
@@ -80,7 +84,7 @@ public class UserHandler extends MethodClass {
 
         // Fetch and convert all Indexs
         Collection<com.kapti.data.User> tUsers = userDAO.findByFilter(filter);
-        Vector<Hashtable<String, Object>> oVector = new Vector<Hashtable<String, Object>>();
+        Vector<HashMap<String, Object>> oVector = new Vector<HashMap<String, Object>>();
         for (com.kapti.data.User tUser : tUsers) {
             oVector.add(tUser.toStruct(
                     com.kapti.data.User.Fields.ID,
@@ -99,7 +103,7 @@ public class UserHandler extends MethodClass {
         return oVector;
     }
 
-    public Vector<Hashtable<String, Object>> List(String iFilter) throws StockPlayException {
+    public Vector<HashMap<String, Object>> List(String iFilter) throws StockPlayException {
         // Get DAO reference
         GenericDAO<com.kapti.data.User, Integer> userDAO = getDAO().getUserDAO();
 
@@ -107,7 +111,7 @@ public class UserHandler extends MethodClass {
         Filter filter = parser.parse(iFilter);
         // Fetch and convert all Indexs
         Collection<com.kapti.data.User> tUsers = userDAO.findByFilter(filter);
-        Vector<Hashtable<String, Object>> oVector = new Vector<Hashtable<String, Object>>();
+        Vector<HashMap<String, Object>> oVector = new Vector<HashMap<String, Object>>();
         for (com.kapti.data.User tUser : tUsers) {
             oVector.add(tUser.toStruct(
                     com.kapti.data.User.Fields.ID,
@@ -126,7 +130,11 @@ public class UserHandler extends MethodClass {
         return oVector;
     }
 
-    public int Modify(String iFilter, Hashtable<String, Object> iDetails) throws StockPlayException {
+    public int Modify(HashMap<String, Object> iDetails) throws StockPlayException {
+        return Modify(("id == '" + getUser().getId() + "" + "'s"), iDetails);
+    }
+
+    public int Modify(String iFilter, HashMap<String, Object> iDetails) throws StockPlayException {
         // Get DAO reference
         GenericDAO<com.kapti.data.User, Integer> tUserDAO = getDAO().getUserDAO();
 
@@ -158,13 +166,12 @@ public class UserHandler extends MethodClass {
         return 1;
     }
 
-    // TODO - Deze methode is enkel om het inloggen te testen, deze moet nog
-    // vervangen worden door een deftige manier van authenticeren.
+    // Authenticatiemethode
     public String Validate(String nickname, String password) throws StockPlayException {
         GenericDAO<com.kapti.data.User, Integer> tUserDAO = getDAO().getUserDAO();
 
         Parser parser = Parser.getInstance();
-        Filter filter = parser.parse("NICKNAME EQUALS '" + nickname + "'");
+        Filter filter = parser.parse("nickname == '" + nickname + "'");
 
         Collection<com.kapti.data.User> tUsers = tUserDAO.findByFilter(filter);
         Iterator<User> uIterator = tUsers.iterator();
@@ -184,6 +191,5 @@ public class UserHandler extends MethodClass {
         }
 
         else return "";
-        //return user.checkPassword(password);
     }
 }

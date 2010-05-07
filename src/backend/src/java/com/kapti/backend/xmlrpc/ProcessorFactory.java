@@ -19,10 +19,12 @@
 package com.kapti.backend.xmlrpc;
 
 import com.kapti.backend.api.MethodClass;
+import com.kapti.backend.security.SessionsHandler;
 import com.kapti.data.persistence.StockPlayDAO;
 import org.apache.log4j.Logger;
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.XmlRpcRequest;
+import org.apache.xmlrpc.common.XmlRpcHttpRequestConfig;
 import org.apache.xmlrpc.server.RequestProcessorFactoryFactory.RequestSpecificProcessorFactoryFactory;
 
 /**
@@ -64,9 +66,14 @@ public class ProcessorFactory extends RequestSpecificProcessorFactoryFactory {
      */
     @Override
     protected Object getRequestProcessor(Class iClass, XmlRpcRequest iRequest) throws XmlRpcException {
+        // Haal credentials op
+        XmlRpcHttpRequestConfig config = (XmlRpcHttpRequestConfig) iRequest.getConfig();
+        String tSessionID = config.getBasicUserName();
+
         mLogger.debug("getting processor for method " + iRequest.getMethodName());
         MethodClass proc = (MethodClass) super.getRequestProcessor(iClass, iRequest);
         proc.init(mDAO);
+        proc.setUser(SessionsHandler.getInstance().getUser(tSessionID));
         return proc;
     }
 }

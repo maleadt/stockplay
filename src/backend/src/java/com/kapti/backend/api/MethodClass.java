@@ -18,6 +18,7 @@
  */
 package com.kapti.backend.api;
 
+import com.kapti.data.User;
 import com.kapti.data.persistence.StockPlayDAO;
 import org.apache.log4j.Logger;
 
@@ -41,6 +42,7 @@ public abstract class MethodClass {
     //
 
     private StockPlayDAO mDAO = null;
+    private User mUser = null;
 
     static Logger mLogger;
 
@@ -65,6 +67,14 @@ public abstract class MethodClass {
      */
     public void init(StockPlayDAO iDAO) {
         mDAO = iDAO;
+    }
+    
+    public void setUser(User iUser) {
+        mUser = iUser;
+    }
+
+    public User getUser() {
+        return mUser;
     }
     
     protected StockPlayDAO getDAO() {

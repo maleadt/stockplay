@@ -23,6 +23,7 @@ import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.XmlRpcRequest;
 import org.apache.xmlrpc.webserver.XmlRpcServletServer;
 import com.kapti.exceptions.InvocationException;
+import com.kapti.exceptions.ServiceException;
 import org.apache.log4j.Logger;
 
 /**
@@ -68,6 +69,8 @@ public class ServletServer extends XmlRpcServletServer {
                     throw new InvocationException(InvocationException.Type.BAD_REQUEST,iException.getCause());
                 else if (tMessage.contains("No such handler"))
                     throw new InvocationException(InvocationException.Type.NOT_FOUND,iException.getCause());
+                else if (tMessage.contains("Not authorized"))
+                    throw new ServiceException(ServiceException.Type.UNAUTHORIZED);
                 
                 // No exception subtype matched, throw an internal failure
                 throw new InternalException(InternalException.Type.INTERNAL_FAILURE, iException.getCause());

@@ -29,7 +29,7 @@ import com.kapti.filter.Filter;
 import com.kapti.filter.parsing.Parser;
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.TimeZone;
 import java.util.Vector;
 
@@ -43,7 +43,7 @@ import java.util.Vector;
  */
 public class PointsHandler extends MethodClass {
 
-    public Vector<Hashtable<String, Object>> List(String iFilter) throws StockPlayException {
+    public Vector<HashMap<String, Object>> List(String iFilter) throws StockPlayException {
         // Get DAO reference
         GenericDAO<PointsTransaction, PointsTransactionPK> tPointsTransactionDAO = getDAO().getPointsTransactionDAO();
 
@@ -52,7 +52,7 @@ public class PointsHandler extends MethodClass {
 
         // Fetch and convert all Indexs
         Collection<PointsTransaction> tTransactions = tPointsTransactionDAO.findByFilter(filter);
-        Vector<Hashtable<String, Object>> oVector = new Vector<Hashtable<String, Object>>();
+        Vector<HashMap<String, Object>> oVector = new Vector<HashMap<String, Object>>();
         for (PointsTransaction tTransaction : tTransactions) {
             oVector.add(tTransaction.toStruct(
                     Fields.USER,
@@ -64,7 +64,7 @@ public class PointsHandler extends MethodClass {
         return oVector;
     }
 
-    public int CreateTransaction(Hashtable<String, Object> iDetails) throws StockPlayException {
+    public int CreateTransaction(HashMap<String, Object> iDetails) throws StockPlayException {
         // Get DAO reference
         GenericDAO<PointsTransaction, PointsTransactionPK> tPointsTransactionDAO = getDAO().getPointsTransactionDAO();
 
@@ -77,7 +77,7 @@ public class PointsHandler extends MethodClass {
 
     }
 
-    public int DeleteTransaction(Hashtable<String, Object> iDetails) throws StockPlayException{
+    public int DeleteTransaction(HashMap<String, Object> iDetails) throws StockPlayException{
         // Get DAO reference
         GenericDAO<PointsTransaction, PointsTransactionPK> tPointsTransactionDAO = getDAO().getPointsTransactionDAO();
 
