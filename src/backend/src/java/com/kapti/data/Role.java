@@ -49,12 +49,8 @@ public class Role implements Serializable {
         SECURITY_MODIFY,
         SECURITY_REMOVE,
         SECURITY_UPDATE,
-        EXCHANGE_CREATE,
-        EXCHANGE_MODIFY,
-        EXCHANGE_REMOVE,
-        INDEX_CREATE,
-        INDEX_MODIFY,
-        INDEX_REMOVE,
+        TRANSACTION_ADMIN,
+        POINTS_ADMIN,
         BACKEND_ADMIN,
         DATABASE_ADMIN,
         SCRAPER_ADMIN
@@ -69,12 +65,8 @@ public class Role implements Serializable {
             put(Fields.SECURITY_MODIFY, Boolean.class);
             put(Fields.SECURITY_REMOVE, Boolean.class);
             put(Fields.SECURITY_UPDATE, Boolean.class);
-            put(Fields.EXCHANGE_CREATE, Boolean.class);
-            put(Fields.EXCHANGE_MODIFY, Boolean.class);
-            put(Fields.EXCHANGE_REMOVE, Boolean.class);
-            put(Fields.INDEX_CREATE, Boolean.class);
-            put(Fields.INDEX_MODIFY, Boolean.class);
-            put(Fields.INDEX_REMOVE, Boolean.class);
+            put(Fields.TRANSACTION_ADMIN, Boolean.class);
+            put(Fields.POINTS_ADMIN, Boolean.class);
             put(Fields.BACKEND_ADMIN, Boolean.class);
             put(Fields.DATABASE_ADMIN, Boolean.class);
             put(Fields.SCRAPER_ADMIN, Boolean.class);
@@ -87,12 +79,8 @@ public class Role implements Serializable {
     private boolean securityModify;
     private boolean securityRemove;
     private boolean securityUpdate;
-    private boolean exchangeCreate;
-    private boolean exchangeModify;
-    private boolean exchangeRemove;
-    private boolean indexCreate;
-    private boolean indexModify;
-    private boolean indexRemove;
+    private boolean transactionAdmin;
+    private boolean pointsAdmin;
     private boolean backendAdmin;
     private boolean databaseAdmin;
     private boolean scraperAdmin;
@@ -120,58 +108,12 @@ public class Role implements Serializable {
         this.databaseAdmin = databaseAdmin;
     }
 
-    public boolean isExchangeCreate() {
-        return exchangeCreate;
-    }
-
-    public void setExchangeCreate(boolean exchangeCreate) {
-        this.exchangeCreate = exchangeCreate;
-    }
-
-    public boolean isExchangeModify() {
-        return exchangeModify;
-    }
-
-    public void setExchangeModify(boolean exchangeModify) {
-        this.exchangeModify = exchangeModify;
-    }
-
-    public boolean isExchangeRemove() {
-        return exchangeRemove;
-    }
-
-    public void setExchangeRemove(boolean exchangeRemove) {
-        this.exchangeRemove = exchangeRemove;
-    }
 
     public int getId() {
         return id;
     }
 
-    public boolean isIndexCreate() {
-        return indexCreate;
-    }
-
-    public void setIndexCreate(boolean indexCreate) {
-        this.indexCreate = indexCreate;
-    }
-
-    public boolean isIndexModify() {
-        return indexModify;
-    }
-
-    public void setIndexModify(boolean indexModify) {
-        this.indexModify = indexModify;
-    }
-
-    public boolean isIndexRemove() {
-        return indexRemove;
-    }
-
-    public void setIndexRemove(boolean indexRemove) {
-        this.indexRemove = indexRemove;
-    }
-
+   
     public String getName() {
         return name;
     }
@@ -228,6 +170,25 @@ public class Role implements Serializable {
         this.userRemove = userRemove;
     }
 
+    public boolean isPointsAdmin() {
+        return pointsAdmin;
+    }
+
+    public void setPointsAdmin(boolean pointsAdmin) {
+        this.pointsAdmin = pointsAdmin;
+    }
+
+    public boolean isTransactionAdmin() {
+        return transactionAdmin;
+    }
+
+    public void setTransactionAdmin(boolean transactionAdmin) {
+        this.transactionAdmin = transactionAdmin;
+    }
+
+
+
+
     //
     // Methods
     //
@@ -256,23 +217,11 @@ public class Role implements Serializable {
                 case SECURITY_UPDATE:
                     oStruct.put(tField.name(), isSecurityUpdate());
                     break;
-                case EXCHANGE_CREATE:
-                    oStruct.put(tField.name(), isExchangeCreate());
+                case TRANSACTION_ADMIN:
+                    oStruct.put(tField.name(), isTransactionAdmin());
                     break;
-                case EXCHANGE_MODIFY:
-                    oStruct.put(tField.name(), isExchangeModify());
-                    break;
-                case EXCHANGE_REMOVE:
-                    oStruct.put(tField.name(), isExchangeRemove());
-                    break;
-                case INDEX_CREATE:
-                    oStruct.put(tField.name(), isIndexCreate());
-                    break;
-                case INDEX_MODIFY:
-                    oStruct.put(tField.name(), isIndexModify());
-                    break;
-                case INDEX_REMOVE:
-                    oStruct.put(tField.name(), isIndexRemove());
+                case POINTS_ADMIN:
+                    oStruct.put(tField.name(), isPointsAdmin());
                     break;
                 case BACKEND_ADMIN:
                     oStruct.put(tField.name(), isBackendAdmin());
@@ -321,23 +270,11 @@ public class Role implements Serializable {
                 case SECURITY_UPDATE:
                     setSecurityUpdate((Boolean)tValue);
                     break;
-                case EXCHANGE_CREATE:
-                    setExchangeCreate((Boolean)tValue);
+                case TRANSACTION_ADMIN:
+                    setTransactionAdmin((Boolean)tValue);
                     break;
-                case EXCHANGE_MODIFY:
-                    setExchangeModify((Boolean)tValue);
-                    break;
-                case EXCHANGE_REMOVE:
-                    setExchangeRemove((Boolean)tValue);
-                    break;
-                case INDEX_CREATE:
-                    setIndexCreate((Boolean)tValue);
-                    break;
-                case INDEX_MODIFY:
-                    setIndexModify((Boolean)tValue);
-                    break;
-                case INDEX_REMOVE:
-                    setIndexRemove((Boolean)tValue);
+                case POINTS_ADMIN:
+                    setPointsAdmin((Boolean)tValue);
                     break;
                 case BACKEND_ADMIN:
                     setBackendAdmin((Boolean)tValue);

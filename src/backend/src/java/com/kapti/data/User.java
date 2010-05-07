@@ -310,6 +310,7 @@ public class User implements Serializable {
             switch (tField) {
                 case ID:
                     setId((Integer) tValue);
+                    break;
                 case FIRSTNAME:
                     setFirstname((String) tValue);
                     break;
@@ -387,7 +388,10 @@ public class User implements Serializable {
         USER(0),
         ADMIN(1),
         SCRAPER(2),
-        AI(3);
+        TRANSACTIONMANAGER(3),
+        POINTSMANAGER(4),
+        AI(5);
+
         int id;
 
         private Role(int id) {

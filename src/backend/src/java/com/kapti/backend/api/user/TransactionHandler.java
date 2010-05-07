@@ -96,17 +96,17 @@ public class TransactionHandler extends MethodClass {
         return 1;
     }
 
-    public int Remove(String iFilter) throws StockPlayException {
-        // Get DAO reference
-        GenericDAO<com.kapti.data.Transaction, Integer> tTransactionDAO = getDAO().getTransactionDAO();
-
-        Parser parser = Parser.getInstance();
-        Filter filter = parser.parse(iFilter);
-
-      for (com.kapti.data.Transaction tTransaction : tTransactionDAO.findByFilter(filter)) {
-            tTransactionDAO.delete(tTransaction);
-        }
-
-        return 1;
-    }
+//    public int Remove(String iFilter) throws StockPlayException {
+//        // Get DAO reference
+//        GenericDAO<com.kapti.data.Transaction, Integer> tTransactionDAO = getDAO().getTransactionDAO();
+//
+//        Parser parser = Parser.getInstance();
+//        Filter filter = parser.parse(iFilter);
+//
+//      for (com.kapti.data.Transaction tTransaction : tTransactionDAO.findByFilter(filter)) {
+//            tTransactionDAO.delete(tTransaction);
+//        }
+//
+//        return 1;
+//    }
 }

@@ -31,11 +31,11 @@ public class RoleDAO implements GenericDAO<Role, Integer> {
     // Member data
     //
 
-    private static final String SELECT_ROLE = "SELECT name, user_remove, security_create, security_modify, security_remove, security_update, exchange_create, exchange_modify, exchange_remove, index_create, index_modify, index_remove, backend_admin, database_admin, scraper_admin FROM roles WHERE id = ?";
-    private static final String SELECT_ROLES = "SELECT id, name, user_remove, security_create, security_modify, security_remove, security_update, exchange_create, exchange_modify, exchange_remove, index_create, index_modify, index_remove, backend_admin, database_admin, scraper_admin FROM roles";
-    private static final String INSERT_ROLE = "INSERT INTO roles(id, name, user_remove, security_create, security_modify, security_remove, security_update, exchange_create, exchange_modify, exchange_remove, index_create, index_modify, index_remove, backend_admin, database_admin, scraper_admin)"
-            + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    private static final String UPDATE_ROLE = "UPDATE roles SET id= ?, name= ?, user_remove= ?, security_create= ?, security_modify= ?, security_remove= ?, security_update= ?, exchange_create= ?, exchange_modify= ?, exchange_remove= ?, index_create= ?, index_modify= ?, index_remove= ?, backend_admin= ?, database_admin= ?, scraper_admin = ? WHERE id = ?";
+    private static final String SELECT_ROLE = "SELECT name, user_remove, security_create, security_modify, security_remove, security_update, transaction_admin, points_admin, backend_admin, database_admin, scraper_admin FROM roles WHERE id = ?";
+    private static final String SELECT_ROLES = "SELECT id, name, user_remove, security_create, security_modify, security_remove, security_update, transaction_admin, points_admin, backend_admin, database_admin, scraper_admin FROM roles";
+    private static final String INSERT_ROLE = "INSERT INTO roles(id, name, user_remove, security_create, security_modify, security_remove, security_update, transaction_admin, points_admin, backend_admin, database_admin, scraper_admin)"
+            + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private static final String UPDATE_ROLE = "UPDATE roles SET id= ?, name= ?, user_remove= ?, security_create= ?, security_modify= ?, security_remove= ?, security_update= ?, transaction_admin = ?, points_admin = ?, backend_admin= ?, database_admin= ?, scraper_admin = ? WHERE id = ?";
     private static final String DELETE_ROLE = "DELETE FROM roles WHERE id = ?";
     //
     // Construction
@@ -72,12 +72,8 @@ public class RoleDAO implements GenericDAO<Role, Integer> {
                     tRole.setSecurityModify(rs.getBoolean("security_modify"));
                     tRole.setSecurityRemove(rs.getBoolean("security_remove"));
                     tRole.setSecurityUpdate(rs.getBoolean("security_update"));
-                    tRole.setExchangeCreate(rs.getBoolean("exchange_create"));
-                    tRole.setExchangeModify(rs.getBoolean("exchange_modify"));
-                    tRole.setExchangeRemove(rs.getBoolean("exchange_remove"));
-                    tRole.setIndexCreate(rs.getBoolean("index_create"));
-                    tRole.setIndexModify(rs.getBoolean("index_modify"));
-                    tRole.setIndexRemove(rs.getBoolean("index_remove"));
+                    tRole.setTransactionAdmin(rs.getBoolean("transaction_admin"));
+                    tRole.setPointsAdmin(rs.getBoolean("points_admin"));
                     tRole.setBackendAdmin(rs.getBoolean("backend_admin"));
                     tRole.setDatabaseAdmin(rs.getBoolean("database_admin"));
                     tRole.setScraperAdmin(rs.getBoolean("scraper_admin"));
@@ -127,16 +123,11 @@ public class RoleDAO implements GenericDAO<Role, Integer> {
                     tRole.setSecurityModify(rs.getBoolean("security_modify"));
                     tRole.setSecurityRemove(rs.getBoolean("security_remove"));
                     tRole.setSecurityUpdate(rs.getBoolean("security_update"));
-                    tRole.setExchangeCreate(rs.getBoolean("exchange_create"));
-                    tRole.setExchangeModify(rs.getBoolean("exchange_modify"));
-                    tRole.setExchangeRemove(rs.getBoolean("exchange_remove"));
-                    tRole.setIndexCreate(rs.getBoolean("index_create"));
-                    tRole.setIndexModify(rs.getBoolean("index_modify"));
-                    tRole.setIndexRemove(rs.getBoolean("index_remove"));
+                    tRole.setTransactionAdmin(rs.getBoolean("transaction_admin"));
+                    tRole.setPointsAdmin(rs.getBoolean("points_admin"));
                     tRole.setBackendAdmin(rs.getBoolean("backend_admin"));
                     tRole.setDatabaseAdmin(rs.getBoolean("database_admin"));
                     tRole.setScraperAdmin(rs.getBoolean("scraper_admin"));
-
 
                     list.add(tRole);
                 }
@@ -184,15 +175,11 @@ public class RoleDAO implements GenericDAO<Role, Integer> {
                 stmt.setBoolean(5, entity.isSecurityModify());
                 stmt.setBoolean(6, entity.isSecurityRemove());
                 stmt.setBoolean(7, entity.isSecurityUpdate());
-                stmt.setBoolean(8, entity.isExchangeCreate());
-                stmt.setBoolean(9, entity.isExchangeModify());
-                stmt.setBoolean(10, entity.isExchangeRemove());
-                stmt.setBoolean(11, entity.isIndexCreate());
-                stmt.setBoolean(12, entity.isIndexModify());
-                stmt.setBoolean(13, entity.isIndexRemove());
-                stmt.setBoolean(14, entity.isBackendAdmin());
-                stmt.setBoolean(15, entity.isDatabaseAdmin());
-                stmt.setBoolean(16, entity.isScraperAdmin());
+                stmt.setBoolean(8, entity.isTransactionAdmin());
+                stmt.setBoolean(9, entity.isPointsAdmin());
+                stmt.setBoolean(10, entity.isBackendAdmin());
+                stmt.setBoolean(11, entity.isDatabaseAdmin());
+                stmt.setBoolean(12, entity.isScraperAdmin());
                 stmt.setInt(1, entity.getId());
 
                 return stmt.executeUpdate();
@@ -237,16 +224,12 @@ public class RoleDAO implements GenericDAO<Role, Integer> {
                 stmt.setBoolean(4, entity.isSecurityModify());
                 stmt.setBoolean(5, entity.isSecurityRemove());
                 stmt.setBoolean(6, entity.isSecurityUpdate());
-                stmt.setBoolean(7, entity.isExchangeCreate());
-                stmt.setBoolean(8, entity.isExchangeModify());
-                stmt.setBoolean(9, entity.isExchangeRemove());
-                stmt.setBoolean(10, entity.isIndexCreate());
-                stmt.setBoolean(11, entity.isIndexModify());
-                stmt.setBoolean(12, entity.isIndexRemove());
-                stmt.setBoolean(13, entity.isBackendAdmin());
-                stmt.setBoolean(14, entity.isDatabaseAdmin());
-                stmt.setBoolean(15, entity.isScraperAdmin());
-                stmt.setInt(16, entity.getId());
+                stmt.setBoolean(7, entity.isTransactionAdmin());
+                stmt.setBoolean(8, entity.isPointsAdmin());
+                stmt.setBoolean(9, entity.isBackendAdmin());
+                stmt.setBoolean(10, entity.isDatabaseAdmin());
+                stmt.setBoolean(11, entity.isScraperAdmin());
+                stmt.setInt(12, entity.getId());
 
                 return stmt.executeUpdate() == 1;
 

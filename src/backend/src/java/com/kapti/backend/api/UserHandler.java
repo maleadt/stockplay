@@ -19,12 +19,15 @@
 package com.kapti.backend.api;
 
 import com.kapti.backend.helpers.DateHelper;
+import com.kapti.backend.security.SessionsHandler;
 import com.kapti.data.User;
 import com.kapti.data.persistence.GenericDAO;
 import com.kapti.exceptions.InvocationException;
 import com.kapti.exceptions.StockPlayException;
 import com.kapti.filter.Filter;
 import com.kapti.filter.parsing.Parser;
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Hashtable;
@@ -157,7 +160,7 @@ public class UserHandler extends MethodClass {
 
     // TODO - Deze methode is enkel om het inloggen te testen, deze moet nog
     // vervangen worden door een deftige manier van authenticeren.
-    public boolean Validate(String nickname, String password) throws StockPlayException {
+    public String Validate(String nickname, String password) throws StockPlayException {
         GenericDAO<com.kapti.data.User, Integer> tUserDAO = getDAO().getUserDAO();
 
         Parser parser = Parser.getInstance();
@@ -166,7 +169,21 @@ public class UserHandler extends MethodClass {
         Collection<com.kapti.data.User> tUsers = tUserDAO.findByFilter(filter);
         Iterator<User> uIterator = tUsers.iterator();
         User user = uIterator.next();
-        boolean resultaat = user.checkPassword(password);
-        return user.checkPassword(password);
+        if(user.checkPassword(password)){
+
+            //we generereren nu een sessie-id voor de gebruiker
+
+            java.security.SecureRandom random = new SecureRandom();
+            String sessionid =  new BigInteger(130,random).toString(32);
+
+
+            SessionsHandler.getInstance().registerSession(sessionid, user);
+
+            return sessionid;
+
+        }
+
+        else return "";
+        //return user.checkPassword(password);
     }
 }

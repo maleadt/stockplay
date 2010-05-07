@@ -18,6 +18,7 @@
  */
 package com.kapti.backend.xmlrpc;
 
+import com.kapti.backend.security.SessionsHandler;
 import com.kapti.data.persistence.StockPlayDAO;
 import org.apache.xmlrpc.XmlRpcRequest;
 import org.apache.xmlrpc.common.XmlRpcHttpRequestConfig;

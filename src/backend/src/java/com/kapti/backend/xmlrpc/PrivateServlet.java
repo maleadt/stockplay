@@ -18,6 +18,7 @@
  */
 package com.kapti.backend.xmlrpc;
 
+import com.kapti.backend.security.SessionsHandler;
 import com.kapti.data.persistence.StockPlayDAO;
 import com.kapti.data.persistence.StockPlayDAOFactory;
 import com.kapti.exceptions.StockPlayException;
