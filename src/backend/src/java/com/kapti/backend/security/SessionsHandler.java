@@ -50,17 +50,16 @@ public class SessionsHandler {
     private Map<User.Role, Role> roles;
     private static SessionsHandler instance = new SessionsHandler();
     private Timer timer;
-    
 
     //
     // Construction
     //
-    
     public static SessionsHandler getInstance() {
         return instance;
     }
 
     private static enum SecurityRoleField {
+
         NONE,
         LOGGEDIN,
         USER_REMOVE,
@@ -86,7 +85,7 @@ public class SessionsHandler {
             roles = new HashMap<User.Role, Role>();
             Collection<Role> rolesFromDB = StockPlayDAOFactory.getDAO().getRolesDAO().findAll();
 
-            for(Role r : rolesFromDB){
+            for (Role r : rolesFromDB) {
                 roles.put(User.Role.fromId(r.getId()), r);
             }
 
@@ -115,7 +114,6 @@ public class SessionsHandler {
         }
     }
 
-
     public void registerSession(String sessionid, User user) {
         sessions.put(sessionid, new Session(sessionid, user));
     }
@@ -129,17 +127,20 @@ public class SessionsHandler {
     }
 
     public Role getRole(String sessionid) {
-        return roles.get(getUser(sessionid).getRole());
+        if (sessionid != null && getUser(sessionid) != null) {
+            return roles.get(getUser(sessionid).getRole());
+        } else {
+            return null;
+        }
     }
 
     //
     // Methods
     //
-
     public boolean containsDefinition(String methodName) {
         return securityroles.containsKey(methodName);
     }
-    
+
     public boolean verifyRequest(String sessionid, String methodName) {
         if (sessions.containsKey(sessionid)) {
             Session s = sessions.get(sessionid);
