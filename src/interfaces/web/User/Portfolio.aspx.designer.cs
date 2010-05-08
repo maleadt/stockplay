@@ -40,6 +40,42 @@ namespace StockPlay.Web {
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl Price;
         
         /// <summary>
+        /// Literal1 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal Literal1;
+        
+        /// <summary>
+        /// SoortOrder control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal SoortOrder;
+        
+        /// <summary>
+        /// OrderType control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList OrderType;
+        
+        /// <summary>
+        /// lblAantal control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblAantal;
+        
+        /// <summary>
         /// txtAmount control.
         /// </summary>
         /// <remarks>
@@ -47,6 +83,15 @@ namespace StockPlay.Web {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtAmount;
+        
+        /// <summary>
+        /// lblStreep control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblStreep;
         
         /// <summary>
         /// txtTotalAmount control.
@@ -67,6 +112,15 @@ namespace StockPlay.Web {
         protected global::System.Web.UI.WebControls.RangeValidator txtAmountValidator;
         
         /// <summary>
+        /// lblVraagprijs control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblVraagprijs;
+        
+        /// <summary>
         /// txtPrice control.
         /// </summary>
         /// <remarks>
@@ -83,6 +137,60 @@ namespace StockPlay.Web {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RangeValidator txtPriceValidator;
+        
+        /// <summary>
+        /// lblOnderLimiet control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblOnderLimiet;
+        
+        /// <summary>
+        /// txtOnderLimiet control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtOnderLimiet;
+        
+        /// <summary>
+        /// lblBovenLimiet control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblBovenLimiet;
+        
+        /// <summary>
+        /// txtBovenLimiet control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtBovenLimiet;
+        
+        /// <summary>
+        /// lblBonuspunten control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblBonuspunten;
+        
+        /// <summary>
+        /// txtBonuspunten control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtBonuspunten;
         
         /// <summary>
         /// btnConfirm control.

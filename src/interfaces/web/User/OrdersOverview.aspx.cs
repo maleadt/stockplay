@@ -73,8 +73,10 @@ namespace StockPlay.Web
 	        ordersTable.Columns["Amount"].DataType = typeof(int);
 	        ordersTable.Columns.Add("Price");
 	        ordersTable.Columns["Price"].DataType = typeof(double);
-	        ordersTable.Columns.Add("Type");
-	        ordersTable.Columns["Type"].DataType = typeof(string);
+            ordersTable.Columns.Add("SecondairyLimit");
+            ordersTable.Columns["SecondairyLimit"].DataType = typeof(double);
+            ordersTable.Columns.Add("Type");
+            ordersTable.Columns["Type"].DataType = typeof(string);
 	        ordersTable.Columns.Add("Status");
 	        ordersTable.Columns["Status"].DataType = typeof(string);
 	
@@ -89,8 +91,9 @@ namespace StockPlay.Web
 	                    row[2] = securities[j].Name;
 	            row[3] = orders[i].Amount;
 	            row[4] = orders[i].Price;
-	            row[5] = orders[i].Type;
-	            row[6] = orders[i].Status;
+                row[5] = orders[i].SecondairyLimit;
+                row[6] = orders[i].Type;
+	            row[7] = orders[i].Status;
 	
 	            ordersTable.Rows.Add(row);
 	        }

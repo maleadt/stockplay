@@ -261,7 +261,10 @@ namespace StockPlay.implXMLRPC
                 string from = iFrom.Year + "-" + iFrom.Month + "-" + iFrom.Day + "T" + iFrom.Hour + ":" + iFrom.Minute + "Z";
                 string to = iTo.Year + "-" + iTo.Month + "-" + iTo.Day + "T" + iTo.Hour + ":" + iTo.Minute + "Z";
 
-                XmlRpcStruct[] query = publicSecurityHandler.Quotes("ISIN == '" + isin + "' && TIMESTAMP <= '" + to + "'d && TIMESTAMP > '" + from + "'d");
+//                XmlRpcStruct[] query = securityHandler.Quotes("ISIN == '" + isin + "' && TIMESTAMP <= '" + to + "'d && TIMESTAMP > '" + from + "'d");
+
+                XmlRpcStruct[] query = securityHandler.Quotes(iFrom, iTo, 10, "ISIN == '" + isin + "'");
+
                 foreach (XmlRpcStruct quote in query)
                     quotes.Add(new Quote(quote));
 
@@ -310,7 +313,30 @@ namespace StockPlay.implXMLRPC
                 return DateTime.MinValue;
             }
         }
-        
+
+        public List<DateTime> GetRange(string isin)
+        {
+            List<DateTime> ranges = new List<DateTime>();
+
+            try
+            {
+                sysLog.Info("Request: 'GetFirstTime' - Requested Security: '" + isin + "'");
+
+                DateTime[] dictionary = securityHandler.getRange(isin);
+
+                foreach (DateTime range in dictionary)
+                    ranges.Add(range);
+
+                return ranges;
+            }
+            catch (Exception e)
+            {
+                sysLog.Error("Error when requesting GetFirstTime", e);
+
+                return null;
+            }
+        }        
+
         /**
          * EXCHANGE
          */
@@ -509,7 +535,7 @@ namespace StockPlay.implXMLRPC
          * ORDERS
          */
 
-        public void CreateOrder(int userId, string isin, int amount, double price, string type, string sessionID)
+        public void CreateOrder(int userId, string isin, int amount, double price, double alternativeOrder, string type, string sessionID)
         {
             try
             {
@@ -517,7 +543,7 @@ namespace StockPlay.implXMLRPC
                                                                    + " PRICE=" + price + " TYPE=" + type);
 
                 OrderHandler privateOrderHandler = HandlerHelper.getPrivateOrderHandler(privateXmlRpcUrl, sessionID);
-                Order order = new Order(-1, userId, isin, amount, price, type, "ACCEPTED", DateTime.Now, DateTime.MinValue, DateTime.MinValue);
+                Order order = new Order(-1, userId, isin, amount, price, alternativeOrder, type, "ACCEPTED", DateTime.Now, DateTime.MinValue, DateTime.MinValue);
                 privateOrderHandler.Create(order.toStruct());
             }
             catch (Exception e)

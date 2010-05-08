@@ -123,10 +123,10 @@ public class Order {
 
         BUY,
         SELL,
-        IMMEDIATE_BUY,
+        BUY_IMMEDIATE,
         STOP_LOSS_BUY,
         STOP_LOSS_SELL,
-        IMMEDIATE_SELL,
+        SELL_IMMEDIATE,
         TRAILING_STOP_BUY,
         TRAILING_STOP_SELL,
         BRACKET_LIMIT_BUY,

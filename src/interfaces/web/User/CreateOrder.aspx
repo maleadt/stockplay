@@ -9,13 +9,36 @@
     <p><asp:Literal runat="server" Text="<%$ Resources:Para2 %>" /> <b id="Quote" runat="server"></b>.</p>
     
     <p><asp:Literal runat="server" Text="<%$ Resources:Para3 %>" /> <b id="Cash" runat="server"></b></p>
+    <p><asp:Literal runat="server" Text="<%$ Resources:Para5 %>" />
     
+        <asp:Literal ID="SoortOrder" runat="server" Text=""></asp:Literal>
+        <asp:DropDownList ID="OrderType" runat="server" AutoPostBack="True">
+            <asp:ListItem Value="direct" meta:resourcekey="direct"></asp:ListItem>
+            <asp:ListItem Value="limit" meta:resourcekey="limit"></asp:ListItem>
+            <asp:ListItem Value="bracket" meta:resourcekey="bracket"></asp:ListItem>
+            <asp:ListItem Value="stoploss" meta:resourcekey="stoploss"></asp:ListItem>
+            <asp:ListItem Value="trailing" meta:resourcekey="trailing"></asp:ListItem>
+        </asp:DropDownList>
+    </p>
     <p>
-        <asp:Literal runat="server" Text="<%$ Resources:Para4 %>" /> 
-        <asp:TextBox ID="txtAmount" runat="server" ValidationGroup="AmountValidation" 
-            meta:resourcekey="txtAmountResource1"></asp:TextBox> x 
-        <asp:TextBox ID="txtQuote" runat="server" meta:resourcekey="txtQuoteResource1"></asp:TextBox> = 
+        <asp:Literal ID="lblPara4" runat="server" Text="<%$ Resources:Para4 %>" /> 
+        <asp:TextBox ID="txtAmount" runat="server" ValidationGroup="AmountValidation" meta:resourcekey="txtAmountResource1"></asp:TextBox>
+        <asp:Literal ID="lblMultiply" runat="server" Text=" x " />
+        <asp:TextBox ID="txtQuote" runat="server" meta:resourcekey="txtQuoteResource1" Enabled="false"></asp:TextBox>
+        <asp:Literal ID="lblEquals" runat="server" Text=" = " />
         <asp:Label ID="Total" runat="server" meta:resourcekey="TotalResource1"></asp:Label>
+    </p>
+    <p>
+        <asp:Literal ID="lblOnderLimiet" runat="server" Text="<%$ Resources:Para6 %>" Visible="false"/> 
+        <asp:TextBox ID="txtOnderLimiet" runat="server" Visible="false"></asp:TextBox>
+    </p>
+    <p>
+        <asp:Literal ID="lblBovenLimiet" runat="server" Text="<%$ Resources:Para7 %>" Visible="false" /> 
+        <asp:TextBox ID="txtBovenLimiet" runat="server" Visible="false"></asp:TextBox>
+    </p>
+    <p>
+        <asp:Literal ID="lblBonuspunten" runat="server" Visible="false" Text="<%$ Resources:Para8 %>" />
+        <asp:TextBox ID="txtBonuspunten" runat="server" Visible="false"></asp:TextBox>
     </p>
     <p>
         <asp:RangeValidator ID="RangeValidator1" runat="server" meta:resourcekey="AmountError" ValidationGroup="AmountValidation"

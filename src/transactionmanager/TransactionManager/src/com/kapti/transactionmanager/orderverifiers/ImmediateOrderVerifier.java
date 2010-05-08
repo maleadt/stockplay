@@ -34,7 +34,7 @@ import com.kapti.client.user.Order.Type;
 public class ImmediateOrderVerifier implements OrderVerifier {
 
     public Type[] getOrderTypes() {
-        return new Type[] { Order.Type.IMMEDIATE_BUY, Order.Type.IMMEDIATE_SELL };
+        return new Type[] { Order.Type.BUY_IMMEDIATE, Order.Type.SELL_IMMEDIATE };
     }
 
     public boolean verifyOrder(Order order) {

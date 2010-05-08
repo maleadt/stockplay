@@ -61,7 +61,76 @@ namespace StockPlay.Web
 	
 	            PortfolioGridview.DataSource = GenerateDataTable(portfolio, securities);
 	            PortfolioGridview.DataBind();
-	        }
+            }
+            else
+            {
+                if (OrderType.SelectedValue.Equals("direct"))
+                {
+                    txtPrice.Enabled = false;
+                    lblVraagprijs.Visible = false;
+                    txtAmount.Visible = true;
+                    txtPrice.Visible = false;
+                    lblOnderLimiet.Visible = false;
+                    txtOnderLimiet.Visible = false;
+                    lblBovenLimiet.Visible = false;
+                    txtBovenLimiet.Visible = false;
+                    lblBonuspunten.Visible = false;
+                    txtBonuspunten.Visible = false;
+                }
+                if (OrderType.SelectedValue.Equals("limit"))
+                {
+                    txtPrice.Enabled = true;
+                    lblVraagprijs.Visible = true;
+                    txtAmount.Visible = true;
+                    txtPrice.Visible = true;
+                    lblOnderLimiet.Visible = false;
+                    txtOnderLimiet.Visible = false;
+                    lblBovenLimiet.Visible = false;
+                    txtBovenLimiet.Visible = false;
+                    lblBonuspunten.Visible = false;
+                    txtBonuspunten.Visible = false;
+                }
+                if (OrderType.SelectedValue.Equals("bracket"))
+                {
+                    txtPrice.Enabled = false;
+                    lblVraagprijs.Visible = false;
+                    txtAmount.Visible = true;
+                    txtPrice.Visible = false;
+                    lblOnderLimiet.Visible = true;
+                    txtOnderLimiet.Visible = true;
+                    lblBovenLimiet.Visible = true;
+                    txtBovenLimiet.Visible = true;
+                    lblBonuspunten.Visible = false;
+                    txtBonuspunten.Visible = false;
+
+                }
+                if (OrderType.SelectedValue.Equals("stoploss"))
+                {
+                    txtPrice.Enabled = true;
+                    lblVraagprijs.Visible = true;
+                    txtAmount.Visible = true;
+                    txtPrice.Visible = true;
+                    lblOnderLimiet.Visible = false;
+                    txtOnderLimiet.Visible = false;
+                    lblBovenLimiet.Visible = false;
+                    txtBovenLimiet.Visible = false;
+                    lblBonuspunten.Visible = false;
+                    txtBonuspunten.Visible = false;
+                }
+                if (OrderType.SelectedValue.Equals("trailing"))
+                {
+                    txtPrice.Enabled = false;
+                    lblVraagprijs.Visible = false;
+                    txtAmount.Visible = true;
+                    txtPrice.Visible = false;
+                    lblOnderLimiet.Visible = false;
+                    txtOnderLimiet.Visible = false;
+                    lblBovenLimiet.Visible = false;
+                    txtBovenLimiet.Visible = false;
+                    lblBonuspunten.Visible = true;
+                    txtBonuspunten.Visible = true;
+                }
+            }
 	    }
 	
 	    private DataTable GenerateDataTable(List<IUserSecurity> portfolio, List<ISecurity> securities)
@@ -99,21 +168,30 @@ namespace StockPlay.Web
 	    {
 	        Page.Validate();
 	
-	        if (Page.IsValid && txtAmount.Text != "" && txtPrice.Text != "")
+	        if (Page.IsValid && txtAmount.Text != "")
 	        {
 	            IDataAccess data = DataAccessFactory.GetDataAccess();
 	
 	            ISecurity security = data.GetSecurityByIsin(Request.Params["sell"])[0];
 	            IQuote latestQuote = data.GetLatestQuoteFromSecurity(Request.Params["sell"]);
 	
-	            int amount = Convert.ToInt32(txtAmount.Text);
-	
-	            StockplayMembershipUser user = (StockplayMembershipUser)Membership.GetUser(User.Identity.Name);
-	
-	
-	            data.CreateOrder(user.ID, security.Isin, amount, latestQuote.Price,
-                                 "SELL", (string) Session["sessionID"]);
-	
+	            StockplayMembershipUser user = (StockplayMembershipUser)Membership.GetUser((int) Session["userID"]entity.Name);
+
+                if (OrderType.SelectedValue.Equals("direct"))
+                    data.CreateOrder((int) Session["userID"], security.Isin, Convert.ToInt32(txtAmount.Text), 0, 0, "SELL_IMMEDIATE", (string) Session["sessionID"]);
+
+                if (OrderType.SelectedValue.Equals("limit"))
+                    data.CreateOrder((int) Session["userID"], security.Isin, Convert.ToInt32(txtAmount.Text), Convert.ToDouble(txtPrice.Text), 0, "SELL", (string) Session["sessionID"]);
+
+                if (OrderType.SelectedValue.Equals("bracket"))
+                    data.CreateOrder((int) Session["userID"], security.Isin, Convert.ToInt32(txtAmount.Text), Convert.ToDouble(txtOnderLimiet.Text), Convert.ToDouble(txtBovenLimiet.Text), "BRACKET_LIMIT_SELL", (string) Session["sessionID"]);
+
+                if (OrderType.SelectedValue.Equals("stoploss"))
+                    data.CreateOrder((int) Session["userID"], security.Isin, Convert.ToInt32(txtAmount.Text), Convert.ToDouble(txtPrice.Text), 0, "STOP_LOSS_SELL", (string) Session["sessionID"]);
+
+                if (OrderType.SelectedValue.Equals("trailing"))
+                    data.CreateOrder((int) Session["userID"], security.Isin, Convert.ToInt32(txtAmount.Text), Convert.ToDouble(txtBonuspunten.Text), 0, "TRAILING_STOP_SELL", (string) Session["sessionID"]);
+
 	            Response.Redirect("~/User/OrdersOverview.aspx");
 	        }
 	    }

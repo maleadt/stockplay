@@ -26,11 +26,17 @@ public interface SecurityHandler : IXmlRpcProxy
     [XmlRpcMethod("Finance.Security.getLatestTime")]
     System.DateTime getLatestTime(string isin);
 
+    [XmlRpcMethod("Finance.Security.QuoteRange")]
+    System.DateTime[] getRange(string isin);
+    
     [XmlRpcMethod("Finance.Security.Details")]
     XmlRpcStruct[] Details(string iFilter);
 
     [XmlRpcMethod("Finance.Security.Quotes")]
     XmlRpcStruct[] Quotes(string iFilter);
+
+    [XmlRpcMethod("Finance.Security.Quotes")]
+    XmlRpcStruct[] Quotes(System.DateTime iFrom, System.DateTime iTo, int iSpan, string iFilter);
 
     [XmlRpcMethod("Finance.Security.LatestQuotes")]
     XmlRpcStruct[] LatestQuotes(string iFilter);

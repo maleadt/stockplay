@@ -83,7 +83,7 @@ public class CheckOrdersTask implements Runnable {
                 transaction.setTime(new Date());
                 transaction.setComment("Execution of order " + order.getId());
                 transaction.setPrice(quote.getPrice());
-                if (order.getType() == Order.Type.BUY || order.getType() == Order.Type.IMMEDIATE_BUY)
+                if (order.getType() == Order.Type.BUY || order.getType() == Order.Type.BUY_IMMEDIATE)
                     transaction.setType(Transaction.Type.BUY);
                 else
                     transaction.setType(Transaction.Type.SELL);

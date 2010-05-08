@@ -23,13 +23,14 @@ namespace StockPlay.implXMLRPC {
 	    private string isin;
 	    private int amount;
 	    private double price;
-	    private string type;
+        private double secondairyLimit;
+        private string type;
 	    private string status;
 	    private DateTime creationTime;
 	    private DateTime expirationTime;
 	    private DateTime executionTime;
 	
-	    public Order(int id, int userId, string isin, int amount, double price, string type,
+	    public Order(int id, int userId, string isin, int amount, double price, double secondairyLimit, string type,
 	                    string status, DateTime creationTime, DateTime expirationTime, DateTime executionTime)
 	    {
 	        this.id = id;
@@ -42,6 +43,7 @@ namespace StockPlay.implXMLRPC {
 	        this.creationTime = creationTime;
 	        this.expirationTime = expirationTime;
 	        this.executionTime = executionTime;
+            this.secondairyLimit = secondairyLimit;
 	    }
 	
 		public Order(XmlRpcStruct order)
@@ -56,7 +58,8 @@ namespace StockPlay.implXMLRPC {
 	        creationTime = Convert.ToDateTime(order["CREATIONTIME"]);
 	        expirationTime = Convert.ToDateTime(order["EXPIRATIONTIME"]);
 	        executionTime = Convert.ToDateTime(order["EXECUTIONTIME"]);
-		}
+            secondairyLimit = Convert.ToDouble(order["SECONDAIRYLIMIT"]);
+        }
 	
 	    public XmlRpcStruct toStruct()
 	    {
@@ -65,7 +68,8 @@ namespace StockPlay.implXMLRPC {
 	        order.Add("ISIN", isin);
 	        order.Add("AMOUNT", amount);
 	        order.Add("PRICE", price);
-	        order.Add("TYPE", type);
+            order.Add("SECONDAIRYLIMIT", secondairyLimit);
+            order.Add("TYPE", type);
 	        order.Add("STATUS", status);
 	        order.Add("CREATIONTIME", creationTime);
 	        if (expirationTime != DateTime.MinValue) order.Add("EXPIRATIONTIME", expirationTime);
@@ -100,8 +104,13 @@ namespace StockPlay.implXMLRPC {
 	    {
 	        get { return price; }
 	    }
-	
-	    public string Type
+
+        public double SecondairyLimit
+        {
+            get { return secondairyLimit; }
+        }
+
+        public string Type
 	    {
 	        get { return type; }
 	    }

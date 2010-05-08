@@ -318,7 +318,6 @@ public class SecurityHandler extends MethodClass {
     public List<Timestamp> QuoteRange(String isin) throws StockPlayException {
         // Get DAO reference
         GenericQuoteDAO tQuoteDAO = getDAO().getQuoteDAO();
-
         return tQuoteDAO.getRange(isin);
     }
 

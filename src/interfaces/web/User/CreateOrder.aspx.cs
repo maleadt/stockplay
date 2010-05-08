@@ -20,7 +20,7 @@ namespace StockPlay.Web
 	        if (!IsPostBack)
 	        {
 	            if (Request.Params["ISIN"] != null)
-	            {
+                {
 	                IDataAccess data = DataAccessFactory.GetDataAccess();
 	
 	                ISecurity security = data.GetSecurityByIsin(Request.Params["ISIN"])[0];
@@ -39,22 +39,120 @@ namespace StockPlay.Web
 	
 	                    txtQuote.Text = Convert.ToString(latestQuote.Price);
 	                    Total.Text = Convert.ToString(0);
-	                }
+                    }
 	                else
 	                    Response.Redirect("~/SecuritiesOverview.aspx");
 	            }
 	            else
 	                Response.Redirect("~/SecuritiesOverview.aspx");
-	        }
+            }
+            else {
+                if (OrderType.SelectedValue.Equals("direct")) {
+                    txtQuote.Enabled = false;
+                    lblPara4.Visible = true;
+                    txtAmount.Visible = true;
+                    lblMultiply.Visible = true;
+                    txtQuote.Visible = true;
+                    lblEquals.Visible = true;
+                    Total.Visible = true;
+                    lblOnderLimiet.Visible = false;
+                    txtOnderLimiet.Visible = false;
+                    lblBovenLimiet.Visible = false;
+                    txtBovenLimiet.Visible = false;
+                    lblBonuspunten.Visible = false;
+                    txtBonuspunten.Visible = false;
+                }
+                if (OrderType.SelectedValue.Equals("limit"))
+                {
+                    txtQuote.Enabled = true;
+                    lblPara4.Visible = true;
+                    txtAmount.Visible = true;
+                    lblMultiply.Visible = true;
+                    txtQuote.Visible = true;
+                    lblEquals.Visible = true;
+                    Total.Visible = true;
+                    lblOnderLimiet.Visible = false;
+                    txtOnderLimiet.Visible = false;
+                    lblBovenLimiet.Visible = false;
+                    txtBovenLimiet.Visible = false;
+                    lblBonuspunten.Visible = false;
+                    txtBonuspunten.Visible = false;
+                }
+                if (OrderType.SelectedValue.Equals("bracket"))
+                {
+                    txtQuote.Enabled = false;
+                    lblPara4.Visible = true;
+                    txtAmount.Visible = true;
+                    lblMultiply.Visible = false;
+                    txtQuote.Visible = false;
+                    lblEquals.Visible = false;
+                    Total.Visible = false;
+                    lblOnderLimiet.Visible = true;
+                    txtOnderLimiet.Visible = true;
+                    lblBovenLimiet.Visible = true;
+                    txtBovenLimiet.Visible = true;
+                    lblBonuspunten.Visible = false;
+                    txtBonuspunten.Visible = false;
+
+                }
+                if (OrderType.SelectedValue.Equals("stoploss"))
+                {
+                    txtQuote.Enabled = true;
+                    lblPara4.Visible = true;
+                    txtAmount.Visible = true;
+                    lblMultiply.Visible = true;
+                    txtQuote.Visible = true;
+                    lblEquals.Visible = true;
+                    Total.Visible = true;
+                    lblOnderLimiet.Visible = false;
+                    txtOnderLimiet.Visible = false;
+                    lblBovenLimiet.Visible = false;
+                    txtBovenLimiet.Visible = false;
+                    lblBonuspunten.Visible = false;
+                    txtBonuspunten.Visible = false;
+                }
+                if (OrderType.SelectedValue.Equals("trailing"))
+                {
+                    txtQuote.Enabled = false;
+                    lblPara4.Visible = true;
+                    txtAmount.Visible = true;
+                    lblMultiply.Visible = false;
+                    txtQuote.Visible = false;
+                    lblEquals.Visible = false;
+                    Total.Visible = false;
+                    lblOnderLimiet.Visible = false;
+                    txtOnderLimiet.Visible = false;
+                    lblBovenLimiet.Visible = false;
+                    txtBovenLimiet.Visible = false;
+                    lblBonuspunten.Visible = true;
+                    txtBonuspunten.Visible = true;
+                }
+            }
 	    }
 	
 	    protected void btnContinue_Click(object sender, EventArgs e)
 	    {
 	        Page.Validate();
 	        if (Page.IsValid)
-	        {            
-	            double total = Convert.ToDouble(txtQuote.Text) * Convert.ToInt32(txtAmount.Text);
-	            if (total > Convert.ToDouble(Cash.InnerText))
+	        {
+                double total = 0;
+
+                if (OrderType.SelectedValue.Equals("direct"))
+                    total = Convert.ToDouble(txtQuote.Text) * Convert.ToInt32(txtAmount.Text);
+
+                if (OrderType.SelectedValue.Equals("limit"))
+                    total = Convert.ToDouble(txtQuote.Text) * Convert.ToInt32(txtAmount.Text);
+
+                if (OrderType.SelectedValue.Equals("bracket"))
+                    total = Convert.ToDouble(txtBovenLimiet.Text) * Convert.ToInt32(txtAmount.Text);
+
+                if (OrderType.SelectedValue.Equals("stoploss"))
+                    total = Convert.ToDouble(txtQuote.Text) * Convert.ToInt32(txtAmount.Text);
+
+                if (OrderType.SelectedValue.Equals("trailing"))
+                    total = (Convert.ToDouble(txtQuote.Text) + Convert.ToDouble(txtBonuspunten.Text)) * Convert.ToInt32(txtAmount.Text);
+
+                if (total > Convert.ToDouble(Cash.InnerText))
 	                ErrorLabel.Visible = true;
 	            else
 	            {
@@ -78,13 +176,26 @@ namespace StockPlay.Web
 	            else
 	            {
 	                IDataAccess data = DataAccessFactory.GetDataAccess();
-	
 	                ISecurity security = data.GetSecurityByIsin(Request.Params["ISIN"])[0];
-	
 	                data.CreateOrder((int) Session["userID"], security.Isin, Convert.ToInt32(txtAmount.Text),
                                      Convert.ToDouble(txtQuote.Text), "BUY", (string) Session["sessionID"]);
-	
-	                Response.Redirect("~/User/OrdersOverview.aspx");
+
+                    if (OrderType.SelectedValue.Equals("direct"))
+                        data.CreateOrder(user.ID, security.Isin, Convert.ToInt32(txtAmount.Text), 0, 0, "BUY_IMMEDIATE");
+
+                        if (OrderType.SelectedValue.Equals("limit"))
+                            data.CreateOrder(user.ID, security.Isin, Convert.ToInt32(txtAmount.Text), Convert.ToDouble(txtQuote.Text), 0, "BUY");
+
+                            if (OrderType.SelectedValue.Equals("bracket"))
+                                data.CreateOrder(user.ID, security.Isin, Convert.ToInt32(txtAmount.Text), Convert.ToDouble(txtOnderLimiet.Text), Convert.ToDouble(txtBovenLimiet.Text), "BRACKET_LIMIT_BUY");
+
+                                if (OrderType.SelectedValue.Equals("stoploss"))
+                                    data.CreateOrder(user.ID, security.Isin, Convert.ToInt32(txtAmount.Text), Convert.ToDouble(txtQuote.Text), 0, "STOP_LOSS_BUY");
+
+                                    if (OrderType.SelectedValue.Equals("trailing"))
+                                        data.CreateOrder(user.ID, security.Isin, Convert.ToInt32(txtAmount.Text), Convert.ToDouble(txtBonuspunten.Text), 0, "TRAILING_STOP_BUY");
+
+                                        Response.Redirect("~/User/OrdersOverview.aspx");
 	            }
 	        }
 	    }
@@ -94,5 +205,4 @@ namespace StockPlay.Web
 	        Response.Redirect("~/User/OrdersOverview.aspx");
 	    }
 	}
-
 }

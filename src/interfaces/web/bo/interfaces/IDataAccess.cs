@@ -19,6 +19,7 @@ namespace StockPlay
 	    List<IQuote> GetQuotesFromSecurity(string isin, DateTime iFrom, DateTime iTo);
 	    DateTime GetLatestTime(string isin);
 	    DateTime GetFirstTime(string isin);
+        List<DateTime> GetRange(string isin);
 	
 	    //Exhanges
 	    IExchange GetExchangeBySymbol(string symbol);
@@ -39,7 +40,7 @@ namespace StockPlay
 	    List<ITransaction> GetUserTransactions(int id, string sessionID);
 	
 	    //Orders
-	    void CreateOrder(int userId, string isin, int amount, double price, string type, string sessionID);
+	    void CreateOrder(int userId, string isin, int amount, double price, double alternativeLimit, string type, string sessionID);
 	    void CancelOrder(int orderId, string sessionID);
 	    List<IOrder> GetUserOrders(int id, string sessionID);
 	}

@@ -26,7 +26,7 @@ import com.kapti.client.user.Order;
 
 /**
  *
- * \brief   Leverd een ordercontroleur.
+ * \brief   Geeft ons een ordercontroleur.
  *
  */
 
@@ -44,9 +44,9 @@ public class OrderVerifierFactory {
                 return new BuyVerifier();
             case SELL:
                 return new SellVerifier();
-            case IMMEDIATE_BUY:
+            case BUY_IMMEDIATE:
                 return new ImmediateOrderVerifier();
-            case IMMEDIATE_SELL:
+            case SELL_IMMEDIATE:
                 return new ImmediateOrderVerifier();
             case STOP_LOSS_BUY:
                 return new StopLossBuy();

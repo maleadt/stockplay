@@ -23,6 +23,7 @@
             <asp:HyperLinkField DataTextField="Security" DataNavigateUrlFields="Isin" DataNavigateUrlFormatString="~/SecurityDetail.aspx?param={0}" meta:resourcekey="Name" />      
             <asp:BoundField DataField="Amount" DataFormatString="{0:0.00}" meta:resourcekey="Amount" />
             <asp:BoundField DataField="Price" meta:resourcekey="Price" />
+            <asp:BoundField DataField="secondairyLimit" meta:resourcekey="secondairyLimit" />
             <asp:BoundField DataField="Type" meta:resourcekey="Type" />
             <asp:BoundField DataField="Status" meta:resourcekey="Status" />
             <asp:HyperLinkField DataNavigateUrlFields="ID" DataNavigateUrlFormatString="~/User/OrdersOverview.aspx?remove={0}" meta:resourcekey="CancelOrder" />

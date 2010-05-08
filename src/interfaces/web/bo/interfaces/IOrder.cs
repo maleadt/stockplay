@@ -7,10 +7,11 @@ namespace StockPlay {
 	    string Isin { get; }
 	    int Amount { get; }
 	    double Price { get; }
-	    string Type { get; }
+        double SecondairyLimit { get; }
+        string Type { get; }
 	    string Status { get; }
 	    DateTime CreationTime { get; }
 	    DateTime ExpirationTime { get; }
 	    DateTime ExecutionTime { get; }
-	}
+    }
 }
