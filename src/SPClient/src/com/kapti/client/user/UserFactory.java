@@ -22,7 +22,7 @@
 
 package com.kapti.client.user;
 
-import com.kapti.client.XmlRpcClientFactory;
+import com.kapti.client.SPClientFactory;
 import com.kapti.exceptions.RequestError;
 import com.kapti.exceptions.StockPlayException;
 import java.util.ArrayList;
@@ -57,11 +57,12 @@ public class UserFactory {
 
         ArrayList<User> result = new ArrayList<User>();
         try {
-            XmlRpcClient client = XmlRpcClientFactory.getXmlRpcClient();
+            XmlRpcClient client = SPClientFactory.getPrivateClient();
             Object[] users = (Object[]) client.execute("User.List", new Object[]{filter});
 
-            for (Object obj : users)
+            for (Object obj : users) {
                 result.add(User.fromStruct((HashMap) obj));
+            }
             return result;
 
         } catch (XmlRpcException ex) {
@@ -85,13 +86,15 @@ public class UserFactory {
 
     public boolean verifyLogin(String nickname, String password) throws StockPlayException {
         try {
-            XmlRpcClient client = XmlRpcClientFactory.getXmlRpcClient();
+            XmlRpcClient client = SPClientFactory.getPublicClient();
             Object result = client.execute("User.Validate", new Object[]{nickname, password});
 
-            if (result instanceof Boolean) {
-                return (Boolean) result;
+            if (result instanceof String) {
+                SPClientFactory.setSessionID((String)result);
+                return true;
             } else {
-                throw new StockPlayException("Expected Boolean, but got an " + result.getClass().toString());
+                return false;
+                //throw new StockPlayException("Expected String, but got an " + result.getClass().toString());
             }
 
         } catch (XmlRpcException ex) {
@@ -112,12 +115,12 @@ public class UserFactory {
      * @throws XmlRpcException
      */
     public boolean makePersistent(User user) throws StockPlayException {
-        XmlRpcClient client = XmlRpcClientFactory.getXmlRpcClient();
+        XmlRpcClient client = SPClientFactory.getPrivateClient();
         HashMap h = user.toStruct();
+        h.remove(User.Fields.ID.toString());
 
         try {
             if (user.getId() > 0) {
-                h.remove(User.Fields.ID.toString());
                 return (Integer) client.execute("User.Modify", new Object[]{"id EQUALS '" + user.getId() + "'", h}) > 0;
             } else {
                 Integer id = (Integer) client.execute("User.Create", new Object[]{h});
@@ -133,7 +136,7 @@ public class UserFactory {
     }
 
     public boolean removeUser(User user) throws StockPlayException {
-        XmlRpcClient client = XmlRpcClientFactory.getXmlRpcClient();
+        XmlRpcClient client = SPClientFactory.getPrivateClient();
 
         try {
             return (Integer) client.execute("User.Remove", new Object[]{"id EQUALS '" + user.getId() + "'"}) > 0;

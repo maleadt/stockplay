@@ -22,7 +22,7 @@
 
 package com.kapti.client.user;
 
-import com.kapti.client.XmlRpcClientFactory;
+import com.kapti.client.SPClientFactory;
 import com.kapti.exceptions.RequestError;
 import com.kapti.exceptions.StockPlayException;
 import java.util.ArrayList;
@@ -65,7 +65,7 @@ public class OrderFactory {
 
         ArrayList<Order> result = new ArrayList<Order>();
         try {
-            XmlRpcClient client = XmlRpcClientFactory.getXmlRpcClient();
+            XmlRpcClient client = SPClientFactory.getPrivateClient();
             Object[] users = (Object[]) client.execute("User.Order.List", new Object[]{filter});
 
             for (Object obj : users)
@@ -89,7 +89,7 @@ public class OrderFactory {
     }
 
     public boolean makePersistent(Order t) throws StockPlayException {
-        XmlRpcClient client = XmlRpcClientFactory.getXmlRpcClient();
+        XmlRpcClient client = SPClientFactory.getPrivateClient();
         HashMap h = t.toStruct();
 
         //verwijder illegale velden

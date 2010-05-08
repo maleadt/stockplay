@@ -19,9 +19,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
 package com.kapti.client;
 
+import com.kapti.exceptions.NotLoggedInException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -34,17 +34,55 @@ import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
  * \brief   Fabriek voor het aanmaken van XmlRPC clients.
  *
  */
+public class SPClientFactory {
 
-public class XmlRpcClientFactory {
+    static Logger logger = Logger.getLogger(SPClientFactory.class);
+    private static String sessionID = null;
 
-    static Logger logger = Logger.getLogger(XmlRpcClientFactory.class);
+    public static String getSessionID() {
+        return sessionID;
+    }
 
-    public static XmlRpcClient getXmlRpcClient() {
+    public static void setSessionID(String sessionid) {
+        SPClientFactory.sessionID = sessionid;
+    }
+
+    public static XmlRpcClient getPrivateClient() throws NotLoggedInException {
+
+        if (sessionID == null) {
+            throw new NotLoggedInException("No sessionID found!");
+        }
+
         try {
 
             ResourceBundle settings = ResourceBundle.getBundle("com/kapti/client/settings");
             XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
             config.setServerURL(new URL(settings.getString("server")));
+            config.setGzipCompressing(settings.getString("gzip").equals("1"));
+            config.setGzipRequesting(settings.getString("gzip").equals("1"));
+            config.setEnabledForExtensions(true);
+            config.setBasicUserName(sessionID);
+
+            XmlRpcClient client = new XmlRpcClient();
+
+            client.setConfig(config);
+
+
+            return client;
+        } catch (MalformedURLException ex) {
+            logger.error("Error while creating XML-RPC-client", ex);
+
+            return null;
+        }
+
+    }
+
+    public static XmlRpcClient getPublicClient() {
+        try {
+
+            ResourceBundle settings = ResourceBundle.getBundle("com/kapti/client/settings");
+            XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
+            config.setServerURL(new URL(settings.getString("serverpublic")));
             config.setGzipCompressing(settings.getString("gzip").equals("1"));
             config.setGzipRequesting(settings.getString("gzip").equals("1"));
             config.setEnabledForExtensions(true);
@@ -57,7 +95,7 @@ public class XmlRpcClientFactory {
             return client;
         } catch (MalformedURLException ex) {
             logger.error("Error while creating XML-RPC-client", ex);
-      
+
             return null;
         }
 

@@ -19,10 +19,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
 package com.kapti.client.system;
 
-import com.kapti.client.XmlRpcClientFactory;
+import com.kapti.client.SPClientFactory;
+import com.kapti.exceptions.StockPlayException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.Timer;
@@ -36,11 +36,9 @@ import org.apache.xmlrpc.client.XmlRpcClient;
  * \brief   Status opvragen om in de desktopclient te kunnen weergeven.
  *
  */
-
 public class StatusObject implements ActionListener {
 
     private static Logger logger = Logger.getLogger(StatusObject.class);
-
     private Timer updateTimer = new Timer(2500, this);
     private EventListenerList listenerList = new EventListenerList();
     private String functionCall;
@@ -49,7 +47,11 @@ public class StatusObject implements ActionListener {
         this.functionCall = functionCall;
         this.name = name;
 
+        try{
         fetchStatus();
+        }catch(StockPlayException ex){
+            logger.error("Update van status failed", ex);
+        }
 
     }
 
@@ -73,17 +75,21 @@ public class StatusObject implements ActionListener {
 
     public void actionPerformed(ActionEvent e) {
         //Timer loopt, we verversen onze status
+        try {
+            fetchStatus();
 
-        fetchStatus();
+        } catch (StockPlayException ex) {
+            logger.error("Error while updating statuses", ex);
+        }
     }
 
-    private void fetchStatus(){
+    private void fetchStatus() throws StockPlayException {
 
-        XmlRpcClient client = XmlRpcClientFactory.getXmlRpcClient();
+        XmlRpcClient client = SPClientFactory.getPrivateClient();
 
         Status newStatus = Status.UNKNOWN;
         try {
-            Integer result = (Integer)client.execute(functionCall, new Object[]{});
+            Integer result = (Integer) client.execute(functionCall, new Object[]{});
 
             newStatus = Status.getStatusFromId(result);
 
@@ -92,19 +98,19 @@ public class StatusObject implements ActionListener {
         }
 
 
-        if(newStatus != status){
+        if (newStatus != status) {
             status = newStatus;
-            fireActionEvent(new ActionEvent(this,0,"STATUS_CHANGED"));
+            fireActionEvent(new ActionEvent(this, 0, "STATUS_CHANGED"));
         }
     }
 
-    public void fetchUpdates(boolean fetchUpdates){
-        if(fetchUpdates)
+    public void fetchUpdates(boolean fetchUpdates) {
+        if (fetchUpdates) {
             updateTimer.start();
-        else
+        } else {
             updateTimer.stop();
+        }
     }
-
     protected String name;
 
     /**

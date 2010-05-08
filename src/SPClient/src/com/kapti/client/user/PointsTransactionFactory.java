@@ -22,7 +22,7 @@
 
 package com.kapti.client.user;
 
-import com.kapti.client.XmlRpcClientFactory;
+import com.kapti.client.SPClientFactory;
 import com.kapti.exceptions.RequestError;
 import com.kapti.exceptions.StockPlayException;
 import java.util.ArrayList;
@@ -63,7 +63,7 @@ public class PointsTransactionFactory {
 
         ArrayList<PointsTransaction> result = new ArrayList<PointsTransaction>();
         try {
-            XmlRpcClient client = XmlRpcClientFactory.getXmlRpcClient();
+            XmlRpcClient client = SPClientFactory.getPrivateClient();
             Object[] users = (Object[]) client.execute("User.Points.List", new Object[]{filter});
 
             for (Object obj : users) {
@@ -90,7 +90,7 @@ public class PointsTransactionFactory {
     }
 
     public boolean makePersistent(PointsTransaction t) throws StockPlayException {
-        XmlRpcClient client = XmlRpcClientFactory.getXmlRpcClient();
+        XmlRpcClient client = SPClientFactory.getPrivateClient();
         HashMap h = t.toStruct();
 
         try {

@@ -22,7 +22,7 @@
 
 package com.kapti.client.user;
 
-import com.kapti.client.XmlRpcClientFactory;
+import com.kapti.client.SPClientFactory;
 import com.kapti.exceptions.RequestError;
 import com.kapti.exceptions.StockPlayException;
 import java.util.ArrayList;
@@ -61,7 +61,7 @@ public class TransactionFactory {
 
         ArrayList<Transaction> result = new ArrayList<Transaction>();
         try {
-            XmlRpcClient client = XmlRpcClientFactory.getXmlRpcClient();
+            XmlRpcClient client = SPClientFactory.getPrivateClient();
             Object[] users = (Object[]) client.execute("User.Transaction.List", new Object[]{filter});
 
             for (Object obj : users) {
@@ -90,7 +90,7 @@ public class TransactionFactory {
 
     public boolean execute(Transaction t) throws StockPlayException {
 
-        XmlRpcClient client = XmlRpcClientFactory.getXmlRpcClient();
+        XmlRpcClient client = SPClientFactory.getPrivateClient();
         HashMap h = t.toStruct();
 
         //transactions kunnen niet worden gewijzigd.. Bij problemen moet een tegentransactie worden aangemaakt

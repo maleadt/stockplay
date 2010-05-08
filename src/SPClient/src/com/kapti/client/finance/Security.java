@@ -192,40 +192,40 @@ public class Security implements Cloneable {
         dirty = true;
     }
 
-    public enum SecurityType {
-
-        Stock,
-        Fund,
-        Tracker;
-
-        @Override
-        public String toString() {
-            return super.toString();
-        }
-    }
-    protected SecurityType type = SecurityType.Stock;
-    public static final String PROP_TYPE = "type";
-
-    /**
-     * Get the value of type
-     *
-     * @return the value of type
-     */
-    public SecurityType getType() {
-        return type;
-    }
-
-    /**
-     * Set the value of type
-     *
-     * @param type new value of type
-     */
-    public void setType(SecurityType type) {
-        SecurityType oldType = this.type;
-        this.type = type;
-        propertyChangeSupport.firePropertyChange(PROP_TYPE, oldType, type);
-        dirty = true;
-    }
+//    public enum SecurityType {
+//
+//        Stock,
+//        Fund,
+//        Tracker;
+//
+//        @Override
+//        public String toString() {
+//            return super.toString();
+//        }
+//    }
+//    protected SecurityType type = SecurityType.Stock;
+//    public static final String PROP_TYPE = "type";
+//
+//    /**
+//     * Get the value of type
+//     *
+//     * @return the value of type
+//     */
+//    public SecurityType getType() {
+//        return type;
+//    }
+//
+//    /**
+//     * Set the value of type
+//     *
+//     * @param type new value of type
+//     */
+//    public void setType(SecurityType type) {
+//        SecurityType oldType = this.type;
+//        this.type = type;
+//        propertyChangeSupport.firePropertyChange(PROP_TYPE, oldType, type);
+//        dirty = true;
+//    }
 
     @Override
     public boolean equals(Object obj) {

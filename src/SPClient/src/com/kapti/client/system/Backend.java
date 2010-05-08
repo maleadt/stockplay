@@ -26,7 +26,8 @@ import java.util.Calendar;
 import java.util.Date;
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
-import com.kapti.client.XmlRpcClientFactory;
+import com.kapti.client.SPClientFactory;
+import com.kapti.exceptions.StockPlayException;
 import java.util.HashMap;
 import org.apache.log4j.Logger;
 
@@ -50,11 +51,11 @@ public class Backend {
         ONLINE;
     }
 
-    public BackendStatus getStatus() {
+    public BackendStatus getStatus() throws StockPlayException {
 
 
         try {
-            XmlRpcClient client = XmlRpcClientFactory.getXmlRpcClient();
+            XmlRpcClient client = SPClientFactory.getPrivateClient();
             Integer result = (Integer) client.execute("System.Backend.Status", new Object[]{});
 
             if (result == 0) {
@@ -77,7 +78,7 @@ public class Backend {
         if (latestStatsRequest == null || Calendar.getInstance().getTime().getTime() - latestStatsRequest.getTime() > 1000) {
 
             try {
-                XmlRpcClient client = XmlRpcClientFactory.getXmlRpcClient();
+                XmlRpcClient client = SPClientFactory.getPrivateClient();
                 Object result = client.execute("System.Backend.Stats", new Object[]{});
 
                 HashMap ht = (HashMap) result;

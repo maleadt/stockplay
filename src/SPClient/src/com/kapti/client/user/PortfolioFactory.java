@@ -22,7 +22,7 @@
 
 package com.kapti.client.user;
 
-import com.kapti.client.XmlRpcClientFactory;
+import com.kapti.client.SPClientFactory;
 import com.kapti.exceptions.RequestError;
 import com.kapti.exceptions.StockPlayException;
 import java.util.ArrayList;
@@ -52,7 +52,7 @@ public class PortfolioFactory {
 
         ArrayList<UserSecurity> result = new ArrayList<UserSecurity>();
         try {
-            XmlRpcClient client = XmlRpcClientFactory.getXmlRpcClient();
+            XmlRpcClient client = SPClientFactory.getPrivateClient();
             Object[] userSecurities = (Object[]) client.execute("User.Portfolio.List", new Object[]{"USERID == " + user.id});
 
             for (Object obj : userSecurities) {

@@ -1,3 +1,24 @@
+/*
+ * Security.java
+ * StockPlay - Effecten object.
+ *
+ * Copyright (c) 2010 StockPlay development team
+ * All rights reserved.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
 package com.kapti.client.finance;
 
 import com.kapti.exceptions.StockPlayException;
@@ -8,13 +29,15 @@ import org.apache.log4j.Logger;
 
 /**
  *
- * @author Dieter
+ * \brief   Effecten object.
+ *
  */
-public class Index {
+public class Index implements Cloneable {
 
-    private static Logger logger = Logger.getLogger(Security.class);
+    private static Logger logger = Logger.getLogger(Index.class);
 
     public static enum Fields {
+
         ISIN, SYMBOL, NAME, EXCHANGE
     }
 
@@ -23,19 +46,7 @@ public class Index {
         this.symbol = symbol;
         this.exchange = exchange;
         this.name = name;
-    }
 
-    /**
-     * Deze variabele geeft aan of de waarden van het object werden gewijzigd
-     */
-    private boolean dirty = false;
-
-    boolean isDirty() {
-        return dirty;
-    }
-
-    void setDirty(boolean dirty) {
-        this.dirty = dirty;
     }
     protected String ISIN;
 
@@ -92,10 +103,7 @@ public class Index {
         String oldName = this.name;
         this.name = name;
         propertyChangeSupport.firePropertyChange(PROP_NAME, oldName, name);
-        dirty = true;
     }
-
-
     private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 
     /**
@@ -124,8 +132,17 @@ public class Index {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final Security other = (Security) obj;
+        final Index other = (Index) obj;
         if ((this.ISIN == null) ? (other.ISIN != null) : !this.ISIN.equals(other.ISIN)) {
+            return false;
+        }
+        if ((this.symbol == null) ? (other.symbol != null) : !this.symbol.equals(other.symbol)) {
+            return false;
+        }
+        if (this.exchange != other.exchange && (this.exchange == null || !this.exchange.equals(other.exchange))) {
+            return false;
+        }
+        if ((this.name == null) ? (other.name != null) : !this.name.equals(other.name)) {
             return false;
         }
         return true;
@@ -134,9 +151,14 @@ public class Index {
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 41 * hash + (this.ISIN != null ? this.ISIN.hashCode() : 0);
+        hash = 83 * hash + (this.ISIN != null ? this.ISIN.hashCode() : 0);
+        hash = 83 * hash + (this.symbol != null ? this.symbol.hashCode() : 0);
+        hash = 83 * hash + (this.exchange != null ? this.exchange.hashCode() : 0);
+        hash = 83 * hash + (this.name != null ? this.name.hashCode() : 0);
         return hash;
     }
+
+   
 
     @Override
     public Object clone() throws CloneNotSupportedException {
@@ -146,19 +168,19 @@ public class Index {
     public static Index fromStruct(HashMap h) {
         Exchange exch = null;
         try {
-            exch = FinanceFactory.getInstance().getExchange((String)h.get(Fields.EXCHANGE.toString()));
-        }catch(StockPlayException ex){
+            exch = FinanceFactory.getInstance().getExchange((String) h.get(Fields.EXCHANGE.toString()));
+        } catch (StockPlayException ex) {
             logger.error(ex);
         }
 
         return new Index(
                 (String) h.get(Security.Fields.ISIN.toString()),
                 (String) h.get(Security.Fields.SYMBOL.toString()),
-                 exch,
+                exch,
                 (String) h.get(Security.Fields.NAME.toString()));
     }
 
-    public HashMap toStruct(){
+    public HashMap toStruct() {
 
         HashMap h = new HashMap();
         h.put(Fields.ISIN.toString(), getISIN());
@@ -169,5 +191,4 @@ public class Index {
 
 
     }
-
 }
