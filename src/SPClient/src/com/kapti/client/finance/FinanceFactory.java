@@ -107,35 +107,6 @@ public class FinanceFactory {
 
     }
     
-    public boolean makePersistent(Security security) throws StockPlayException {
-        //enkel als er veranderingen zijn moeten ze worden opgeslagen!
-        if (security.isDirty()) {
-            XmlRpcClient client = XmlRpcClientFactory.getXmlRpcClient();
-
-            Vector v = new Vector();
-
-            //we maken de filter aan zodat enkel dit object wordt gewijzigd
-            v.add("isin EQUALS '" + security.getISIN() + "'");
-
-            //we voegen nu de argumenten aan het bericht toe
-
-            v.add(security.toStruct());
-            try{
-            Integer result = (Integer) client.execute("Finance.Security.Modify", v);
-            if (result == 1) {
-                security.setDirty(false);
-                securities.put(security.getISIN(), security);
-                return true;
-            }
-            }catch(XmlRpcException ex ){
-                throw new StockPlayException("Error while saving security", ex);
-            }
-            return false;
-
-        }
-        return true;
-    }
-
     /*
      * EXCHANGES
      */
