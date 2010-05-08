@@ -24,5 +24,5 @@ public interface UserHandler : IXmlRpcProxy
     int Remove(string iFilter);
 
     [XmlRpcMethod("User.Validate")]
-    bool Validate(string nickname, string password);
+    string Validate(string nickname, string password);
 }

@@ -27,8 +27,9 @@ namespace StockPlay.Web
 	            {
 	                StockplayMembershipProvider provider = (StockplayMembershipProvider) Membership.Provider;
 	                MembershipCreateStatus status = new MembershipCreateStatus();
-	                StockplayMembershipUser user = provider.CreateUser(UserName.Text, Password.Text, Email.Text, txtLastname.Text, txtFirstname.Text,
-	                                    -1, out status);
+	                provider.CreateUser(UserName.Text, Password.Text, Email.Text,
+                                        txtLastname.Text, txtFirstname.Text,- 1, out status);
+
 	                if (status != MembershipCreateStatus.Success)
 	                {
 	                    ErrorLabel.Visible = true;
@@ -41,7 +42,7 @@ namespace StockPlay.Web
 
                         try
                         {
-                            SendMail(user);
+                            SendMail();
                         }
                         catch (Exception ex)
                         {
@@ -57,17 +58,18 @@ namespace StockPlay.Web
 	
 	    }
 
-        private void SendMail(StockplayMembershipUser user)
+        //TODO - Vertalen van emailbericht
+        private void SendMail()
         {
             //Welkomstemail versturen met logingegevens
             MailMessage message = new MailMessage();
 
             message.From = new MailAddress(ConfigurationManager.AppSettings["EMAIL_ADDRESS"], "Stockplay Team");
-            message.To.Add(new MailAddress(user.Email, user.Lastname + " " + user.Firstname));
+            message.To.Add(new MailAddress(Email.Text, txtLastname.Text + " " + txtFirstname.Text));
 
             message.Subject = "Your StockPlay account has been registered";
-            message.Body = "Dear " + user.Lastname + " " + user.Firstname + ",\nWelcome to StockPlay, your account is now registered!\nYou can use the "
-                            + "following information to log in to your account:\nNickname: " + user.UserName + "\nPassword: " + Password.Text + "\n\nGreetings,\nthe Stockplay team.";
+            message.Body = "Dear " + txtLastname.Text + " " + txtFirstname.Text + ",\nWelcome to StockPlay, your account is now registered!\nYou can use the "
+                            + "following information to log in to your account:\nNickname: " + UserName.Text + "\nPassword: " + Password.Text + "\n\nGreetings,\nthe Stockplay team.";
 
             SmtpClient client = new SmtpClient();
             client.Send(message);

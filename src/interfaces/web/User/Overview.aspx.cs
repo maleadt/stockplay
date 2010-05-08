@@ -19,7 +19,9 @@ namespace StockPlay.Web
 	    {
 	        if (!IsPostBack)
 	        {
-	            StockplayMembershipUser user = (StockplayMembershipUser)Membership.GetUser(User.Identity.Name);
+                StockplayMembershipProvider provider = (StockplayMembershipProvider)Membership.Provider;
+	            StockplayMembershipUser user = (StockplayMembershipUser) provider.GetUser(User.Identity.Name,
+                                                                                          (string) Session["sessionID"]);
 	            Username.InnerText = user.UserName;
 	            Lastname.InnerText = user.Lastname;
 	            Firstname.InnerText = user.Firstname;

@@ -23,7 +23,7 @@ namespace StockPlay.Web
 	            IDataAccess data = DataAccessFactory.GetDataAccess();
 	
 	            List<ISecurity> security = data.GetSecurityByIsin(Request.Params["sell"]);
-	            List<IUserSecurity> portfolio = data.GetUserSecurities(((StockplayMembershipUser)Membership.GetUser(User.Identity.Name)).ID);
+	            List<IUserSecurity> portfolio = data.GetUserSecurities((int) Session["userID"], (string) Session["sessionID"]);
 	
 	            if (security != null && security.Count > 0 && portfolio != null && portfolio.Count > 0)
 	            {
@@ -48,7 +48,7 @@ namespace StockPlay.Web
 	        {
 	            IDataAccess data = DataAccessFactory.GetDataAccess();
 	
-	            List<IUserSecurity> portfolio = data.GetUserSecurities(((StockplayMembershipUser)Membership.GetUser(User.Identity.Name)).ID);
+	            List<IUserSecurity> portfolio = data.GetUserSecurities((int) Session["userID"], (string) Session["sessionID"]);
 	
 	            string[] isins = new string[portfolio.Count];
 	            for (int i = 0; i < portfolio.Count; i++)
@@ -111,7 +111,8 @@ namespace StockPlay.Web
 	            StockplayMembershipUser user = (StockplayMembershipUser)Membership.GetUser(User.Identity.Name);
 	
 	
-	            data.CreateOrder(user.ID, security.Isin, amount, latestQuote.Price, "SELL");
+	            data.CreateOrder(user.ID, security.Isin, amount, latestQuote.Price,
+                                 "SELL", (string) Session["sessionID"]);
 	
 	            Response.Redirect("~/User/OrdersOverview.aspx");
 	        }

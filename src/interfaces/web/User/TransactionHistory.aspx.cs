@@ -21,7 +21,8 @@ namespace StockPlay.Web
 	        if (!IsPostBack)
 	        {
 	            IDataAccess data = DataAccessFactory.GetDataAccess();
-	            TransactionsGridview.DataSource = GenerateDataTable(data.GetUserTransactions(((StockplayMembershipUser)Membership.GetUser(User.Identity.Name)).ID));
+	            TransactionsGridview.DataSource = 
+                    GenerateDataTable(data.GetUserTransactions((int) Session["userID"], (string) Session["sessionID"]));
 	        }
 	    }
 	

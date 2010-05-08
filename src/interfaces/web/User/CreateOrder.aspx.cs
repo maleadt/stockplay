@@ -25,8 +25,10 @@ namespace StockPlay.Web
 	
 	                ISecurity security = data.GetSecurityByIsin(Request.Params["ISIN"])[0];
 	                IQuote latestQuote = data.GetLatestQuoteFromSecurity(Request.Params["ISIN"]);
-	
-	                StockplayMembershipUser user = (StockplayMembershipUser) Membership.GetUser(User.Identity.Name);
+
+                    StockplayMembershipProvider provider = (StockplayMembershipProvider)Membership.Provider;
+	                StockplayMembershipUser user = (StockplayMembershipUser) provider.GetUser(User.Identity.Name,
+                                                                                              (string) Session["sessionID"]);
 	
 	                if (security != null && latestQuote != null && user != null)
 	                {
@@ -79,9 +81,8 @@ namespace StockPlay.Web
 	
 	                ISecurity security = data.GetSecurityByIsin(Request.Params["ISIN"])[0];
 	
-	                StockplayMembershipUser user = (StockplayMembershipUser)Membership.GetUser(User.Identity.Name);
-	
-	                data.CreateOrder(user.ID, security.Isin, Convert.ToInt32(txtAmount.Text), Convert.ToDouble(txtQuote.Text), "BUY");
+	                data.CreateOrder((int) Session["userID"], security.Isin, Convert.ToInt32(txtAmount.Text),
+                                     Convert.ToDouble(txtQuote.Text), "BUY", (string) Session["sessionID"]);
 	
 	                Response.Redirect("~/User/OrdersOverview.aspx");
 	            }

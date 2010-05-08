@@ -22,7 +22,7 @@ namespace StockPlay.Web
 	        {
 	            IDataAccess data = DataAccessFactory.GetDataAccess();
 	
-	            List<IOrder> orders = data.GetUserOrders(((StockplayMembershipUser)Membership.GetUser(User.Identity.Name)).ID);
+	            List<IOrder> orders = data.GetUserOrders((int) Session["userID"], (string) Session["sessionID"]);
 	
 	            string[] isins = new string[orders.Count];
 	            for (int i = 0; i < orders.Count; i++)
@@ -103,7 +103,7 @@ namespace StockPlay.Web
 	        IDataAccess data = DataAccessFactory.GetDataAccess();
 	
 	        int orderId = Convert.ToInt32(OrderId.InnerText);
-	        data.CancelOrder(orderId);
+	        data.CancelOrder(orderId, (string) Session["sessionID"]);
 	
 	        Response.Redirect("~/User/OrdersOverview.aspx");
 	    }

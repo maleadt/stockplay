@@ -27,21 +27,21 @@ namespace StockPlay
 	    //Users
 	    void CreateUser(int id, string nickname, string password, string email, bool isAdmin, string lastname, string firstname, DateTime regDate,
 	                    long rrn, int points, double startAmount, double cash);
-	    bool RemoveUser(string nickname);
-	    bool UpdateUser(IUser user);
-	    IUser GetUserByNickname(string nickname);
-	    bool ValidateUser(string nickname, string password);
+	    bool RemoveUser(string nickname, string sessionID);
+	    bool UpdateUser(IUser user, string sessionID);
+	    IUser GetUserByNickname(string nickname, string sessionID);
+	    string ValidateUser(string nickname, string password); //Geeft de sessionID terug, deze is de lege string als validatie is mislukt
 	
 	    //User Securities
-	    List<IUserSecurity> GetUserSecurities(int id);
+	    List<IUserSecurity> GetUserSecurities(int id, string sessionID);
 	
 	    //Transactions
-	    List<ITransaction> GetUserTransactions(int id);
+	    List<ITransaction> GetUserTransactions(int id, string sessionID);
 	
 	    //Orders
-	    void CreateOrder(int userId, string isin, int amount, double price, string type);
-	    void CancelOrder(int orderId);
-	    List<IOrder> GetUserOrders(int id);
+	    void CreateOrder(int userId, string isin, int amount, double price, string type, string sessionID);
+	    void CancelOrder(int orderId, string sessionID);
+	    List<IOrder> GetUserOrders(int id, string sessionID);
 	}
 
 }

@@ -21,7 +21,13 @@ namespace StockPlay.Web
 	    }
 	    protected void btnLogin_Click(object sender, EventArgs e)
 	    {
-	        if(Membership.ValidateUser(txtUsername.Text, txtPassword.Text)) {
+            StockplayMembershipProvider provider = (StockplayMembershipProvider) Membership.Provider;
+            string sessionID = provider.ValidateUserSession(txtUsername.Text, txtPassword.Text);
+            
+            if( ! sessionID.Equals("")) { //Indien we een geldige sessionID krijgen is het inloggen geslaagd.
+                Session["sessionID"] = sessionID;
+                Session["userID"] = ((StockplayMembershipUser)provider.GetUser(txtUsername.Text, sessionID)).ID;
+
 	            FormsAuthentication.RedirectFromLoginPage(txtUsername.Text, chkRememberMe.Enabled);
 	        }
 	    }

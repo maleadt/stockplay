@@ -14,6 +14,7 @@ using log4net;
 using log4net.Config;
 using System.Text;
 using StockPlay;
+using web.bo.implXMLRPC.handlers;
 
 namespace StockPlay.implXMLRPC
 {
@@ -30,16 +31,17 @@ namespace StockPlay.implXMLRPC
 
         private readonly ILog sysLog = LogManager.GetLogger(typeof(DataAccess));
 
-        //Handlerinstanties
-        private ExchangeHandler exchangeHandler;
-        private IndexHandler indexHandler;
-        private OrderHandler orderHandler;
-        private PortfolioHandler portfolioHandler;
-        private SecurityHandler securityHandler;
-        private TransactionHandler transactionHandler;
-        private UserHandler userHandler;
+        //Handlerinstanties die gebruikt worden voor de publiek toegankelijke requests
+        private ExchangeHandler publicExchangeHandler;
+        private IndexHandler publicIndexHandler;
+        private OrderHandler publicOrderHandler;
+        private PortfolioHandler publicPortfolioHandler;
+        private SecurityHandler publicSecurityHandler;
+        private TransactionHandler publicTransactionHandler;
+        private UserHandler publicUserHandler;
 
-        private string xmlRpcUrl;
+        private string publicXmlRpcUrl;
+        private string privateXmlRpcUrl;
 
         private Dictionary<string, IExchange> exchangeCache;
 
@@ -53,31 +55,19 @@ namespace StockPlay.implXMLRPC
         private DataAccess()
         {
             XmlConfigurator.Configure();
+
             sysLog.Info("DataAccess startup");
 
-            xmlRpcUrl = ConfigurationManager.AppSettings["XML_RPC_SERVER"];
+            publicXmlRpcUrl = ConfigurationManager.AppSettings["PUBLIC_XML_RPC_SERVER"];
+            privateXmlRpcUrl = ConfigurationManager.AppSettings["PRIVATE_XML_RPC_SERVER"];
 
-            exchangeHandler = XmlRpcProxyGen.Create<ExchangeHandler>();
-            exchangeHandler.Url = xmlRpcUrl;
-            exchangeHandler.EnableCompression = true;
-            indexHandler = XmlRpcProxyGen.Create<IndexHandler>();
-            indexHandler.Url = xmlRpcUrl;
-            indexHandler.EnableCompression = true;
-            orderHandler = XmlRpcProxyGen.Create<OrderHandler>();
-            orderHandler.Url = xmlRpcUrl;
-            orderHandler.EnableCompression = true;
-            portfolioHandler = XmlRpcProxyGen.Create<PortfolioHandler>();
-            portfolioHandler.Url = xmlRpcUrl;
-            portfolioHandler.EnableCompression = true;
-            securityHandler = XmlRpcProxyGen.Create<SecurityHandler>();
-            securityHandler.Url = xmlRpcUrl;
-            securityHandler.EnableCompression = true;
-            transactionHandler = XmlRpcProxyGen.Create<TransactionHandler>();
-            transactionHandler.Url = xmlRpcUrl;
-            transactionHandler.EnableCompression = true;
-            userHandler = XmlRpcProxyGen.Create<UserHandler>();
-            userHandler.Url = xmlRpcUrl;
-            userHandler.EnableCompression = true;
+            publicExchangeHandler = HandlerHelper.getPublicExchangeHandler(publicXmlRpcUrl);
+            publicIndexHandler = HandlerHelper.getPublicIndexHandler(publicXmlRpcUrl);
+            publicOrderHandler = HandlerHelper.getPublicOrderHandler(publicXmlRpcUrl);
+            publicPortfolioHandler = HandlerHelper.getPublicPortfolioHandler(publicXmlRpcUrl);
+            publicSecurityHandler = HandlerHelper.getPublicSecurityHandler(publicXmlRpcUrl);
+            publicTransactionHandler = HandlerHelper.getPublicTransactionHandler(publicXmlRpcUrl);
+            publicUserHandler = HandlerHelper.getPublicUserHandler(publicXmlRpcUrl);
 
             exchangeCache = new Dictionary<string, IExchange>();
         }
@@ -117,13 +107,13 @@ namespace StockPlay.implXMLRPC
                 //De zoekterm zoekt zowel op isin, symbool, naam en exchange
                 XmlRpcStruct[] querySecurities = null;
                 if (searchterm == "")
-                    querySecurities = securityHandler.List();
+                    querySecurities = publicSecurityHandler.List();
                 else
-                    querySecurities = securityHandler.List("ISIN =~ '" + searchterm + "'ri || NAME =~ '" + searchterm
+                    querySecurities = publicSecurityHandler.List("ISIN =~ '" + searchterm + "'ri || NAME =~ '" + searchterm
                                                             + "'ri || EXCHANGE =~ '" + searchterm
                                                             + "'ri || SYMBOL =~ '" + searchterm + "'ri");
 
-                XmlRpcStruct[] queryQuotes = securityHandler.LatestQuotes("");
+                XmlRpcStruct[] queryQuotes = publicSecurityHandler.LatestQuotes("");
 
                 Dictionary<string, XmlRpcStruct> quoteDictionary = new Dictionary<string, XmlRpcStruct>();
                 foreach (XmlRpcStruct quote in queryQuotes)
@@ -162,7 +152,7 @@ namespace StockPlay.implXMLRPC
                 List<ISecurity> securities = new List<ISecurity>();
 
                 //Securities ophalen via XML-RPC en omzetten naar objecten
-                XmlRpcStruct[] query = securityHandler.List(parameters.ToString());
+                XmlRpcStruct[] query = publicSecurityHandler.List(parameters.ToString());
                 foreach (XmlRpcStruct security in query)
                     securities.Add(new Security(security));
 
@@ -184,7 +174,7 @@ namespace StockPlay.implXMLRPC
 
                 List<ISecurity> securities = new List<ISecurity>();
 
-                XmlRpcStruct[] query = securityHandler.List("EXCHANGE == '" + id + "'");
+                XmlRpcStruct[] query = publicSecurityHandler.List("EXCHANGE == '" + id + "'");
                 foreach (XmlRpcStruct security in query)
                     securities.Add(new Security(security));
 
@@ -210,7 +200,7 @@ namespace StockPlay.implXMLRPC
 
                 IQuote quote = null;
 
-                XmlRpcStruct[] query = securityHandler.LatestQuotes("ISIN == '" + isin + "'");
+                XmlRpcStruct[] query = publicSecurityHandler.LatestQuotes("ISIN == '" + isin + "'");
                 if (query.Length > 0)
                     quote = new Quote(query[0]);
                 else
@@ -236,9 +226,10 @@ namespace StockPlay.implXMLRPC
                 foreach (ISecurity security in securities)
                     isins.Add("ISIN == '" + security.Isin + "'");
 
-                sysLog.Info("Request: 'GetLatestQuotesFromSecurities' - Requested Securities: '" + isins.ToArray() +"'");
+                // TODO - deze info wordt niet doorgestuurd, wss te groot
+                sysLog.Info("Request: 'GetLatestQuotesFromSecurities' - Requested Securities: '" + string.Join(" ", isins.ToArray()) + "'");
 
-                XmlRpcStruct[] queries = securityHandler.LatestQuotes(string.Join(" || ", isins.ToArray()));
+                XmlRpcStruct[] queries = publicSecurityHandler.LatestQuotes(string.Join(" || ", isins.ToArray()));
                 foreach (XmlRpcStruct query in queries)
                 {
                     quotes.Add(new Quote(query));
@@ -270,7 +261,7 @@ namespace StockPlay.implXMLRPC
                 string from = iFrom.Year + "-" + iFrom.Month + "-" + iFrom.Day + "T" + iFrom.Hour + ":" + iFrom.Minute + "Z";
                 string to = iTo.Year + "-" + iTo.Month + "-" + iTo.Day + "T" + iTo.Hour + ":" + iTo.Minute + "Z";
 
-                XmlRpcStruct[] query = securityHandler.Quotes("ISIN == '" + isin + "' && TIMESTAMP <= '" + to + "'d && TIMESTAMP > '" + from + "'d");
+                XmlRpcStruct[] query = publicSecurityHandler.Quotes("ISIN == '" + isin + "' && TIMESTAMP <= '" + to + "'d && TIMESTAMP > '" + from + "'d");
                 foreach (XmlRpcStruct quote in query)
                     quotes.Add(new Quote(quote));
 
@@ -292,7 +283,7 @@ namespace StockPlay.implXMLRPC
             {
                 sysLog.Info("Request: 'GetLatestTime' - Requested Security: '" + isin + "'");
 
-                DateTime time = securityHandler.getLatestTime(isin);
+                DateTime time = publicSecurityHandler.getLatestTime(isin);
                 return time;
             }
             catch(Exception e)
@@ -309,7 +300,7 @@ namespace StockPlay.implXMLRPC
             {
                 sysLog.Info("Request: 'GetFirstTime' - Requested Security: '" + isin + "'");
 
-                DateTime time = securityHandler.getFirstTime(isin);
+                DateTime time = publicSecurityHandler.getFirstTime(isin);
                 return time;
             }
             catch (Exception e)
@@ -328,15 +319,15 @@ namespace StockPlay.implXMLRPC
         {
             try
             {
-                sysLog.Info("Request: 'GetExchangeBySymbol' - Requested Exchange: '" + symbol + "'");
-
                 IExchange exchange = null;
 
                 if (exchangeCache.ContainsKey(symbol))
                     exchange = exchangeCache[symbol];
                 else
                 {
-                    XmlRpcStruct[] query = exchangeHandler.List("SYMBOL == '" + symbol + "'");
+                    sysLog.Info("Request: 'GetExchangeBySymbol' - Requested Exchange: '" + symbol + "'");
+
+                    XmlRpcStruct[] query = publicExchangeHandler.List("SYMBOL == '" + symbol + "'");
                     exchange = new Exchange(query[0]);
                     exchangeCache.Add(symbol, exchange);
                 }
@@ -359,7 +350,7 @@ namespace StockPlay.implXMLRPC
 
                 List<IExchange> exchanges = new List<IExchange>();
 
-                XmlRpcStruct[] query = exchangeHandler.List();
+                XmlRpcStruct[] query = publicExchangeHandler.List();
                 foreach (XmlRpcStruct exchange in query)
                     exchanges.Add(new Exchange(exchange));
 
@@ -387,7 +378,7 @@ namespace StockPlay.implXMLRPC
 
                 User user = new User(id, nickname, password, email, isAdmin, lastname, firstname, regTime, rrn, points, startAmount, cash);
                 XmlRpcStruct userStruct = user.toStruct();
-                userHandler.Create(userStruct);
+                publicUserHandler.Create(userStruct);
             }
             catch (Exception e)
             {
@@ -397,13 +388,14 @@ namespace StockPlay.implXMLRPC
             }
         }
 
-        public bool RemoveUser(string nickname)
+        public bool RemoveUser(string nickname, string sessionID)
         {
             try
             {
                 sysLog.Info("Request: RemoveUser - Requested User: '" + nickname + "'");
 
-                userHandler.Remove("NICKNAME == '" + nickname + "'");
+                UserHandler privateUserHandler = HandlerHelper.getPrivateUserHandler(privateXmlRpcUrl, sessionID);
+                privateUserHandler.Remove("NICKNAME == '" + nickname + "'");
             }
             catch (Exception e)
             {
@@ -414,7 +406,7 @@ namespace StockPlay.implXMLRPC
             return false;
         }
 
-        public bool UpdateUser(IUser user)
+        public bool UpdateUser(IUser user, string sessionID)
         {
             try
             {
@@ -424,7 +416,8 @@ namespace StockPlay.implXMLRPC
                                                                                    + " LASTNAME=" + user.Lastname
                                                                                    + " EMAIL=" + user.Email);
 
-                userHandler.Modify("NICKNAME == '" + user.Nickname + "'", userStruct);
+                UserHandler privateUserHandler = HandlerHelper.getPrivateUserHandler(privateXmlRpcUrl, sessionID);
+                privateUserHandler.Modify("NICKNAME == '" + user.Nickname + "'", userStruct);
             }
             catch (Exception e)
             {
@@ -436,7 +429,7 @@ namespace StockPlay.implXMLRPC
             return true;
         }
 
-        public IUser GetUserByNickname(string nickname)
+        public IUser GetUserByNickname(string nickname, string sessionID)
         {
             try
             {
@@ -444,7 +437,8 @@ namespace StockPlay.implXMLRPC
 
                 IUser user = null;
 
-                XmlRpcStruct[] userStruct = userHandler.List("NICKNAME == '" + nickname + "'");
+                UserHandler privateUserHandler = HandlerHelper.getPrivateUserHandler(privateXmlRpcUrl, sessionID);
+                XmlRpcStruct[] userStruct = privateUserHandler.List("NICKNAME == '" + nickname + "'");
                 if (userStruct.Length > 0)
                     user = new User(userStruct[0]);
 
@@ -458,12 +452,12 @@ namespace StockPlay.implXMLRPC
             }
         }
 
-        public bool ValidateUser(string nickname, string password)
+        public string ValidateUser(string nickname, string password)
         {
-            return userHandler.Validate(nickname, password);
+            return publicUserHandler.Validate(nickname, password);
         }
 
-        public List<IUserSecurity> GetUserSecurities(int id)
+        public List<IUserSecurity> GetUserSecurities(int id, string sessionID)
         {
             try
             {
@@ -471,7 +465,8 @@ namespace StockPlay.implXMLRPC
 
                 List<IUserSecurity> userSecurities = new List<IUserSecurity>();
 
-                XmlRpcStruct[] portfolioStruct = portfolioHandler.List("USERID == '" + id + "'");
+                PortfolioHandler privatePortfolioHandler = HandlerHelper.getPrivatePortfolioHandler(privateXmlRpcUrl, sessionID);
+                XmlRpcStruct[] portfolioStruct = privatePortfolioHandler.List("USERID == '" + id + "'");
 
                 foreach (XmlRpcStruct userSecurity in portfolioStruct)
                     userSecurities.Add(new UserSecurity(userSecurity));
@@ -486,7 +481,7 @@ namespace StockPlay.implXMLRPC
             }
         }
 
-        public List<ITransaction> GetUserTransactions(int id)
+        public List<ITransaction> GetUserTransactions(int id, string sessionID)
         {
             try
             {
@@ -494,7 +489,8 @@ namespace StockPlay.implXMLRPC
 
                 List<ITransaction> userTransactions = new List<ITransaction>();
 
-                XmlRpcStruct[] transactionStruct = transactionHandler.List("USERID == '" + id + "'");
+                TransactionHandler privateTransactionHandler = HandlerHelper.getPrivateTransactionHandler(privateXmlRpcUrl, sessionID);
+                XmlRpcStruct[] transactionStruct = privateTransactionHandler.List("USERID == '" + id + "'");
 
                 foreach (XmlRpcStruct userTransaction in userTransactions)
                     userTransactions.Add(new Transaction(userTransaction));
@@ -513,15 +509,16 @@ namespace StockPlay.implXMLRPC
          * ORDERS
          */
 
-        public void CreateOrder(int userId, string isin, int amount, double price, string type)
+        public void CreateOrder(int userId, string isin, int amount, double price, string type, string sessionID)
         {
             try
             {
                 sysLog.Info("Request: CreateOrder - Created Order: USERID=" + userId + " ISIN=" + isin + " AMOUNT=" + amount
                                                                    + " PRICE=" + price + " TYPE=" + type);
 
+                OrderHandler privateOrderHandler = HandlerHelper.getPrivateOrderHandler(privateXmlRpcUrl, sessionID);
                 Order order = new Order(-1, userId, isin, amount, price, type, "ACCEPTED", DateTime.Now, DateTime.MinValue, DateTime.MinValue);
-                orderHandler.Create(order.toStruct());
+                privateOrderHandler.Create(order.toStruct());
             }
             catch (Exception e)
             {
@@ -529,7 +526,22 @@ namespace StockPlay.implXMLRPC
             }
         }
 
-        public List<IOrder> GetUserOrders(int id)
+        public void CancelOrder(int orderId, string sessionID)
+        {
+            try
+            {
+                sysLog.Info("Request: CancelOrder - Requested OrderId: " + orderId);
+
+                OrderHandler privateOrderHandler = HandlerHelper.getPrivateOrderHandler(privateXmlRpcUrl, sessionID);
+                privateOrderHandler.Cancel("ID == '" + orderId + "'");
+            }
+            catch (Exception e)
+            {
+                sysLog.Error("Error when cancelling Order", e);
+            }
+        }
+
+        public List<IOrder> GetUserOrders(int id, string sessionID)
         {
             try
             {
@@ -537,7 +549,8 @@ namespace StockPlay.implXMLRPC
 
                 List<IOrder> userOrders = new List<IOrder>();
 
-                XmlRpcStruct[] orderStruct = orderHandler.List("USERID == '" + id + "'");
+                OrderHandler privateOrderHandler = HandlerHelper.getPrivateOrderHandler(privateXmlRpcUrl, sessionID);
+                XmlRpcStruct[] orderStruct = privateOrderHandler.List("USERID == '" + id + "'");
 
                 foreach (XmlRpcStruct userOrder in orderStruct)
                     userOrders.Add(new Order(userOrder));
@@ -549,20 +562,6 @@ namespace StockPlay.implXMLRPC
                 sysLog.Error("Error when requesting UserOrders", e);
 
                 return null;
-            }
-        }
-
-        public void CancelOrder(int orderId)
-        {
-            try
-            {
-                sysLog.Info("Request: CancelOrder - Requested OrderId: " + orderId);
-
-                orderHandler.Cancel("ID == '" + orderId + "'");
-            }
-            catch (Exception e)
-            {
-                sysLog.Error("Error when cancelling Order", e);
             }
         }
 

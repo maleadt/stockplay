@@ -49,7 +49,9 @@
     <Content Include="User\Overview.aspx" />
     <Content Include="User\Portfolio.aspx" />
     <Content Include="User\TransactionHistory.aspx" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.sitemap">
       <SubType>Designer</SubType>
     </Content>
@@ -138,6 +140,7 @@
     <Content Include="grafiek\options.js" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="bo\implXMLRPC\handlers\HandlerHelper.cs" />
     <Compile Include="Default.aspx.designer.cs">
       <DependentUpon>Default.aspx</DependentUpon>
     </Compile>
