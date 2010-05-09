@@ -263,7 +263,7 @@ namespace StockPlay.implXMLRPC
 
 //                XmlRpcStruct[] query = securityHandler.Quotes("ISIN == '" + isin + "' && TIMESTAMP <= '" + to + "'d && TIMESTAMP > '" + from + "'d");
 
-                XmlRpcStruct[] query = securityHandler.Quotes(iFrom, iTo, 10, "ISIN == '" + isin + "'");
+                XmlRpcStruct[] query = publicSecurityHandler.Quotes(iFrom, iTo, 10, "ISIN == '" + isin + "'");
 
                 foreach (XmlRpcStruct quote in query)
                     quotes.Add(new Quote(quote));
@@ -322,7 +322,7 @@ namespace StockPlay.implXMLRPC
             {
                 sysLog.Info("Request: 'GetFirstTime' - Requested Security: '" + isin + "'");
 
-                DateTime[] dictionary = securityHandler.getRange(isin);
+                DateTime[] dictionary = publicSecurityHandler.getRange(isin);
 
                 foreach (DateTime range in dictionary)
                     ranges.Add(range);

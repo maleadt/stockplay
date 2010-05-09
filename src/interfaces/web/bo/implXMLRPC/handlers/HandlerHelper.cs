@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using CookComputing.XmlRpc;
 using System.Net;
+using System.Text;
 
 namespace web.bo.implXMLRPC.handlers
 {
@@ -77,7 +78,7 @@ namespace web.bo.implXMLRPC.handlers
         public static ExchangeHandler getPrivateExchangeHandler(string xmlRpcUrl, string sessionID)
         {
             ExchangeHandler handler = getPublicExchangeHandler(xmlRpcUrl);
-            handler.Credentials = new System.Net.NetworkCredential(sessionID, sessionID);
+            handler.Headers.Add("Authorization", "Basic " + getBase64SessionID(sessionID));
 
             return handler;
         }
@@ -85,7 +86,7 @@ namespace web.bo.implXMLRPC.handlers
         public static OrderHandler getPrivateOrderHandler(string xmlRpcUrl, string sessionID)
         {
             OrderHandler handler = getPublicOrderHandler(xmlRpcUrl);
-            handler.Credentials = new System.Net.NetworkCredential(sessionID, sessionID);
+            handler.Headers.Add("Authorization", "Basic " + getBase64SessionID(sessionID));
 
             return handler;
         }
@@ -93,7 +94,7 @@ namespace web.bo.implXMLRPC.handlers
         public static IndexHandler getPrivateIndexHandler(string xmlRpcUrl, string sessionID)
         {
             IndexHandler handler = getPublicIndexHandler(xmlRpcUrl);
-            handler.Credentials = new System.Net.NetworkCredential(sessionID, sessionID);
+            handler.Headers.Add("Authorization", "Basic " + getBase64SessionID(sessionID));
 
             return handler;
         }
@@ -101,7 +102,7 @@ namespace web.bo.implXMLRPC.handlers
         public static PortfolioHandler getPrivatePortfolioHandler(string xmlRpcUrl, string sessionID)
         {
             PortfolioHandler handler = getPublicPortfolioHandler(xmlRpcUrl);
-            handler.Credentials = new System.Net.NetworkCredential(sessionID, sessionID);
+            handler.Headers.Add("Authorization", "Basic " + getBase64SessionID(sessionID));
 
             return handler;
         }
@@ -109,7 +110,7 @@ namespace web.bo.implXMLRPC.handlers
         public static SecurityHandler getPrivateSecurityHandler(string xmlRpcUrl, string sessionID)
         {
             SecurityHandler handler = getPublicSecurityHandler(xmlRpcUrl);
-            handler.Credentials = new System.Net.NetworkCredential(sessionID, sessionID);
+            handler.Headers.Add("Authorization", "Basic " + getBase64SessionID(sessionID));
 
             return handler;
         }
@@ -117,7 +118,7 @@ namespace web.bo.implXMLRPC.handlers
         public static TransactionHandler getPrivateTransactionHandler(string xmlRpcUrl, string sessionID)
         {
             TransactionHandler handler = getPublicTransactionHandler(xmlRpcUrl);
-            handler.Credentials = new System.Net.NetworkCredential(sessionID, sessionID);
+            handler.Headers.Add("Authorization", "Basic " + getBase64SessionID(sessionID));
 
             return handler;
         }
@@ -125,9 +126,17 @@ namespace web.bo.implXMLRPC.handlers
         public static UserHandler getPrivateUserHandler(string xmlRpcUrl, string sessionID)
         {
             UserHandler handler = getPublicUserHandler(xmlRpcUrl);
-            handler.Credentials = new System.Net.NetworkCredential(sessionID, sessionID);
+            handler.Headers.Add("Authorization", "Basic " + getBase64SessionID(sessionID));
 
             return handler;
+        }
+
+        private static string getBase64SessionID(string sessionID)
+        {
+            byte[] stringArray = Encoding.UTF8.GetBytes(sessionID + ":");
+            Convert.ToBase64String(stringArray);
+
+            return Convert.ToBase64String(stringArray);
         }
     }
 }

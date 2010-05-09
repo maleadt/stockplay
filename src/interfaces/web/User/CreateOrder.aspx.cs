@@ -177,23 +177,27 @@ namespace StockPlay.Web
 	            {
 	                IDataAccess data = DataAccessFactory.GetDataAccess();
 	                ISecurity security = data.GetSecurityByIsin(Request.Params["ISIN"])[0];
-	                data.CreateOrder((int) Session["userID"], security.Isin, Convert.ToInt32(txtAmount.Text),
-                                     Convert.ToDouble(txtQuote.Text), "BUY", (string) Session["sessionID"]);
+
+                    int userID = (int) Session["userID"];
+                    string sessionID = (string) Session["sessionID"];
+
+                    //TODO - Dit corrigeren?
+	                //data.CreateOrder(userID, security.Isin, Convert.ToInt32(txtAmount.Text), Convert.ToDouble(txtQuote.Text), "BUY", sessionID);
 
                     if (OrderType.SelectedValue.Equals("direct"))
-                        data.CreateOrder(user.ID, security.Isin, Convert.ToInt32(txtAmount.Text), 0, 0, "BUY_IMMEDIATE");
+                        data.CreateOrder(userID, security.Isin, Convert.ToInt32(txtAmount.Text), 0, 0, "BUY_IMMEDIATE", sessionID);
 
                         if (OrderType.SelectedValue.Equals("limit"))
-                            data.CreateOrder(user.ID, security.Isin, Convert.ToInt32(txtAmount.Text), Convert.ToDouble(txtQuote.Text), 0, "BUY");
+                            data.CreateOrder(userID, security.Isin, Convert.ToInt32(txtAmount.Text), Convert.ToDouble(txtQuote.Text), 0, "BUY", sessionID);
 
                             if (OrderType.SelectedValue.Equals("bracket"))
-                                data.CreateOrder(user.ID, security.Isin, Convert.ToInt32(txtAmount.Text), Convert.ToDouble(txtOnderLimiet.Text), Convert.ToDouble(txtBovenLimiet.Text), "BRACKET_LIMIT_BUY");
+                                data.CreateOrder(userID, security.Isin, Convert.ToInt32(txtAmount.Text), Convert.ToDouble(txtOnderLimiet.Text), Convert.ToDouble(txtBovenLimiet.Text), "BRACKET_LIMIT_BUY", sessionID);
 
                                 if (OrderType.SelectedValue.Equals("stoploss"))
-                                    data.CreateOrder(user.ID, security.Isin, Convert.ToInt32(txtAmount.Text), Convert.ToDouble(txtQuote.Text), 0, "STOP_LOSS_BUY");
+                                    data.CreateOrder(userID, security.Isin, Convert.ToInt32(txtAmount.Text), Convert.ToDouble(txtQuote.Text), 0, "STOP_LOSS_BUY", sessionID);
 
                                     if (OrderType.SelectedValue.Equals("trailing"))
-                                        data.CreateOrder(user.ID, security.Isin, Convert.ToInt32(txtAmount.Text), Convert.ToDouble(txtBonuspunten.Text), 0, "TRAILING_STOP_BUY");
+                                        data.CreateOrder(userID, security.Isin, Convert.ToInt32(txtAmount.Text), Convert.ToDouble(txtBonuspunten.Text), 0, "TRAILING_STOP_BUY", sessionID);
 
                                         Response.Redirect("~/User/OrdersOverview.aspx");
 	            }

@@ -175,7 +175,7 @@ namespace StockPlay.Web
 	            ISecurity security = data.GetSecurityByIsin(Request.Params["sell"])[0];
 	            IQuote latestQuote = data.GetLatestQuoteFromSecurity(Request.Params["sell"]);
 	
-	            StockplayMembershipUser user = (StockplayMembershipUser)Membership.GetUser((int) Session["userID"]entity.Name);
+	            StockplayMembershipUser user = (StockplayMembershipUser)Membership.GetUser((int) Session["userID"]);
 
                 if (OrderType.SelectedValue.Equals("direct"))
                     data.CreateOrder((int) Session["userID"], security.Isin, Convert.ToInt32(txtAmount.Text), 0, 0, "SELL_IMMEDIATE", (string) Session["sessionID"]);
