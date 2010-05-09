@@ -174,6 +174,8 @@ public class UserHandler extends MethodClass {
         Filter filter = parser.parse("nickname == '" + nickname + "'");
 
         Collection<com.kapti.data.User> tUsers = tUserDAO.findByFilter(filter);
+        if (tUsers.size() == 0)
+            return "";  // Throw invalid credentials exception
         Iterator<User> uIterator = tUsers.iterator();
         User user = uIterator.next();
         if(user.checkPassword(password)){

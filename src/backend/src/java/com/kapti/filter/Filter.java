@@ -28,6 +28,8 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
+import java.util.ArrayList;
+import java.util.List;
 import org.apache.log4j.Logger;
 
 /**
@@ -150,8 +152,25 @@ public class Filter implements Serializable {
      */
     public static Filter merge(Filter a, Filter b, Class<? extends Relation> r) throws FilterException {
         try {
-            Constructor<? extends Condition> c = r.getConstructor(Condition.class, Condition.class);
-            return new Filter( c.newInstance(a, b));
+            Constructor<? extends Condition> c = r.getConstructor(List.class);
+
+            // Maak een nieuwe filter gebaseerd op inkomende filters
+            // (lege filters negeren)
+            Filter oFilter = null;
+            if (a.empty() && b.empty()) {
+                oFilter = new Filter();
+            } else if (a.empty()) {
+                oFilter = new Filter(b.mRoot);
+            } else if (b.empty()) {
+                oFilter = new Filter(a.mRoot);
+            } else {
+                List<Convertable> tParams = new ArrayList<Convertable>();
+                tParams.add(a.mRoot);
+                tParams.add(b.mRoot);
+                oFilter = new Filter(c.newInstance(tParams));
+            }
+
+            return oFilter;
         }
         catch (Exception e) {
             throw new FilterException(FilterException.Type.MERGE_FAILURE, "construction of relation failed", e.getCause());

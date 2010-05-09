@@ -27,8 +27,8 @@ public final class FilterException extends StockPlayException {
         //
 
         FILTER_FAILURE(31, "Filter Failure"),
-        DEBUG_FAILURE(32, "Debug Failure"),
-        MERGE_FAILURE(33, "Merge Failure");
+        DEBUG_FAILURE(32, "Filter Debug Failure"),
+        MERGE_FAILURE(33, "Filter Merge Failure");
 
         private final int mCode;
         private final String mMessage;
