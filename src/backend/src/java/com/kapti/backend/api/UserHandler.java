@@ -179,11 +179,9 @@ public class UserHandler extends MethodClass {
         Iterator<User> uIterator = tUsers.iterator();
         User user = uIterator.next();
         if (user.checkPassword(password)) {
-
             return createAndRegisterSession(user);
-
         } else {
-            return "";
+            throw new ServiceException(ServiceException.Type.INVALID_CREDENTIALS);
         }
     }
 
