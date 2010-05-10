@@ -1,12 +1,6 @@
 Backend
 -------
 
-*) Toevoegen van authenticatie & autorisatie
-
-Deze functionaliteit hoeft niet in de Concrete* implementaties te staan, maar
-kan geabstraheerd worden in de bovenliggende abstracte klassen.
-
-
 *) Controle van keys in filter
 
 Het zou mooi zijn om de doorgegeven filters te controleren zodat slecht een
@@ -14,20 +8,7 @@ vaste (gedocumenteerde) selectie er kan in voorkomen. Eventueel translatielaag
 toevoegen om joins etc te ondersteunen (FIELD -> String, SQL only).
 
 
-*) Duplicate code bij excepties
+*) Filter
 
-
-*) Methode om quotes aan een bepaalde resolutie op te halen
-
-vb. getQuotes(DateTime start, DateTime end, Int amount)
-
-getfirstdate&getlastdate -> getquoterange
-
-
-
-Perl
-----
-
-getIndexSecurities($index)
-createIndexSecurity($index, $security) -> ook aan push(@{$index->securities})?
+Limit functie (orderfields, amount, selection)
 
