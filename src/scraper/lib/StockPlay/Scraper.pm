@@ -297,6 +297,11 @@ sub run {
 			if ($@) {
 				chomp $@;
 				$self->logger->error("plugin processing failed ($@)");
+				# Remove all quotes (so they can't be used as
+				# time reference the next day)
+				foreach my $quotable (@quotables) {
+					delete $quotable->{quote};
+				}
 			}
 		}
 		

@@ -30,6 +30,7 @@ use StockPlay::Security;
 use StockPlay::Quote;
 use DateTime::Format::ISO8601;
 use StockPlay::Configuration;
+use MIME::Base64;
 
 # Roles
 with 'StockPlay::Logger';
@@ -73,7 +74,7 @@ sub _build_xmlrpc {
 	my ($self) = @_;
 
 	# Disable compression with
-	#$RPC::XML::GzipClient::COMPRESSION_AVAILABLE = "";
+	$RPC::XML::GzipClient::COMPRESSION_AVAILABLE = "";
 	
 	my $xmlrpc = RPC::XML::GzipClient->new(
 		$self->config->get('server'),
@@ -109,6 +110,8 @@ sub BUILD {
 	
 	# Default configuration
 	$self->config->set_default('server', 'http://localhost:6800/backend/public');
+	$self->config->set_default('username', undef);
+	$self->config->set_default('password', undef);
 	
 	# Build data members which require other data members
 	$self->xmlrpc;
@@ -120,6 +123,25 @@ sub BUILD {
 	if ($@) {
 		chomp $@;
 		die("could not connect to backend ($@)\n");
+	}
+	
+	# Verify credentials
+	my $username = $self->config->get("username");
+	my $password = $self->config->get("password");
+	if (defined $username && defined $password) {
+		eval {
+			my $session = $self->xmlrpc->send_request('User.Validate',
+				RPC_STRING($username),
+				RPC_STRING($password))
+			->value;
+			my $basic_auth = "Basic " . encode_base64($session . ":42");
+			$self->xmlrpc->request->header("Authorization", $basic_auth);
+			
+		};
+		if ($@) {
+			chomp $@;
+			die("could not login with given credentials ($@)\n");
+		}
 	}
 }
 
