@@ -21,6 +21,7 @@ package com.kapti.backend.security;
 import com.kapti.data.Role;
 import com.kapti.data.User;
 import com.kapti.data.persistence.StockPlayDAOFactory;
+import com.kapti.exceptions.ServiceException;
 import com.kapti.exceptions.StockPlayException;
 import java.io.IOException;
 import java.util.Collection;
@@ -141,8 +142,11 @@ public class SessionsHandler {
         return securityroles.containsKey(methodName);
     }
 
-    public boolean verifyRequest(String sessionid, String methodName) {
-        if (sessions.containsKey(sessionid)) {
+    public boolean verifyRequest(String sessionid, String methodName) throws StockPlayException {
+        if (sessionid != null) {
+            if (! sessions.containsKey(sessionid))
+                throw new ServiceException(ServiceException.Type.SESSION_CORRUPT);
+            
             Session s = sessions.get(sessionid);
             s.recordActivity();
 

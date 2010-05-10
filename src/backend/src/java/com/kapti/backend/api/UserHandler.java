@@ -23,6 +23,7 @@ import com.kapti.backend.security.SessionsHandler;
 import com.kapti.data.User;
 import com.kapti.data.persistence.GenericDAO;
 import com.kapti.exceptions.InvocationException;
+import com.kapti.exceptions.ServiceException;
 import com.kapti.exceptions.StockPlayException;
 import com.kapti.filter.Filter;
 import com.kapti.filter.parsing.Parser;
@@ -30,7 +31,6 @@ import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.TimeZone;
@@ -174,9 +174,8 @@ public class UserHandler extends MethodClass {
         Filter filter = parser.parse("nickname == '" + nickname + "'");
 
         Collection<com.kapti.data.User> tUsers = tUserDAO.findByFilter(filter);
-        if (tUsers.size() == 0) {
-            return "";  // Throw invalid credentials exception
-        }
+        if (tUsers.size() == 0)
+            throw new ServiceException(ServiceException.Type.INVALID_CREDENTIALS);
         Iterator<User> uIterator = tUsers.iterator();
         User user = uIterator.next();
         if (user.checkPassword(password)) {

@@ -28,7 +28,9 @@ public final class ServiceException extends StockPlayException {
 
         SERVICE_UNAVAILABLE(10, "Service Unavailable"),
         UNAUTHORIZED(11, "Unauthorized"),
-        NOT_ENOUGH_INFORMATION(12, "not enough information to instantiate object");
+        INVALID_CREDENTIALS(12, "Invalid Credentials"),
+        SESSION_CORRUPT(13, "Session Corrupt"),
+        NOT_ENOUGH_INFORMATION(14, "not enough information to instantiate object");
 
         private final int mCode;
         private final String mMessage;
