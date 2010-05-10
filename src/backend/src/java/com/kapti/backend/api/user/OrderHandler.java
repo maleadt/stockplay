@@ -56,7 +56,7 @@ public class OrderHandler extends MethodClass {
             filter = base;
         } else {
             Filter user = parser.parse("id == '" + getUser().getId() + "'i");
-            filter = Filter.merge(base, user, RelationAnd.class);
+            filter = Filter.merge(RelationAnd.class, base, user);
         }
 
         // Fetch and convert all orders
@@ -116,7 +116,7 @@ public class OrderHandler extends MethodClass {
             filter = base;
         } else {
             Filter user = parser.parse("id == '" + getUser().getId() + "'i");
-            filter = Filter.merge(base, user, RelationAnd.class);
+            filter = Filter.merge(RelationAnd.class, base, user);
         }
 
         // Get the exchanges we need to modify
@@ -144,7 +144,7 @@ public class OrderHandler extends MethodClass {
             filter = base;
         } else {
             Filter user = parser.parse("id == '" + getUser().getId() + "'i");
-            filter = Filter.merge(base, user, RelationAnd.class);
+            filter = Filter.merge(RelationAnd.class, base, user);
         }
 
         // Get the exchanges we need to modify

@@ -150,24 +150,26 @@ public class Filter implements Serializable {
      *
      * @return
      */
-    public static Filter merge(Filter a, Filter b, Class<? extends Relation> r) throws FilterException {
+    public static Filter merge(Class<? extends Relation> iRelation, Filter... iFilters) throws FilterException {
         try {
-            Constructor<? extends Condition> c = r.getConstructor(List.class);
+            Constructor<? extends Condition> c = iRelation.getConstructor(List.class);
+            Filter oFilter = new Filter();
 
-            // Maak een nieuwe filter gebaseerd op inkomende filters
-            // (lege filters negeren)
-            Filter oFilter = null;
-            if (a.empty() && b.empty()) {
-                oFilter = new Filter();
-            } else if (a.empty()) {
-                oFilter = new Filter(b.mRoot);
-            } else if (b.empty()) {
-                oFilter = new Filter(a.mRoot);
-            } else {
-                List<Convertable> tParams = new ArrayList<Convertable>();
-                tParams.add(a.mRoot);
-                tParams.add(b.mRoot);
-                oFilter = new Filter(c.newInstance(tParams));
+            // Merge the filters using the given relation
+            switch (iFilters.length) {
+                case 0:
+                    break;
+
+                case 1:
+                    oFilter.mRoot = iFilters[0].mRoot;
+                    break;
+                    
+                default:
+                    List<Convertable> tParameters = new ArrayList<Convertable>();
+                    for (Filter tFilter : iFilters) {
+                        tParameters.add(tFilter.mRoot);
+                    }
+                    oFilter.mRoot = c.newInstance(tParameters);
             }
 
             return oFilter;
