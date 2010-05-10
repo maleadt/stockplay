@@ -66,7 +66,7 @@ public class UserHandler extends MethodClass {
         tUser.applyStruct(iDetails);
         tUser.setStartamount(100000); //TODO hier berekenen van het startamount
         tUser.setCash(100000);
-        tUser.setRegdate( DateHelper.convertCalendar(Calendar.getInstance(), TimeZone.getTimeZone("GMT")).getTime());
+        tUser.setRegdate(DateHelper.convertCalendar(Calendar.getInstance(), TimeZone.getTimeZone("GMT")).getTime());
 
         return tUserDAO.create(tUser);
     }
@@ -174,24 +174,33 @@ public class UserHandler extends MethodClass {
         Filter filter = parser.parse("nickname == '" + nickname + "'");
 
         Collection<com.kapti.data.User> tUsers = tUserDAO.findByFilter(filter);
-        if (tUsers.size() == 0)
+        if (tUsers.size() == 0) {
             return "";  // Throw invalid credentials exception
+        }
         Iterator<User> uIterator = tUsers.iterator();
         User user = uIterator.next();
-        if(user.checkPassword(password)){
+        if (user.checkPassword(password)) {
 
-            //we generereren nu een sessie-id voor de gebruiker
+            return createAndRegisterSession(user);
 
-            java.security.SecureRandom random = new SecureRandom();
-            String sessionid =  new BigInteger(130,random).toString(32);
-
-
-            SessionsHandler.getInstance().registerSession(sessionid, user);
-
-            return sessionid;
-
+        } else {
+            return "";
         }
+    }
 
-        else return "";
+    private String CreateSessionForUser(int id) throws StockPlayException {
+        GenericDAO<com.kapti.data.User, Integer> tUserDAO = getDAO().getUserDAO();
+
+        User u = tUserDAO.findById(id);
+        return createAndRegisterSession(u);
+
+    }
+
+    private String createAndRegisterSession(User user) {
+        //we generereren nu een sessie-id voor de gebruiker
+        java.security.SecureRandom random = new SecureRandom();
+        String sessionid = new BigInteger(130, random).toString(32);
+        SessionsHandler.getInstance().registerSession(sessionid, user);
+        return sessionid;
     }
 }
