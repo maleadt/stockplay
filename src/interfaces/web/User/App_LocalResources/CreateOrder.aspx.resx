@@ -120,6 +120,9 @@
   <data name="AmountError.ErrorMessage" xml:space="preserve">
     <value>You need to enter an amount larger than 0</value>
   </data>
+  <data name="bracket.Text" xml:space="preserve">
+    <value>Bracket Order</value>
+  </data>
   <data name="Cancel.Text" xml:space="preserve">
     <value>Cancel</value>
   </data>
@@ -129,8 +132,14 @@
   <data name="Continue.Text" xml:space="preserve">
     <value>Continue</value>
   </data>
+  <data name="direct.Text" xml:space="preserve">
+    <value>Direct Order</value>
+  </data>
   <data name="LabelError.Text" xml:space="preserve">
     <value>You do not have enough cash to place this order</value>
+  </data>
+  <data name="limit.Text" xml:space="preserve">
+    <value>Limit Order</value>
   </data>
   <data name="Page.Title" xml:space="preserve">
     <value>Create order</value>
@@ -147,6 +156,9 @@
   <data name="Para4" xml:space="preserve">
     <value>Amount:</value>
   </data>
+  <data name="Para5" xml:space="preserve">
+    <value>Sort order:s</value>
+  </data>
   <data name="Para51" xml:space="preserve">
     <value>After this order your new account balance will be</value>
   </data>
@@ -155,5 +167,20 @@
   </data>
   <data name="QuoteError.ErrorMessage" xml:space="preserve">
     <value>Please enter a correct price, greater than 1</value>
+  </data>
+  <data name="stoploss.Text" xml:space="preserve">
+    <value>Stop Loss Order</value>
+  </data>
+  <data name="trailing.Text" xml:space="preserve">
+    <value>Trailing Stop Order</value>
+  </data>
+  <data name="Para6" xml:space="preserve">
+    <value>Onder limiet:</value>
+  </data>
+  <data name="Para7" xml:space="preserve">
+    <value>Boven limiet:</value>
+  </data>
+  <data name="Para8" xml:space="preserve">
+    <value>Punten:</value>
   </data>
 </root>

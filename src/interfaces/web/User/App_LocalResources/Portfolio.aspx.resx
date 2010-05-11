@@ -123,14 +123,23 @@
   <data name="AmountError.ErrorMessage" xml:space="preserve">
     <value>Please enter an amount smaller than or equal your total amount of stocks for this security.</value>
   </data>
+  <data name="bracket.Text" xml:space="preserve">
+    <value>Bracket Limit Order</value>
+  </data>
   <data name="Cancel.Text" xml:space="preserve">
     <value>Cancel</value>
   </data>
   <data name="Confirm.Text" xml:space="preserve">
     <value>Confirm</value>
   </data>
+  <data name="direct.Text" xml:space="preserve">
+    <value>Direct Sell</value>
+  </data>
   <data name="Isin.HeaderText" xml:space="preserve">
     <value>Isin</value>
+  </data>
+  <data name="limit.Text" xml:space="preserve">
+    <value>Sell with Limit</value>
   </data>
   <data name="Page.Title" xml:space="preserve">
     <value>Portfolio</value>
@@ -150,6 +159,9 @@
   <data name="Para32" xml:space="preserve">
     <value>Asking price per stock?</value>
   </data>
+  <data name="Para5" xml:space="preserve">
+    <value>Type of order:</value>
+  </data>
   <data name="PriceError.ErrorMessage" xml:space="preserve">
     <value>Please enter a positive number.</value>
   </data>
@@ -162,7 +174,22 @@
   <data name="Sell.Text" xml:space="preserve">
     <value>Place Sell Order</value>
   </data>
+  <data name="stoploss.Text" xml:space="preserve">
+    <value>Stop Loss Order</value>
+  </data>
   <data name="Title.InnerText" xml:space="preserve">
     <value>Portfolio</value>
+  </data>
+  <data name="trailing.Text" xml:space="preserve">
+    <value>Trailing Stop Limit</value>
+  </data>
+  <data name="Para6" xml:space="preserve">
+    <value>Under limit:</value>
+  </data>
+  <data name="Para7" xml:space="preserve">
+    <value>Upper limit:</value>
+  </data>
+  <data name="Para8" xml:space="preserve">
+    <value>Points:</value>
   </data>
 </root>

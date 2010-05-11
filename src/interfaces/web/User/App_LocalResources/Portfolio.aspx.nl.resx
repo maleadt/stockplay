@@ -123,14 +123,23 @@
   <data name="AmountError.ErrorMessage" xml:space="preserve">
     <value>Vul een hoeveelheid in die kleiner dan of gelijk is aan de totale hoeveelheid aandelen die zich in uw portfolio bevinden.</value>
   </data>
+  <data name="bracket.Text" xml:space="preserve">
+    <value>Bracket Sell</value>
+  </data>
   <data name="Cancel.Text" xml:space="preserve">
     <value>Annuleren</value>
   </data>
   <data name="Confirm.Text" xml:space="preserve">
     <value>Bevestigen</value>
   </data>
+  <data name="direct.Text" xml:space="preserve">
+    <value>Direct order</value>
+  </data>
   <data name="Isin.HeaderText" xml:space="preserve">
     <value>Isin</value>
+  </data>
+  <data name="limit.Text" xml:space="preserve">
+    <value>Limit order</value>
   </data>
   <data name="Page.Title" xml:space="preserve">
     <value>Portfolio</value>
@@ -150,6 +159,9 @@
   <data name="Para32" xml:space="preserve">
     <value>Vraagprijs per aandeel?</value>
   </data>
+  <data name="Para5" xml:space="preserve">
+    <value>Soort order:</value>
+  </data>
   <data name="PriceError.ErrorMessage" xml:space="preserve">
     <value>Vul een positief getal in.</value>
   </data>
@@ -162,7 +174,22 @@
   <data name="Sell.Text" xml:space="preserve">
     <value>Plaats verkoopsorder</value>
   </data>
+  <data name="stoploss.Text" xml:space="preserve">
+    <value>Stop Loss Sell</value>
+  </data>
   <data name="Title.InnerText" xml:space="preserve">
     <value>Portfolio</value>
+  </data>
+  <data name="trailing.Text" xml:space="preserve">
+    <value>Trailing Stop Sell</value>
+  </data>
+  <data name="Para6" xml:space="preserve">
+    <value>Onder limiet:</value>
+  </data>
+  <data name="Para7" xml:space="preserve">
+    <value>Boven limiet:</value>
+  </data>
+  <data name="Para8" xml:space="preserve">
+    <value>Punten:</value>
   </data>
 </root>

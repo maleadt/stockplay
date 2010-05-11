@@ -120,6 +120,9 @@
   <data name="AmountError.ErrorMessage" xml:space="preserve">
     <value>Je moet een hoeveelheid groter dan 0 opgeven</value>
   </data>
+  <data name="bracket.Text" xml:space="preserve">
+    <value>Bracket Order</value>
+  </data>
   <data name="Cancel.Text" xml:space="preserve">
     <value>Annuleren</value>
   </data>
@@ -129,8 +132,14 @@
   <data name="Continue.Text" xml:space="preserve">
     <value>Doorgaan</value>
   </data>
+  <data name="direct.Text" xml:space="preserve">
+    <value>Direct Order</value>
+  </data>
   <data name="LabelError.Text" xml:space="preserve">
     <value>Je hebt niet genoeg geld om dit order te kunnen plaatsen</value>
+  </data>
+  <data name="limit.Text" xml:space="preserve">
+    <value>Limit Order</value>
   </data>
   <data name="Page.Title" xml:space="preserve">
     <value>Order plaatsen</value>
@@ -147,13 +156,31 @@
   <data name="Para4" xml:space="preserve">
     <value>Hoeveelheid:</value>
   </data>
+  <data name="Para5" xml:space="preserve">
+    <value>Soort Order</value>
+  </data>
   <data name="Para51" xml:space="preserve">
-    <value>Na dit order zal dit uw cashpositie zijn:</value>
+    <value>Na dit order zal dit naar schatting uw cashpositie zijn:</value>
   </data>
   <data name="Para52" xml:space="preserve">
     <value>Bent u zeker?</value>
   </data>
   <data name="QuoteError.ErrorMessage" xml:space="preserve">
-    <value>Geef een geldige prijs op, die minstens 1 bedraagt</value>
+    <value>Geef een geldige prijs op, die minstens hoger is dan 1</value>
+  </data>
+  <data name="stoploss.Text" xml:space="preserve">
+    <value>Stop Loss Order</value>
+  </data>
+  <data name="trailing.Text" xml:space="preserve">
+    <value>Trailing Stop Order</value>
+  </data>
+  <data name="Para6" xml:space="preserve">
+    <value>Onder limiet:</value>
+  </data>
+  <data name="Para7" xml:space="preserve">
+    <value>Boven limiet:</value>
+  </data>
+  <data name="Para8" xml:space="preserve">
+    <value>Punten:</value>
   </data>
 </root>

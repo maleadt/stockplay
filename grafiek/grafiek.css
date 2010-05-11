@@ -64,6 +64,20 @@
 	font-size: 1.0em;
 }
 
+.plot .overlay {
+	position: relative;
+	top: -110px;
+	background: url(images/overlay.png) no-repeat top left;
+	height: 50px;
+	width: 606px;
+	left: -28px;
+}
+
+.plot .overlay p {
+	text-align: center;
+	padding-top: 8px;
+}
+
 .plot:hover div.subPlot {
 	top: -24px;
 }

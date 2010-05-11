@@ -148,7 +148,10 @@
     <value>voor het effect</value>
   </data>
   <data name="Price.HeaderText" xml:space="preserve">
-    <value>Prijs</value>
+    <value>Primaire limiet</value>
+  </data>
+  <data name="secondairyLimit.HeaderText" xml:space="preserve">
+    <value>Secondaire limiet</value>
   </data>
   <data name="Status.HeaderText" xml:space="preserve">
     <value>Status</value>
