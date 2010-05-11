@@ -1,5 +1,7 @@
 package com.kapti.pointsmanager;
 
+import com.kapti.client.user.PointsTransaction;
+import com.kapti.client.user.PointsTransactionFactory;
 import com.kapti.client.user.User;
 import com.kapti.client.user.UserFactory;
 import com.kapti.exceptions.StockPlayException;
@@ -7,11 +9,13 @@ import com.kapti.pointsmanager.pointevents.IndividualEvents.IIndividualEvent;
 import com.kapti.pointsmanager.pointevents.RankingEvents.ARankingEvent;
 import com.kapti.pointsmanager.pointevents.RankingEvents.ProfitRanking;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
 import org.apache.log4j.Logger;
 
@@ -21,12 +25,18 @@ import org.apache.log4j.Logger;
  */
 public class Main {
 
+    //Login-informatie voor de backend
+    private static String username = "stefaan";
+    private static String password = "eetlieverfrietjes";
+
     private static Logger logger = Logger.getLogger(ProfitRanking.class);
 
-    private static String section = null;
+    private static String section = null; //Houdt huidige sectie van config bij
 
     public static void main(String[] args) {
         try {
+            //Valideren
+            UserFactory.getInstance().verifyLogin(username, password);
 
             //Users opvragen
             Collection<User> users = UserFactory.getInstance().getAllUsers();
@@ -75,6 +85,11 @@ public class Main {
             User user = iterator.next();
 
             if(individualEvent.getPoints(user) != 0) {
+                PointsTransaction points = PointsTransactionFactory.getInstance().createTransaction(user, new Date());
+                points.setDelta(individualEvent.getPoints(user));
+                points.setComment(individualEvent.getDescription());
+                PointsTransactionFactory.getInstance().makePersistent(points);
+
                 System.out.println(user.getNickname());
                 System.out.println(individualEvent.getDescription());
                 System.out.println(individualEvent.getPoints(user));
@@ -105,6 +120,11 @@ public class Main {
             User user = iterator.next();
 
             if(rankingEvent.getDescription(user) != null) {
+                PointsTransaction points = PointsTransactionFactory.getInstance().createTransaction(user, new Date());
+                points.setDelta(rankingEvent.getPoints(user));
+                points.setComment(rankingEvent.getDescription(user));
+                PointsTransactionFactory.getInstance().makePersistent(points);
+
                 System.out.println(user.getNickname());
                 System.out.println(rankingEvent.getPoints(user));
                 System.out.println(rankingEvent.getDescription(user));

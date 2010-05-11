@@ -6,6 +6,7 @@ import com.kapti.client.finance.Quote;
 import com.kapti.client.user.User;
 import com.kapti.exceptions.StockPlayException;
 import com.kapti.pointsmanager.util.Profit;
+import java.text.DecimalFormat;
 import org.apache.log4j.Logger;
 
 /**
@@ -23,8 +24,11 @@ public class ProfitEvent implements IIndividualEvent {
 
     private static int MULTIPLIER = 10;
 
+    private double percentage; //Percentage van laatste gebruiker
+
     public String getDescription() {
-        return DESCRIPTION;
+        DecimalFormat df = new DecimalFormat("#.##");
+        return DESCRIPTION + " by " + df.format(percentage*100) + "%";
     }
 
     public int getPoints(User user) {
@@ -37,7 +41,9 @@ public class ProfitEvent implements IIndividualEvent {
             double profitPercentageBel20 = (latestQuote.getPrice() - latestQuote.getOpen())/latestQuote.getOpen();
             double profitPercentageUser = profit.getProfitPercentage();
 
-            if(profitPercentageUser > profitPercentageBel20) {
+            percentage = profitPercentageUser-profitPercentageBel20;
+
+            if(profit.getProfit()>0 && profitPercentageUser > profitPercentageBel20) {
                 return (int) ((profitPercentageUser - profitPercentageBel20) * 100 * MULTIPLIER);
             }
             else
