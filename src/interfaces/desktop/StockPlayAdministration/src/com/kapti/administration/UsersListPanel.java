@@ -9,13 +9,16 @@ import com.kapti.client.user.UserFactory;
 import com.kapti.administration.tablemodels.UsersTableModel;
 import com.kapti.exceptions.StockPlayException;
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 import java.util.regex.Pattern;
@@ -43,14 +46,21 @@ public class UsersListPanel extends JPanel implements TableModelListener, ListSe
     private static Logger logger = Logger.getLogger(UsersListPanel.class);
     private UserFactory usersFactory = UserFactory.getInstance();
     private static UsersListPanel instance = new UsersListPanel();
-    private JLabel selectedLabel = new JLabel();
     private final ResourceBundle translations = ResourceBundle.getBundle("com/kapti/administration/translations");
+    private JLabel selectedLabel = new JLabel(translations.getString("SELECTED_USERS_COUNT") + " 0");
+    private JLabel titleLabel = new JLabel(translations.getString("OVERVIEW"));
     private JXTable usersTable = null;
     private UsersTableModel usersTableModel = null;
     private JButton refreshButton = new JButton(translations.getString("REFRESH"));
     private JButton createUser = new JButton(translations.getString("CREATE_USER"));
     private JButton editUser = new JButton(translations.getString("EDIT_USER"));
     private JButton deleteUser = new JButton(translations.getString("DELETE_USER"));
+    //filtering
+    private NicknameRowFilter nicknameRowFilter = null;
+    private RegTimeRowFilter regTimeRowFilter = null;
+    private StringRowFilter stringRowFilter = null;
+    private JLabel searchLabel = new JLabel(translations.getString("SEARCH_USER"));
+    private JTextField searchField = new JTextField();
 
     public static UsersListPanel getInstance() {
         return instance;
@@ -60,9 +70,8 @@ public class UsersListPanel extends JPanel implements TableModelListener, ListSe
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-        JLabel titel = new JLabel(translations.getString("OVERVIEW"));
-        titel.setFont(titel.getFont().deriveFont(Font.BOLD, 30));
-        add(titel, BorderLayout.NORTH);
+        titleLabel.setFont(titleLabel.getFont().deriveFont(Font.BOLD, 30));
+        add(titleLabel, BorderLayout.NORTH);
 
 
         //We stellen hier onze securities-JXTable in
@@ -79,10 +88,7 @@ public class UsersListPanel extends JPanel implements TableModelListener, ListSe
 
         usersTableModel.addTableModelListener(this);
 
-
-
         //we passen nog enkele weergave-dingen aan
-
         TableColumn roleColumn = usersTable.getColumn(5);
         JComboBox rolesComboBox = new JComboBox(User.Role.values());
         roleColumn.setCellEditor(new DefaultCellEditor(rolesComboBox));
@@ -98,7 +104,6 @@ public class UsersListPanel extends JPanel implements TableModelListener, ListSe
         add(new UsersListActionPanel(), BorderLayout.SOUTH);
 
         //we stellen de acties in
-
         refreshButton.setActionCommand(REFRESH_ACTION);
         refreshButton.addActionListener(this);
 
@@ -144,23 +149,39 @@ public class UsersListPanel extends JPanel implements TableModelListener, ListSe
         worker.execute();
     }
 
-    public void setFilter(String nicknameFilter) {
-        usersTable.setRowFilter(new NicknameRowFilter(nicknameFilter));
+    public void filterByNickname(String nicknameFilter, String friendlyName) {
+        if (nicknameFilter != null) {
+            regTimeRowFilter = null;
+            nicknameRowFilter = new NicknameRowFilter(nicknameFilter, friendlyName);
+        } else {
+            nicknameRowFilter = null;
+        }
 
+        updateFilters();
     }
 
-    public void removeFilter() {
-        usersTable.setRowFilter(null);
+    public void resetFilters() {
+        nicknameRowFilter = null;
+        regTimeRowFilter = null;
+
+        searchField.setText("");
+        updateFilters();
     }
 
     private class NicknameRowFilter extends javax.swing.RowFilter<TableModel, Integer> {
 
         private Pattern nicknameFilterPattern;
+        private String friendlyName = "";
 
-        public NicknameRowFilter(String nicknameFilter) {
+        public NicknameRowFilter(String nicknameFilter, String friendlyName) {
             nicknameFilterPattern = Pattern.compile(nicknameFilter);
 
+            this.friendlyName = friendlyName;
 
+        }
+
+        public String getFriendlyName() {
+            return friendlyName;
         }
 
         @Override
@@ -173,18 +194,29 @@ public class UsersListPanel extends JPanel implements TableModelListener, ListSe
         }
     }
 
-    public void setFilter(long period) {
-        usersTable.setRowFilter(new RegTimeRowFilter(period));
+    public void filterByRegtime(long period, String friendlyName) {
+        if (period > 0) {
+            nicknameRowFilter = null;
+            regTimeRowFilter = new RegTimeRowFilter(period, friendlyName);
+        } else {
+            regTimeRowFilter = null;
+        }
+        updateFilters();
     }
 
     private class RegTimeRowFilter extends javax.swing.RowFilter<TableModel, Integer> {
 
         private long period;
+        private String friendlyName = "";
 
-        public RegTimeRowFilter(long period) {
+        public RegTimeRowFilter(long period, String friendlyName) {
             this.period = period;
+            this.friendlyName = friendlyName;
 
+        }
 
+        public String getFriendlyName() {
+            return friendlyName;
         }
 
         @Override
@@ -195,6 +227,78 @@ public class UsersListPanel extends JPanel implements TableModelListener, ListSe
 
             return Calendar.getInstance().getTime().getTime() - u.getRegdate().getTime() <= period;
         }
+    }
+
+    private class StringRowFilter extends javax.swing.RowFilter<TableModel, Integer> {
+
+        private String str;
+
+        public StringRowFilter(String str) {
+            this.str = str;
+        }
+
+        @Override
+        public boolean include(Entry<? extends TableModel, ? extends Integer> entry) {
+            UsersTableModel model = (UsersTableModel) entry.getModel();
+            User u = model.getUserAt(entry.getIdentifier());
+
+            Pattern p = Pattern.compile(str + ".*", Pattern.CASE_INSENSITIVE);
+
+            if (p.matcher(u.getFirstname()).matches()) {
+                return true;
+            }
+
+            if (p.matcher(u.getLastname()).matches()) {
+                return true;
+            }
+
+            if (p.matcher(u.getNickname()).matches()) {
+                return true;
+            }
+
+            if (p.matcher(u.getEmail()).matches()) {
+                return true;
+            }
+
+            if (p.matcher(u.getRijksregisternummer().toString()).matches()) {
+                return true;
+            }
+
+            return false;
+        }
+    }
+
+    private void updateFilters() {
+        List<RowFilter<TableModel, Integer>> filters = new ArrayList<RowFilter<TableModel, Integer>>();
+
+        String title = translations.getString("OVERVIEW");
+
+        if (nicknameRowFilter != null) {
+            filters.add(nicknameRowFilter);
+            title = translations.getString("USER_NICKNAME_FILTER") + " '" + nicknameRowFilter.getFriendlyName() + "'";
+        }
+
+        if (regTimeRowFilter != null) {
+            filters.add(regTimeRowFilter);
+            title = translations.getString("USER_REGTIME_FILTER") + " '" + regTimeRowFilter.getFriendlyName() + "'";
+
+        }
+        if (stringRowFilter != null) {
+            filters.add(stringRowFilter);
+            title = title.concat(" " + translations.getString("FILTERED"));
+        }
+
+        if (!filters.isEmpty()) {
+            RowFilter<TableModel, Integer> comboFilter = RowFilter.andFilter(filters);
+            usersTable.setRowFilter(comboFilter);
+        } else {
+            usersTable.setRowFilter(null);
+        }
+
+        titleLabel.setText(title);
+
+
+
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -268,18 +372,10 @@ public class UsersListPanel extends JPanel implements TableModelListener, ListSe
                         usersTableModel.removeUserAt(rownr);
                     } catch (StockPlayException ex) {
                         JXErrorPane.showDialog(this, new ErrorInfo(translations.getString("ERROR"), translations.getString("ERROR_DELETING_USER"), null, null, ex, null, null));
-
                     }
-
                 }
-
-
-
             }
-
-
         }
-
     }
 
     public void tableChanged(TableModelEvent e) {
@@ -287,29 +383,47 @@ public class UsersListPanel extends JPanel implements TableModelListener, ListSe
     }
 
     public void valueChanged(ListSelectionEvent e) {
-        selectedLabel.setText(translations.getString("SELECTED_USERS_COUNT") + usersTable.getSelectedRowCount());
+        selectedLabel.setText(translations.getString("SELECTED_USERS_COUNT") + " " + usersTable.getSelectedRowCount());
         checkButtons();
-
     }
 
     private void checkButtons() {
-
         editUser.setEnabled(usersTable.getSelectedRowCount() > 0);
         deleteUser.setEnabled(usersTable.getSelectedRowCount() > 0);
-
     }
 
     private class UsersListActionPanel extends JPanel {
 
         public UsersListActionPanel() {
-            setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-            setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
 
-            add(refreshButton);
-            add(Box.createHorizontalGlue());
-            add(createUser);
-            add(editUser);
-            add(deleteUser);
+            setLayout(new BorderLayout());
+            add(new JPanel() {
+
+                {
+                    setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+                    setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
+                    add(selectedLabel);
+
+                    add(Box.createHorizontalGlue());
+                    add(createUser);
+                    add(editUser);
+                    add(deleteUser);
+                }
+            }, BorderLayout.NORTH);
+
+            add(new JPanel() {
+
+                {
+                    setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+                    setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
+                    add(searchLabel);
+                    add(searchField);
+
+                    add(Box.createHorizontalStrut(300));
+                    add(Box.createHorizontalGlue());
+                    add(refreshButton);
+                }
+            }, BorderLayout.SOUTH);
         }
     }
 }

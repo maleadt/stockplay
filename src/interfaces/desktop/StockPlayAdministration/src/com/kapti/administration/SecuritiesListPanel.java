@@ -4,20 +4,23 @@
  */
 package com.kapti.administration;
 
-import com.kapti.client.finance.SecurityState;
 import com.kapti.client.finance.Exchange;
 import com.kapti.client.finance.FinanceFactory;
 import com.kapti.client.finance.Security;
 import com.kapti.administration.tablemodels.SecuritiesTableModel;
+import com.kapti.client.finance.Index;
 import com.kapti.exceptions.StockPlayException;
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.ResourceBundle;
-import java.util.Stack;
 import java.util.concurrent.ExecutionException;
+import java.util.regex.Pattern;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.*;
@@ -35,17 +38,22 @@ import org.jdesktop.swingx.error.ErrorInfo;
  *
  * @author Thijs
  */
-public class SecuritiesListPanel extends JPanel implements TableModelListener, ListSelectionListener {
+public class SecuritiesListPanel extends JPanel implements TableModelListener, ListSelectionListener, ActionListener {
 
+    private static final String REFRESH_ACTION = "REFRESH";
+    private static final String SHOW_SECURITY_ACTION = "SHOW_SECURITY";
+    private static final String HIDE_SECURITY_ACTION = "HIDE_SECURITY";
+    private static final String RESUME_SECURITY_ACTION = "RESUME_SECURITY";
+    private static final String SUSPEND_SECURITY_ACTION = "SUSPEND_SECURITY";
+    private static final String SAVE_ACTION = "SAVE";
     private static Logger logger = Logger.getLogger(SecuritiesListPanel.class);
     private FinanceFactory finFactory = FinanceFactory.getInstance();
-    private static SecuritiesListPanel instance = new SecuritiesListPanel();
-    private JLabel selectedLabel = new JLabel();
-
-    private LockableUI lockUI = null;
     private final ResourceBundle translations = ResourceBundle.getBundle("com/kapti/administration/translations");
+    private static SecuritiesListPanel instance = new SecuritiesListPanel();
+    private JLabel titleLabel = new JLabel(translations.getString("OVERVIEW"));
+    private JLabel selectedLabel = new JLabel(translations.getString("SELECTED_SECURITIES_COUNT") + " 0");
+    private LockableUI lockUI = null;
     private JXLayer<JComponent> busyLayer = null;
-
     private JXTable securitiesTable = null;
     private SecuritiesTableModel securitiesTableModel = null;
     private JButton showSecurity = new JButton(translations.getString("SHOW_SECURITY"));
@@ -53,28 +61,24 @@ public class SecuritiesListPanel extends JPanel implements TableModelListener, L
     private JButton resumeSecurity = new JButton(translations.getString("RESUME_SECURITY"));
     private JButton suspendSecurity = new JButton(translations.getString("SUSPEND_SECURITY"));
     private JButton saveButton = new JButton(translations.getString("SAVE"));
-    private JButton undoButton = new JButton(translations.getString("UNDO"));
-    private Stack<SecurityState> undoStack = new Stack<SecurityState>();
+    private JButton refreshButton = new JButton(translations.getString("REFRESH"));
+    //filtering
+    private ExchangeRowFilter exchangeRowFilter = null;
+    private IndexRowFilter indexRowFilter = null;
+    private StringRowFilter stringRowFilter = null;
+    private JLabel searchLabel = new JLabel(translations.getString("SEARCH_SECURITY"));
+    private JTextField searchField = new JTextField();
 
     public static SecuritiesListPanel getInstance() {
         return instance;
-    }
-
-    private void AddSecurityStateToUndoStack(int rowIndex) {
-        try {
-            undoStack.add(new SecurityState(rowIndex, (Security) securitiesTableModel.getSecurityAt(rowIndex).clone()));
-        } catch (CloneNotSupportedException ex) {
-        }
-        undoButton.setEnabled(true);
     }
 
     private SecuritiesListPanel() {
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-        JLabel titel = new JLabel(translations.getString("OVERVIEW"));
-        titel.setFont(titel.getFont().deriveFont(Font.BOLD, 30));
-        add(titel, BorderLayout.NORTH);
+        titleLabel.setFont(titleLabel.getFont().deriveFont(Font.BOLD, 30));
+        add(titleLabel, BorderLayout.NORTH);
 
 
         //We stellen hier onze securities-JXTable in
@@ -90,20 +94,7 @@ public class SecuritiesListPanel extends JPanel implements TableModelListener, L
 
         securitiesTableModel.addTableModelListener(this);
 
-
-
-        //we passen nog enkele weergave-dingen aan als het op editen aankomt
-        TableColumn typeColumn = securitiesTable.getColumn(4);
-
-        JComboBox typeComboBox = new JComboBox();
-        for (Security.SecurityType type : Security.SecurityType.values()) {
-            typeComboBox.addItem(type);
-        }
-
-        typeColumn.setCellEditor(new DefaultCellEditor(typeComboBox));
-
         TableColumn exchangeColumn = securitiesTable.getColumn(2);
-
         JComboBox exchangesComboBox = new JComboBox();
         try {
             for (Exchange exch : finFactory.getAllExchanges()) {
@@ -120,137 +111,62 @@ public class SecuritiesListPanel extends JPanel implements TableModelListener, L
         //we voegen de tabel toe aan de busylayer, zodat deze kan blokkeren tijdens het inladen
         lockUI = new LockableUI();
 
-
         busyLayer = new JXLayer<JComponent>(securitiesTableScrollPane, lockUI);
         busyLayer.setUI(lockUI);
         add(busyLayer, BorderLayout.CENTER);
-        
         lockUI.setLocked(true);
+
+        searchField.getDocument().addDocumentListener(new DocumentListener() {
+
+            private void updateSearchFilter() {
+                if (searchField.getText().length() > 0) {
+                    stringRowFilter = new StringRowFilter(searchField.getText());
+                } else {
+                    stringRowFilter = null;
+                }
+
+                updateFilters();
+            }
+
+            public void insertUpdate(DocumentEvent e) {
+                updateSearchFilter();
+            }
+
+            public void removeUpdate(DocumentEvent e) {
+                updateSearchFilter();
+            }
+
+            public void changedUpdate(DocumentEvent e) {
+                //niet nodig
+            }
+        });
+
+
         //de onderste balk
-
-
         add(new SecuritiesListActionPanel(), BorderLayout.SOUTH);
 
-
         //we stellen de acties in
+        refreshButton.setActionCommand(REFRESH_ACTION);
+        refreshButton.addActionListener(this);
 
-        showSecurity.addActionListener(new ActionListener() {
+        showSecurity.setActionCommand(SHOW_SECURITY_ACTION);
+        showSecurity.addActionListener(this);
 
-            public void actionPerformed(ActionEvent e) {
-                for (int rownr : securitiesTable.getSelectedRows()) {
-                    AddSecurityStateToUndoStack(rownr);
-                    Security sec = securitiesTableModel.getSecurityAt(rownr);
-                    sec.setVisible(true);
-                }
+        hideSecurity.setActionCommand(HIDE_SECURITY_ACTION);
+        hideSecurity.addActionListener(this);
 
-            }
-        });
+        resumeSecurity.setActionCommand(RESUME_SECURITY_ACTION);
+        resumeSecurity.addActionListener(this);
 
+        suspendSecurity.setActionCommand(SUSPEND_SECURITY_ACTION);
+        suspendSecurity.addActionListener(this);
 
-        hideSecurity.addActionListener(
-                new ActionListener() {
-
-                    public void actionPerformed(ActionEvent e) {
-                        for (int rownr : securitiesTable.getSelectedRows()) {
-                            AddSecurityStateToUndoStack(rownr);
-                            Security sec = securitiesTableModel.getSecurityAt(rownr);
-                            sec.setVisible(false);
-                        }
-                    }
-                });
-        resumeSecurity.addActionListener(
-                new ActionListener() {
-
-                    public void actionPerformed(ActionEvent e) {
-                        for (int rownr : securitiesTable.getSelectedRows()) {
-                            AddSecurityStateToUndoStack(rownr);
-                            Security sec = securitiesTableModel.getSecurityAt(rownr);
-                            sec.setSuspended(false);
-                        }
-                    }
-                });
-
-        suspendSecurity.addActionListener(
-                new ActionListener() {
-
-                    public void actionPerformed(ActionEvent e) {
-                        for (int rownr : securitiesTable.getSelectedRows()) {
-                            AddSecurityStateToUndoStack(rownr);
-                            Security sec = securitiesTableModel.getSecurityAt(rownr);
-                            sec.setSuspended(true);
-                        }
-                    }
-                });
-
-
-        saveButton.addActionListener(new ActionListener() {
-
-            boolean success = true;
-
-            public void actionPerformed(ActionEvent e) {
-                for (Security sec : securitiesTableModel.getSecurities()) {
-                    try {
-                        if (!finFactory.makePersistent(sec)) {
-                            success = false;
-                        }
-
-                    } catch (StockPlayException ex) {
-                        logger.error(translations.getString("ERROR_SAVING_SECURITY"), ex);
-                        success = false;
-                    }
-                }
-
-                if (success) {
-                    undoStack.clear();
-                    undoButton.setEnabled(false);
-                    saveButton.setEnabled(false);
-                } else {
-                    JXErrorPane.showDialog(null, new ErrorInfo(translations.getString("ERROR"), translations.getString("ERROR_SAVING_SECURITIES"), "", "", null, null, null));
-                }
-            }
-        });
-
-
-        undoButton.setEnabled(false);
-        undoButton.addActionListener(new ActionListener() {
-
-            public void actionPerformed(ActionEvent e) {
-                SecurityState ss = undoStack.pop();
-
-                securitiesTableModel.setSecurityAt(ss.getRowNumber(), ss.getSecurity());
-                if (undoStack.empty()) {
-                    undoButton.setEnabled(false);
-                }
-            }
-        });
+        saveButton.setActionCommand(SAVE_ACTION);
+        saveButton.addActionListener(this);
 
         //we laden hier onze gegevens in
 
-        SwingWorker<Collection<Security>, Void> worker = new SwingWorker<Collection<Security>, Void>() {
-
-            @Override
-            protected Collection<Security> doInBackground() throws Exception {
-                return FinanceFactory.getInstance().getAllSecurities();
-            }
-
-            @Override
-            protected void done() {
-                try {
-                    securitiesTableModel.setSecurities(get());
-
-                    securitiesTableModel.fireTableDataChanged();
-                    lockUI.setLocked(false);
-
-                } catch (InterruptedException ex) {
-                    JXErrorPane.showDialog(new Exception(translations.getString("ERROR_SAVING_SECURITIES_THREAD_INTERRUPTED"), ex));
-                } catch (ExecutionException ex) {
-                    JXErrorPane.showDialog(new Exception(translations.getString("ERROR_SAVING_SECURITIES_EXECUTION_EXCEPTION"), ex));
-                }
-            }
-        };
-
-        worker.execute();
-
+        fetchSecuritiesTable();
     }
 
     public void tableChanged(TableModelEvent e) {
@@ -258,7 +174,7 @@ public class SecuritiesListPanel extends JPanel implements TableModelListener, L
     }
 
     public void valueChanged(ListSelectionEvent e) {
-        selectedLabel.setText(translations.getString("SELECTED_SECURITIES_COUNT") + securitiesTable.getSelectedRowCount());
+        selectedLabel.setText(translations.getString("SELECTED_SECURITIES_COUNT") + " " + securitiesTable.getSelectedRowCount());
         checkButtons();
 
     }
@@ -287,6 +203,75 @@ public class SecuritiesListPanel extends JPanel implements TableModelListener, L
         suspendSecurity.setEnabled(suspend);
     }
 
+    public void actionPerformed(ActionEvent e) {
+        if (e.getActionCommand().equals(REFRESH_ACTION)) {
+            fetchSecuritiesTable();
+
+        } else if (e.getActionCommand().equals(SHOW_SECURITY_ACTION)) {
+            for (int rownr : securitiesTable.getSelectedRows()) {
+
+                Security sec = securitiesTableModel.getSecurityAt(rownr);
+                sec.setVisible(true);
+            }
+        } else if (e.getActionCommand().equals(HIDE_SECURITY_ACTION)) {
+            for (int rownr : securitiesTable.getSelectedRows()) {
+                Security sec = securitiesTableModel.getSecurityAt(rownr);
+                sec.setVisible(false);
+            }
+        } else if (e.getActionCommand().equals(RESUME_SECURITY_ACTION)) {
+            for (int rownr : securitiesTable.getSelectedRows()) {
+
+                Security sec = securitiesTableModel.getSecurityAt(rownr);
+                sec.setSuspended(false);
+            }
+        } else if (e.getActionCommand().equals(SUSPEND_SECURITY_ACTION)) {
+            for (int rownr : securitiesTable.getSelectedRows()) {
+                Security sec = securitiesTableModel.getSecurityAt(rownr);
+                sec.setSuspended(true);
+            }
+        } else if (e.getActionCommand().equals(SAVE_ACTION)) {
+            for (Security sec : securitiesTableModel.getSecurities()) {
+                try {
+                    if (!finFactory.makePersistent(sec)) {
+                        throw new StockPlayException("Saving securities failed");
+                    }
+                } catch (StockPlayException ex) {
+                    logger.error(translations.getString("ERROR_SAVING_SECURITY"), ex);
+                    JXErrorPane.showDialog(null, new ErrorInfo(translations.getString("ERROR"), translations.getString("ERROR_SAVING_SECURITIES"), "", "", null, null, null));
+                }
+            }
+        }
+
+    }
+
+    private void fetchSecuritiesTable() {
+        SwingWorker<Collection<Security>, Void> worker = new SwingWorker<Collection<Security>, Void>() {
+
+            @Override
+            protected Collection<Security> doInBackground() throws Exception {
+                return FinanceFactory.getInstance().getAllSecurities();
+            }
+
+            @Override
+            protected void done() {
+                try {
+                    lockUI.setLocked(true);
+
+                    securitiesTableModel.setSecurities(get());
+                    securitiesTableModel.fireTableDataChanged();
+                    lockUI.setLocked(false);
+
+                } catch (InterruptedException ex) {
+                    JXErrorPane.showDialog(new Exception(translations.getString("ERROR_FETCH_USERS_THREAD"), ex));
+                } catch (ExecutionException ex) {
+                    JXErrorPane.showDialog(new Exception(translations.getString("ERROR_FETCH_USERS_EXECUTION_EXCEPTION"), ex));
+                }
+            }
+        };
+
+        worker.execute();
+    }
+
     private class SecuritiesListActionPanel extends JPanel {
 
         public SecuritiesListActionPanel() {
@@ -299,11 +284,13 @@ public class SecuritiesListPanel extends JPanel implements TableModelListener, L
                     setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
                     setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
 
+                    add(selectedLabel);
+
+                    add(Box.createHorizontalGlue());
                     add(resumeSecurity);
                     add(suspendSecurity);
 
                     add(Box.createHorizontalStrut(10));
-
                     add(showSecurity);
                     add(hideSecurity);
 
@@ -315,22 +302,70 @@ public class SecuritiesListPanel extends JPanel implements TableModelListener, L
 
                 {
                     setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-                    add(selectedLabel);
-                    add(Box.createHorizontalGlue());
 
+
+                    add(searchLabel);
+
+                    add(searchField);
+                    add(Box.createHorizontalStrut(300));
+                    add(Box.createHorizontalGlue());
+                    add(refreshButton);
                     add(saveButton);
-                    add(undoButton);
                 }
             }, BorderLayout.SOUTH);
         }
     }
 
-    public void setFilter(Exchange exchange) {
+    public void filterByExchange(Exchange exchange) {
+
         if (exchange == null) {
-            securitiesTable.setRowFilter(null);
+            exchangeRowFilter = null;
         } else {
-            securitiesTable.setRowFilter(new ExchangeRowFilter(exchange));
+            indexRowFilter = null;
+            exchangeRowFilter = new ExchangeRowFilter(exchange);
         }
+        updateFilters();
+    }
+
+    public void filterByIndex(Index index) {
+        if (index == null) {
+            indexRowFilter = null;
+        } else {
+            exchangeRowFilter = null;
+            indexRowFilter = new IndexRowFilter(index);
+        }
+        updateFilters();
+    }
+
+    private void updateFilters() {
+        List<RowFilter<TableModel, Integer>> filters = new ArrayList<RowFilter<TableModel, Integer>>();
+
+        String title = translations.getString("OVERVIEW");
+
+        if (exchangeRowFilter != null) {
+            filters.add(exchangeRowFilter);
+            title = translations.getString("SECURITIES_OF") + " '" + exchangeRowFilter.getExchange().getName() + "'";
+        }
+
+        if (indexRowFilter != null) {
+            filters.add(indexRowFilter);
+            title = translations.getString("SECURITIES_OF") + " '" + indexRowFilter.getIndex().getName() + "'";
+
+        }
+        if (stringRowFilter != null) {
+            filters.add(stringRowFilter);
+            title = title.concat(" " + translations.getString("FILTERED"));
+        }
+
+        if (!filters.isEmpty()) {
+            RowFilter<TableModel, Integer> comboFilter = RowFilter.andFilter(filters);
+            securitiesTable.setRowFilter(comboFilter);
+        } else {
+            securitiesTable.setRowFilter(null);
+        }
+
+        titleLabel.setText(title);
+
     }
 
     private class ExchangeRowFilter extends javax.swing.RowFilter<TableModel, Integer> {
@@ -341,13 +376,75 @@ public class SecuritiesListPanel extends JPanel implements TableModelListener, L
             this.exchange = exchange;
         }
 
+        public Exchange getExchange() {
+            return exchange;
+        }
+
+        @Override
+        public boolean include(Entry<? extends TableModel, ? extends Integer> entry) {
+            SecuritiesTableModel model = (SecuritiesTableModel) entry.getModel();
+            Security sec = model.getSecurityAt(entry.getIdentifier());
+            return sec.getExchange().equals(exchange);
+        }
+    }
+
+    private class IndexRowFilter extends javax.swing.RowFilter<TableModel, Integer> {
+
+        private Collection<Security> securitiesFromIndex;
+        private Index index;
+
+        public Index getIndex() {
+            return index;
+        }
+
+        public IndexRowFilter(Index index) {
+            try {
+                this.index = index;
+                securitiesFromIndex = FinanceFactory.getInstance().getSecuritiesFromIndex(index);
+            } catch (StockPlayException ex) {
+                logger.error("Error while loading securities from index", ex);
+            }
+
+        }
+
         @Override
         public boolean include(Entry<? extends TableModel, ? extends Integer> entry) {
             SecuritiesTableModel model = (SecuritiesTableModel) entry.getModel();
 
             Security sec = model.getSecurityAt(entry.getIdentifier());
 
-            return sec.getExchange().equals(exchange);
+            return securitiesFromIndex.contains(sec);
+        }
+    }
+
+    private class StringRowFilter extends javax.swing.RowFilter<TableModel, Integer> {
+
+        String str;
+
+        public StringRowFilter(String str) {
+            this.str = str;
+        }
+
+        @Override
+        public boolean include(Entry<? extends TableModel, ? extends Integer> entry) {
+            SecuritiesTableModel model = (SecuritiesTableModel) entry.getModel();
+            Security sec = model.getSecurityAt(entry.getIdentifier());
+
+            Pattern p = Pattern.compile(str + ".*", Pattern.CASE_INSENSITIVE);
+
+            if (p.matcher(sec.getName()).matches()) {
+                return true;
+            }
+
+            if (p.matcher(sec.getSymbol()).matches()) {
+                return true;
+            }
+
+            if (p.matcher(sec.getISIN()).matches()) {
+                return true;
+            }
+
+            return false;
         }
     }
 }

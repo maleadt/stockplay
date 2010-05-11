@@ -7,6 +7,8 @@ package com.kapti.administration.actions;
 
 import com.kapti.administration.MainFrame;
 import com.kapti.administration.SecuritiesListPanel;
+import com.kapti.client.finance.Exchange;
+import com.kapti.client.finance.Index;
 import java.awt.event.ActionEvent;
 import javax.swing.Icon;
 
@@ -14,19 +16,19 @@ import javax.swing.Icon;
  *
  * @author Thijs
  */
-public class ShowSecuritiesAction extends StockPlayAction{
+public class ShowSecuritiesByIndexAction extends StockPlayAction {
 
-    public ShowSecuritiesAction(String name, Icon icon) {
+    Index index = null;
+
+    public ShowSecuritiesByIndexAction(String name, Icon icon, Index index) {
         super(name, icon);
+        this.index = index;
     }
 
-    public ShowSecuritiesAction(String name, Icon icon, boolean title) {
-        super(name, icon, title);
-    }
 
     public void actionPerformed(ActionEvent e) {
         MainFrame.getInstance().setMainPanel(SecuritiesListPanel.getInstance());
-        SecuritiesListPanel.getInstance().filterByExchange(null);
+        SecuritiesListPanel.getInstance().filterByIndex(index);
     }
 
 }

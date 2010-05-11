@@ -15,9 +15,30 @@ import javax.swing.table.AbstractTableModel;
 public class SecuritiesTableModel extends AbstractTableModel {
 
     private static final ResourceBundle translations = ResourceBundle.getBundle("com/kapti/administration/translations");
-    private final static String[] columnTitles = {translations.getString("ISIN_COLUMN"), translations.getString("SYMBOL_COLUMN"), translations.getString("EXCHANGE_COLUMN"), translations.getString("NAME_COLUMN"), translations.getString("SECURITY_COLUMN"), translations.getString("VISIBLE_COLUMN"), translations.getString("GESCHORST")};
-    private final static Class[] columnTypes = {String.class, String.class, String.class, String.class, String.class, Boolean.class, Boolean.class};
-    private final static boolean[] editableColumns = new boolean[]{false, false, true, true, true, true, true};
+    private final static String[] columnTitles = {
+        translations.getString("ISIN_COLUMN"),
+        translations.getString("SYMBOL_COLUMN"),
+        translations.getString("EXCHANGE_COLUMN"),
+        translations.getString("NAME_COLUMN"),
+        //translations.getString("SECURITY_COLUMN"),
+        translations.getString("VISIBLE_COLUMN"),
+        translations.getString("GESCHORST")};
+    private final static Class[] columnTypes = {
+        String.class,
+        String.class,
+        String.class,
+        String.class,
+        //String.class,
+        Boolean.class,
+        Boolean.class};
+    private final static boolean[] editableColumns = new boolean[]{
+        false,
+        false,
+        true,
+        true,
+        //true,
+        true,
+        true};
     //Andere opmaak van datums kan bekommen worden met een "SimpleDateFormat" toe te passen
     //maar geen enkel formaat dat ik ingeef wordt ooit geaccepteerd...
     Security[] securities = new Security[]{};
@@ -84,11 +105,11 @@ public class SecuritiesTableModel extends AbstractTableModel {
             case 3:
                 return security.getName();
 
+//            case 4:
+//                return security.getType();
             case 4:
-                return security.getType();
-            case 5:
                 return security.isVisible();
-            case 6:
+            case 5:
                 return security.isSuspended();
             default:
                 return null;
@@ -108,13 +129,13 @@ public class SecuritiesTableModel extends AbstractTableModel {
             case 3:
                 security.setName((String) aValue);
                 break;
+//            case 4:
+//                security.setType((Security.SecurityType) aValue);
+//                break;
             case 4:
-                security.setType((Security.SecurityType) aValue);
-                break;
-            case 5:
                 security.setVisible((Boolean) aValue);
                 break;
-            case 6:
+            case 5:
                 security.setSuspended((Boolean) aValue);
                 break;
 

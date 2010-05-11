@@ -397,7 +397,15 @@ public class EditUserDialog extends JDialog implements ActionListener {
             user.setFirstname(firstnameField.getText());
             user.setEmail(emailField.getText());
             if (rrnField.getValue() != null) {
-                user.setRijksregisternummer(new Long((String) rrnField.getValue()));
+
+                StringBuilder sb = new StringBuilder();
+                for(char c : rrnField.getValue().toString().toCharArray())
+                    if(Character.isDigit(c))
+                        sb.append(c);
+
+
+
+                user.setRijksregisternummer(new Long(sb.toString()));
             }
             user.setRole((User.Role) roleField.getSelectedItem());
 

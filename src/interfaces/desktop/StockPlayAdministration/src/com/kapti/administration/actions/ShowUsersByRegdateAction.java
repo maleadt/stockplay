@@ -7,6 +7,7 @@ package com.kapti.administration.actions;
 
 import com.kapti.administration.UsersListPanel;
 import java.awt.event.ActionEvent;
+import javax.swing.Action;
 import javax.swing.Icon;
 
 /**
@@ -25,7 +26,7 @@ public class ShowUsersByRegdateAction extends ShowUsersAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         super.actionPerformed(e);
-        UsersListPanel.getInstance().setFilter(period);
+        UsersListPanel.getInstance().filterByRegtime(period, ((String)super.getValue(Action.NAME)).toLowerCase());
         
     }
 

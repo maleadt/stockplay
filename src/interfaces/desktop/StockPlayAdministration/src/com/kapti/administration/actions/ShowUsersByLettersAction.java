@@ -7,6 +7,7 @@ package com.kapti.administration.actions;
 
 import com.kapti.administration.UsersListPanel;
 import java.awt.event.ActionEvent;
+import javax.swing.Action;
 import javax.swing.Icon;
 
 /**
@@ -27,7 +28,7 @@ public class ShowUsersByLettersAction  extends ShowUsersAction{
     @Override
     public void actionPerformed(ActionEvent e) {
         super.actionPerformed(e);
-        UsersListPanel.getInstance().setFilter(regex);
+        UsersListPanel.getInstance().filterByNickname(regex, (String)super.getValue(Action.NAME));
 
     }
 

@@ -7,6 +7,7 @@ package com.kapti.administration.actions;
 import com.kapti.administration.MainFrame;
 import com.kapti.client.finance.Exchange;
 import com.kapti.client.finance.FinanceFactory;
+import com.kapti.client.finance.Index;
 import com.kapti.exceptions.StockPlayException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -68,18 +69,29 @@ public class ActionsFactory {
             Collection<Exchange> exchanges = null;
             try {
                 exchanges = financeFactory.getAllExchanges();
+
+                for (Exchange exch : exchanges) {
+
+                    securitiesActions.add(new ShowSecuritiesByExchangeAction(exch.getName(), createImageIcon("money_euro.png"), exch));
+                }
             } catch (StockPlayException ex) {
                 JXErrorPane.showDialog(MainFrame.getInstance(), new ErrorInfo(translations.getString("ERROR_COMMUNICATION"), translations.getString("ERROR_FETCH_EXCHANGES"), null, null, ex, null, null));
             }
 
-            for (Exchange exch : exchanges) {
 
-                securitiesActions.add(new ShowSecuritiesByExchangeAction(exch.getName(), createImageIcon("money_euro.png"), exch));
+            securitiesActions.add(new ShowSecuritiesAction(translations.getString("INDEXESMENUITEM"), createImageIcon("money.png"), true));
+            Collection<Index> indexes = null;
+            try {
+                indexes = financeFactory.getAllIndexes();
+
+                for (Index index : indexes) {
+
+                    securitiesActions.add(new ShowSecuritiesByIndexAction(index.getName(), createImageIcon("money_euro.png"), index));
+                }
+            } catch (StockPlayException ex) {
+                JXErrorPane.showDialog(MainFrame.getInstance(), new ErrorInfo(translations.getString("ERROR_COMMUNICATION"), translations.getString("ERROR_FETCH_EXCHANGES"), null, null, ex, null, null));
             }
 
-
-
-            securitiesActions.add(new ShowSecuritiesAction(translations.getString("EXCHANGESMENUITEM"), createImageIcon("money.png"), true));
 
         }
 

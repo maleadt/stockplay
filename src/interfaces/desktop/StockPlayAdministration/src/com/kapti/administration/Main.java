@@ -4,70 +4,97 @@
  */
 package com.kapti.administration;
 
-import com.kapti.administration.helpers.StockPlayLoginService;
+import com.kapti.administration.helpers.StockPlayLoginScreen;
 import com.kapti.administration.helpers.StockPlayPreferences;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import com.kapti.administration.helpers.StockPlayeIDLoginScreen;
+import com.kapti.client.SPClientFactory;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Locale;
 import javax.swing.SwingUtilities;
-import org.jdesktop.swingx.JXLoginPane;
-import org.jdesktop.swingx.JXLoginPane.Status;
+import org.jdesktop.swingx.JXErrorPane;
+import org.jdesktop.swingx.error.ErrorInfo;
 
 /**
  *
  * @author Thijs
  */
-public class Main {
-
-
-
+public class Main  {
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) throws Exception {
 
+        StockPlayPreferences spp = new StockPlayPreferences();
 
-        StockPlayPreferences spp  = new StockPlayPreferences();
-
-        if(spp.getLocale() != null){
-            System.out.println(spp.getLocale().getLanguage() + " is de nieuwe taal");
+        //locale instellen
+        if (spp.getLocale() != null) {
             Locale.setDefault(spp.getLocale());
         }
 
         SwingUtilities.invokeLater(new Runnable() {
 
             public void run() {
-
-                //eerst een loginscherm
-                JXLoginPane loginPane = new JXLoginPane();
-                loginPane.setBannerText("Stockplay");
-                loginPane.setMessage("Geef uw gegevens in om in te loggen:");
-
-                loginPane.setSaveMode(JXLoginPane.SaveMode.USER_NAME);
-                loginPane.setLoginService(new StockPlayLoginService());
-                //loginPane.setLoginService(new StockPlayeIDLoginService());
-                //loginPane.setUserNameEnabled(false);
-            
-
-                JXLoginPane.JXLoginFrame loginFrame = JXLoginPane.showLoginFrame(loginPane);
-                loginFrame.setTitle("StockPlay login");
-                loginFrame.setVisible(true);
-
-                loginFrame.addWindowListener(new WindowAdapter() {
-
-                    @Override
-                    public void windowClosed(WindowEvent e) {
-                        if (((JXLoginPane.JXLoginFrame)e.getSource()).getStatus() == Status.SUCCEEDED) {
-                            MainFrame frame = MainFrame.getInstance();
-                            frame.setVisible(true);
-                        }
-                    }
-                });
-
+                Main m = new Main();
 
             }
         });
 
     }
+
+    private StockPlayeIDLoginScreen eIDScreen = null;
+    private StockPlayLoginScreen screen = null;
+
+    public Main() {
+
+        if(!SPClientFactory.checkConnectivity()){
+
+            JXErrorPane.showDialog(null, new ErrorInfo("Verbindingsfout", "Er kon geen verbinding worden gemaakt met de StockPlay-servers. Controleer uw internetconnectiviteit en probeer opnieuw!", null, "Connectivity", null, null, null));
+
+            System.exit(1);
+        }
+
+        StockPlayPreferences prefs = new StockPlayPreferences();
+
+
+
+
+        if (prefs.getLoginWithEid()) {
+            eIDScreen = new  StockPlayeIDLoginScreen();
+            eIDScreen.addActionListener(new ActionListener(){
+
+                public void actionPerformed(ActionEvent e) {
+                    if(eIDScreen.isSuccess())
+                        showMainScreen();
+                    else
+                        //fallback
+                        showLoginScreen();
+
+                }
+            });
+            eIDScreen.setVisible(true);
+        } else {
+            showLoginScreen();
+
+        }
+    }
+
+    private void showLoginScreen() {
+        screen = new StockPlayLoginScreen();
+        screen.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                if (screen.isSuccess()) {
+                    showMainScreen();
+                }
+            }
+        });
+    }
+
+    public void showMainScreen() {
+        MainFrame mf = MainFrame.getInstance();
+        mf.setVisible(true);
+    }
+
 }

@@ -25,6 +25,6 @@ public class ShowAllUsersAction extends ShowUsersAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         super.actionPerformed(e);
-        UsersListPanel.getInstance().removeFilter();
+        UsersListPanel.getInstance().resetFilters();
     }
 }

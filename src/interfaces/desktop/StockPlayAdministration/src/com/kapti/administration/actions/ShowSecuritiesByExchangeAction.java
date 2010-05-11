@@ -27,7 +27,7 @@ public class ShowSecuritiesByExchangeAction extends StockPlayAction {
 
     public void actionPerformed(ActionEvent e) {
         MainFrame.getInstance().setMainPanel(SecuritiesListPanel.getInstance());
-        SecuritiesListPanel.getInstance().setFilter(exch);
+        SecuritiesListPanel.getInstance().filterByExchange(exch);
     }
 
 }
