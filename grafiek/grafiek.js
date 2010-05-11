@@ -14,6 +14,7 @@ $.extend(plot.prototype, {
 		this.data = this.getData(from, to);
 		this.plotListeners = [];
 		this._init(container, from, to);
+		this.maxReferences = 3;
 	},
 
 	getData: function(from, to) {
@@ -233,13 +234,10 @@ $.extend(primaryPlot.prototype, {
 
 		$(this.containerName+' li.add').bind('click', {me: this}, function(event) {
 			var me = event.data.me;
-			if (me.noLines == 2)
+			if (me.noLines == me.maxReferences)
 				return;
-			me.addLine(1,1,1);
-			me.noLines++;
-			if (me.noLines == 2)
-				$(me.containerName+' li.add').addClass('disabled');
-			$(me.containerName+' li.reset').removeClass('disabled');
+			$(me.containerName).siblings('.overlay').show();
+			$(me.containerName+' ul').hide();
 		});
 
 		$(this.containerName).bind('mouseover', {me: this}, function(event) {
@@ -249,6 +247,38 @@ $.extend(primaryPlot.prototype, {
 		$(this.containerName).bind('mouseout', {me: this}, function(event) {
 			$(event.data.me.containerName+' .legendLabel a').hide();
 		});
+
+		$(this.containerName).siblings('.overlay').children('p').children('.cancel').bind('click', {me: this}, function(event) {
+			var me = event.data.me;
+			$(me.containerName).siblings('.overlay').hide();
+			$(me.containerName+' ul').show();
+			return false;
+		});
+
+		$(this.containerName).siblings('.overlay').children('p').children('.add').bind('click', {me: this}, function(event) {
+			var me = event.data.me;
+			if (me.noLines == me.maxReferences)
+				return;
+			me.addLine(1,1,1);
+			me.noLines++;
+			if (me.noLines == me.maxReferences)
+				$(me.containerName+' li.add').addClass('disabled');
+			$(me.containerName+' li.reset').removeClass('disabled');
+			$(me.containerName).siblings('.overlay').hide();
+			$(me.containerName+' ul').show();
+			return false;
+		});
+		
+		// Add translations
+		$(this.containerName+' li.pan').text(messages.menuPan);
+		$(this.containerName+' li.selection').text(messages.menuSelection);
+		$(this.containerName+' li.last').text(messages.menuLast);
+		$(this.containerName+' li.zoomIn').text(messages.menuZoomIn);
+		$(this.containerName+' li.zoomOut').text(messages.menuZoomOut);
+		$(this.containerName+' li.add').text(messages.menuAdd);
+		$(this.containerName+' li.reset').text(messages.menuReset);
+		$(this.containerName).siblings('.overlay').children('p').children('.add').text(messages.referenceAdd);
+		$(this.containerName).siblings('.overlay').children('p').children('.cancel').text(messages.referenceCancel);
     }
 
 });
