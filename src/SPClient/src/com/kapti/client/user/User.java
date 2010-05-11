@@ -45,7 +45,9 @@ public class User implements Cloneable {
         USER(0),
         ADMIN(1),
         SCRAPER(2),
-        AI(3);
+        TRANSACTIONMANAGER(3),
+        POINTSMANAGER(4),
+        AI(5);
         int id;
 
         private Role(int id) {

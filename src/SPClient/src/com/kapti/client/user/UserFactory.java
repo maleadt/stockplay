@@ -19,7 +19,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
 package com.kapti.client.user;
 
 import com.kapti.client.SPClientFactory;
@@ -37,7 +36,6 @@ import org.apache.xmlrpc.client.XmlRpcClient;
  * \brief   Gebruikersfabriek
  *
  */
-
 public class UserFactory {
 
     private static UserFactory instance = new UserFactory();
@@ -90,7 +88,26 @@ public class UserFactory {
             Object result = client.execute("User.Validate", new Object[]{nickname, password});
 
             if (result instanceof String) {
-                SPClientFactory.setSessionID((String)result);
+                SPClientFactory.setSessionID((String) result);
+                return true;
+            } else {
+                return false;
+                //throw new StockPlayException("Expected String, but got an " + result.getClass().toString());
+            }
+
+        } catch (XmlRpcException ex) {
+            throw new RequestError(ex);
+        }
+
+    }
+
+    public boolean setLoggedInUser(User user) throws StockPlayException {
+        try {
+            XmlRpcClient client = SPClientFactory.getPrivateClient();
+            Object result = client.execute("User.CreateSessionForUser", new Object[]{user.getId()});
+
+            if (result instanceof String) {
+                SPClientFactory.setSessionID((String) result);
                 return true;
             } else {
                 return false;

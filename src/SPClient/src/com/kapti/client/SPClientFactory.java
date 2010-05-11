@@ -25,7 +25,9 @@ import com.kapti.exceptions.NotLoggedInException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 import org.apache.log4j.Logger;
+import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
 
@@ -98,6 +100,19 @@ public class SPClientFactory {
 
             return null;
         }
+
+    }
+
+    public static boolean checkConnectivity(){
+
+        XmlRpcClient client = getPublicClient();
+        try {
+            return (Integer) client.execute("User.Hello", new Object[] {"Administration", 1}) == 1;
+        } catch (XmlRpcException ex) {
+            java.util.logging.Logger.getLogger(SPClientFactory.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+
 
     }
 }
