@@ -26,7 +26,6 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import org.apache.log4j.Logger;
 
 public class QuoteDAO implements GenericQuoteDAO {
     //
@@ -515,7 +514,6 @@ public class QuoteDAO implements GenericQuoteDAO {
         try {
             try {
                 conn = OracleConnection.getConnection();
-                    Logger.getLogger(this.getClass()).error(SELECT_SPAN_QUOTE_FILTER.replace("$filter", (String) iFilter.compile("sql")));
                 if(!iFilter.empty())
                     stmt = conn.prepareStatement(SELECT_SPAN_QUOTE_FILTER.replace("$filter", (String) iFilter.compile("sql")));
                 else
@@ -532,7 +530,6 @@ public class QuoteDAO implements GenericQuoteDAO {
 
                 ArrayList<Quote> result = new ArrayList<Quote>();
                 while (rs.next()) {
-                    Logger.getLogger(this.getClass()).error("GOT ONE");
                     Quote tQuote = new Quote(rs.getString("isin"), rs.getTimestamp("timestamp"));
                     tQuote.setPrice(rs.getDouble("price"));
                     tQuote.setVolume(rs.getInt("volume"));
