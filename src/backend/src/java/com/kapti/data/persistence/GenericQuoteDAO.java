@@ -31,9 +31,7 @@ import java.util.List;
 
 public interface GenericQuoteDAO extends GenericDAO<Quote, Quote.QuotePK> {
     @Invalidates boolean createBulk(List<Quote> iQuotes) throws StockPlayException;
-
-    @Cachable Timestamp getFirstTime(String isin) throws StockPlayException;
-    @Cachable Timestamp getLatestTime(String isin) throws StockPlayException;
+    
     @Cachable List<Timestamp> getRange(String isin) throws StockPlayException;
     @Cachable double getHighest(Filter iFilter) throws StockPlayException;
     @Cachable double getLowest(Filter iFilter) throws StockPlayException;

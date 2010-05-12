@@ -26,6 +26,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import org.apache.log4j.Logger;
 
 public class QuoteDAO implements GenericQuoteDAO {
     //
@@ -38,23 +39,42 @@ public class QuoteDAO implements GenericQuoteDAO {
     private static final String UPDATE_QUOTE = "UPDATE quotes SET price = ?, volume ?, bid = ?, ask = ?, low = ?, high = ?, open ? WHERE isin = ? AND timestamp = ?";
     private static final String DELETE_QUOTE = "DELETE FROM quotes WHERE isin = ? AND timestamp = ?";
     private static final String SELECT_LATEST_QUOTES = "with x as (select isin, max(timestamp)  latesttime from quotes group by isin) select isin, timestamp, price, volume, bid, ask, low, high, open from quotes q where timestamp = (select latesttime from x where q.isin=x.isin)";
-    private static final String MIN_QUOTE = "SELECT MAX(TIMESTAMP) timestamp FROM quotes WHERE isin = ?";
-    private static final String MAX_QUOTE = "SELECT MIN(TIMESTAMP) timestamp FROM quotes WHERE isin = ?";
     private static final String SELECT_LOWEST = "SELECT MIN(PRICE) lowest FROM quotes";
     private static final String SELECT_HIGHEST = "SELECT MAX(PRICE) highest FROM quotes";
     private static final String QUOTE_RANGE = "SELECT MIN(TIMESTAMP) min, MAX(TIMESTAMP) max FROM quotes WHERE isin = ?";
     private static final String SELECT_LATEST_QUOTE_FILTER =    "SELECT  ISIN, TIMESTAMP, PRICE, VOLUME, BID, ASK, LOW, HIGH, OPEN"
                                                                 + " FROM ( SELECT  QUOTES.*, MAX(TIMESTAMP) OVER (PARTITION BY ISIN) AS MAX_TIMESTAMP FROM QUOTES ) WHERE TIMESTAMP = MAX_TIMESTAMP AND ( $filter )";
-    private static final String SELECT_SPAN_QUOTE =         "select isin, ? + batch*?/(24*60*60) as timestamp, avg(price) as price, max(volume) as volume, avg(bid) as bid, avg(ask) as ask, min(low) as low, max(high) as high, max(open) KEEP (DENSE_RANK FIRST ORDER BY timestamp) as open"
-                                                            + " from ( select isin, timestamp, price, volume, bid, ask, low, high, open,"
-                                                            + " trunc(abs(extract(second from timestamp-?) + extract(minute from timestamp-?)*60 + extract(hour from timestamp-?)*60*60 + extract(day from timestamp-?)*24*60*60)/(?) ) as batch"
-                                                            + " from quotes )"
-                                                            + " WHERE timestamp between ? and ? group by isin, batch";
-    private static final String SELECT_SPAN_QUOTE_FILTER = "select isin, ? + batch*?/(24*60*60) as timestamp, avg(price) as price, max(volume) as volume, avg(bid) as bid, avg(ask) as ask, min(low) as low, max(high) as high, max(open) KEEP (DENSE_RANK FIRST ORDER BY timestamp) as open"
-                                                            + " from ( select isin, timestamp, price, volume, bid, ask, low, high, open,"
-                                                            + " trunc(abs(extract(second from timestamp-?) + extract(minute from timestamp-?)*60 + extract(hour from timestamp-?)*60*60 + extract(day from timestamp-?)*24*60*60)/(?) ) as batch"
-                                                            + " from quotes )"
-                                                            + " WHERE (timestamp between ? and ?) and ($filter) group by isin, batch";
+    private static final String SELECT_SPAN_QUOTE =         "select isin, median(timestamp) as timestamp, AVG(price) AS price, MAX(volume) AS volume, AVG(bid) AS bid, AVG(ask) AS ask, MIN(low) AS low, MAX(high) AS high, open"
+                                                           + " from ( SELECT q.*, time_diff(?, TIMESTAMP) as diff, time_diff(?, min(TIMESTAMP) over(order by timestamp asc)) as diff_start, time_diff(?, max(TIMESTAMP) over(order by timestamp desc)) as diff_end from quotes q where (TIMESTAMP BETWEEN ? AND ?) ) s"
+                                                           + " GROUP BY isin, trunc(? * (diff - diff_start) / (diff_end - diff_start)), open";
+    private static final String SELECT_SPAN_QUOTE_FILTER = "select isin, median(timestamp) as timestamp, AVG(price) AS price, MAX(volume) AS volume, AVG(bid) AS bid, AVG(ask) AS ask, MIN(low) AS low, MAX(high) AS high, open"
+                                                           + " from ( SELECT q.*, time_diff(?, TIMESTAMP) as diff, time_diff(?, min(TIMESTAMP) over(order by timestamp asc)) as diff_start, time_diff(?, max(TIMESTAMP) over(order by timestamp desc)) as diff_end from quotes q where (TIMESTAMP BETWEEN ? AND ?) AND ($filter) ) s"
+                                                           + " GROUP BY isin, trunc(? * (diff - diff_start) / (diff_end - diff_start)), open";
+    
+    //  CREATE OR REPLACE FUNCTION time_diff (
+    //DATE_1 IN DATE, DATE_2 IN DATE) RETURN NUMBER IS
+    //
+    //NDATE_1   NUMBER;
+    //NDATE_2   NUMBER;
+    //NSECOND_1 NUMBER(5,0);
+    //NSECOND_2 NUMBER(5,0);
+    //
+    //BEGIN
+    //  -- Get Julian date number from first date (DATE_1)
+    //  NDATE_1 := TO_NUMBER(TO_CHAR(DATE_1, 'J'));
+    //
+    //  -- Get Julian date number from second date (DATE_2)
+    //  NDATE_2 := TO_NUMBER(TO_CHAR(DATE_2, 'J'));
+    //
+    //  -- Get seconds since midnight from first date (DATE_1)
+    //  NSECOND_1 := TO_NUMBER(TO_CHAR(DATE_1, 'SSSSS'));
+    //
+    //  -- Get seconds since midnight from second date (DATE_2)
+    //  NSECOND_2 := TO_NUMBER(TO_CHAR(DATE_2, 'SSSSS'));
+    //
+    //  RETURN (((NDATE_2 - NDATE_1) * 86400)+(NSECOND_2 - NSECOND_1));
+    //END time_diff;
+    ///
 
 
     //
@@ -338,72 +358,6 @@ public class QuoteDAO implements GenericQuoteDAO {
         }
     }
 
-    public Timestamp getLatestTime(String isin) throws StockPlayException {
-        Connection conn = null;
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        try {
-            try {
-                conn = OracleConnection.getConnection();
-                stmt = conn.prepareStatement(MIN_QUOTE);
-
-                stmt.setString(1, isin);
-
-                rs = stmt.executeQuery();
-                if (rs.next()) {
-                    return rs.getTimestamp("timestamp");
-                } else {
-                    return null;
-                }
-            } finally {
-                if (rs != null) {
-                    rs.close();
-                }
-                if (stmt != null) {
-                    stmt.close();
-                }
-                if (conn != null) {
-                    conn.close();
-                }
-            }
-        } catch (SQLException ex) {
-            throw new DBException(ex);
-        }
-    }
-
-    public Timestamp getFirstTime(String isin) throws StockPlayException {
-        Connection conn = null;
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        try {
-            try {
-                conn = OracleConnection.getConnection();
-                stmt = conn.prepareStatement(MAX_QUOTE);
-
-                stmt.setString(1, isin);
-
-                rs = stmt.executeQuery();
-                if (rs.next()) {
-                    return rs.getTimestamp("timestamp");
-                } else {
-                    return null;
-                }
-            } finally {
-                if (rs != null) {
-                    rs.close();
-                }
-                if (stmt != null) {
-                    stmt.close();
-                }
-                if (conn != null) {
-                    conn.close();
-                }
-            }
-        } catch (SQLException ex) {
-            throw new DBException(ex);
-        }
-    }
-
     public List<Timestamp> getRange(String isin) throws StockPlayException {
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -561,25 +515,24 @@ public class QuoteDAO implements GenericQuoteDAO {
         try {
             try {
                 conn = OracleConnection.getConnection();
+                    Logger.getLogger(this.getClass()).error(SELECT_SPAN_QUOTE_FILTER.replace("$filter", (String) iFilter.compile("sql")));
                 if(!iFilter.empty())
                     stmt = conn.prepareStatement(SELECT_SPAN_QUOTE_FILTER.replace("$filter", (String) iFilter.compile("sql")));
                 else
                     stmt = conn.prepareStatement(SELECT_SPAN_QUOTE);
-                
-                stmt.setDate(1, new Date(iStart.getTime()));
-                stmt.setInt(2, iSpan);
-                stmt.setDate(3, new Date(iStart.getTime()));
-                stmt.setDate(4, new Date(iStart.getTime()));
-                stmt.setDate(5, new Date(iStart.getTime()));
-                stmt.setDate(6, new Date(iStart.getTime()));
-                stmt.setInt(7, iSpan);
-                stmt.setDate(8, new Date(iStart.getTime()));
-                stmt.setDate(9, new Date(iStop.getTime()));
+                    
+                stmt.setTimestamp(1, new Timestamp(iStart.getTime()));
+                stmt.setTimestamp(2, new Timestamp(iStart.getTime()));
+                stmt.setTimestamp(3, new Timestamp(iStart.getTime()));
+                stmt.setTimestamp(4, new Timestamp(iStart.getTime()));
+                stmt.setTimestamp(5, new Timestamp(iStop.getTime()));
+                stmt.setInt(6, iSpan-1);
 
                 rs = stmt.executeQuery();
 
                 ArrayList<Quote> result = new ArrayList<Quote>();
                 while (rs.next()) {
+                    Logger.getLogger(this.getClass()).error("GOT ONE");
                     Quote tQuote = new Quote(rs.getString("isin"), rs.getTimestamp("timestamp"));
                     tQuote.setPrice(rs.getDouble("price"));
                     tQuote.setVolume(rs.getInt("volume"));
