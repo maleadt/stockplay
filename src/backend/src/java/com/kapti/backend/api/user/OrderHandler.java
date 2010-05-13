@@ -23,7 +23,7 @@ import com.kapti.backend.helpers.DateHelper;
 import com.kapti.data.Order;
 import com.kapti.data.OrderStatus;
 import com.kapti.data.persistence.GenericDAO;
-import com.kapti.exceptions.InvocationException;
+import com.kapti.exceptions.ServiceException;
 import com.kapti.exceptions.StockPlayException;
 import com.kapti.filter.Filter;
 import com.kapti.filter.parsing.Parser;
@@ -88,12 +88,12 @@ public class OrderHandler extends MethodClass {
         if (! getRole().isBackendAdmin()) {   // TODO: isOrderAdmin
             for (String tKey : iDetails.keySet()) {
                 if (tKey.equalsIgnoreCase(Order.Fields.USER.toString())) {
-                    throw new InvocationException(InvocationException.Type.BAD_REQUEST, "you cannot edit other user's orders");
+                    int tId = (Integer) iDetails.get(tKey);
+                    if (tId != getUser().getId())
+                        throw new ServiceException(ServiceException.Type.UNAUTHORIZED);
                 }
             }
-            iDetails.put(Order.Fields.USER.toString(), getUser().getId());
         }
-
 
         // Instantiate a new order
         Order tOrder = Order.fromStruct(iDetails);
