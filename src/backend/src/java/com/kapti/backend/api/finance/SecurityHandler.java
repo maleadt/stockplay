@@ -94,6 +94,27 @@ public class SecurityHandler extends MethodClass {
         return oVector;
     }
 
+    public List<Map<String, Object>> ListIndexes(String iFilter) throws StockPlayException {
+        // Get DAO reference
+        GenericDAO<com.kapti.data.Index, String> tIndexDAO = getDAO().getIndexDAO();
+
+        Parser parser = Parser.getInstance();
+        Filter filter = parser.parse(iFilter);
+
+        // Fetch and convert all Indexs
+        Collection<com.kapti.data.Index> tIndexes = tIndexDAO.findByFilter(filter);
+        Vector<Map<String, Object>> oVector = new Vector<Map<String, Object>>();
+        for (com.kapti.data.Index tIndex : tIndexes) {
+            oVector.add(tIndex.toStruct(
+                    com.kapti.data.Index.Fields.ISIN,
+                    com.kapti.data.Index.Fields.SYMBOL,
+                    com.kapti.data.Index.Fields.NAME,
+                    com.kapti.data.Index.Fields.EXCHANGE));
+        }
+
+        return oVector;
+    }
+
     public int Modify(String iFilter, HashMap<String, Object> iDetails) throws StockPlayException {
         // Get DAO reference
         GenericDAO<com.kapti.data.Security, String> tSecurityDAO = getDAO().getSecurityDAO();

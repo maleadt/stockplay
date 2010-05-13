@@ -24,7 +24,6 @@ import com.kapti.exceptions.ServiceException;
 import com.kapti.exceptions.StockPlayException;
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -46,7 +45,7 @@ public class Index implements Serializable {
     }
     public static Map<Fields, Class> Types = new HashMap<Fields, Class>() { {
             put(Fields.ISIN, String.class);
-            put(Fields.EXCHANGE, String.class);
+            put(Fields.NAME, String.class);
             put(Fields.EXCHANGE, String.class);
             put(Fields.SYMBOL, String.class);
     } };
@@ -55,7 +54,6 @@ public class Index implements Serializable {
     private String exchange;
     private String isin;
     private String symbol;
-
 
     //
     // Construction

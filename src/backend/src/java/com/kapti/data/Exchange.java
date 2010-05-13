@@ -24,7 +24,6 @@ import com.kapti.exceptions.ServiceException;
 import com.kapti.exceptions.StockPlayException;
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
