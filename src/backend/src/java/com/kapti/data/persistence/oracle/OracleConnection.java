@@ -42,6 +42,7 @@ public class OracleConnection {
                 ds.setTestOnBorrow(true);
                 ds.setTestOnReturn(true);
                 ds.setTestWhileIdle(true);
+                ds.setValidationQuery("select 1 from dual");
             }
 
             return ds.getConnection();
