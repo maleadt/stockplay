@@ -44,6 +44,11 @@ import java.util.Vector;
  */
 public class OrderHandler extends MethodClass {
 
+    public Vector<HashMap<String, Object>> List() throws StockPlayException {
+        return List("");
+
+    }
+
     public Vector<HashMap<String, Object>> List(String iFilter) throws StockPlayException {
         // Get DAO reference
         GenericDAO<com.kapti.data.Order, Integer> orDAO = getDAO().getOrderDAO();
@@ -56,7 +61,11 @@ public class OrderHandler extends MethodClass {
             filter = base;
         } else {
             Filter user = parser.parse("userid == '" + getUser().getId() + "'i");
-            filter = Filter.merge(RelationAnd.class, base, user);
+            if (!base.empty()) {
+                filter = Filter.merge(RelationAnd.class, base, user);
+            } else {
+                filter = user;
+            }
         }
 
         // Fetch and convert all orders
@@ -85,7 +94,7 @@ public class OrderHandler extends MethodClass {
         GenericDAO<com.kapti.data.Order, Integer> orDAO = getDAO().getOrderDAO();
 
         // Restrict the input hash
-        if (! getRole().isBackendAdmin()) {   // TODO: isOrderAdmin
+        if (!getRole().isBackendAdmin()) {   // TODO: isOrderAdmin
             for (String tKey : iDetails.keySet()) {
                 if (tKey.equalsIgnoreCase(Order.Fields.USER.toString())) {
                     int tId = (Integer) iDetails.get(tKey);
@@ -126,8 +135,9 @@ public class OrderHandler extends MethodClass {
         boolean success = true;
         for (com.kapti.data.Order tOrder : tOrders) {
             tOrder.applyStruct(iDetails);
-            if(!orDAO.update(tOrder))
+            if (!orDAO.update(tOrder)) {
                 success = false;
+            }
         }
         return success;
     }
