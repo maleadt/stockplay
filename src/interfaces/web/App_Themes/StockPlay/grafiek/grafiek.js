@@ -136,7 +136,7 @@ $.extend(subPlot.prototype, {
 
 $.extend(primaryPlot.prototype, {
 
-    _init: function(container, from, to, isin) {
+    _init: function (container, from, to, isin) {
         this.container = $(this.containerName + ' div');
         this.options = new LineOptions();
         this.draw();
@@ -153,20 +153,23 @@ $.extend(primaryPlot.prototype, {
         this.draw();
     },
 
-    getDummyData: function(from, to) {
+    getDummyData: function (from, to) {
         return [
 			{ label: messages.loading, data: d1, color: 'lightblue', lines: { fill: true }, id: 0 }
 		];
     },
 
-    addLine: function(from, to, ref) {
-        this.data.push({ label: messages.loading, data: [], color: 'red', id: 1 });
-        this.requestDataFromService(1, ref, this.plot.getAxes().xaxis.min, this.plot.getAxes().xaxis.max);
+    addLine: function (from, to, ref) {
+        var color = 'red';
+        if (this.noLines == 2)
+            color = 'yellow';
+        this.data.push({ label: messages.loading, data: [], color: color, id: this.noLines });
+        this.requestDataFromService(this.noLines, ref, this.plot.getAxes().xaxis.min, this.plot.getAxes().xaxis.max);
         this.codes.push(ref);
     },
 
-    addTemporyEvents: function() {
-        $(this.containerName + ' .legendLabel a').bind('click', { me: this }, function(event) {
+    addTemporyEvents: function () {
+        $(this.containerName + ' .legendLabel a').bind('click', { me: this }, function (event) {
             var me = event.data.me;
             //var href = event.srcElement.href;
             var href = event.target.href;
@@ -178,13 +181,13 @@ $.extend(primaryPlot.prototype, {
         });
     },
 
-    pushHistory: function() {
+    pushHistory: function () {
         this.history.push(this.lastView);
         this.lastView = [this.plot.getAxes().xaxis.min, this.plot.getAxes().xaxis.max];
         $(this.containerName + ' li.last, ' + this.containerName + ' li.reset').removeClass('disabled');
     },
 
-    requestDataFromService: function(id, isin, from, to) {
+    requestDataFromService: function (id, isin, from, to) {
         var _this = this;
         var diff = (to - from) / 2;
         from -= diff;
@@ -195,11 +198,11 @@ $.extend(primaryPlot.prototype, {
             url: "WebService.asmx/getData",
             data: "{'isin':'" + isin + "','from':" + from + ",'to':" + to + "}",
             dataType: "json",
-            success: function(json) {
+            success: function (json) {
                 var line = _this.data[id];
                 var data = eval("(" + json.d + ")");
                 var xaxis = _this.plot.getAxes().xaxis;
-                line.label = messages.legendString+' '+data.name;
+                line.label = messages.legendString + ' ' + data.name;
                 line.data = data.data;
                 _this.draw();
                 _this.setView(xaxis.min, xaxis.max);
@@ -212,14 +215,14 @@ $.extend(primaryPlot.prototype, {
         });
     },
 
-    requestData: function() {
+    requestData: function () {
         for (nr in this.codes)
             this.requestDataFromService(nr, this.codes[nr], this.plot.getAxes().xaxis.min, this.plot.getAxes().xaxis.max);
     },
 
-    addEvents: function() {
+    addEvents: function () {
 
-        this.container.bind('plotzoom', { me: this }, function(event, plot) {
+        this.container.bind('plotzoom', { me: this }, function (event, plot) {
             var ranges = plot.getAxes().xaxis;
             var me = event.data.me;
             // controle op maximum inzoomen
@@ -232,7 +235,7 @@ $.extend(primaryPlot.prototype, {
             me.pushHistory();
         });
 
-        this.container.bind("plotselected", { me: this }, function(event, ranges) {
+        this.container.bind("plotselected", { me: this }, function (event, ranges) {
             var me = event.data.me;
             me.setView(ranges.xaxis.from, ranges.xaxis.to);
             me.draw();
@@ -240,7 +243,7 @@ $.extend(primaryPlot.prototype, {
             me.pushHistory();
         });
 
-        this.container.bind('plotpan', { me: this }, function(event, plot) {
+        this.container.bind('plotpan', { me: this }, function (event, plot) {
             var ranges = plot.getAxes().xaxis;
             var me = event.data.me;
             me.setView(ranges.min, ranges.max);
@@ -249,7 +252,7 @@ $.extend(primaryPlot.prototype, {
             me.pushHistory();
         });
 
-        $(this.containerName + ' li.selection').bind('click', { me: this }, function(event) {
+        $(this.containerName + ' li.selection').bind('click', { me: this }, function (event) {
             var me = event.data.me;
             me.options.setSelectionMode();
             me.draw();
@@ -259,7 +262,7 @@ $.extend(primaryPlot.prototype, {
             me.pushHistory();
         });
 
-        $(this.containerName + ' li.pan').bind('click', { me: this }, function(event) {
+        $(this.containerName + ' li.pan').bind('click', { me: this }, function (event) {
             var me = event.data.me;
             me.options.setPanningMode();
             me.draw();
@@ -269,15 +272,15 @@ $.extend(primaryPlot.prototype, {
             me.pushHistory();
         });
 
-        $(this.containerName + ' li.zoomOut').bind('click', { me: this }, function(event) {
+        $(this.containerName + ' li.zoomOut').bind('click', { me: this }, function (event) {
             event.data.me.plot.zoomOut();
         });
 
-        $(this.containerName + ' li.zoomIn').bind('click', { me: this }, function(event) {
+        $(this.containerName + ' li.zoomIn').bind('click', { me: this }, function (event) {
             event.data.me.plot.zoom();
         });
 
-        $(this.containerName + ' li.reset').addClass('disabled').bind('click', { me: this }, function(event) {
+        $(this.containerName + ' li.reset').addClass('disabled').bind('click', { me: this }, function (event) {
             var me = event.data.me;
             delete me.options;
             me.options = new LineOptions();
@@ -296,7 +299,7 @@ $.extend(primaryPlot.prototype, {
             $(me.containerName + ' li.add').removeClass('disabled');
         });
 
-        $(this.containerName + ' li.last').addClass('disabled').bind('click', { me: this }, function(event) {
+        $(this.containerName + ' li.last').addClass('disabled').bind('click', { me: this }, function (event) {
             var me = event.data.me;
             if (me.history.length == 0)
                 return;
@@ -311,53 +314,67 @@ $.extend(primaryPlot.prototype, {
             }
         });
 
-        $(this.containerName + ' li.add').bind('click', { me: this }, function(event) {
-			var me = event.data.me;
-			if (me.noLines == me.maxReferences)
-				return;
-			$(me.containerName).siblings('.overlay').show();
-			$(me.containerName+' ul').hide();
+        $(this.containerName + ' li.add').bind('click', { me: this }, function (event) {
+            var me = event.data.me;
+            if (me.noLines == me.maxReferences)
+                return;
+            me.referenceMenuActivated = true;
+            $(me.containerName).parent().children('.subPlot').hide();
+            $(me.containerName).siblings('.overlay').show();
+            $(me.containerName + ' ul').hide();
         });
 
-        $(this.containerName).bind('mouseover', { me: this }, function(event) {
-            $(event.data.me.containerName + ' .legendLabel a').show();
+        $(this.containerName).parent().bind('mouseover', { me: this }, function (event) {
+            var me = event.data.me;
+            $(me.containerName + ' .legendLabel a').show();
+            if (me.referenceMenuActivated)
+                return;
+            $(me.containerName + ' ul').show();
         });
 
-        $(this.containerName).bind('mouseout', { me: this }, function(event) {
-            $(event.data.me.containerName + ' .legendLabel a').hide();
+        $(this.containerName).parent().bind('mouseout', { me: this }, function (event) {
+            var me = event.data.me;
+            $(me.containerName + ' .legendLabel a').hide();
+            if (me.referenceMenuActivated)
+                return;
+            $(me.containerName + ' ul').hide();
         });
 
-		$(this.containerName).siblings('.overlay').children('p').children('.cancel').bind('click', {me: this}, function(event) {
-			var me = event.data.me;
-			$(me.containerName).siblings('.overlay').hide();
-			$(me.containerName+' ul').show();
-			return false;
-		});
+        $(this.containerName).siblings('.overlay').children('p').children('.cancel').bind('click', { me: this }, function (event) {
+            var me = event.data.me;
+            $(me.containerName).siblings('.overlay').hide();
+            $(me.containerName + ' ul').show();
+            me.referenceMenuActivated = false;
+            $(me.containerName).parent().children('.subPlot').show();
+            return false;
+        });
 
-		$(this.containerName).siblings('.overlay').children('p').children('.add').bind('click', {me: this}, function(event) {
-			var me = event.data.me;
-			if (me.noLines == me.maxReferences)
-				return;
-			me.addLine(1,1,$('#code'));
-			me.noLines++;
-			if (me.noLines == me.maxReferences)
-				$(me.containerName+' li.add').addClass('disabled');
-			$(me.containerName+' li.reset').removeClass('disabled');
-			$(me.containerName).siblings('.overlay').hide();
-			$(me.containerName+' ul').show();
-			return false;
-		});
-		
-		// Add translations
-		$(this.containerName+' li.pan').text(messages.menuPan);
-		$(this.containerName+' li.selection').text(messages.menuSelection);
-		$(this.containerName+' li.last').text(messages.menuLast);
-		$(this.containerName+' li.zoomIn').text(messages.menuZoomIn);
-		$(this.containerName+' li.zoomOut').text(messages.menuZoomOut);
-		$(this.containerName+' li.add').text(messages.menuAdd);
-		$(this.containerName+' li.reset').text(messages.menuReset);
-		$(this.containerName).siblings('.overlay').children('p').children('.add').text(messages.referenceAdd);
-		$(this.containerName).siblings('.overlay').children('p').children('.cancel').text(messages.referenceCancel);
+        $(this.containerName).siblings('.overlay').children('p').children('.add').bind('click', { me: this }, function (event) {
+            var me = event.data.me;
+            if (me.noLines == me.maxReferences)
+                return;
+            me.addLine(1, 1, $('#code').val());
+            me.noLines++;
+            if (me.noLines == me.maxReferences)
+                $(me.containerName + ' li.add').addClass('disabled');
+            $(me.containerName + ' li.reset').removeClass('disabled');
+            $(me.containerName).siblings('.overlay').hide();
+            $(me.containerName + ' ul').show();
+            $(me.containerName).parent().children('.subPlot').show();
+            me.referenceMenuActivated = false;
+            return false;
+        });
+
+        // Add translations
+        $(this.containerName + ' li.pan').text(messages.menuPan);
+        $(this.containerName + ' li.selection').text(messages.menuSelection);
+        $(this.containerName + ' li.last').text(messages.menuLast);
+        $(this.containerName + ' li.zoomIn').text(messages.menuZoomIn);
+        $(this.containerName + ' li.zoomOut').text(messages.menuZoomOut);
+        $(this.containerName + ' li.add').text(messages.menuAdd);
+        $(this.containerName + ' li.reset').text(messages.menuReset);
+        $(this.containerName).siblings('.overlay').children('p').children('.add').text(messages.referenceAdd);
+        $(this.containerName).siblings('.overlay').children('p').children('.cancel').text(messages.referenceCancel);
 
     }
 

@@ -110,7 +110,7 @@ $.extend(primaryPlot.prototype, {
 	},
 
 	addLine: function(from, to, ref) {
-		this.data.push({label: "Beursverloop Ordina", data: d3, color: 'red', id: 1});
+	    this.data.push({ label: "Beursverloop Ordina", data: d3, color: 'red', id: me.noLines });
 		this.draw();
 		this.setView(this.plot.getAxes().xaxis.min, this.plot.getAxes().xaxis.max); // dubbel tekenen vervangen door from en max functie
 		this.draw();

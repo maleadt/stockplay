@@ -11,6 +11,9 @@ public interface SecurityHandler : IXmlRpcProxy
     [XmlRpcMethod("Finance.Security.List")]
     XmlRpcStruct[] List(string iFilter);
 
+    [XmlRpcMethod("Finance.Security.ListIndexes")]
+    XmlRpcStruct[] ListIndexes(string iFilter);
+
     [XmlRpcMethod("Finance.Security.Modify")]
     int Modify(string iFilter, XmlRpcStruct iDetails);
 
@@ -19,12 +22,6 @@ public interface SecurityHandler : IXmlRpcProxy
 
     [XmlRpcMethod("Finance.Security.Remove")]
     int Remove(string iFilter);
-
-    [XmlRpcMethod("Finance.Security.getFirstTime")]
-    System.DateTime getFirstTime(string isin);
-
-    [XmlRpcMethod("Finance.Security.getLatestTime")]
-    System.DateTime getLatestTime(string isin);
 
     [XmlRpcMethod("Finance.Security.QuoteRange")]
     System.DateTime[] getRange(string isin);

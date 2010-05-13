@@ -166,6 +166,36 @@ namespace StockPlay.implXMLRPC
             }
         }
 
+        public List<IIndex> GetIndexesByIsin(params string[] isin)
+        {
+            try
+            {
+                //Filter opbouwen
+                StringBuilder parameters = new StringBuilder();
+                for (int i = 0; i < isin.Length - 1; i++)
+                    parameters.Append("ISIN == '" + isin[i] + "' || ");
+                parameters.Append("ISIN == '" + isin[isin.Length - 1] + "'");
+
+                sysLog.Info("Request: 'GetIndexByIsin' - Requested ISINs: '" + parameters.ToString() + "'");
+
+                List<IIndex> indexes = new List<IIndex>();
+
+                //Securities ophalen via XML-RPC en omzetten naar objecten
+                XmlRpcStruct[] query = publicSecurityHandler.ListIndexes(parameters.ToString());
+                foreach (XmlRpcStruct index in query)
+                    indexes.Add(new Index(index));
+
+                return indexes;
+            }
+            catch (Exception e)
+            {
+                sysLog.Error("Error when requesting IndexByIsin", e);
+
+                return null;
+            }
+        }
+
+
         public List<ISecurity> GetSecuritiesFromExchange(string id)
         {
             try
@@ -277,41 +307,6 @@ namespace StockPlay.implXMLRPC
                 return null;
             }
 
-        }
-
-
-        public DateTime GetLatestTime(string isin)
-        {
-            try
-            {
-                sysLog.Info("Request: 'GetLatestTime' - Requested Security: '" + isin + "'");
-
-                DateTime time = publicSecurityHandler.getLatestTime(isin);
-                return time;
-            }
-            catch(Exception e)
-            {
-                sysLog.Error("Error when requesting GetLatestTime", e);
-
-                return DateTime.MinValue;
-            }
-        }
-
-        public DateTime GetFirstTime(string isin)
-        {
-            try
-            {
-                sysLog.Info("Request: 'GetFirstTime' - Requested Security: '" + isin + "'");
-
-                DateTime time = publicSecurityHandler.getFirstTime(isin);
-                return time;
-            }
-            catch (Exception e)
-            {
-                sysLog.Error("Error when requesting GetFirstTime", e);
-
-                return DateTime.MinValue;
-            }
         }
 
         public List<DateTime> GetRange(string isin)

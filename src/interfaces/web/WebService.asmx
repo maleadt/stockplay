@@ -21,8 +21,22 @@ public class WebService  : System.Web.Services.WebService {
         List<IQuote> quotes = data.GetQuotesFromSecurity(isin, Helpers.ConvertFromUnixTimestamp(from / 1000), Helpers.ConvertFromUnixTimestamp(to / 1000));
         
         if (Application[isin] == null) {
-            ISecurity security = data.GetSecurityByIsin(isin)[0];
-            Application[isin] = security.Name;
+            List<ISecurity> securities = data.GetSecurityByIsin(isin);
+            if (securities.Count > 0) {
+                ISecurity security = data.GetSecurityByIsin(isin)[0];
+                Application[isin] = security.Name;
+            } else {
+                List<IIndex> indexes = data.GetIndexesByIsin(isin);
+                if (indexes.Count > 0)
+                {
+                    IIndex index = data.GetIndexesByIsin(isin)[0];
+                    Application[isin] = index.Name;
+                }
+                else
+                {
+                    Application[isin] = "??";
+                }
+            }
         }
         
         Plot plot = new Plot();

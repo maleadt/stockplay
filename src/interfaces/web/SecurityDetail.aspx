@@ -70,7 +70,7 @@
 			</ul>
 		</div>
 		<div class="overlay">
-			<p>ISIN: <input name="code" type="text" value="BE0389555039"/> <a href="" class="add"></a> <a href="" class="cancel"></a></p>
+			<p>ISIN: <input name="code" id="code" type="text" value="BE0389555039"/> <a href="" class="add"></a> <a href="" class="cancel"></a></p>
 		</div>
 		<div id="volumes" class="subPlot">
 		</div>

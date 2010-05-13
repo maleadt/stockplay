@@ -10,15 +10,16 @@ namespace StockPlay
 	    List<ISecurity> GetSecuritiesList();
 	    List<ISecurity> GetSecuritiesList(string searchterm);
 	    List<ISecurity> GetSecurityByIsin(params string[] isin);
-	    List<ISecurity> GetSecuritiesFromExchange(string id);
+        List<ISecurity> GetSecuritiesFromExchange(string id);
+
+        //Indexes
+        List<IIndex> GetIndexesByIsin(params string[] isin);
 	
 	    //Quotes
 	    IQuote GetLatestQuoteFromSecurity(string isin);
 	    List<IQuote> GetLatestQuotesFromSecurities(List<ISecurity> securities);
 	    List<IQuote> GetDailyQuotesFromSecurity(string isin, DateTime minDate, DateTime maxDate);
 	    List<IQuote> GetQuotesFromSecurity(string isin, DateTime iFrom, DateTime iTo);
-	    DateTime GetLatestTime(string isin);
-	    DateTime GetFirstTime(string isin);
         List<DateTime> GetRange(string isin);
 	
 	    //Exhanges

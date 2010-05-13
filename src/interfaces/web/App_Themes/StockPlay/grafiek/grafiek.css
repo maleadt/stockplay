@@ -72,10 +72,6 @@
 	margin-top: 24px;
 }
 
-.plot:hover ul {
-	display: inherit;
-}
-
 .plot li {
 	margin-right: 0.8em;
 	background: no-repeat center left;
