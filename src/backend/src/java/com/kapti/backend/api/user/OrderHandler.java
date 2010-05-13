@@ -55,7 +55,7 @@ public class OrderHandler extends MethodClass {
         if (getRole().isBackendAdmin()) {   // TODO: isOrderAdmin
             filter = base;
         } else {
-            Filter user = parser.parse("id == '" + getUser().getId() + "'i");
+            Filter user = parser.parse("userid == '" + getUser().getId() + "'i");
             filter = Filter.merge(RelationAnd.class, base, user);
         }
 
