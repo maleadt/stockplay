@@ -26,7 +26,6 @@ import com.kapti.exceptions.StockPlayException;
 import com.kapti.filter.Filter;
 import com.kapti.filter.parsing.Parser;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
@@ -277,42 +276,6 @@ public class SecurityHandler extends MethodClass {
                     Quote.Fields.OPEN));
         }
         return oVector;
-    }
-
-
-     /**
-     * Geeft het tijdstip van de eerste datum van een koers
-     * @param String isin
-     * @return Timestamp
-     * @throws XmlRpcException
-     * @throws StockPlayException
-     * @throws FilterException
-     * @throws ParserException
-     */
-    public Timestamp getFirstTime(String isin) throws StockPlayException {
-        // Get DAO reference
-        
-        GenericQuoteDAO tQuoteDAO = getDAO().getQuoteDAO();
-        System.err.println("DEPRECATED: use QuoteRange instead");
-
-        return tQuoteDAO.getFirstTime(isin);
-    }
-
-     /**
-     * Geeft het tijdstip van de laatste datum van een koers
-     * @param String isin
-     * @return Timestamp
-     * @throws XmlRpcException
-     * @throws StockPlayException
-     * @throws FilterException
-     * @throws ParserException
-     */
-    public Timestamp getLatestTime(String isin) throws StockPlayException {
-        // Get DAO reference
-        GenericQuoteDAO tQuoteDAO = getDAO().getQuoteDAO();
-        System.err.println("DEPRECATED: use QuoteRange instead");
-
-        return tQuoteDAO.getLatestTime(isin);
     }
 
     public List<Timestamp> QuoteRange(String isin) throws StockPlayException {
