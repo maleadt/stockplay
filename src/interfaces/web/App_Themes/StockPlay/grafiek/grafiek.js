@@ -12,6 +12,7 @@ $.extend(plot.prototype, {
         this.data = this.getData(from, to);
         this.plotListeners = [];
         this.codes = [];
+		this.maxReferences = 3;
         this._init(container, from, to, isin);
     },
 
@@ -154,14 +155,14 @@ $.extend(primaryPlot.prototype, {
 
     getDummyData: function(from, to) {
         return [
-			{ label: "Bezig met laden..", data: d1, color: 'lightblue', lines: { fill: true }, id: 0 }
+			{ label: messages.loading, data: d1, color: 'lightblue', lines: { fill: true }, id: 0 }
 		];
     },
 
     addLine: function(from, to, ref) {
-        this.data.push({ label: "Bezig met laden..", data: [], color: 'red', id: 1 });
-        this.requestDataFromService(1, 'BE0003565737', this.plot.getAxes().xaxis.min, this.plot.getAxes().xaxis.max);
-        this.codes.push('BE0003565737');
+        this.data.push({ label: messages.loading, data: [], color: 'red', id: 1 });
+        this.requestDataFromService(1, ref, this.plot.getAxes().xaxis.min, this.plot.getAxes().xaxis.max);
+        this.codes.push(ref);
     },
 
     addTemporyEvents: function() {
@@ -198,7 +199,7 @@ $.extend(primaryPlot.prototype, {
                 var line = _this.data[id];
                 var data = eval("(" + json.d + ")");
                 var xaxis = _this.plot.getAxes().xaxis;
-                line.label = "Beursverloop" + " " + data.name;
+                line.label = messages.legendString+' '+data.name;
                 line.data = data.data;
                 _this.draw();
                 _this.setView(xaxis.min, xaxis.max);
@@ -311,14 +312,11 @@ $.extend(primaryPlot.prototype, {
         });
 
         $(this.containerName + ' li.add').bind('click', { me: this }, function(event) {
-            var me = event.data.me;
-            if (me.noLines == 2)
-                return;
-            me.addLine(1, 1, 1);
-            me.noLines++;
-            if (me.noLines == 2)
-                $(me.containerName + ' li.add').addClass('disabled');
-            $(me.containerName + ' li.reset').removeClass('disabled');
+			var me = event.data.me;
+			if (me.noLines == me.maxReferences)
+				return;
+			$(me.containerName).siblings('.overlay').show();
+			$(me.containerName+' ul').hide();
         });
 
         $(this.containerName).bind('mouseover', { me: this }, function(event) {
@@ -328,6 +326,39 @@ $.extend(primaryPlot.prototype, {
         $(this.containerName).bind('mouseout', { me: this }, function(event) {
             $(event.data.me.containerName + ' .legendLabel a').hide();
         });
+
+		$(this.containerName).siblings('.overlay').children('p').children('.cancel').bind('click', {me: this}, function(event) {
+			var me = event.data.me;
+			$(me.containerName).siblings('.overlay').hide();
+			$(me.containerName+' ul').show();
+			return false;
+		});
+
+		$(this.containerName).siblings('.overlay').children('p').children('.add').bind('click', {me: this}, function(event) {
+			var me = event.data.me;
+			if (me.noLines == me.maxReferences)
+				return;
+			me.addLine(1,1,$('#code'));
+			me.noLines++;
+			if (me.noLines == me.maxReferences)
+				$(me.containerName+' li.add').addClass('disabled');
+			$(me.containerName+' li.reset').removeClass('disabled');
+			$(me.containerName).siblings('.overlay').hide();
+			$(me.containerName+' ul').show();
+			return false;
+		});
+		
+		// Add translations
+		$(this.containerName+' li.pan').text(messages.menuPan);
+		$(this.containerName+' li.selection').text(messages.menuSelection);
+		$(this.containerName+' li.last').text(messages.menuLast);
+		$(this.containerName+' li.zoomIn').text(messages.menuZoomIn);
+		$(this.containerName+' li.zoomOut').text(messages.menuZoomOut);
+		$(this.containerName+' li.add').text(messages.menuAdd);
+		$(this.containerName+' li.reset').text(messages.menuReset);
+		$(this.containerName).siblings('.overlay').children('p').children('.add').text(messages.referenceAdd);
+		$(this.containerName).siblings('.overlay').children('p').children('.cancel').text(messages.referenceCancel);
+
     }
 
 });

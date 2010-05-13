@@ -134,3 +134,27 @@
 .plot li {
 	cursor: pointer;
 }
+
+.plot .overlay {
+	position: relative;
+	top: -110px;
+	background: url(images/overlay.png) no-repeat top left;
+	height: 50px;
+	width: 606px;
+	left: -28px;
+	display: none;
+}
+
+.plot .overlay p {
+	text-align: center;
+	padding-top: 8px;
+}
+
+.plot .overlay p a {
+	text-decoration: none;
+	color: inherit;
+}
+
+.plot .overlay p a:hover {
+	text-decoration: underline;
+}

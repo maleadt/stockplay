@@ -60,14 +60,17 @@
 		<div id="plotTest">
 			<div class="draw"></div>
 			<ul>
-				<li class="pan hand">Verplaats</li>
-				<li class="selection hand">Selectie</li>
-				<li class="last hand" onselectstart="return false">Vorige</li>
-				<li class="zoomIn hand" onselectstart="return false">Kleiner</li>
-				<li class="zoomOut hand" onselectstart="return false">Groter</li>
-				<li class="add hand">Toevoegen</li>
-				<li class="reset hand">Herstel</li>
+				<li class="pan hand"></li>
+				<li class="selection hand"></li>
+				<li class="last hand" onselectstart="return false"></li>
+				<li class="zoomIn hand" onselectstart="return false"></li>
+				<li class="zoomOut hand" onselectstart="return false"></li>
+				<li class="add hand"></li>
+				<li class="reset hand"></li>
 			</ul>
+		</div>
+		<div class="overlay">
+			<p>ISIN: <input name="code" type="text" value="BE0389555039"/> <a href="" class="add"></a> <a href="" class="cancel"></a></p>
 		</div>
 		<div id="volumes" class="subPlot">
 		</div>
