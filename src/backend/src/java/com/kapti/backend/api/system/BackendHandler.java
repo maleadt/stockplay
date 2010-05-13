@@ -19,6 +19,7 @@
 package com.kapti.backend.api.system;
 
 import com.kapti.backend.api.MethodClass;
+import com.kapti.backend.security.SessionsHandler;
 import com.kapti.backend.xmlrpc.Servlet;
 import com.kapti.backend.xmlrpc.ServletServer;
 import com.kapti.cache.Manager;
@@ -53,7 +54,7 @@ public class BackendHandler extends MethodClass {
 
     public HashMap<String, Object> Stats() throws StockPlayException {
         HashMap<String, Object> oStats = new HashMap<String, Object>();
-        oStats.put("users", 5);
+        oStats.put("users", SessionsHandler.getInstance().getCount());
         oStats.put("req", ServletServer.getRequests());
         oStats.put("uptime", Long.toString(Servlet.getUptime()));
         return oStats;

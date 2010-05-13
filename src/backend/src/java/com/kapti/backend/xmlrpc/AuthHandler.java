@@ -20,6 +20,7 @@ package com.kapti.backend.xmlrpc;
 
 import com.kapti.backend.security.SessionsHandler;
 import com.kapti.data.persistence.StockPlayDAO;
+import com.kapti.exceptions.StockPlayException;
 import org.apache.xmlrpc.XmlRpcRequest;
 import org.apache.xmlrpc.common.XmlRpcHttpRequestConfig;
 import org.apache.xmlrpc.server.AbstractReflectiveHandlerMapping.AuthenticationHandler;
@@ -58,7 +59,7 @@ public class AuthHandler implements AuthenticationHandler {
     // Methoden
     //
 
-    public boolean isAuthorized(XmlRpcRequest pRequest) {
+    public boolean isAuthorized(XmlRpcRequest pRequest) throws StockPlayException {
         // Haal credentials op
         XmlRpcHttpRequestConfig config = (XmlRpcHttpRequestConfig) pRequest.getConfig();
         String sessionid = config.getBasicUserName();

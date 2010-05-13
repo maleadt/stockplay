@@ -213,4 +213,8 @@ public class SessionsHandler {
 
         }
     }
+
+    public int getCount() {
+        return sessions.size();
+    }
 }

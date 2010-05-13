@@ -51,8 +51,14 @@
         <%
             // Define XML-RPC client object
             org.apache.xmlrpc.client.XmlRpcClientConfigImpl tConfig = new org.apache.xmlrpc.client.XmlRpcClientConfigImpl();
-            tConfig.setServerURL(new java.net.URL("http://localhost:6800/backend/public"));
+            tConfig.setServerURL(new java.net.URL("http://localhost:" + request.getServerPort() + "/backend/public"));
             org.apache.xmlrpc.client.XmlRpcClient tClient = new org.apache.xmlrpc.client.XmlRpcClient();
+            tClient.setConfig(tConfig);
+
+            // Login
+            String tSession = (String) tClient.execute("User.Validate", new Object[]{"Administrator", "chocolademousse"});
+            tConfig.setBasicUserName(tSession);
+            tConfig.setBasicPassword("");
             tClient.setConfig(tConfig);
         %>
         
@@ -61,7 +67,7 @@
         <p>
             <b>Requests served</b>: <%=tStatsBackend.get("req")%>.<br />
             <b>Uptime</b>: <%=seconds2readable(Long.parseLong((String)tStatsBackend.get("uptime")))%>.<br />
-            <b>Users logged in</b>: <i>not implemented</i>.<br />
+            <b>Users logged in</b>: <%=tStatsBackend.get("users")%>.<br />
         </p>
 
         <h2>Database</h2>
