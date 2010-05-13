@@ -10,7 +10,7 @@
     </p>
     <table id="TableRegister" runat="server">
         <tr>
-            <td colspan="2" meta:resourcekey="TableHeader"></td>
+            <td colspan="2"><h1 runat="server" meta:resourcekey="TableHeader"></h1></td>
         </tr>
         <tr>
             <td runat="server" meta:resourcekey="Nickname"></td>
@@ -65,8 +65,8 @@
         </tr>
         <tr>
             <td></td>
-            <td><asp:Button ID="btnRegister" runat="server" meta:resourcekey="RegisterButton" /> 
-                <asp:Button ID="btnCancel" runat="server" meta:resourcekey="CancelButton" onclick="btnCancel_Click" />
+            <td><asp:Button ID="btnRegister" class="button" runat="server" meta:resourcekey="RegisterButton" /> 
+                <asp:Button ID="btnCancel" class="button" runat="server" meta:resourcekey="CancelButton" onclick="btnCancel_Click" />
                 <asp:Label ID="ErrorLabel" runat="server" ForeColor="Red" Visible="False" meta:resourcekey="ErrorLabel"></asp:Label>
             </td>
         </tr>

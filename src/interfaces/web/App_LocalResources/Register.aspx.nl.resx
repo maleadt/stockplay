@@ -117,6 +117,27 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Body1" xml:space="preserve">
+    <value>Beste</value>
+  </data>
+  <data name="Body2" xml:space="preserve">
+    <value>Welkom bij StockPlay, uw account is nu geregistreerd!</value>
+  </data>
+  <data name="Body3" xml:space="preserve">
+    <value>Je kan de volgende gegevens gebruiken om in te loggen op je account:</value>
+  </data>
+  <data name="Body4" xml:space="preserve">
+    <value>Gebruikersnaam:</value>
+  </data>
+  <data name="Body5" xml:space="preserve">
+    <value>Paswoord:</value>
+  </data>
+  <data name="Body6" xml:space="preserve">
+    <value>Met vriendelijke groeten,</value>
+  </data>
+  <data name="Body7" xml:space="preserve">
+    <value>het Stockplay team.</value>
+  </data>
   <data name="CancelButton.Text" xml:space="preserve">
     <value>Annuleren</value>
   </data>
@@ -167,6 +188,9 @@
   </data>
   <data name="RegisterButton.Text" xml:space="preserve">
     <value>Registreer</value>
+  </data>
+  <data name="Subject" xml:space="preserve">
+    <value>Uw Stockplay account is geregistreerd</value>
   </data>
   <data name="TableHeader.InnerText" xml:space="preserve">
     <value>Registreer een nieuwe account</value>

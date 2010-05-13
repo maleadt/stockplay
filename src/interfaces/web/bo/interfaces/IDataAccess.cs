@@ -1,6 +1,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Collections.Generic;
+using web.bo;
 
 namespace StockPlay
 {
@@ -29,21 +30,21 @@ namespace StockPlay
 	    //Users
 	    void CreateUser(int id, string nickname, string password, string email, bool isAdmin, string lastname, string firstname, DateTime regDate,
 	                    long rrn, int points, double startAmount, double cash);
-	    bool RemoveUser(string nickname, string sessionID);
-	    bool UpdateUser(IUser user, string sessionID);
-	    IUser GetUserByNickname(string nickname, string sessionID);
+	    bool RemoveUser(string nickname, string sessionID, ISession sessionHandler);
+	    bool UpdateUser(IUser user, string sessionID, ISession sessionHandler);
+	    IUser GetUserByNickname(string nickname, string sessionID, ISession sessionHandler);
 	    string ValidateUser(string nickname, string password); //Geeft de sessionID terug, deze is de lege string als validatie is mislukt
 	
 	    //User Securities
-	    List<IUserSecurity> GetUserSecurities(int id, string sessionID);
+	    List<IUserSecurity> GetUserSecurities(int id, string sessionID, ISession sessionHandler);
 	
 	    //Transactions
-	    List<ITransaction> GetUserTransactions(int id, string sessionID);
+	    List<ITransaction> GetUserTransactions(int id, string sessionID, ISession sessionHandler);
 	
 	    //Orders
-	    void CreateOrder(int userId, string isin, int amount, double price, double alternativeLimit, string type, string sessionID);
-	    void CancelOrder(int orderId, string sessionID);
-	    List<IOrder> GetUserOrders(int id, string sessionID);
+	    void CreateOrder(int userId, string isin, int amount, double price, double alternativeLimit, string type, string sessionID, ISession sessionHandler);
+	    void CancelOrder(int orderId, string sessionID, ISession sessionHandler);
+	    List<IOrder> GetUserOrders(int id, string sessionID, ISession sessionHandler);
 	}
 
 }

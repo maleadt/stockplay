@@ -10,6 +10,7 @@ using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using StockPlay;
+using System.Collections.Generic;
 
 namespace StockPlay.Web
 	{
@@ -22,14 +23,25 @@ namespace StockPlay.Web
 	    protected void btnLogin_Click(object sender, EventArgs e)
 	    {
             StockplayMembershipProvider provider = (StockplayMembershipProvider) Membership.Provider;
-            string sessionID = provider.ValidateUserSession(txtUsername.Text, txtPassword.Text);
-            
-            if( ! sessionID.Equals("")) { //Indien we een geldige sessionID krijgen is het inloggen geslaagd.
-                Session["sessionID"] = sessionID;
-                Session["userID"] = ((StockplayMembershipUser)provider.GetUser(txtUsername.Text, sessionID)).ID;
 
-	            FormsAuthentication.RedirectFromLoginPage(txtUsername.Text, chkRememberMe.Enabled);
-	        }
+            //Proberen in te loggen (als de gebruiker foute gegevens opgeeft krijgen we een 'invalid
+            //credentials' exception van de backend)
+            try
+            {
+                string sessionID = provider.ValidateUserSession(txtUsername.Text, txtPassword.Text);
+
+                if (!sessionID.Equals(""))
+                {
+                    Session["sessionID"] = sessionID;
+                    Session["userID"] = ((StockplayMembershipUser)provider.GetUser(txtUsername.Text, sessionID)).ID;
+
+                    FormsAuthentication.RedirectFromLoginPage(txtUsername.Text, chkRememberMe.Enabled);
+                }
+            }
+            catch (Exception ex)
+            {
+                // TODO Foutbericht tonen
+            }
 	    }
 	}
 }

@@ -23,11 +23,12 @@ a:hover {
 }
 
 #container {
-	width: 63em;
+	width: 68em;
 	margin: auto;
 }
 
-#header {
+#header 
+{
 	background: url(../afbeeldingen/logo.png) left top no-repeat;
 	margin-top: 1.5em;
 	margin-bottom: 0.7em;
@@ -35,11 +36,13 @@ a:hover {
 	width: 200px;
 }
 
-#header h1 {
+#header h1 
+{
 	display: none;
 }
 
-#content {
+#content 
+{
 	border-top: solid 1px #ace;
 	width: 100%;
 }
@@ -53,37 +56,26 @@ a:hover {
 
 #right 
 {
-	width: 46em; 
+	width: 51em; 
 }
 
+/* MENU */
 #menu {
 	float:left;
 	border-left: solid 1px #ace;
 }
 
+/* KEUZEMENU */
 #left ul {
 	padding-left: 1em;
 	margin-bottom: 0;
 	list-style: none;
 }
 
-#left ul.menu {
-	padding-top: 1em;
-	padding-bottom: 3em;
-}
-
-#left li {
-	padding-top: 0.2em;
-}
-
 #left li a {
 	margin-left: 0;
 	padding-left: 0;
 	padding: 0.3em;
-	font-size: 0.8em;
-}
-
-#left li a {
 	color: #666;
 	text-decoration: none;
 }
@@ -92,10 +84,35 @@ a:hover {
 	color: #4395cd;
 }
 
-#left li.niv2 {
-	margin-left: 1em;
+/* HOOFDMENU */
+#left ul.menu {
+	padding-top: 1em;
+	padding-bottom: 3em;
+	font-size: 1em;
 }
 
+#left .menu li {
+	padding-top: 0.5em;
+}
+
+/* SUBMENU */
+#left ul.TreeViewSubmenu {
+	font-size: 0.8em;
+	margin-left: 0.5em;
+}
+
+#left .TreeViewSubmenu li {
+    padding-top: 0.2em;
+    border-left: 0.4em solid #aaccee;
+    padding-left: 0.5em;
+}
+
+#left .TreeViewSubmenu li:hover {
+    border-left: 0.4em solid white;
+}
+
+
+/* MENU ONDERAAN */
 #leftBottom p {
 	color: #666;
 	font-size: 0.8em;
@@ -155,7 +172,7 @@ a:hover {
 
 #right table.table {
 	margin-left: 0.7em;
-	width: 44.7em;
+	width: 49.7em;
 	color: #646464;
 }
 
@@ -192,16 +209,7 @@ a:hover {
 	text-align: center;
 }
 
-#search {
-	margin: 1.5em 0 1em 1em;
-	width: 77.5%;
-	height: 1.4em;
-	padding-left: 1.7em;
-	background: url(../afbeeldingen/magnifier.png) 1px 1px no-repeat;
-	color: gray;
-}
-
-/* ID van de asp textbox is anders */
+/* Search textbox */
 #ctl00_search 
 {
 	margin: 1.5em 0 1em 1em;
@@ -212,13 +220,14 @@ a:hover {
 	color: gray;
 }
 
-/* OPMAAK SECURITY DETAIL */
+/* TITEL VAN PAGINAS */
 #right h1 
 {
 	color: #ace;
 	margin-bottom: 1em;
 }
 
+/* OPMAAK VAN SECURITY DETAIL */
 #right h2.Value 
 {
 	font-size: 1.2em;
@@ -259,4 +268,22 @@ a:hover {
 #right h2.neg 
 {
 	color: #d40000;
+}
+
+/* OPMAAK BUTTONS */
+.button
+{
+   color:#686868;
+   background-color:#f6fbff;
+   border-style:solid;
+   border-color:#77aed5;
+   border-width:2px;
+   padding: 0.1em 0.6em 0.1em 0.6em;
+}
+
+.button:hover
+{
+    color:#ffffff;
+    background-color:#2c97d5;
+    border-color: #c0e1fb;
 }

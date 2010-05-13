@@ -12,6 +12,6 @@
         <asp:CheckBox ID="chkRememberMe" runat="server" Text="<%$ Resources:RememberMe %>"/>
         <a href="ForgotPassword.aspx" meta:resourcekey="ForgotPassword" runat="server"></a>
     </p>
-    <asp:Button ID="btnLogin" runat="server" Text="Login" onclick="btnLogin_Click" meta:resourcekey="LoginButton" />
+    <asp:Button ID="btnLogin" class="button" runat="server" Text="Login" onclick="btnLogin_Click" meta:resourcekey="LoginButton" />
 </asp:Content>
 

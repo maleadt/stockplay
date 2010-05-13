@@ -8,13 +8,14 @@ using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
+using web.bo;
 
 /// <summary>
 /// Summary description for StockplayMembershipProvider
 /// </summary>
 namespace StockPlay
 {
-	public class StockplayMembershipProvider : System.Web.Security.MembershipProvider
+	public class StockplayMembershipProvider : System.Web.Security.MembershipProvider, ISession
 	{
 	
 	    public override bool ChangePassword(string nickname, string oldPassword, string newPassword)
@@ -29,9 +30,9 @@ namespace StockPlay
 	
 	        try
 	        {
-                IUser user = data.GetUserByNickname(nickname, sessionID);
+                IUser user = data.GetUserByNickname(nickname, sessionID, this);
 	            user.Password = newPassword;
-	            data.UpdateUser(user, sessionID);
+	            data.UpdateUser(user, sessionID, this);
 	        }
 	        catch(Exception e)
 	        {
@@ -58,7 +59,7 @@ namespace StockPlay
         public bool DeleteUser(string nickname, string sessionID)
         {
             IDataAccess data = DataAccessFactory.GetDataAccess();
-            return data.RemoveUser(nickname, sessionID);
+            return data.RemoveUser(nickname, sessionID, this);
         }
 	
 	    public override bool EnablePasswordReset
@@ -74,7 +75,7 @@ namespace StockPlay
 	    public MembershipUser GetUser(string nickname, string sessionID)
 	    {
 	        IDataAccess data = DataAccessFactory.GetDataAccess();
-	        IUser user = data.GetUserByNickname(nickname, sessionID);
+	        IUser user = data.GetUserByNickname(nickname, sessionID, this);
 	
 	        StockplayMembershipUser membershipUser = null;
 	        if(user != null)
@@ -121,7 +122,7 @@ namespace StockPlay
 	        IDataAccess data = DataAccessFactory.GetDataAccess();
 	        try
 	        {
-	            IUser userData = data.GetUserByNickname(user.UserName, sessionID);
+	            IUser userData = data.GetUserByNickname(user.UserName, sessionID, this);
 	            StockplayMembershipUser userMembership = (StockplayMembershipUser) user;
 	
 	            userData.Nickname = userMembership.UserName;
@@ -130,7 +131,7 @@ namespace StockPlay
 	            userData.Email = userMembership.Email;
 	            userData.RRN = userMembership.RRN;
 	
-	            data.UpdateUser(userData, sessionID);
+	            data.UpdateUser(userData, sessionID, this);
 	        }
 	        catch (Exception e)
 	        {
@@ -275,5 +276,12 @@ namespace StockPlay
         {
             get { throw new NotImplementedException(); }
         }
-	}
+
+        //Implementatie van ISession interface
+        public void handleSessionTimeout()
+        {
+            FormsAuthentication.SignOut();
+            // TODO Van hieruit naar de login pagina omleiden?
+        }
+    }
 }

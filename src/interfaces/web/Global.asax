@@ -1,15 +1,20 @@
 ﻿<%@ Application Language="C#" %>
 <%@ Import Namespace="log4net" %>
 <%@ Import Namespace="log4net.Config" %>
+<%@ Import Namespace="System.Collections.Generic" %>
 
 <script runat="server">
 
     void Application_Start(object sender, EventArgs e) 
     {
         // Code that runs on application startup
+        XmlConfigurator.Configure(); //Loggin automatisch configureren met Web.Config
+        
+        //Globale parameters
+        Application["applicationStart"] = DateTime.Now;
+        Application["activeUsers"] = new Dictionary<string, DateTime>();
         
         ILog sysLog = LogManager.GetLogger("Application");
-        XmlConfigurator.Configure();
         sysLog.Info("Website startup");
 
         SiteMap.SiteMapResolve += new SiteMapResolveEventHandler(HandleUnknownSiteMapNode);
@@ -27,10 +32,10 @@
             SiteMapNode overview = SiteMap.Provider.FindSiteMapNode("~/SecuritiesOverview.aspx");
             //Een bestaande node kan je niet aanpassen, dus nemen we een kopie
             SiteMapNode node = new SiteMapNode(overview.Provider, overview.Key, overview.Url, overview.Title, overview.Description);
-            
-            string title = "Security Detail";
+
+            string title = (string) HttpContext.GetGlobalResourceObject("Global", "SecurityDetailTitle");
             string query = "SecurityDetail.aspx";
-            string description = "Detail of security";
+            string description = (string)HttpContext.GetGlobalResourceObject("Global", "SecurityDetailDescription");
             if (context.Request.Params["param"] != null) {
                 title += " (" + context.Request.Params["param"] + ")";
                 query += "?param=" + context.Request.Params["param"];
@@ -50,7 +55,6 @@
     {
         //  Code that runs on application shutdown
         ILog sysLog = LogManager.GetLogger("Application");
-        XmlConfigurator.Configure();
         sysLog.Info("Website is going down...");
     }
         
@@ -58,11 +62,13 @@
     { 
         // Code that runs when an unhandled error occurs
 
+        //In het geval een gebruiker niet geauthenticeerd is (bv. sessie verlopen)
+        Exception ex = Server.GetLastError();
+
         //Niet opgevangen excepties doorspelen aan de logger
         Exception lastException = Server.GetLastError().GetBaseException();
 
         ILog sysLog = LogManager.GetLogger("Application");
-        XmlConfigurator.Configure();
         sysLog.Fatal("Fatal error occured in ASP.NET website", lastException);
     }
 
@@ -70,6 +76,17 @@
     {
         // Code that runs when a new session is started
 
+        Dictionary<string, DateTime> users = (Dictionary<string, DateTime>)Application["activeUsers"];
+        
+        if (HttpContext.Current.User != null)
+        {
+            //controleren of sessie bestaat en nog niet verlopen is
+            if (!users.ContainsKey(HttpContext.Current.User.Identity.Name)
+                || users[HttpContext.Current.User.Identity.Name].Add(new TimeSpan(0,10,0)) > DateTime.Now )
+            {
+                FormsAuthentication.SignOut();
+            }
+        } 
     }
 
     void Session_End(object sender, EventArgs e) 
@@ -78,7 +95,5 @@
         // Note: The Session_End event is raised only when the sessionstate mode
         // is set to InProc in the Web.config file. If session mode is set to StateServer 
         // or SQLServer, the event is not raised.
-
     }
-       
 </script>

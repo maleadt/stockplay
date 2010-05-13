@@ -47,12 +47,9 @@ namespace StockPlay.Web
                         catch (Exception ex)
                         {
                             ILog sysLog = LogManager.GetLogger("Register");
-                            XmlConfigurator.Configure();
                             sysLog.Error("Failed to send e-mail", ex);
                         }
 	                }
-	
-	
 	            }
 	        }
 	
@@ -67,9 +64,15 @@ namespace StockPlay.Web
             message.From = new MailAddress(ConfigurationManager.AppSettings["EMAIL_ADDRESS"], "Stockplay Team");
             message.To.Add(new MailAddress(Email.Text, txtLastname.Text + " " + txtFirstname.Text));
 
-            message.Subject = "Your StockPlay account has been registered";
-            message.Body = "Dear " + txtLastname.Text + " " + txtFirstname.Text + ",\nWelcome to StockPlay, your account is now registered!\nYou can use the "
-                            + "following information to log in to your account:\nNickname: " + UserName.Text + "\nPassword: " + Password.Text + "\n\nGreetings,\nthe Stockplay team.";
+            message.Subject = (string) GetLocalResourceObject("Subject");
+            message.Body = 
+                (string)GetLocalResourceObject("Body1") + " " + txtLastname.Text + " " + txtFirstname.Text + ",\n\n"
+                + (string)GetLocalResourceObject("Body2") + "\n"
+                + (string)GetLocalResourceObject("Body3") + "\n" + (string)GetLocalResourceObject("Body4") + " " + UserName.Text + "\n"
+                +(string)GetLocalResourceObject("Body5") + Password.Text
+                + "\n\n"
+                +(string)GetLocalResourceObject("Body6") + "\n"
+                + (string)GetLocalResourceObject("Body7");
 
             SmtpClient client = new SmtpClient();
             client.Send(message);

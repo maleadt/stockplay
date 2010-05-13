@@ -94,7 +94,7 @@
         <tr>
             <td></td>
             <td>
-                <asp:Button ID="btnUpdate" runat="server" onclick="btnUpdate_Click" meta:resourcekey="Update" />
+                <asp:Button ID="btnUpdate" class="button" runat="server" onclick="btnUpdate_Click" meta:resourcekey="Update" />
                 <asp:Label ID="ErrorLabel" runat="server" ForeColor="Red" Visible="false" meta:resourcekey="UpdateError" />
             </td>
         </tr>

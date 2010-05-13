@@ -64,7 +64,7 @@ namespace StockPlay.implXMLRPC {
 	    public XmlRpcStruct toStruct()
 	    {
 	        XmlRpcStruct order = new XmlRpcStruct();
-	        order.Add("USER", userId);
+            order.Add("USER", userId);
 	        order.Add("ISIN", isin);
 	        order.Add("AMOUNT", amount);
 	        order.Add("PRICE", price);

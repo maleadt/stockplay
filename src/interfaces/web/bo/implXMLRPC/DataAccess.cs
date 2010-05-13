@@ -15,6 +15,7 @@ using log4net.Config;
 using System.Text;
 using StockPlay;
 using web.bo.implXMLRPC.handlers;
+using web.bo;
 
 namespace StockPlay.implXMLRPC
 {
@@ -47,6 +48,10 @@ namespace StockPlay.implXMLRPC
 
         private static object lockSingleton = new object(); //Object om dubbele locking te voorzien voor de instance
 
+        //Foutberichten
+        private static string corruptSession = "Session Corrupt",
+                              invalidSession = "Invalid Credentials";
+
 
         //
         // Constructie
@@ -54,8 +59,6 @@ namespace StockPlay.implXMLRPC
 
         private DataAccess()
         {
-            XmlConfigurator.Configure();
-
             sysLog.Info("DataAccess startup");
 
             publicXmlRpcUrl = ConfigurationManager.AppSettings["PUBLIC_XML_RPC_SERVER"];
@@ -409,7 +412,7 @@ namespace StockPlay.implXMLRPC
             }
         }
 
-        public bool RemoveUser(string nickname, string sessionID)
+        public bool RemoveUser(string nickname, string sessionID, ISession sessionHandler)
         {
             try
             {
@@ -420,14 +423,18 @@ namespace StockPlay.implXMLRPC
             }
             catch (Exception e)
             {
-                sysLog.Error("Error when removing user '" + nickname + "'", e);
+                if (e.Message.Contains(corruptSession) || e.Message.Contains(invalidSession))
+                    sessionHandler.handleSessionTimeout();
+                else
+                    sysLog.Error("Error when removing user '" + nickname + "'", e);
+
 
                 return false;
             }
             return false;
         }
 
-        public bool UpdateUser(IUser user, string sessionID)
+        public bool UpdateUser(IUser user, string sessionID, ISession sessionHandler)
         {
             try
             {
@@ -442,7 +449,10 @@ namespace StockPlay.implXMLRPC
             }
             catch (Exception e)
             {
-                sysLog.Error("Error when updating user '" + user.Nickname + "'", e);
+                if (e.Message.Contains(corruptSession) || e.Message.Contains(invalidSession))
+                    sessionHandler.handleSessionTimeout();
+                else
+                    sysLog.Error("Error when updating user '" + user.Nickname + "'", e);
 
                 return false;
             }
@@ -450,7 +460,7 @@ namespace StockPlay.implXMLRPC
             return true;
         }
 
-        public IUser GetUserByNickname(string nickname, string sessionID)
+        public IUser GetUserByNickname(string nickname, string sessionID, ISession sessionHandler)
         {
             try
             {
@@ -467,7 +477,10 @@ namespace StockPlay.implXMLRPC
             }
             catch(Exception e)
             {
-                sysLog.Error("Error when requesting user", e);
+                if (e.Message.Contains(corruptSession) || e.Message.Contains(invalidSession))
+                    sessionHandler.handleSessionTimeout();
+                else
+                    sysLog.Error("Error when requesting user", e);
 
                 return null;
             }
@@ -478,7 +491,7 @@ namespace StockPlay.implXMLRPC
             return publicUserHandler.Validate(nickname, password);
         }
 
-        public List<IUserSecurity> GetUserSecurities(int id, string sessionID)
+        public List<IUserSecurity> GetUserSecurities(int id, string sessionID, ISession session)
         {
             try
             {
@@ -496,13 +509,16 @@ namespace StockPlay.implXMLRPC
             }
             catch (Exception e)
             {
-                sysLog.Error("Error when requesting UserSecurities", e);
+                if(e.Message.Contains("Session Corrupt"))
+                    session.handleSessionTimeout();
+                else
+                    sysLog.Error("Error when requesting UserSecurities", e);
 
-                return null;
+                return new List<IUserSecurity>();
             }
         }
 
-        public List<ITransaction> GetUserTransactions(int id, string sessionID)
+        public List<ITransaction> GetUserTransactions(int id, string sessionID, ISession sessionHandler)
         {
             try
             {
@@ -520,9 +536,12 @@ namespace StockPlay.implXMLRPC
             }
             catch (Exception e)
             {
-                sysLog.Error("Error when requesting UserTransactions", e);
+                if (e.Message.Contains(corruptSession) || e.Message.Contains(invalidSession))
+                    sessionHandler.handleSessionTimeout();
+                else
+                    sysLog.Error("Error when requesting UserTransactions", e);
 
-                return null;
+                return new List<ITransaction>();
             }
         }
 
@@ -530,7 +549,7 @@ namespace StockPlay.implXMLRPC
          * ORDERS
          */
 
-        public void CreateOrder(int userId, string isin, int amount, double price, double alternativeOrder, string type, string sessionID)
+        public void CreateOrder(int userId, string isin, int amount, double price, double alternativeOrder, string type, string sessionID, ISession sessionHandler)
         {
             try
             {
@@ -543,11 +562,14 @@ namespace StockPlay.implXMLRPC
             }
             catch (Exception e)
             {
-                sysLog.Error("Error when creating Order", e);
+                if (e.Message.Contains(corruptSession) || e.Message.Contains(invalidSession))
+                    sessionHandler.handleSessionTimeout();
+                else
+                    sysLog.Error("Error when creating Order", e);
             }
         }
 
-        public void CancelOrder(int orderId, string sessionID)
+        public void CancelOrder(int orderId, string sessionID, ISession sessionHandler)
         {
             try
             {
@@ -558,11 +580,14 @@ namespace StockPlay.implXMLRPC
             }
             catch (Exception e)
             {
-                sysLog.Error("Error when cancelling Order", e);
+                if (e.Message.Contains(corruptSession) || e.Message.Contains(invalidSession))
+                    sessionHandler.handleSessionTimeout();
+                else
+                    sysLog.Error("Error when cancelling Order", e);
             }
         }
 
-        public List<IOrder> GetUserOrders(int id, string sessionID)
+        public List<IOrder> GetUserOrders(int id, string sessionID, ISession sessionHandler)
         {
             try
             {
@@ -580,9 +605,12 @@ namespace StockPlay.implXMLRPC
             }
             catch (Exception e)
             {
-                sysLog.Error("Error when requesting UserOrders", e);
+                if(e.Message.Contains(corruptSession) || e.Message.Contains(invalidSession))
+                    sessionHandler.handleSessionTimeout();
+                else
+                    sysLog.Error("Error when requesting UserOrders", e);
 
-                return null;
+                return new List<IOrder>();
             }
         }
 

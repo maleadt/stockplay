@@ -45,8 +45,8 @@
             <asp:TextBox ID="txtBonuspunten" runat="server" Visible="false"></asp:TextBox>
         </p>
         <p>
-            <asp:Button ID="btnConfirm" runat="server" OnClick="btnConfirm_Click" meta:resourcekey="Confirm" />
-            <asp:Button ID="btnCancel" runat="server" OnClick="btnCancel_Click" meta:resourcekey="Cancel" />
+            <asp:Button ID="btnConfirm" class="button" runat="server" OnClick="btnConfirm_Click" meta:resourcekey="Confirm" />
+            <asp:Button ID="btnCancel" class="button" runat="server" OnClick="btnCancel_Click" meta:resourcekey="Cancel" />
         </p>
     </div>
 

@@ -11,6 +11,7 @@ using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using System.Collections.Generic;
 using StockPlay;
+using web.bo;
 
 namespace StockPlay.Web
 	{
@@ -23,7 +24,7 @@ namespace StockPlay.Web
 	            IDataAccess data = DataAccessFactory.GetDataAccess();
 	
 	            List<ISecurity> security = data.GetSecurityByIsin(Request.Params["sell"]);
-	            List<IUserSecurity> portfolio = data.GetUserSecurities((int) Session["userID"], (string) Session["sessionID"]);
+                List<IUserSecurity> portfolio = data.GetUserSecurities((int)Session["userID"], (string)Session["sessionID"], (ISession)this.Master);
 	
 	            if (security != null && security.Count > 0 && portfolio != null && portfolio.Count > 0)
 	            {
@@ -48,7 +49,7 @@ namespace StockPlay.Web
 	        {
 	            IDataAccess data = DataAccessFactory.GetDataAccess();
 	
-	            List<IUserSecurity> portfolio = data.GetUserSecurities((int) Session["userID"], (string) Session["sessionID"]);
+	            List<IUserSecurity> portfolio = data.GetUserSecurities((int) Session["userID"], (string) Session["sessionID"], (ISession) this.Master);
 	
 	            string[] isins = new string[portfolio.Count];
 	            for (int i = 0; i < portfolio.Count; i++)
@@ -178,19 +179,19 @@ namespace StockPlay.Web
 	            StockplayMembershipUser user = (StockplayMembershipUser)Membership.GetUser((int) Session["userID"]);
 
                 if (OrderType.SelectedValue.Equals("direct"))
-                    data.CreateOrder((int) Session["userID"], security.Isin, Convert.ToInt32(txtAmount.Text), 0, 0, "SELL_IMMEDIATE", (string) Session["sessionID"]);
+                    data.CreateOrder((int) Session["userID"], security.Isin, Convert.ToInt32(txtAmount.Text), 0, 0, "SELL_IMMEDIATE", (string) Session["sessionID"], (ISession) this.Master);
 
                 if (OrderType.SelectedValue.Equals("limit"))
-                    data.CreateOrder((int) Session["userID"], security.Isin, Convert.ToInt32(txtAmount.Text), Convert.ToDouble(txtPrice.Text), 0, "SELL", (string) Session["sessionID"]);
+                    data.CreateOrder((int)Session["userID"], security.Isin, Convert.ToInt32(txtAmount.Text), Convert.ToDouble(txtPrice.Text), 0, "SELL", (string)Session["sessionID"], (ISession)this.Master);
 
                 if (OrderType.SelectedValue.Equals("bracket"))
-                    data.CreateOrder((int) Session["userID"], security.Isin, Convert.ToInt32(txtAmount.Text), Convert.ToDouble(txtOnderLimiet.Text), Convert.ToDouble(txtBovenLimiet.Text), "BRACKET_LIMIT_SELL", (string) Session["sessionID"]);
+                    data.CreateOrder((int)Session["userID"], security.Isin, Convert.ToInt32(txtAmount.Text), Convert.ToDouble(txtOnderLimiet.Text), Convert.ToDouble(txtBovenLimiet.Text), "BRACKET_LIMIT_SELL", (string)Session["sessionID"], (ISession)this.Master);
 
                 if (OrderType.SelectedValue.Equals("stoploss"))
-                    data.CreateOrder((int) Session["userID"], security.Isin, Convert.ToInt32(txtAmount.Text), Convert.ToDouble(txtPrice.Text), 0, "STOP_LOSS_SELL", (string) Session["sessionID"]);
+                    data.CreateOrder((int)Session["userID"], security.Isin, Convert.ToInt32(txtAmount.Text), Convert.ToDouble(txtPrice.Text), 0, "STOP_LOSS_SELL", (string)Session["sessionID"], (ISession)this.Master);
 
                 if (OrderType.SelectedValue.Equals("trailing"))
-                    data.CreateOrder((int) Session["userID"], security.Isin, Convert.ToInt32(txtAmount.Text), Convert.ToDouble(txtBonuspunten.Text), 0, "TRAILING_STOP_SELL", (string) Session["sessionID"]);
+                    data.CreateOrder((int)Session["userID"], security.Isin, Convert.ToInt32(txtAmount.Text), Convert.ToDouble(txtBonuspunten.Text), 0, "TRAILING_STOP_SELL", (string)Session["sessionID"], (ISession)this.Master);
 
 	            Response.Redirect("~/User/OrdersOverview.aspx");
 	        }

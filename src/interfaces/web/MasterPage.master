@@ -20,6 +20,7 @@
         <div id="header">
             <h1 runat="server" meta:resourcekey="Title"></h1>
         </div>
+        <div id="bg"></div>
         
         <div id="content">
             <div id="menu">            

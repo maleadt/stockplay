@@ -10,14 +10,21 @@ using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using StockPlay;
+using web.bo;
 
 namespace StockPlay.Web
 	{
-	public partial class MasterPage : System.Web.UI.MasterPage
+	public partial class MasterPage : System.Web.UI.MasterPage, ISession
 	{
 	    protected void Page_Load(object sender, EventArgs e)
 	    {
-	
+
 	    }
-	}
+
+        public void handleSessionTimeout()
+        {
+            FormsAuthentication.SignOut();
+            Response.Redirect("~/Login.aspx");
+        }
+    }
 }

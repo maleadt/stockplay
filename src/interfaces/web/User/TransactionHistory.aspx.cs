@@ -11,6 +11,7 @@ using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using System.Collections.Generic;
 using StockPlay;
+using web.bo;
 
 namespace StockPlay.Web
 	{
@@ -21,8 +22,8 @@ namespace StockPlay.Web
 	        if (!IsPostBack)
 	        {
 	            IDataAccess data = DataAccessFactory.GetDataAccess();
-	            TransactionsGridview.DataSource = 
-                    GenerateDataTable(data.GetUserTransactions((int) Session["userID"], (string) Session["sessionID"]));
+	            TransactionsGridview.DataSource =
+                    GenerateDataTable(data.GetUserTransactions((int)Session["userID"], (string)Session["sessionID"], (ISession)this.Master));
 	        }
 	    }
 	

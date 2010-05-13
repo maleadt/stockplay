@@ -53,10 +53,11 @@
     </p>
     
     <p>
-        <asp:Button ID="btnConfirm" meta:resourcekey="Confirm" runat="server" 
+        <asp:Button ID="btnConfirm" class="button" meta:resourcekey="Confirm" runat="server" 
             OnClick="btnConfirm_Click" ValidationGroup="AmountValidation" Visible="False" />
-        <asp:Button ID="btnContinue" meta:resourcekey="Continue" runat="server" OnClick="btnContinue_Click" ValidationGroup="AmountValidation" />
-        <asp:Button ID="btnCancel" meta:resourcekey="Cancel" runat="server" onclick="btnCancel_Click" />
+        <asp:Button ID="btnContinue" class="button" meta:resourcekey="Continue" runat="server"
+            OnClick="btnContinue_Click" ValidationGroup="AmountValidation" />
+        <asp:Button ID="btnCancel" class="button" meta:resourcekey="Cancel" runat="server" onclick="btnCancel_Click" />
     </p>
 </asp:Content>
 

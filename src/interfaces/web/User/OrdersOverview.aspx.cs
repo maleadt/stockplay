@@ -11,6 +11,7 @@ using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using System.Collections.Generic;
 using StockPlay;
+using web.bo;
 
 namespace StockPlay.Web
 {
@@ -22,7 +23,7 @@ namespace StockPlay.Web
 	        {
 	            IDataAccess data = DataAccessFactory.GetDataAccess();
 	
-	            List<IOrder> orders = data.GetUserOrders((int) Session["userID"], (string) Session["sessionID"]);
+	            List<IOrder> orders = data.GetUserOrders((int) Session["userID"], (string) Session["sessionID"], (ISession) this.Master);
 	
 	            string[] isins = new string[orders.Count];
 	            for (int i = 0; i < orders.Count; i++)
@@ -106,7 +107,7 @@ namespace StockPlay.Web
 	        IDataAccess data = DataAccessFactory.GetDataAccess();
 	
 	        int orderId = Convert.ToInt32(OrderId.InnerText);
-	        data.CancelOrder(orderId, (string) Session["sessionID"]);
+	        data.CancelOrder(orderId, (string) Session["sessionID"], (ISession) this.Master);
 	
 	        Response.Redirect("~/User/OrdersOverview.aspx");
 	    }

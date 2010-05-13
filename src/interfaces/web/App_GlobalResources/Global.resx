@@ -117,85 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Body1" xml:space="preserve">
-    <value>Dear</value>
+  <data name="SecurityDetailDescription" xml:space="preserve">
+    <value>Detail of security</value>
   </data>
-  <data name="Body2" xml:space="preserve">
-    <value>Welcome to StockPlay, your account is now registered!</value>
-  </data>
-  <data name="Body3" xml:space="preserve">
-    <value>You can use the following information to log in to your account:</value>
-  </data>
-  <data name="Body4" xml:space="preserve">
-    <value>Nickname:</value>
-  </data>
-  <data name="Body5" xml:space="preserve">
-    <value>Password:</value>
-  </data>
-  <data name="Body6" xml:space="preserve">
-    <value>Greetings,</value>
-  </data>
-  <data name="Body7" xml:space="preserve">
-    <value>the Stockplay team.</value>
-  </data>
-  <data name="CancelButton.Text" xml:space="preserve">
-    <value>Cancel</value>
-  </data>
-  <data name="ConfirmPassword.InnerText" xml:space="preserve">
-    <value>Confirm Password:</value>
-  </data>
-  <data name="ConfirmPasswordError.ErrorMessage" xml:space="preserve">
-    <value>The entered password does not match</value>
-  </data>
-  <data name="Email.InnerText" xml:space="preserve">
-    <value>E-mail address:</value>
-  </data>
-  <data name="EmailInvalid.ErrorMessage" xml:space="preserve">
-    <value>You have to enter a valid e-mail address</value>
-  </data>
-  <data name="EmailMissing.ErrorMessage" xml:space="preserve">
-    <value>You need to your e-mail adress</value>
-  </data>
-  <data name="ErrorLabel.Text" xml:space="preserve">
-    <value>Make sure you have entered a unique username.</value>
-  </data>
-  <data name="FinishRegistration.Text" xml:space="preserve">
-    <value>Your account has now been registered! You will receive a copy of your login information in your inbox shortly. Go to the &lt;a href="Login.aspx"&gt;login page&lt;/a&gt; to login and participate in StockPlay.</value>
-  </data>
-  <data name="Firstname.InnerText" xml:space="preserve">
-    <value>First name:</value>
-  </data>
-  <data name="FirstnameError.ErrorMessage" xml:space="preserve">
-    <value>You need to enter a first name</value>
-  </data>
-  <data name="Lastname.InnerText" xml:space="preserve">
-    <value>Last name:</value>
-  </data>
-  <data name="LastnameError.ErrorMessage" xml:space="preserve">
-    <value>You need to enter a last name</value>
-  </data>
-  <data name="Nickname.InnerText" xml:space="preserve">
-    <value>Nickname:</value>
-  </data>
-  <data name="Page.Title" xml:space="preserve">
-    <value>Register</value>
-  </data>
-  <data name="Password.InnerText" xml:space="preserve">
-    <value>Password:</value>
-  </data>
-  <data name="PasswordError.ErrorMessage" xml:space="preserve">
-    <value>Please enter a password</value>
-  </data>
-  <data name="RegisterButton.Text" xml:space="preserve">
-    <value>Register</value>
-  </data>
-  <data name="Subject" xml:space="preserve">
-    <value>Your StockPlay account has been registered</value>
-  </data>
-  <data name="TableHeader.InnerText" xml:space="preserve">
-    <value>Register a new account</value>
-  </data>
-  <data name="UsernameError.ErrorMessage" xml:space="preserve">
-    <value>You have to enter a nickname</value>
+  <data name="SecurityDetailTitle" xml:space="preserve">
+    <value>Security Detail</value>
   </data>
 </root>
