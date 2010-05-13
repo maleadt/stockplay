@@ -19,7 +19,7 @@ De gebruiker kan effecten aankopen en verkopen van onderstaande types:
 
 Tijdens het verloop van het spel worden er op gezette tijden (per dag/week/maand) klassementen opgemaakt met daarin het relatief rendement dat de spelers konden neerzetten. Op basis van deze tussenklassementen worden er ook punten toegekend, waarmee ook een apart puntenklassement wordt opgemaakt. Dit puntenklassement geeft een eerlijkere kijk op de prestaties van de speler, en zorgt ervoor dat niet enkel het uiteindelijke rendement tussen de start- en einddatum van belang is, maar ook de continue goede prestaties tijdens de duur van het spel.
 
-Het spel eindigt op 31 mei 2010, waarna een eindklassement wordt opgemaakt. De koersen op de website worden niet meer ge\"updatet, en er kunnen ook geen transacties meer gedaan worden. Gebruikers kunnen wel nog steeds authenticeren op de website om statistieken van hun spelverloop te raadplegen.
+Het spel eindigt op 31 mei 2010, waarna een eindklassement wordt opgemaakt. De koersen op de website worden niet meer geüpdatet, en er kunnen ook geen transacties meer gedaan worden. Gebruikers kunnen wel nog steeds authenticeren op de website om statistieken van hun spelverloop te raadplegen.
 
 \section{Website}
 
@@ -37,7 +37,7 @@ Het spel eindigt op 31 mei 2010, waarna een eindklassement wordt opgemaakt. De k
 \paragraph{Doel}De speler verkrijgt een lidmaatschap. Via dit lidmaatschap kunnen we een persoon (een speler) koppelen aan zijn portfolio.
 \paragraph{Precondities}De speler bezitte een geldig email adres, een eID lezer en hij was nog niet in bezit van een lidmaatschap (een persoon bezit een lidmaatschap als hij de combinatie gebruikersnaam en wachtwoord kent of over een eID bezit waar een lidmaatschap aan gekoppeld is). \small{Lidmaatschap aanvragen is pas mogelijk vanaf 1 maart 2010, 8u, Central European Time.}
 \paragraph{Postcondities}In de database zit een nieuw record waarmee we de speler kunnen authenticeren en waaraan zijn instellingen en portfolio gekoppeld worden.
-\paragraph{Triggers}Een persoon zit op de inleidende website en kiest daar voor de optie "Registreren".
+\paragraph{Triggers}Een persoon zit op de inleidende website en kiest daar voor de optie ``Registreren''.
 \paragraph{Notities}De velden die de gebruiker op de afzonderlijke registratie pagina dient in te vullen zijn terug te vinden in het database schema van de gebruikers. Alle velden zijn verplicht.
 \paragraph{Business rules}Het registreren (en dus onrechtstreeks het spelen van het beursspel) moet aangemoedigd worden vanuit de gastsite.
 \paragraph{Prioriteit}Gemiddeld
@@ -64,7 +64,7 @@ Alternatief voor \ref{def:lidmaatschap:bevestiging}:
 \paragraph{Primaire actoren} Bezoekers zonder lidmaatschap die er wel een willen aanvragen, bezoekers zonder lidmaatschap die enkel op zoek zijn naar informatie over het spel en bezoekers met lidmaatschap die zich willen authenticeren voor toegang tot het voor hen zichtbare deel.
 \paragraph{Doel} Bezoekers snel laten inloggen, bezoekers informeren over het spel, bezoekers doorheen de registratieprocedure leiden.
 \paragraph{Precondities} De gastsite heeft dezelfde precondities als de overige delen van de website. De surfer was voorzien van een breedband internetverbinding, een desktop of draagbare computer met daarop een gangbaar en recent besturingssysteem en bijhorende standaard compatibele internetbrowser.
-\paragraph{Postcondities} De gebruiker was ingelogd, geregistreerd of was voldoende geïnformeerd over het spel.
+\paragraph{Postcondities} De gebruiker was ingelogd, geregistreerd of was voldoende ge\"informeerd over het spel.
 \paragraph{Triggers} De surfer bezoekt de website door het ingeven van het webadres, het aanklikken van een favoriet in zijn internetbrowser of na het klikken op een webverwijzing op een andere internetwebsite.
 \paragraph{Notities} Het gastgedeelte zal op elke pagina een module bevatten waarmee bezoekers met lidmaatschap zich snel kunnen authenticeren.\small{Om de surfer te informeren over het spel zullen verschillende pagina's voorzien worden. Op die pagina's zijn visuele hulpmiddelen voorzien zoals afbeeldingen waarop te zien is hoe bepaalde spelprocedures verlopen en eventueel ook ondersteunde filmen.}
 \paragraph{Business rules}Het is op dit gedeelte van de site dat de surfer en potenti\"ele speler overtuigd moet worden om actief mee te spelen.
@@ -74,7 +74,7 @@ Alternatief voor \ref{def:lidmaatschap:bevestiging}:
 \begin{enumerate}
  \item Speler bezoekt de website
  \item Speler navigeert naar de juiste pagina
- \item Speler is voldoende ge\"'nformeerd
+ \item Speler is voldoende ge\"informeerd
 \end{enumerate}
 
 \todo{De beschrijving van deze use case is gewoon een kopie van de vorige?? -Dieter}
@@ -94,7 +94,7 @@ Alternatief voor \ref{def:lidmaatschap:bevestiging}:
  \item Speler geeft voldoende gegevens waarmee hij zich kan authenticeren
  \item \label{def:inloggen:bevestiging} Speler krijgt een bevestiging en wordt doorgestuurd naar het interactieve deel van de website
 \end{enumerate}
-\paragraph{Alternatieve scenario’s}
+\paragraph{Alternatieve scenario's}
 Alternatief voor \ref{def:inloggen:bevestiging}:
 \begin{enumerate}
  \item Speler heeft een ongeschikte of foutieve invoer gedaan voor een veld en krijgt de mogelijkheid om dit aan te passen
@@ -105,7 +105,7 @@ Alternatief voor \ref{def:inloggen:bevestiging}:
 \paragraph{Actoren} De speler bekijkt het portfolio. De huidige waarde hangt af van de re\"ele beursevolutie (de scrapers volgen deze evolutie).
 \paragraph{Doel} De gebruiker ziet zijn portfolio en de gegevens die interessant zijn om erbij te zien.
 \paragraph{Precondities} De gebruiker is ingelogd.
-\paragraph{Triggers} De gebruiker kiest in het linkermenu de optie "Portfolio".
+\paragraph{Triggers} De gebruiker kiest in het linkermenu de optie ``Portfolio''.
 \paragraph{Prioriteit}Hoog
 \paragraph{Complexiteit}Laag
 \paragraph{Successcenario}
@@ -115,7 +115,7 @@ Alternatief voor \ref{def:inloggen:bevestiging}:
  \item Een overzicht van de speler zijn huidige portfolio wordt getoond
 \end{enumerate}
 
-\todo{In deze use case staan al die verschillende orders beschreven. Maar die staan al uitgewerkt in "`Module geavanceerde orders"'! Het lijkt me best om hier gewoon een opsomming te geven van de mogelijkheden en te refereren naar dat ander hoofdstuk.}
+\todo{In deze use case staan al die verschillende orders beschreven. Maar die staan al uitgewerkt in ``Module geavanceerde orders''! Het lijkt me best om hier gewoon een opsomming te geven van de mogelijkheden en te refereren naar dat ander hoofdstuk.}
 \subsubsection{Effecten aankopen}
 
 \paragraph{Overzicht}Een gebruiker kan zijn portfolio invullen of aanvullen door effecten bij te kopen. De speler kan effecten bijkopen van een effect die hij/zei reeds bezit of een nieuwe reeks aankopen. Een effect kan nooit rechtstreeks aangekocht worden, dit gebeurt met een tussenstap. Deze tussenstap noemen we het plaatsen van een order. Een order bestaat er in twee types; een aankooporder of een verkooporder. Een order heeft een voorwaarde, type, aantal, eigenaar en effect. Orders worden periodiek (elke minuut) bekeken. Als aan de voorwaarde voldaan wordt, dan wordt het order omgezet in een effectieve aankoop of verkoop. Dan pas worden de effecten toegevoegd of verwijderd van het spelers portfolio. Het kan dus zijn dat een geplaatst order pas in de verre toekomst uitgevoerd wordt of in zijn geheel niet uitgevoerd wordt. De voorwaarden die op een order ingezet kunnen worden houden we in een eerste fase beperkt. Maar deze kunnen later aangevuld worden met geavanceerde orders, zoals ook te zien is bij de huidige gespecialiseerde brokers. We beginnen met drie typen van orders:
@@ -141,7 +141,7 @@ Mogelijke geavanceerde orders die we in een verdere fase zouden kunnen invoeren 
  \item Speler bevestigd zijn order
  \item \label{def:aankopen:bevestiging} Speler krijgt een bevestiging van zijn order
 \end{enumerate}
-\paragraph{Alternatieve scenario’s}
+\paragraph{Alternatieve scenario's}
 Alternatief voor \ref{def:aankopen:bevestiging}:
 \begin{enumerate}
  \item Speler heeft een ongeschikte of foutieve invoer gedaan voor een veld en krijgt de mogelijkheid om dit aan te passen
@@ -163,7 +163,7 @@ Een effect verkopen verloopt op dezelfde manier als een effect aankopen. Er word
  \item Speler bevestigd zijn order
  \item \label{def:verkopen:bevestiging} Speler krijgt een bevestiging van zijn order
 \end{enumerate}
-\paragraph{Alternatieve scenario’s}
+\paragraph{Alternatieve scenario's}
 Alternatief voor \ref{def:verkopen:bevestiging}:
 \begin{enumerate}
  \item Speler heeft een ongeschikte of foutieve invoer gedaan voor een veld en krijgt de mogelijkheid om dit aan te passen
@@ -223,7 +223,7 @@ Het tijdsinterval kan de speler bepalen door een dubbele slider te verslepen. De
 \paragraph{Complexiteit}Laag
 \paragraph{Successcenario}
 \begin{enumerate}
- \item Gebruiker begin bij scenario "Overzicht opvragen van de effecten die je in het spel actief kan verhandelen" of bij "De gebruiker bekijkt zijn eigen Portfolio"
+ \item Gebruiker begin bij scenario ``Overzicht opvragen van de effecten die je in het spel actief kan verhandelen'' of bij "De gebruiker bekijkt zijn eigen Portfolio"
  \item In het overzicht geeft de gebruiker aan de details van een effect te willen bekijken
  \item Alle beschikbare informatie van een effect wordt getoond samen met een interactieve grafiek
 \end{enumerate}
@@ -321,7 +321,7 @@ Het tijdsinterval kan de speler bepalen door een dubbele slider te verslepen. De
 \end{enumerate}
 \paragraph{Alternatieve Scenario's}
 \begin{enumerate}
-	\item[2.] Als de backend niet antwoord wordt deze als offline beschouwd en krijgen de andere servers als status �onbekend�.
+	\item[2.] Als de backend niet antwoord wordt deze als offline beschouwd en krijgen de andere servers als status ``onbekend''.
 	\item[4.] Indien de servers niet bereikbaar zijn, zijn deze koppelingen uitgegrijsd.
 \end{enumerate}
 
@@ -339,7 +339,7 @@ Het tijdsinterval kan de speler bepalen door een dubbele slider te verslepen. De
  \item De applicatie vraagt een lijst van recent geregistreerde gebruikers op bij de back-end en ontvangt deze via XML-RPC. Deze lijst wordt getoond aan de gebruiker in de vorm van een tabel.
  \item De administrator past filters toe om de getoonde lijst te beperken tot de gewenste gebruikers.
  \item Alle gebruikers die aan de filter voldoen worden opgehaald uit de databank en de backend stuurt deze terug via XML-RPC.
- \item De administrator kiest een gebruiker uit de tabel en voert de actie \"Gebruiker bewerken\" uit.
+ \item De administrator kiest een gebruiker uit de tabel en voert de actie ``Gebruiker bewerken'' uit.
  \item Er wordt een modaal venster getoond met daarin alle beschikbare gegevens van de gebruiker. Niet aanpasbare gegevens worden uitgegrijsd.
  \item De administrator brengt de gewenste wijzigen aan en kiest OK.
  \item De nieuwe gegevens worden doorgestuurd naar de backend.
@@ -366,7 +366,7 @@ Het tijdsinterval kan de speler bepalen door een dubbele slider te verslepen. De
  \item De applicatie toont alle beschikbare effecten in een tabel samen met hun belangrijkste gegevens.
  \item De administrator kan desgewenst een filter toepassen om de lijst te beperken.
  \item De administrator selecteert \'e\'en of meerdere effecten die hij wil aanpassen.
- \item De actie \"Effect(en) verbergen\" of \"Effect(en) schorsen\" wordt gekozen.
+ \item De actie ``Effect(en) verbergen'' of ``Effect(en) schorsen'' wordt gekozen.
  \item De veranderingen worden doorgestuurd naar de backend en deze past de databank aan.
 \end{enumerate}
 \paragraph{Alternatieve Scenario's}
@@ -388,7 +388,7 @@ Het tijdsinterval kan de speler bepalen door een dubbele slider te verslepen. De
  \item De applicatie krijgt een beperkte lijst van gebruikers die het ontvangt vanuit de back-end.
  \item De administrator past filters toe om de getoonde lijst te beperken tot de gewenste gebruikers.
  \item Alle gebruikers die aan de filter voldoen worden opgehaald uit de databank en de backend stuurt deze terug via XML-RPC.
- \item De administrator selecteert de gewenste gebruikers en kiest voor \"Gebruiker deactiveren\".
+ \item De administrator selecteert de gewenste gebruikers en kiest voor ``Gebruiker deactiveren''.
  \item Er wordt een venster getoond met daarin de mogelijkheid om een tijdsduur in te geven of een checkbox die aangeeft dat deze gebruiker permanent moet verbannen worden.
  \item De wijzigingen worden gestuurd naar de backend en deze past de gebruikers aan in de databank.
  \item De administrator krijgt opnieuw het gebruikersoverzicht te zien.

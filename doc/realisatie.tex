@@ -97,7 +97,7 @@ Deze denkpiste gaf echter enkele problemen. Vooreerst is het sterk onveilig aang
 
 Om de veiligheid te verhogen gebruiken we verschillende technieken. Eerst en vooral is de sessie tijdelijk, en worden ongebruikte sessie-keys regelmatig geinvalideerd. Ook hebben we het moeilijk gemaakt om sessie-keys te genereren, door ze op een unieke manier te linken aan data die enkel de gebruiker zelf kent (zijn wachtwoord). Om het tenslotten ook moeilijk te maken om een sessie-key te linken aan een gebruiker, implementeren we in onze sessie-hash een variabele seed.
 
-Authenticatie en autorisatie gaat ook gepaard met een specifieke set aan mogelijke errormessages. Allemaal geklasseerd binnen de Service Exceptions, zijn de volgende subtypes mogelijk: "invalid credentials" wanneer het authenticeren mislukt is, "unauthorized" wanneer een gebruiker niet geautoriseerd is tot het gebruik van een bepaalde functie, en tenslotte "session corrupt" wanneer een gespecifieerde sessie ongeldig blijkt te zijn.
+Authenticatie en autorisatie gaat ook gepaard met een specifieke set aan mogelijke errormessages. Allemaal geklasseerd binnen de Service Exceptions, zijn de volgende subtypes mogelijk: ``invalid credentials'' wanneer het authenticeren mislukt is, ``unauthorized'' wanneer een gebruiker niet geautoriseerd is tot het gebruik van een bepaalde functie, en tenslotte ``session corrupt'' wanneer een gespecificeerde sessie ongeldig blijkt te zijn.
 
 Hoewel een administrator gebruikersprofielen (en bijhorende autorisatiebits) manueel kan aanpassen, onderscheiden we volgende categorie\"en:
 \begin{itemize}
@@ -477,7 +477,7 @@ Tenslotte zijn er nog de methodes gerelateerd met het effectieve beurswezen, die
 	{ nieuwe quote aan een security toevoegen (of updaten) }
 	{ een struct dat een quote voorstelt, met de volgende inhoud:
 		\begin{itemize}
-		\item{security: id van het security dat ge\"updatete moet worden}
+		\item{security: id van het security dat geüpdatet moet worden}
 		\item{time: tijdstip waarop de quote gelde}
 		\item{price: huidige prijs}
 		\item{volume: omzet van het aandeel}
@@ -528,13 +528,13 @@ De scraper is een elementair gedeelte van StockPlay, daar het hele project nood 
 
 \section{Databronnen}
 
-Vooraleer een scraper te ontwerpen, was het belangrijk de mogelijke bronnen te identificeren. Logischerwijs beperken we ons tot gratis beschikbare bronnen, maar zelfs dan zijn er verschillende sites die aan onze eisen voldoen. Om uiteindelijk een zo uitgebreid mogelijke dataset te hebben, besloten we om het mogelijk te maken verschillende databronnen tegelijk te gebruiken.
+Vooraleer een scraper te ontwerpen, was het belangrijk de mogelijke bronnen te identificeren. Logischerwijs beperken we ons tot gratis beschikbare bronnen, maar zelfs dan komen er verschillende bronnen in aanmerking. Om uiteindelijk een zo uitgebreid mogelijke dataset te hebben, besloten we om het mogelijk te maken verschillende bronnen tegelijk te gebruiken.
 
 \subsection{De Tijd}
 
-Een eerste kandidaat om onze scraper op te laten werken, was de website van De Tijd. Deze site voorziet in een uitgebreid zicht op de aandelen en indexen van verschillende beurzen, en heeft zelf ondersteuning voor realtime updates van die data. Verder onderzoek van hoe die realtime updates gebeurden - en het reverse-engineeren van de bijhorende HTTP-based API - leverde ons nogal snel een compact Perl-script op dat in staat was de aandelen en indexen van een bepaalde beurs eenmalig op te halen, om in een later stadium dan de effectieve koersen op te halen via de aangeboden API in kwestie.
+Een eerste kandidaat om onze scraper op in te laten werken, was de website van De Tijd. Deze site voorziet in een uitgebreid aanbod aandelen en indexen van verschillende beurzen, en biedt sommige van die data zelfs real-time aan. Verder onderzoek van hoe die realtime updates gebeurden - en het reverse-engineering van de bijhorende HTTP-based API - leverde ons nogal snel een compact Perl-script op dat in staat was de aandelen en indexen van een bepaalde beurs eenmalig op te halen, om in een later stadium dan de effectieve koersen op te halen via de aangeboden API in kwestie.
 
-Aangezien deze bron een hele waaier aan aandelen zichtbaar maakt, er veel data over publiceert, en bovendien die data beschikbaar maakt via een compacte en handige interface, hebben we deze als belangrijkste bron gebruikt bij het opvullen en bijhouden van onze database.
+Aangezien deze bron een hele waaier aan aandelen zichtbaar maakt, er veel data over publiceert, en bovendien die data beschikbaar maakt via een compacte en handige interface, hebben we deze als belangrijkste bron gebruikt bij het opvullen en updaten van onze database.
 
 \subsection{Euronext}
 
@@ -544,76 +544,85 @@ De site bleek echter wel nuttig te zijn bij het ontwerpen van een artifici\"ele 
 
 \subsection{Perl Finance modules}
 
-Het Perl CPAN archief kent een uitgebreide selectie voorgemaakte modules die in staat zijn om koersen van aandelen op te halen van verschillende bronnen. Hoewel deze bron uitmunt in gemak van gebruik (eenvoudige maar doordachte API, hergebruik van code) hebben we toch besloten deze niet te gebruiken. De motivatie daarvoor bestaat uit een aantal punten: eerst en vooral is het de bedoeling dat we zelf een Perl scraper schrijven, eenvoudigweg een bestaande module gebruiken voldoet niet aan deze eis. Daarnaast kennen de modules voor Europese beurzen niet dezelfde hoge resolutie als een zelfgemaakt script die de site van De Tijd of die van Euronext raadpleegt, en een hoge resolutie is belangrijk om een kwalitatief en correct verloop van het spel te garanderen. Tenslotte bleken de modules soms problemen te hebben met verschillende Belgische aandelen.
+Het Perl CPAN archief kent een uitgebreid aanbod aan modules die in staat zijn om koersen van aandelen op te halen van verschillende bronnen. Hoewel deze bron uitmunt in gemak van gebruik (eenvoudige maar doordachte API, hergebruik van code) hebben we toch besloten deze niet te gebruiken. De motivatie daarvoor bestaat uit een aantal punten: eerst en vooral is het de bedoeling dat we zelf een Perl scraper schrijven, eenvoudigweg een bestaande module gebruiken voldoet niet aan deze eis. Daarnaast kennen de modules voor Europese beurzen niet dezelfde kwaliteit en resolutie als een zelfgemaakt script die de site van De Tijd of die van Euronext raadpleegt, en een hoge resolutie is belangrijk om een kwalitatief en correct verloop van het spel te garanderen.
 
 \section{Ontwerp}
 
-Om op een flexibele wijze verschillende databronnen parallel te kunnen gebruiken, hebben we geopteerd voor een plugin-based design. Hierbij wordt elke databron geassocieerd met een enkele plugin, die een vaste interface implementeert om de gestandaardiseerde data van buitenaf toegankelijk te maken. De plugins kunnen echter ook hi\"erarchisch uitgebreid worden, zo zal een plugin die data scrapet niet rechtstreeks de Plugin interface implementeren, maar gebruik maken van de Website interface, die op zijn beurt de Plugin interface uitbreidt met functionaliteit toegespitst tot websites.
+Om op een flexibele wijze verschillende bronnen parallel te kunnen raadplegen, hebben we geopteerd voor een plugin-based design. Hierbij wordt elke bron geassocieerd met een enkele plugin, die een vaste interface implementeert om gestandaardiseerd data-opvragingen van buitenaf toegankelijk te maken. De plugins kunnen echter ook hi\"erarchisch uitgebreid worden: zo zal een plugin die data ophaalt niet rechtstreeks de \emph{Source} interface implementeren, maar gebruik maken van de \emph{Website} interface, die op zijn beurt de \emph{Source} interface uitbreidt met functionaliteit toegespitst tot websites.
 
-De hoofdinterface Plugin beschrijft essentieel twee kenmerken: het beschikbaar zijn van een "exchanges" attribuut, en een "getQuotes" methode. Het "exchanges" attribuut is een lijst van beurzen die de plugin kan scrapen, waarbij de elementen van die lijst instanties zijn van de StockPlay::Exchange klasse. Dit object bevat geen functionaliteit, maar wel een hi\"erarchie aan andere objecten: twee lijsten, respectievelijk opgevuld met StockPlay::Security en StockPlay::Index objecten. De verantwoordelijkheid voor het opvullen van deze lijsten ligt bij de plugin die het Exchange object aangemaakt heeft.
-De Plugin interface dwingt ook een getQuotes functie af, die gebruikt wordt om eenmaal de initi\"ele opbouw aan Exchanges, Securities en Indexen voltooid is, de koersen van een lijst Securities op te halen. Deze functie geeft dan ook een lijst aan StockPlay::Quote objecten terug. Dergelijke objecten, 1 op 1 verbonden met een Security, bevatten de effectieve koersdata. Zo zijn verschillende velden beschikbaar zoals "time", "volume", of "price". Een ander belangrijk veld is het "delay" veld, dat omschrijft hoe lang er moet gewacht worden om een nieuwe koers op te halen.
+De hoofdinterface Source beschrijft essentieel twee kenmerken: het beschikbaar zijn van een ``exchanges'' attribuut, en een ``getLatestQuotes'' methode. Het \textbf{exchanges} attribuut is een hi\"erarchische structuur van de beurzen die de plugin kan scrapen: de elementen zijn instanties zijn van de StockPlay::Exchange klasse, waarvan de objecten toegang geven tot de indexen (klasse StockPlay::Index) en aandelen (klasse StockPlay::Security) van de klasse. De verantwoordelijkheid voor het aanmaken van deze structuur ligt bij de plugin die het Exchange object aangemaakt heeft.
+De Plugin interface dwingt ook een \textbf{getQuotes} functie af, die gebruikt wordt om eenmaal de initi\"ele opbouw aan Exchanges, Securities en Indexen voltooid is, de koersen van een lijst Securities op te halen. Deze functie geeft dan ook een lijst aan StockPlay::Quote objecten terug. Dergelijke objecten, 1 op 1 verbonden met een Security, bevatten de effectieve koersdata. Zo zijn verschillende velden beschikbaar zoals ``time'', ``volume'', of ``price''. Een ander belangrijk veld is het ``delay'' veld, dat omschrijft hoe lang er moet gewacht worden om een nieuwe koers op te halen.
 
-Nu vastligt hoe de data in een uniforme en gestructureerde wijze opgeslaan wordt, is het duidelijk dat de data opgedeeld kan worden in twee categorie\"en: presistente en variabele data.
-Onder de persistente data behoort de hi\"erarchie aan Exchange, Security en Index objecten die omschrijft welke beurzen en aandelen de plugin toegang tot heeft, en hoe die zich onderling relateren. Aangezien de objecten in kwestie steeds voorzien in een "private data container" (die plugins kunnen gebruiken om bronspecifieke maar verder niet relevante data op te slaan), volstaat het om die eenmaal op te bouwen. Ze kunnen daarna steeds opnieuw herbruikt worden om de variabele data op te halen. Die variabele data bestaat natuurlijk uit de uiteindelijke Quotes.
-Door deze essenti\"ele splitsing is het mogelijk om de persistente data eenmaal op te halen en dan binnen een bepaald interval te herbruiken om variabele data op te halen. Dit maakt de scraper niet alleen sneller, het verlaagt ook de hoeveel data die steeds benodigd is om de aangevraagde data op halen. Hierbij reduceren we de kans dat de scraper teveel opvalt en eventueel zou verbannen worden van de databron in kwestie.
+Nu vastligt hoe de data in een uniforme en gestructureerde wijze opgeslagen wordt, is het duidelijk dat de data opgedeeld kan worden in twee categorie\"en: presistente en variabele data.
+Onder de persistente data behoort de hi\"erarchie aan Exchange, Security en Index objecten die omschrijft welke beurzen en aandelen de plugin toegang tot heeft, en hoe die zich onderling relateren. Aangezien de objecten in kwestie steeds voorzien in een ``private data container'' (die plugins kunnen gebruiken om bronspecifieke maar verder niet relevante data op te slaan), volstaat het om die eenmaal op te bouwen. Ze kunnen daarna steeds opnieuw herbruikt worden om de variabele data op te halen. Die variabele data bestaat natuurlijk uit de uiteindelijke Quotes.
+Door deze essenti\"ele splitsing is het mogelijk om de persistente data eenmaal op te halen en dan binnen een bepaald interval te herbruiken om variabele data op te halen. Dit maakt de scraper niet alleen sneller, het verlaagt ook de hoeveel data die steeds benodigd is om de aangevraagde data op halen. Hierbij reduceren we de kans dat de scraper teveel opvalt en eventueel zou verbannen worden van de bron in kwestie.
+
+Functionaliteit zoals de private data containers, en andere huishoudelijke functionaliteit, zit verpakt in de StockPlay::Plugin klasse. Elke klasse die zich gedraagt als een plugin (zoals de Source interface hierboven beschreven), moeten deze klasse implementeren. Dit onderscheid is gemaakt zodat de plugin manager ook nog gebruikt zou worden voor andere scripts die gebruik maken van het Perl framework dat ontwikkeld is in functie van de scraper, zoals de artifici\"ele intelligentie.
 
 \section{Communicatie}
 
 Nu de scraper in staat is om gevraagde koersen op een effici\"ente manier op te halen, moet de methode van communicatie naar de backend nog ontworpen worden. Hierbij zijn er twee mogelijkheden: een PUSH of PULL model.
 
-In geval van een PULL model is de Backend de initiator, en zal die de scraper vragen om een bepaalde set data. In een PUSH model daarentegen zal de scraper zelf initiatief nemen. Hierbij is het vrij snel duidelijk dat het PUSH model de beste keuze is. Moesten we immers voor een PULL model gaan, dan zou de scraper nog een apart protocol moeten defini\"eren, of in geval van hergebruik van het XML-RPC protocol voorzien in een webserver en XML-RPC decoder. Als we echter voor een PUSH model kiezen, moet de scraper enkel voorzien in een XML-RPC client (wat veel minder werk is), en kan de reeds bestaande XML-RPC server code in de backend integraal herbruikt worden om die communicatie te gebruiken.
-Om dit te realiseren zal de backend wel moeten voorzien in speciale functies toegespitst op de doelen van de scraper, zoals het toevoegen van aandelen, of updaten van de bijhorende koersen. Ook is deze uitbreiding van het backend-protocol de druppel geweest die ons overtuigde om ten behoeve van autorisatie om te schakelen van een eenvoudige boolean-flag (isAdmin) naar een flexibeler model gebaseerd op rechten.
+In geval van een \textbf{PULL} model is de Backend de initiator, en zal die de scraper vragen om een bepaalde selectie data. In een \textbf{PUSH} model daarentegen zal de scraper zelf het initiatief nemen. Hierbij is het vrij snel duidelijk dat het PUSH model de beste keuze is. Moesten we immers voor een PULL model gaan, dan zou de scraper nog een apart protocol moeten defini\"eren, of in geval van hergebruik van het XML-RPC protocol voorzien in een webserver en XML-RPC decoder. Als we echter voor een PUSH model kiezen, moet de scraper enkel voorzien in een XML-RPC client (wat veel minder werk is), en kan de reeds bestaande XML-RPC server code in de backend integraal herbruikt worden.
+Om dit te realiseren zal de backend wel moeten voorzien in speciale functies toegespitst op de werking van de scraper, zoals het toevoegen van aandelen, of updaten van de bijhorende koersen. Ook is deze uitbreiding van het backend-protocol de druppel geweest die ons overtuigde om ten behoeve van autorisatie om te schakelen van een eenvoudige boolean-flag (isAdmin) naar een flexibeler model gebaseerd op rechten.
 
-Om het PUSH model te realiseren moet de scraper voorzien in een algoritme dat continu alle aandelen overloopt, en selectief voor diegene die verlopen zijn nieuwe koersen ophaalt en die naar de backend stuurt. Deze functionaliteit wordt ge\"implementeerd door het StockPlay::Scraper::Daemon object, dewelke bezit over een lijst van de geactiveerde plugins, en zo in de \emph{run()} functie van alle plugins de aandelen ophaalt en ze eventueel vernieuwt. Tijdens de refresh-run wordt tevens bepaald hoelang minimaal moet gewacht worden vooraleer er een nieuwe cyclus kan gestart worden.
-
-De uiteindelijke PUSH communicatie zal verlopen over het bestaande XML-RPC protocol. Daarom voorzien we in specifieke functies, zoals "Finance.Security.Add" en "Finance.Security.Update". In geval van een uitgebreide set aan geactiveerde databronnen kan het aantal XML-RPC requests gegenereerd door de scraper echter substantieel worden, waardoor de load van de backend server te hoog kan worden. Daarom kunnen we eventueel in een later stadium voorzien in BATCH-update functies om de overhead veroorzaakt door de XML-RPC requests geminimaliseerd wordt.
+Om het PUSH model te realiseren moet de scraper voorzien in een algoritme dat continu alle aandelen overloopt, en selectief voor diegene die verlopen zijn nieuwe koersen ophaalt en die naar de backend stuurt. Deze functionaliteit wordt ge\"implementeerd door de StockPlay::Scraper klasse, dewelke bezit over een lijst van de geactiveerde plugins, en zo in de \emph{run()} functie van alle plugins de aandelen ophaalt en ze eventueel vernieuwt. Tijdens de refresh-run wordt tevens bepaald hoelang minimaal moet gewacht worden vooraleer er een nieuwe cyclus kan gestart worden. Om echter de belasting van de databron te minimaliseren, maakt de scraper intelligent gebruik van verschillende statistieken (zoals hoelang geleden het aandeel voor het laatst geüpdatet is) om de berekende wachttijd te transformeren naar een wachttijd passend bij het aandeel in kwestie.
 
 
 %
-% Artificiële intelligentie
+% Artifici\"ele intelligentie
 %
 
 \chapter{Artifici\"ele intelligentie}
 
 Als illustratie van de modulariteit van de backend, hebben we ook een artifici\"ele intelligentie aangemaakt die het spel meespeelt zoals een reguliere speler dat doet. Dit was echter geen evidente opdracht, en er was flink wat opzoekingswerk benodigd om dit tot een goed einde te brengen.
 
+
 \section{Intelligentie}
 
-Prioritair om aan de implementatie te kunnen beginnen, was het vinden van een geschikt algoritme die de intelligentie van de speler zou drijven. Hiervoor hebben we verschillende opties overwogen, gaande van expertsystemen zoals regelbanken, tot meer massief-lerende systemen zoals genetische algoritmes of neurle netwerken. Expertsystemen zijn vrij snel afgevoerd, ze werken misschien wel nauwkeurig maar hebben nood aan een uitgebreide set (moeilijk kwantificeerbare) regels die bovendien voor het opstellen een expertise vereisen die geen van ons hebben. Om aan deze eis van expertise te ontsnappen, zijn we gaan kijken naar massief lerende systemen die zichzelf kunnen verbeteren aan de hand van een ruime set aan testgegevens. Hierbij zijn genetische algoritmes misschien wel een interessante piste, maar ze vereisen een vrij specifieke implementatie: een library integreren zou veel werk kosten, laat staan het schrijven van een eigen implementatie. Zo zijn we uitgekomen op neurale netwerken, wat uiteindelijk ook eenvoudig integreerbaar bleek te zijn.
+Prioritair om aan de implementatie te kunnen beginnen, was het vinden van een geschikt algoritme die de intelligentie van de speler zou drijven. Hiervoor hebben we verschillende opties overwogen, gaande van expertsystemen zoals regelbanken, tot meer massief-lerende systemen zoals genetische algoritmes of neurale netwerken. Expertsystemen zijn vrij snel afgevoerd, ze werken misschien wel nauwkeurig maar hebben nood aan een uitgebreide set (moeilijk kwantificeerbare) regels die bovendien voor het opstellen een expertise vereisen die geen van ons hebben. Om aan deze eis van expertise te ontsnappen, zijn we gaan kijken naar massief lerende systemen die zichzelf kunnen verbeteren aan de hand van een ruime set aan testgegevens. Hierbij zijn genetische algoritmes misschien wel een interessante piste, maar ze vereisen een vrij specifieke implementatie: een library integreren zou veel werk kosten, laat staan het schrijven van een eigen implementatie. Zo zijn we uitgekomen op neurale netwerken, dewelke uiteindelijk ook eenvoudig integreerbaar bleken te zijn.
 
-Een neuraal netwerk is een populaire methode om artifici\"eel gedrag te bekomen, en baseert zich daarbij op hoe een biologisch brein functioneert. Hierbij wordt dynamisch een gewogen pad gevormd tussen een vast aantal input en output neuronen, en zal via backpropagatie steeds ge\"evolueerd worden in de richting van een correctere oplossing. We hebben er voor gekozen om een aantal gegevens (zoals de koers van het aandeel, de koers van een overkopelende index, de dag van de week, het volume, etc) als inputneuronen te registreren, en een enkel output neuron vast te leggen als de slotkoers van de volgende dag. Moesten we immers de slot van de volgende dag kunnen bepalen aan de hand van gegevens bepaald op de huidige dag, kunnen we steeds een positief-renderende portfolio samenstellen.
+Een neuraal netwerk is een populaire methode om artifici\"eel gedrag te bekomen, en baseert zich daarbij op hoe een biologisch brein functioneert. Hierbij wordt dynamisch een gewogen pad gevormd tussen een vast aantal input en output neuronen, en zal via backpropagatie steeds ge\"evolueerd worden in de richting van een correctere oplossing. We hebben er voor gekozen om een aantal gegevens (zoals de koers van het aandeel, de koers van een overkoepelende index, de dag van de week, het volume, etc) als inputneuronen te registreren, en een enkel output neuron vast te leggen als de slotkoers van de volgende dag. Moesten we immers de slot van de volgende dag kunnen bepalen aan de hand van gegevens bepaald op de huidige dag, kunnen we steeds een positief-renderende portfolio samenstellen.
 
 Bij het bepalen van de inputneuronen hebben we ons gebaseerd op bestaande kennis die te vinden was in de verschillende papers die we geraadpleegd hebben bij het kiezen van een optimale intelligentie-algoritme. In de uiteindelijke versie van het project worden de volgende inputs gebruikt:
 \begin{itemize}
-\item Slotkoers op dag i
-\item Slotkoers van de meest prominente index op dezelfde beurs op dag i
-\item Laagste koers van het aandeel op dag i
-\item Hoogste koers van het aandeel op dag i
-\item Verkoopsvolume van het aandeel op dag i
-\end{itemize}
-Gebaseerd op dergelijke inputinformatie, zal het neuraal netwerk zich werken naar een set van outputdata die volgende informatie bevat:
-\begin{itemize}
-\item Slotkoers op dag i+1
+\item Slotkoers op dag $i$
+\item Slotkoers van de meest prominente index op dezelfde beurs op dag $i$
+\item Laagste koers van het aandeel op dag $i$
+\item Hoogste koers van het aandeel op dag $i$
+\item Verkoopvolume van het aandeel op dag $i$
 \end{itemize}
 
-Hoewel het ontwerpen van een eenvoudig neuraal netwerk misschien niet zoveel tijd kost, hebben we er voor gekozen om een bestaande bibiliotheek te gebruiken. Verschillende belangrijke features (zoals backpropagatie, shortcut-netwerken, of automatisch bepalen van een ideale activatiefunctie) die de performantie van het netwerk serieus verbeteren, zijn te moeilijk om binnen het opgegeven tijdsbestek zelf te implementeren. Bovendien is het enkel te bedoeling om de modulariteit van de backend te demonstreren, waaraan het implementeren van ingewikkelde algoritmen nauwelijks bijdraagt.
+Gebaseerd op dergelijke inputinformatie, zal het neuraal netwerk zich werken naar een set van outputdata die volgende informatie bevat:
+\begin{itemize}
+\item Slotkoers op dag $i+1$
+\end{itemize}
+
+Hoewel het ontwerpen van een eenvoudig neuraal netwerk misschien niet zoveel tijd kost, hebben we er voor gekozen om een bestaande bibliotheek te gebruiken. Verschillende belangrijke features die de performantie van het netwerk serieus verbeteren (zoals backpropagatie, shortcut-netwerken, of automatisch bepalen van een ideale activatiefunctie), zijn te moeilijk om binnen het opgegeven tijdsbestek zelf te implementeren. Bovendien is het enkel te bedoeling om de modulariteit van de backend te demonstreren, waaraan het implementeren van ingewikkelde algoritmen nauwelijks bijdraagt.
 
 
 \section{Omgeving}
 
-Bibliotheken om gebruik te maken van neurale netwerken, zijn wegens performantieredenen meestal geschreven in performante talen zoals C of C++. Dit zou echter betekenen dat we opnieuw een datalaag zouden moeten bouwen in de taal in kwestie, en dit terwijl we reeds functionele datalagen hadden in zowel Java, Perl als C\#. Om toch niet in te boeten aan performantie, hebben we ervoor gekozen om gebruik te maken van een bestaande datalaag, en op zoek te gaan naar een bibliotheek die bindings aanbiedt in de taal in kwestie. Hierdoor is het performantieverlies minimaal, en kunnen we toch het schrijven van nog een datalaag vermijden.
+Bibliotheken om gebruik te maken van neurale netwerken, zijn wegens performantieredenen meestal geschreven in low-level talen zoals C of C++. Dit zou echter betekenen dat we opnieuw een datalaag zouden moeten opbouwen, en dit terwijl we reeds functionele datalagen hadden in zowel Java, Perl als C\#. Om toch niet in te moeten inboeten aan performantie, hebben we ervoor gekozen om gebruik te maken van een bestaande datalaag, en op zoek te gaan naar een bibliotheek geschreven in een performante taal, die bindings aanbiedt in de taal waarin onze datalaag geschreven is. Hierdoor is het performantieverlies minimaal, en kunnen we toch het schrijven van nog een datalaag vermijden.
 
-Het in Perl geschreven \makeurl{AI::FANN}{http://search.cpan.org/~salva/AI-FANN-0.10/lib/AI/FANN.pm} pakket voldoet volledig aan deze specificatie: we kunnen gebruik maken van de bestaande datalaag die we reeds geschreven hebben voor de scraper, terwijl de echte performantie gehaald wordt door het interfacen met de in C geschreven bibliotheen \makeurl{FANN}{http://leenissen.dk/fann/}. Deze bibliotheek biedt tevens vele geavanceerde mogelijkheden, zoals het automatisch wijzigen van netwerkparameters via een genetisch algoritme, waarbij zowel activatiefuncties als neuronen dynamisch kunnen gewijzigd worden.
+Het in Perl geschreven \makeurl{AI::FANN}{http://search.cpan.org/~salva/AI-FANN-0.10/lib/AI/FANN.pm} pakket voldoet volledig aan deze specificatie: we kunnen gebruik maken van de bestaande datalaag die we reeds geschreven hebben voor de scraper, terwijl de echte performantie gehaald wordt door het interfacen met de in C geschreven bibliotheek \makeurl{FANN}{http://leenissen.dk/fann/}. Deze bibliotheek biedt tevens vele geavanceerde mogelijkheden, zoals het automatisch wijzigen van netwerkparameters via een genetisch algoritme, waarbij zowel activatiefuncties als neuronen dynamisch kunnen gewijzigd worden.
 
 
 \section{Historische data}
 
-Om een massief-lerend systeem te trainen, is er een voldoende hoeveelheid aan historische data nodig. Hierbij moet zowel de input als output waarden bekend zijn, zodat het netwerk via backpropagatie en andere technieken de gewichten van de paden in het netwerk kan bijstellen (of andere structurele veranderingen toevoegen). Die data hebben we kunnen halen bij de site van Euronext, een bron die we initi\"eel afgekeurd hadden wegens het gebrek aan realtime data, maar nu uitermate handig bleek te zijn door zijn eenvoudige interface en dataset die ruim 2 jaar in het verleden teruggaat.
+Om een massief-lerend systeem te trainen, is er een voldoende hoeveelheid aan historische data nodig. Hierbij moet zowel de input als output waarden bekend zijn, zodat het netwerk via backpropagatie en andere technieken de gewichten van de paden in het netwerk kan bijstellen (of eventueel andere structurele veranderingen toevoegen). Die data hebben we kunnen halen bij de site van Euronext, een bron die we initi\"eel afgekeurd hadden wegens het gebrek aan realtime data, maar nu uitermate handig bleek te zijn door zijn eenvoudige interface tot data die 2 jaar in het verleden teruggaat.
 
 
 \section{Modulariteit}
 
 Om in een eventueel later stadium toe te laten om op een eenvoudige wijze gebruik te maken van alternatieve algoritmes, hebben we gebruik gemaakt van de plugin-infrastructuur ontwikkeld voor de scraper. Het is heel eenvoudig mogelijk om extra intelligentie-algoritmes toe te voegen, die dynamisch en automatisch zullen gebruikt worden bij het samenstellen van de ideale portfolio. Hierbij wordt elk algoritme steeds gebruikt, en diegene met de kleinste voorspelde fout uiteindelijk gebruikt om de slotkoers van de volgende dag te voorspellen.
+
+Analoog aan hoe we de scraper plugin-infrastructuur gerealiseerd hebben, zal elke voorspellings-plugin  verplicht de interface StockPlay::AI::Forecaster moeten implementeren. Die klasse, die op zijn beurt StockPlay::Plugin implementeert, legt een interface vast die vervolgens door de AI manager kan gebruikt worden om het netwerk te trainen, koersen te voorspellen, foutmarges op te halen, etc. Zo worden uiteindelijk at-runtime alle voorspellers uitgeprobeerd, om uiteindelijk het nauwkeurigste resultaat te gebruiken bij selectie van een portfolio.
+
+
+\section{Portfolio selectie}
+
+Wanneer er tenslotte slotkoersen voor de volgende dag voorspeld zijn, moet er nog een optimale portfolio samengesteld worden. Dit aspect mag misschien klein lijken, het is helemaal niet evident om dit intelligent te realiseren! Een goed algoritme zou hierbij kijken naar de nauwkeurigheid van elke voorspelling, zich baseren op het uiteindelijke resultaat van vorige voorspellingen, en gebruik maken van vastgelegde parameters die bepalen hoe ``conservatief'' of net ``risicovol'' het zich moet gedragen. Maar dit valt opnieuw ruim buiten de scope van dit project, niet alleen is het geen exacte wetenschap, ook is het een relatief ongedocumenteerd onderwerp en zou er veel tijd kruipen in het ontwikkelen en benchmarken van een dergelijk algoritme. Daarom hebben we geopteerd om een eenvoudig algoritme te gebruiken, waarbij een evenredige selectie genomen wordt van de meest performante aandelen gebaseerd op een enkele voorspelling. Dit opnieuw omdat de artifici\"ele intelligentie vooral ontworpen is om de modulariteit en eenvoudige uitbreidbaarheid van de backend te demonstreren, het ontwikkelen van een complex portfolio-selectiealgoritme is hierbij irrelevant.
 
 
 %
@@ -622,28 +631,41 @@ Om in een eventueel later stadium toe te laten om op een eenvoudige wijze gebrui
 
 \chapter{Netwerkoptimalisaties}
 
-Tijdens de implementatie van de applicatie, zijn we verschillende keren tegen een netwerk-gerelateerde bottleneck gelopen. Zo duurde het bijvoorbeeld ettelijke seconden vooraleer de backend de laatste quotes van een bepaalde beurs opgehaald had. Om te vermijden dat de gebruiker effectief verschillende seconden moet wachten op het resultaat van een bewerking, hebben we verschillende optimalisaties toegepast.
+Tijdens de implementatie van de applicatie, zijn we verschillende keren tegen een netwerk-gerelateerde bottleneck gelopen. Zo duurde het in eerste instantie bijvoorbeeld ettelijke seconden vooraleer de backend de laatste quotes van een bepaalde beurs opgehaald had. Om te vermijden dat de gebruiker effectief verschillende seconden moet wachten op het resultaat van een bewerking, hebben we verschillende optimalisaties toegepast.
+
 
 \section{Datacompressie}
 
-Zoals reeds vermeld bij de voordelen van het XML-RPC protocol, kunnen we eenvoudig gebruik maken van beschikbare techologie\"en. Zo hebben we om de duur van een request te verlagen, gebruik gemaakt van de compressie mogelijkheden die het HTTP protocol reeds aanbiedt. De client kan zo in een request de \emph{Accept-Encoding} meesturen, waarop de backend op een gepaste manier kan reageren. Hier zijn we echter tegen een beperking van de ws-xmlrpc library gelopen die we gebruiken binnen onze backend: enkel de \emph{gzip} compressietechniek wordt ondersteund. Dit had als gevolg dat we de Perl library \emph{RPC::XML} hebben moeten wijzigen, aangezien die enkel de \emph{deflate} compressietechnologie ondersteund (eigenlijk was dit niet nodig, bij gebrek aan ondersteuning wordt compressie niet gebruikt, maar gezien de hoeveelheid data die de scraper dagelijks naar de backend stuurt was compressie toch gewenst).
+Zoals reeds vermeld bij de voordelen van het XML-RPC protocol, kunnen we eenvoudig gebruik maken van beschikbare technologie\"en. Zo hebben we om de duur van een request te verlagen, gebruik gemaakt van de compressie mogelijkheden die het HTTP-protocol reeds aanbiedt. De client kan zo in een request de \emph{Accept-Encoding} header meesturen, waarop de backend eventueel op gepaste wijze kan reageren door de reply te comprimeren. Hier zijn we echter tegen een beperking van de ws-xmlrpc library gelopen die we gebruiken binnen onze backend: enkel de \emph{gzip} compressietechniek wordt ondersteund. Dit had als gevolg dat we de Perl library \emph{RPC::XML} hebben moeten wijzigen, aangezien die enkel de \emph{deflate} compressietechniek ondersteunt (eigenlijk was dit niet nodig, bij gebrek aan ondersteuning werd compressie niet gebruikt, maar gezien de hoeveelheid data die de scraper dagelijks naar de backend stuurt was compressie toch gewenst).
+
 
 \section{Caching}
 
-Hoewel de bovenstaande netwerkoptimalisatie een grote impact heeft (datatransfers werden soms met factor 10 versneld), hielp dit niet bij de requests die de backend zelf stuurt in de richting van de database. Die requests zijn mogelijks reeds gecomprimeerd (aangezien ze verlopen via een binair protocol eigen aan de Oracle JDBC driver), maar zorgden toch voor een substantiële vertraging. Zo bleek, na implementatie van datacompressie bij requests en replies, dat een groot deel van de originele delay zijn oorsprong kende bij het ophalen van data uit de database.
+Hoewel de bovenstaande netwerkoptimalisatie een grote impact heeft (grote datatransfers werden met factor 10 versneld), hielp dit niet bij de requests die de backend zelf stuurt in de richting van de database. Die requests zijn mogelijks reeds gecomprimeerd (aangezien ze verlopen via een binair protocol eigen aan de Oracle JDBC driver), maar zorgden toch voor een substanti\"ele vertraging. Zo bleek, na implementatie van datacompressie bij requests en replies, dat een groot deel van de originele delay zijn oorsprong kende bij het ophalen van data uit de database.
 
-Daarom hebben we besloten om de datalaag in de backend uit te breiden met een flexibel caching systeem. Dit resulteerde echter in een aantal interessante problemen: wat moet er juist in de cache, wanneer worden zaken geinvalideerd, en hoe bepalen we wat relevant is en wat te vluchtig is om in een cache op te slaan? Veel van deze problemen zijn niet eigen aan ons project, maar vallen binnen het domein van caches. Daarom hebben we besloten om een deel van deze problematiek te elimineren door gebruik te maken van een bestaande caching bibliotheek. De keuze is daarbij gevallen op \makeurl{cache4j}{http://cache4j.sourceforge.net/}: een compacte doch performante caching bibliotheek die net voldoende features biedt om aan onze eisen te voldoen.
+Daarom hebben we besloten om de datalaag in de backend uit te breiden met een flexibel caching systeem. Dit resulteerde echter in een aantal interessante problemen: wat moet er juist in de cache, wanneer worden entries geinvalideerd, en hoe bepalen we wat relevant is en wat te vluchtig is om in een cache op te slaan? Veel van deze problemen zijn niet eigen aan ons project, maar vallen binnen het domein van caches. Daarom hebben we besloten om een deel van deze problematiek te elimineren door gebruik te maken van een bestaande caching bibliotheek. De keuze is daarbij gevallen op \makeurl{cache4j}{http://cache4j.sourceforge.net/}: een compacte doch performante caching bibliotheek die net voldoende features biedt om aan onze eisen te voldoen.
 
-De standaard opzet bij caches is om de data die de gebruiker terugkrijgt op te slaan, en wanneer de gebruiker iets opvraagt eerst de cache te controleren. Zo zouden we een cache hebben met beurzen, aandelen, koersen, etc. Wanneer de gebruiker dan een lijst van de beurzen opvraagt, kunnen we eenvoudigweg de inhoud van de cache teruggeven in plaats van de database te moeten contacteren.
-De opzet van ons project vermoeilijkt dit idee echter. Aangezien we gebruik maken van een filter die nooit geinterpreteerd wordt door de backend, maar louter gecompileerd wordt tot een string die de database dan kan verwerken, heeft de backend nooit weet van wat de effectieve selectiecriteria van de dataset waren. Daarom kunnen we het resultaat van de opvraging niet eenvoudig opslaan, laat staan in een later stadium de cache raadplegen om de juiste entries op te halen. Om toch een cache te kunnen gebruiken, slaan we geen hierarchie van datasets op, maar louter het letterlijke antwoord dat een gebruiker zou moeten krijgen bij een specifieke request. De key die gebruiken om die resultaatset op te slaan in de cache, is een gemodificeerde content-aware representatie van de request, samengesteld uit de methodenaam, en de inhoud van de filter. Zo zal een aanvraging bij de backend, gericht op eenzelfde functie (vb \emph{Finance.Exchange.List}), waarbij de argumenten inhoudelijk identiek zijn aan de argumenten van een vorige aanroep, niet resulteren in een opvraging bij de database maar louter in het teruggeven van een gecachete waarde.
-Hoewel dit complex mag lijken, valt dit in Java eenvoudig te implementeren. Eerst hebben we voorzien in een Proxy klasse, die elk object kan rerouten via een InvocationHandler (indien caching gewenst is). Die InvocationHandler zal in actie treden wanneer een willekeurige functie aangeroepen wordt op een object dat geregistreerd is bij de Proxy. In die methode kunnen we vervolgens een content-aware hashcode genereren (een combinatie van de methodenaam, en de parameters), de cache controleren, eventueel een gecachete waarde teruggeven, of indien die ontbrak een aanroep naar het effectieve object uitvoeren om daarna het resultaat in de cache op te slaan. Om dit proces vervolgens flexibel te maken, hebben we gebruikt van Java annotaties (\emph{@Cachable} en \emph{@Invalidates}), die de programmeur van de Data Access Objecten eenvoudig kan toevoegen aan een functiedeclaratie, om de interpretatie binnen een eventuele InvocationHandler te manipuleren.
+De standaard opzet bij caches is om de data die de gebruiker terugkrijgt op te slaan, en wanneer de gebruiker iets opvraagt eerst de cache te controleren. Zo zouden we een cache moeten opzetten met beurzen, aandelen, koersen, etc. Wanneer de gebruiker dan een lijst van de beurzen opvraagt, kunnen we eenvoudigweg de inhoud van de cache teruggeven in plaats van de database te moeten contacteren.
+De opzet van ons project bemoeilijkt dit concept echter. Aangezien we gebruik maken van een filter die nooit geïnterpreteerd wordt door de backend, maar louter gecompileerd wordt tot een string die de database dan kan verwerken, heeft de backend nooit weet van wat de effectieve selectiecriteria van de dataset waren. Daarom kunnen we het resultaat van de bevraging niet eenvoudig opslaan, laat staan in een later stadium de cache raadplegen om de juiste entries op te halen.
+Om toch een cache te kunnen gebruiken, slaan we geen hiërarchie van datasets op, maar louter het letterlijke antwoord dat een gebruiker zou moeten krijgen bij een specifieke aanvraag. De sleutel die web gebruiken om de resultaatset op te slaan in de cache, is een gemodificeerde content-aware representatie van de aa,vraag, samengesteld uit de methodenaam en de argumentenlijst (meestal een filter). Zo zal een aa,vraag bij de backend, gericht op eenzelfde functie (vb ``Finance.Exchange.List''), waarbij de argumenten inhoudelijk identiek zijn aan de argumenten van een vorige aanroep, niet resulteren in een bevraging bij de database maar louter in het teruggeven van een waarde uit de cache.
+Hoewel dit complex mag lijken, valt dit in Java relatief eenvoudig te implementeren. Eerst hebben we voorzien in een Proxy klasse, die elke aanvraag op object kan herleiden via een InvocationHandler (indien caching gewenst is natuurlijk). Die InvocationHandler zal in actie treden wanneer een willekeurige functie aangeroepen wordt op een object dat geregistreerd is bij de Proxy. In die methode kunnen we vervolgens de content-aware hashcode genereren, de cache controleren, eventueel een opgeslagen waarde teruggeven, of indien die ontbrak een aanroep naar het effectieve object uitvoeren om daarna het resultaat in de cache op te slaan.
+Om dit proces vervolgens flexibel te maken, hebben we gebruikt van Java annotaties (\emph{@Cachable} en \emph{@Invalidates}), die de programmeur van de Data Access Objecten eenvoudig kan toevoegen aan een functiedeclaratie, om zo de interpretatie binnen een eventuele InvocationHandler te manipuleren.
 
 Zoals vermeld hierboven hebben we ook voorzien in een \emph{@Invalidates} annotatie, die de InvocationHandler duidelijk maakt dat een bepaalde aanroep juist de bijhorende cache invalideert. Om de effici\"entie hierbij te verhogen, hebben we de cache gesplitst in een aantal deelcaches, elk geassocieerd met een specifiek Data Access Object. Zo zal een wijziging aan een beurs, enkel een cache invalidatie veroorzaken in de cache verbonden met het Data Access Object verantwoordelijk voor beurzen.
 
-Hoewel we moeite gedaan hebben om cache invalidaties te beperken en zo specifiek mogelijk te maken, blijkt het effici\"entieverlies dat gepaard gaat met ons model, niet te verwaarlozen is. De beste optie zou natuurlijk zijn om het filtermodel te veranderen zodat de backend weet heeft van de selectiecriteria, om zo op een effici\"ente wijze resultaten te kunnen opslaan, teruggeven, en belangrijker: slechts een kleine selectie aan records moet invalideren. Het filtermodel ondersteunt deze uitbreiding, maar het zou binnen het tijdsbestek van het project niet realistisch zijn om een dergelijke interpreter te realiseren. Daarom hebben we gekozen om de performantie van de cache proberen te maximaliseren.
+Hoewel we moeite gedaan hebben om cache invalidaties te beperken en zo specifiek mogelijk te maken, blijkt het effici\"entieverlies dat gepaard gaat met ons model, niet te verwaarlozen is. De beste optie zou natuurlijk zijn om het filtermodel te veranderen zodat de backend weet heeft van de selectiecriteria, om zo op een effici\"ente wijze resultaten op te slaan, terug te geven, en belangrijker: slechts selectief te invalideren. Het filtermodel ondersteunt deze uitbreiding, maar het zou binnen het tijdsbestek van het project niet realistisch zijn om een dergelijke interpreter te realiseren. Daarom hebben we gekozen om de performantie van de cache proberen te maximaliseren.
 
-Om de performantie van de caches te verhogen, hebben we een cache monitor geimplementeerd. Deze monitor haakt in op de invocation manager, zodat het gedetailleerde informatie bevat over hoe vaak elke functieaanroep uitgevoerd wordt. Met deze informatie kan vervolgens een lijst opgesteld worden van de meest frequent uitgevoerde queries per cache. Vervolgens zal de cache monitor op geregelde tijdstippen (maar enkel wanneer de backend idle is) de lijst met meest frequent uitgevoerde queries overlopen, kijken of het resultaat ervan in de cache zit, om indien dit niet het geval is de query uit te voeren en het resultaat ervan in de cache op te slaan.
-Het lijkt misschien dubbel werk om deze informatie in een aparte entity op te slaan (deze informatie zou immers kunnen toegevoegd worden aan de caches zelf), maar daarvoor zijn de objecten benodigd om de data te kunnen ophalen (namelijk een \emph{java.lang.reflection.Method} object, naast eventuele argumenten) te groot en niet eenvoudig bruikbaar om als key te dienen voor een cache. Een inhouds-gevoelige hashcode is daarbij veel effici\"enter.
+Om de performantie van de caches te verhogen, hebben we een cache monitor geïmplementeerd. Deze monitor haakt in op de InvocationManager, zodat het gedetailleerde informatie bevat over hoe vaak elke functieaanroep uitgevoerd wordt. Met deze informatie kan vervolgens een lijst opgesteld worden van de meest frequent uitgevoerde queries per cache. Vervolgens zal de cache monitor op geregelde tijdstippen (maar enkel wanneer de backend inactief is) de lijst met meest frequent uitgevoerde queries overlopen, kijken of het resultaat ervan in de cache zit, om indien dit niet het geval is de query uit te voeren en het resultaat ervan in de cache op te slaan.
+Het lijkt misschien dubbel werk om deze informatie in een aparte entity op te slaan (deze informatie zou immers kunnen toegevoegd worden aan de caches zelf), maar daarvoor zijn de objecten benodigd om de data te kunnen ophalen (namelijk een \emph{java.lang.reflection.Method} object, naast eventuele argumenten) veel te groot en niet eenvoudig bruikbaar om als sleutel te dienen voor een cache. De hierboven vermelde inhouds-gevoelige hashcode is daarbij veel effici\"enter.
+
+
+\section{Bulk methodes}
+
+Na implementatie van bovenvermelde technieken bleek de performantie drastisch verhoogd te zijn. Toch bleek de belasting veroorzaakt door de scraper, substantieel te zijn. Combineer dit met het feit dat de scraper gemiddeld elke minuut een 50-tal quotes doorstuurt, en het wordt duidelijk dat extra optimalisaties benodigd zijn.
+
+Vooraleerst hebben we het aantal queries geminimaliseerd door speciale \emph{bulk methodes} te implementeren. Hiermee kan de scraper n ``Finance.Security.Update'' methodes substitueren door een enkele ``Finance.Security.UpdateBulk'' aanroep. Hoewel dit de performantie duidelijk verbeterde, bleef de backend lang bezig om de quotes te versturen naar de database. Daarom hebben we de ``UpdateBulk'' methode een counterpart gegeven op database-niveau, door binnen deze gespecialiseerde routine gebruik te maken van JDBC batch statements. Hierdoor werd de belasting op de link tussen de backend en database verminderd, hoewel het verschil veel minder opvallend was dan over de XML-RPC link (dit vermoedelijk omdat het binaire protocol tussen JDBC en de Oracle database reeds weinig overhead kende, dit in tegenstelling tot een XML-RPC request die steeds opnieuw veel vaste velden, zoals de methodenaam, moest enumereren).
+
+
 
 %
 % Geavanceerde orders
@@ -653,7 +675,7 @@ Het lijkt misschien dubbel werk om deze informatie in een aparte entity op te sl
 
 In de order module zullen we een extra modulaire functionaliteit voorzien zodat we later extra types van geavanceerde orders kunnen toevoegen.
 Deze modules accepteren twee parameters (limietkoersen), de huidige koers, het type order (aankoop of verkoop) en het tijdstip op wanneer het order aangemaakt is. Elke keer ze opgeroepen worden geven ze terug of aan de voorwaarde al dan niet voldaan is. Is de voorwaarde voldaan dan zal dit tot gevolg hebben dat het order omgezet zal worden in een effectieve aankoop van een effect.
-Deze modules kunnen ook extra informatie aan de backend vragen die kunnen helpen bij de keuze. Bijvoorbeeld: "Wat was de maximum koers van dit effect in periode x"?
+Deze modules kunnen ook extra informatie aan de backend vragen die kunnen helpen bij de keuze. Bijvoorbeeld: ``Wat was de maximum koers van dit effect in periode x''?
 Elke module krijgt bij het oproepen drie parameters:
 \begin{itemize}
 \item{effectcode}
@@ -681,6 +703,7 @@ Als de koers buiten een van de twee limietwaarden valt dan geeft de module een p
 De module vraagt bij een aankooporder aan de backend wat de laagste prijs was tussen het plaatsen van het order en het huidige tijdstip. Is dit minimum lager dan de eerste parameter, dan geeft de module een positief antwoord terug. Bij een verkooporder gebeurt het omgekeerde.
 
 
+
 %
 % Filters
 %
@@ -688,9 +711,9 @@ De module vraagt bij een aankooporder aan de backend wat de laagste prijs was tu
 \chapter{Filters}
 
 Een bijkomend probleem kwam naar boven bij de effectieve implementatie van het backend protocol. Daarbij hadden we immers voorzien in een flexibele filter-methodiek, vergelijkbaar met de WHERE clausule in een SQL statement.
-Naar verloop van tijd hebben we echter een bijkomende genericiteit geintroduceerd in de backend, namelijk de Data Access Objects, waardoor het niet meer vastligt welke database effectief gebruikt zou worden. Hierdoor voldeed een filter opgemaakt in SQL-syntax niet meer, aangezien niet alle mogelijke data-backends SQL-filters ondersteunen (denk maar aan een puur Java data-backend, gebruik makende van datastructuren eigen aan Java zelf).
+Naar verloop van tijd hebben we echter een bijkomende genericiteit geïgeïntroduceerd in de backend, namelijk de Data Access Objects, waardoor het niet meer vastligt welke database effectief gebruikt zou worden. Hierdoor voldeed een filter opgemaakt in SQL-syntax niet meer, aangezien niet alle mogelijke data-backends SQL-filters ondersteunen (denk maar aan een Java in-memory data-backend, gebruik makende van datastructuren eigen aan Java zelf).
 
-Daarom zijn we op zoek gegaan naar een methodiek om gemakkelijk filters door te geven aan de backend, mits mogelijkheden om eenzelfde filter te gebruiken in combinatie met verschillende data-backends. De JDBC backend die we nu gebruikten voor data toegang bleek daarvoor onvoldoende, aangezien die enerzijds enkel database-specifieke SQL queries aanvaardt, en anderzijds niet noodzakelijk gebruikt wordt in elke DAO implementatie. Ook bleken er geen bestaande paketten beschikbaar te zijn om deze taak te realiseren, het werd dus snel duidelijk dat we onze eigen implementatie zouden moeten voorzien.
+Daarom zijn we op zoek gegaan naar een methodiek om gemakkelijk filters door te geven aan de backend, mits mogelijkheden om eenzelfde filter te gebruiken in combinatie met verschillende data-backends. De JDBC backend die we nu gebruikten voor data toegang bleek daarvoor onvoldoende, aangezien die enerzijds enkel database-specifieke SQL queries aanvaardt, en anderzijds niet noodzakelijk gebruikt wordt in elke DAO implementatie. Ook bleken er geen bestaande pakketten beschikbaar te zijn om deze taak te realiseren, het werd dus snel duidelijk dat we onze eigen implementatie zouden moeten voorzien.
 
 
 \section{Input formaat}
@@ -698,34 +721,35 @@ Daarom zijn we op zoek gegaan naar een methodiek om gemakkelijk filters door te 
 Vooraleer een implementatie te schrijven, was het imperatief om de semantiek vast te leggen: hoe geeft een gebruiker een filter door aan de backend. Dit moest voldoen aan een aantal eisen:
 \begin{enumerate}
 \item Compact: de data wordt over het netwerk verstuurd en mag dus niet te groot zijn.
-\item Gebruiksvriendelijk: de filter wordt steeds opgesteld door een developer, en moet dus eenvoudig in gebruik zijn.
+\item Gebruiksvriendelijk: de filter wordt steeds opgesteld door een ontwikkelaar, en moet dus eenvoudig in gebruik zijn.
 \item Flexibel: zowel eenvoudige als complexe filters moeten mogelijk zijn, zonder daarbij in een extreem moeilijke syntax terecht te komen.
 \end{enumerate}
 
-Een eerste methode zou zijn om de filter op te stellen aan de hand van een aantal Java objecten, waarbij aan elk object kinderen toegevoegd kunnen worden, en de root node dan instaat voor de evaluatie van de filter-boom. Hoewel deze methode makkelijk te implementeren is, is ze verre van gebruiksvriendelijk, en niet eenvoudig te versturen over het netwerk zonder gebruik te maken van serializatieprotocollen (die onmiddelijk een vrij grote overhead introduceren). Daarom is deze optie vrij snel ge\"elimineerd.
+Een eerste methode zou zijn om de filter op te stellen aan de hand van een aantal Java objecten, waarbij aan elk object kinderen toegevoegd kunnen worden, en de root node dan instaat voor de evaluatie van de filter-boom. Hoewel deze methode makkelijk te implementeren is, is ze verre van gebruiksvriendelijk, en niet eenvoudig te versturen over het netwerk zonder gebruik te maken van serialisatieprotocollen (die onmiddellijk een vrij grote overhead introduceren). Daarom is deze optie vrij snel ge\"elimineerd.
 
 Een volgende manier, gebaseerd op het \makeurl{Hibernate}{https://www.hibernate.org/} framework, stelt een filter op via een hi\"erarchie aan XML tags. Deze filters kunnen dan opgeslaan worden in aparte bestanden, at-runtime ingeladen worden, en aangevuld worden met de nodige parameters (vergelijkbaar per \emph{prepared statements}). Hoewel deze methode heel flexibel is, neigt de syntax snel tot complexe en onoverzichtelijke structuren. Bovendien is ze verre van compact: wat in een SQL filter een eenvoudig gelijkheidsteken is (voor het testen van gelijkheid), wordt hierbij al snel een lange reeks aan karakters met een vaste, vrij grote overhead (zoals de sluittags). Hoewel aantrekkelijker dan een filter opgebouwd met Java objecten, voldeed deze methode evenmin aan onze eisen.
 
-Uiteindelijk zijn we meer gaan kijken naar bestaande en beproefde paketten om onze filtersyntax te definiëren. Het uiteindelijke resultaat bestaat uit een SQL-achtige syntax, zoals we kunnen terug vinden in \makeurl{ASP.NET}{http://www.asp.net/}. Hierbij kan de gebruiker een filter opstellen en doorsturen als een reguliere tekenreeks, wat de eenvoud van het opstellen drastisch verbeterd. Ook blijkt de voorstellingswijze heel compact te zijn: overhead is nauwelijks aanwezig. Tenslotte kunnen we in deze syntax eenvoudig bijkomende hi\"erarchie\"en introduceren op een heel gebruikelijke manier: door het invoeren van extra haakjes. Dit maakt onze filter heel flexibel, zonder daarbij overdreven complex te worden.
+Uiteindelijk zijn we meer gaan kijken naar bestaande en beproefde pakketten om onze filtersyntax te defini\"eren. Het uiteindelijke resultaat bestaat uit een SQL-achtige syntax, zoals we kunnen terug vinden in \makeurl{ASP.NET}{http://www.asp.net/}. Hierbij kan de gebruiker een filter opstellen en doorsturen als een reguliere tekenreeks, wat de eenvoud van het opstellen drastisch verbeterd. Ook blijkt de voorstellingswijze heel compact te zijn: overhead is nauwelijks aanwezig. Tenslotte kunnen we in deze syntax eenvoudig bijkomende hi\"erarchie\"en introduceren op een heel gebruikelijke manier: door het invoeren van extra haakjes. Dit maakt onze filter heel flexibel, zonder daarbij overdreven complex te worden.
 
 \begin{code}
 \begin{verbatim}
-id EQUALS 42 AND name EQUALS 'StockPlay'
+id == 42 && name EQUALS 'StockPlay'
 \end{verbatim}
 \caption{De uiteindelijke filter-syntax.}
 \end{code}
 
+
 \section{Transmissie en conversie}
 
 Nu de semantiek van onze filter vaststond, konden we starten met een deel van de implementatie: de transmissie en conversie.
-Zoals vermeld in bovenstaande sectie, stelt de gebruiker een filter-string op en zendt die door naar de backend over het XML-RPC protocol. Voor de backend is het echter moeilijk om een dergelijke string direct te verwerken, aangezien de filter veel "menselijke opmaak" bevat (zoals whitespace, of infix notatie, meer hierover later). Vooraleer aan de verwerking van de filter te beginnen, is het dus belangrijk ze om te zetten naar een bruikbaar formaat.
+Zoals vermeld in bovenstaande sectie, stelt de gebruiker een filter-string op en zendt die door naar de backend over het XML-RPC protocol. Voor de backend is het echter moeilijk om een dergelijke string direct te verwerken, aangezien de filter veel ``menselijke opmaak'' bevat (zoals whitespace, of infix operatoren, meer hierover later). Vooraleer aan de verwerking van de filter te beginnen, is het dus belangrijk ze om te zetten naar een bruikbaar formaat.
 Deze conversiemethoden zijn reeds bekend en goed gedocumenteerd in de vele naslagwerken over compilertechnieken, en we zullen ze dan ook maar kort aanraken.
 
 \subsection{Tokenizer}
 
-De eerste stap bestaat eruit om de ontvangen tekenreeks om te zetten naar een formaat waarbij de string opgedeelt is in syntactische blokken, die snel te identificeren en vergelijken vallen. Hiervoor wordt een lijst aan Token objecten opgebouwd, waarbij elk Token de start en eindpositie van de syntactische blok aanduidt, net als zijn type (een object van het TokenType enumeratietype, wat vergelijken eenvoudiger en sneller maakt) als eventueel een kleinere aanduiding van het syntactisch blok voor de effectieve inhoud.
+De eerste stap bestaat eruit om de ontvangen tekenreeks om te zetten naar een formaat waarbij de string opgedeeld is in syntactische blokken, die snel te identificeren en vergelijken vallen. Hiervoor wordt een lijst aan Token objecten opgebouwd, waarbij elk Token de start en eindpositie van de syntactische blok aanduidt, net als zijn type (een object van het TokenType enumeratietype, wat vergelijken eenvoudiger en sneller maakt) als eventueel een kleinere aanduiding van het syntactisch blok voor de effectieve inhoud.
 
-Het omzetten van karakters naar dergelijke tokens gebeurt aan de hand van een set aan regels, reguliere expressies die telkens overeenkomen met een specifiek TokenType. Om mogelijke ambigu\"iteiten te voorkomen, wordt steeds de langste match effectief opgeslaan. Het detecteren van alternatieve blokken voor de effectieve inhoud wordten de \emph{grouping} mogelijkheden van reguliere expressies gebruikt.
+Het omzetten van karakters naar dergelijke tokens gebeurt aan de hand van een set aan regels, reguliere expressies die telkens overeenkomen met een specifiek TokenType. Om mogelijke ambigu\"iteiten te voorkomen, wordt steeds de langste match effectief opgeslagen. Het detecteren van kortere blokken voor de effectieve inhoud (bijvoorbeeld: de effectieve tekst binnen een quoted string) worden de \emph{grouping} mogelijkheden van reguliere expressies gebruikt.
 
 \begin{code}
 \begin{verbatim}
@@ -748,11 +772,11 @@ Token [29, 40, QUOTE]: StockPlay
 
 \subsection{Infix naar postfix omzetting}
 
-Nu we een lijst hebben van tokens, moet een tweede typische karakteristiek van "menselijke opmaak" verwijderd worden: operator infix notatie. Bij deze notatie wordt een operator omring door zijn parameters, in tegenstelling tot de meer computer-gerichte notatie waarbij alle parameters voorafgegaan worden door hun operator. Het is mogelijk om deze stap over te slaan (iets wat we effectief gedaan hebben bij de eerste versies van deze filter), maar dat resulteert in veel complexere algoritmen voor het omzetten van de lijst aan tokens naar een AST.
+Nu we een lijst hebben van tokens, moet een tweede typische karakteristiek van ``menselijke opmaak'' verwijderd worden: operator infix notatie. Bij deze notatie wordt een operator omring door zijn parameters, in tegenstelling tot de meer computer-gerichte notatie waarbij alle parameters voorafgegaan worden door hun operator. Het is mogelijk om deze stap over te slaan (iets wat we effectief gedaan hebben bij de eerste versies van deze filter), maar dat resulteert in veel complexere algoritmen voor het omzetten van de lijst aan tokens naar een AST.
 
-We hebben deze stap gerealiseerd via het shunting-yard algoritme van Edsger Dijkstra. Dit stack-based algoritme wordt vaak gebruikt bij het verwerken van infix-genoteerde mathematische uitdrukkingen, maar kan mits kleine wijzigingen perfect gebruikt worden voor het verwerken van onze filter. Voor de effectieve implementatie van dit algoritme verwijzen we naar het ruime aanbod van voorbeelden online.
+We hebben deze stap gerealiseerd via het \emph{Shunting-Yard algoritme} van Edsger Dijkstra. Dit stack-based algoritme wordt vaak gebruikt bij het verwerken van infix-genoteerde mathematische uitdrukkingen, maar kan mits kleine wijzigingen perfect gebruikt worden voor het verwerken van onze filter. Voor de effectieve implementatie van dit algoritme verwijzen we naar het ruime aanbod van voorbeelden online.
 
-Een beperking van dit algoritme is echter dat elke functie of operator steeds moet vastleggen hoeveel parameters die accepteert. Zonder dit kan het algoritme niet beslissen hoeveel paramters er van de stack moeten gehaald worden. In de huidige opzet van ons filterontwerp hebben we echter dergelijke functies niet nodig, en daarom is er ook geen voorziening geimplementeerd om er mee te kunnen opgaan. Moest dit echter wel het geval zijn, is het mogelijk het Shunting-yard aloritme \makeurl{uit te breiden}{http://www.kallisti.net.nz/blog/2008/02/extension-to-the-shunting-yard-algorithm-to-allow-variable-numbers-of-arguments-to-functions/} voor gebruik met een willekeurig aantal parameters.
+Een beperking van dit algoritme is echter dat elke functie of operator steeds moet vastleggen hoeveel parameters die accepteert. Zonder dit kan het algoritme niet beslissen hoeveel parameters er van de stack moeten gehaald worden. In de huidige opzet van ons filterontwerp hebben we echter dergelijke functies niet nodig, en daarom is er ook geen voorziening geïmplementeerd om er mee te kunnen opgaan. Moest dit echter wel het geval zijn, is het mogelijk het shunting-yard aloritme \makeurl{uit te breiden}{http://www.kallisti.net.nz/blog/2008/02/extension-to-the-shunting-yard-algorithm-to-allow-variable-numbers-of-arguments-to-functions/} voor gebruik met een willekeurig aantal parameters, wat zeker handig is in de context van functies.
 
 \begin{code}
 \begin{verbatim}
@@ -764,12 +788,12 @@ Token [29, 40, QUOTE]: StockPlay
 Token [22, 28, WORD]: EQUALS
 Token [13, 16, WORD]: AND
 \end{verbatim}
-\caption{Postfix-notatie van de filter-tekenreeks na omzetting door het shunting-yard algoritme.}
+\caption{Postfix-notatie van de filter-tekenreeks na omzetting door het shunting-yard algoritme. Merk ook op dat hierbij nutteloze token (zoals whitespace tussen andere tokens) verwijderd is.}
 \end{code}
 
 \subsection{Bouwen van een AST}
 
-Nu een lijst van tokens, opgebouwd in postfix notatie, beschikbaar is, kunnen we eenvoudig deze Reverse Polish Notation (RPN) evalueren naar een Abstract Syntax Tree (AST). Deze boomstructuur bevat tevens geen tokens meer, maar instantiaties van de relevante objecten.
+Nu een lijst van tokens, opgebouwd in postfix notatie, beschikbaar is, kunnen we eenvoudig deze Reverse Polish Notation (RPN) evalueren naar een Abstract Syntax Tree (AST). Deze boomstructuur bevat tevens geen tokens meer, maar instanties van de relevante objecten.
 
 Dit stadium bestaat dus essentieel uit twee onderdelen:
 \begin{itemize}
@@ -779,13 +803,14 @@ Dit stadium bestaat dus essentieel uit twee onderdelen:
 
 Het eerste aspect hiervan is triviaal: gebruik makende van een secundaire set aan regels (opbouw identiek met de regels uit de tokenizer, echter komt een regel nu niet meer overeen met een TokenType maar met een Class) kunnen we op eenvoudige doch flexibele wijze tokens omzetten naar een lokaal object.
 
-Voor het tweede gedeelte gebruiken we een relatief eenvoudig algoritme dat normaal gebruikt wordt voor het \makeurl{evalueren}{http://en.wikipedia.org/wiki/Reverse\_Polish\_notation\#The\_postfix\_algorithm} van postfix-expressies. We breiden het echter uit, zodat we een boom van niet-ge\"evalueerde structuren kunnen opstellen. Om daarbij geavanceerde syntactictische expressies toe te laten, waarbij het (nog onbekende) uitvoeringsresultaat van een operator dient als input voor een andere operator, hebben we gekozen voor de volgens opzet: elk object dat in de boom kan optreden implementeert de Convertable interface, die voorziet in een \emph{compile()} instructie. Die instructie zal voor data-objecten louter zijn inhoud teruggeven, maar zal ovor complexere sub-bomen alle nodes evalueren en het eindresultaat van die evaluatie teruggeven. Zo kan waar een operator een data-object verwacht, eveneens een schakering aan operatoren doorgegeven worden aangezien die eveneens in dezelfde \emph{compile()} instructie voorzien.
+Voor het tweede gedeelte gebruiken we een relatief eenvoudig algoritme dat normaal gebruikt wordt voor het \makeurl{evalueren}{http://en.wikipedia.org/wiki/Reverse\_Polish\_notation\#The\_postfix\_algorithm} van postfix-expressies. We breiden het echter uit, zodat we een boom van niet-ge\"evalueerde structuren kunnen opstellen. Om daarbij geavanceerde syntactische expressies toe te laten, waarbij het (nog onbekende) uitvoeringsresultaat van een operator dient als input voor een andere operator, hebben we gekozen voor de volgens opzet: elk object dat in de boom kan optreden implementeert de Convertable interface, die voorziet in een \emph{compile()} instructie. Die instructie zal voor data-objecten louter zijn inhoud teruggeven, maar zal voor complexere sub-bomen alle nodes evalueren en het eindresultaat van die evaluatie teruggeven. Zo kan waar een operator een data-object verwacht, eveneens een schakering aan operatoren doorgegeven worden aangezien die eveneens in dezelfde \emph{compile()} instructie voorzien.
 
 \begin{figure}[h!]
 	\centering
 		\includegraphics[width=\textwidth]{images/realisatie/AST}
 	\caption{Abstract Syntax Tree van een voorbeeldfilter.}
 \end{figure}
+
 
 \section{Verwerking}
 
@@ -801,11 +826,11 @@ Hoewel dit idee perfect toepasbaar is bij systemen waar alle data lokaal aanwezi
 
 Het alternatief voor een lokale toepassing, is een omzetting van de filter-boom naar een formaat dat geschikt is om op afstand verwerkt te worden. Hierbij is er geen overhead meer aanwezig, maar wordt het geheel een pak complexer daar het moet kunnen omgezet worden naar een specifieke syntax, afhankelijk van de data-backend.
 
-Om hieraan te kunnen voldoen, hebben we de implementatie van filter sub-objecten (zoals Condities, Relaties, en Data objecten) dusdanig gerealiseerd dat een gemeenschappelijk pseudo-abstract Convertable object (wel instantieerbaar, maar faalt bij aanroepen van de abstracte functies) voorziet in een interface en een set aan functies, terwijl een implementerend object dit gemeenschappelijk object dan moet uitbreiden door de abstracte functies in kwestie in te vullen.
+Om dit te kunnen realiseren, hebben we eerst voorzien in een pseudo-abstracte klasse (Convertable, wel instantieerbaar, maar de compile() functie is ``verboden'') die voorziet in een interface en gemeenschappelijke functionaliteit, onder meer voor het verwerken van eventuele parameters. Filter sub-objecten (Condities, Relaties, en Data objecten) breiden vervolgens deze abstracte klasse gepast uit, door niet zozeer functionaliteit toe te voegen, maar louter voorziet in een hi\"erarchie (zo kunnen we later bijvoorbeeld zeggen dat een Condition enkel Data-objecten als argumenten kan aanvaarden).
+Het volgend niveau in het Filter model is dat van de effectieve Condities, Relaties, en Datatypes. Een dergelijke klasse (vb ConditionEquals) breidt opnieuw zijn ouder uit, waarbij de toegevoegde functionaliteit bestaat uit het opbouwen van een graaf-subtree (meer hierover later), het specificeren van een functiesignatuur, en het vereisen van een \emph{compile()} functie voor alle implenterende klassen.
+Het finale niveau in ons model voorziet in een implementatie van bovenstaande objecten. Zo zal elke Convertable een implementatie moeten hebben voor elke data-backend (bijvoorbeeld sql.ConditionEquals). Via introspectie zal een Convertable at-runtime een correcte implementatie instantieren, wiens \emph{process()} functie dan instaat voor het genereren van een object dat bruikbaar is voor een data-backend (in geval van SQL zal dit een String).
 
-De gemeenschappelijke functionaliteit in dergelijke abstracte objecten voorziet in de verwerking van parameters, het aanbieden van een vaste functie-signatuur, de generatie van een Graph-subtree, en tenslotte in een implementatie van de \emph{compile()} functie. Deze functie, een pijler van de filter-infrastructuur, doet enkele elementaire dingen: het haalt een specifieke Converter op, en het roept diens \emph{process()} functie aan met de gepaste parameters. Een dergelijke Converter -- de implementerende counterpart van het abstract object -- voorziet enkel in een \emph{process()} functie, die opgeroepen wordt wanneer het object gecompileerd wordt.
-
-Deze opzet (pseudo-abstracte Convertable objecten die Converters instanti\"eren) mag misschien complex lijken, maar het is elementair in het generiek maken van de filters. Aangezien de pseudo-abstracte Convertable objecten rechtstreeks instanti\"eerbaar zijn, kan de Parser een boomstructuur aan dergelijke objecten opstellen zonder weet te hebben van hoe die boom uiteindelijk zal gecompileerd worden. Het is slechts wanneer die aanroep effectief gebeurt, dat elk Convertable object zal opvragen hoe hij gecompileerd moet worden, om zo de juiste Converter op te roepen. Die Converters voorzien ook niet in een \emph{compile()} instructie, omdat die instructie geen parameters vastlegt en dus manueel de private dataleden zou moeten raadplegen om parameters op te halen. Om dit te vermijden hebben we gekozen voor een extra instructie, de \emph{process()} instructie, die w\'el voorziet in een specifieke signatuur om zo verkeerde implementaties van de Convertables te vermijden.
+Deze opzet (pseudo-abstracte Convertable objecten die opnieuw een Convertable instanti\"eren die nu wel over een compile() functie beschikt) mag misschien complex lijken, maar het is elementair in het generiek maken van de filters. Aangezien de pseudo-abstracte Convertable objecten rechtstreeks instantieerbaar zijn, kan de Parser een boomstructuur aan dergelijke objecten opstellen zonder weet te hebben van hoe die boom uiteindelijk zal gecompileerd worden. Het is slechts wanneer die aanroep effectief gebeurt, dat elk Convertable object zal opvragen hoe hij gecompileerd moet worden, om zo de juiste Converter op te roepen. Die Converters voorzien ook niet in een \emph{compile()} instructie, omdat die instructie geen parameters vastlegt en dus manueel de private dataleden zou moeten raadplegen om parameters op te halen. Om dit te vermijden hebben we gekozen voor een extra instructie, de \emph{process()} instructie, die w\'el voorziet in een specifieke signatuur om zo verkeerde implementaties van de Convertables te vermijden.
 
 \begin{code}
 \begin{verbatim}
@@ -822,16 +847,16 @@ Zoals reeds beschreven bestaat een filter essenti\"eel uit drie verschillende mo
 \subsection{Operatoren}
 
 \begin{itemize}
-\item{Ronde haakjes: wordt gebruikt om conditites en relaties te groeperen om precedentie in te voeren.}
+\item{Ronde haakjes: wordt gebruikt om conditities en relaties te groeperen om precedentie in te voeren.}
 \item{Komma: wordt gebruikt om de argumenten die aan een functie doorgegeven worden, te scheiden (momenteel ongebruikt).}
 \end{itemize}
 
-Ronde haakjes zijn nodig wanneer precedentie onduidelijk is. Aangezien er geen niveau's van precendentie gedefini\"eerd zijn tussen verschillende relaties, zullen er altijd haken moeten gebruikt worden wanneer er zich verschillende relaties in eenzelfde filter bevinden. Bij gelijke relaties wordt er echter impliciet linkse-precedentie toegepast, en zijn haken niet vereist.
+Ronde haakjes zijn nodig wanneer precedentie onduidelijk is. Aangezien er geen niveaus van precendentie gedefini\"eerd zijn tussen verschillende relaties, zullen er altijd haken moeten gebruikt worden wanneer er zich verschillende relaties in eenzelfde filter bevinden. Bij gelijke relaties wordt er echter impliciet linkse-precedentie toegepast, en zijn haken niet vereist.
 
 \begin{code}
 \begin{verbatim}
 -- door de impliciete linkse-precedentie wordt eerst de
--- id-expressie gevalueerd, vervolgens de age-expressie en
+-- id-expressie ge\"evalueerd, vervolgens de age-expressie en
 -- tenslotte de name-expressie.
 id >= 5 && age >= 10 && name != 'Jan's
 
@@ -854,7 +879,7 @@ Dit speciaal datatype wordt gebruikt om bij een conditie een specifieke kolom te
 -- gelijkheids-conditie op in te laten werken
 id EQUALS 5
 \end{verbatim}
-\caption{Voorbeeldgebruik van een sleutel.}
+\caption{Illustratief gebruik van een sleutel.}
 \end{code}
 
 \subsubsection{Tekenreeksen}
@@ -866,7 +891,7 @@ Dit datatype stelt een ordinaire string voor, en kan alle karakters omvatten op 
 name EQUALS 'Foo'
 name EQUALS 'Foo's
 \end{verbatim}
-\caption{Voorbeeldgebruik van een tekenreeks.}
+\caption{Illustratief gebruik van een tekenreeks.}
 \end{code}
 
 \subsubsection{Natuurlijke getallen -- int}
@@ -878,7 +903,7 @@ Dit primitief datatype wordt gebruikt om natuurlijk getallen te detecteren, en m
 id EQUALS 5
 id EQUALS '5'i
 \end{verbatim}
-\caption{Voorbeeldgebruik van een natuurlijk getal.}
+\caption{Illustratief gebruik van een natuurlijk getal.}
 \end{code}
 
 \subsubsection{Gehele getallen -- float}
@@ -890,7 +915,7 @@ Dit is een uitbreiding van de natuurlijke getallen, en mag zo ook een decimaal p
 cash EQUALS 123.45
 cash EQUALS '123.45'f
 \end{verbatim}
-\caption{Voorbeeldgebruik van een geheel getal.}
+\caption{Illustratief gebruik van een geheel getal.}
 \end{code}
 
 \subsubsection{Datums -- date}
@@ -901,14 +926,14 @@ Dit is een voorbeeld van een complex type dat enkel kan geconstrueerd worden via
 \item{YYYY-MM-DD'T'HH:MM'Z': 2010-04-07T05:56Z}
 \end{itemize}
 
-Uren zijn steeds in 24-uurs formaat, gespecifi\"eerd in de UTC-tijdzone. Bij afwezigheid van het uur (vb. in YYYY-MM-DD), wordt dit impliciet ingesteld op '00:00' (middernacht), en zal ook zo in de database-backend verwerkt worden. De converters hebben dus geen weet van de manier waarop de datum ingegeven is (al dan niet met gespecifieerd uur).
+Uren zijn steeds in 24-uurs formaat, gespecificeerd in de UTC-tijdzone. Bij afwezigheid van het uur (vb. in YYYY-MM-DD), wordt dit impliciet ingesteld op '00:00' (middernacht), en zal ook zo in de database-backend verwerkt worden. De converters hebben dus geen weet van de manier waarop de datum ingegeven is (al dan niet met gespecificeerd uur).
 
 \begin{code}
 \begin{verbatim}
 date EQUALS '2010-04-07'd
 date EQUALS '2010-04-07T16:01Z'd
 \end{verbatim}
-\caption{Voorbeeldgebruik van een datum.}
+\caption{Illustratief gebruik van een datum.}
 \end{code}
 
 \subsubsection{Reguliere expressies -- regex}
@@ -922,9 +947,8 @@ Dit complex datatype wordt steeds gebruikt in combinatie met de LIKE operator, e
 \begin{verbatim}
 name LIKE '^j*n$'ri
 \end{verbatim}
-\caption{Voorbeeldgebruik van een reguliere expressie.}
+\caption{Illustratief gebruik van een reguliere expressie.}
 \end{code}
-
 
 \subsection{Condities}
 
@@ -952,6 +976,6 @@ Relaties dienen om verschillende condities aan elkaar te schakelen, en het resul
 
 \subsection{Functies}
 
-Momenteel zijn er nog geen functies gedefini\"eerd in de parser, maar de infrastructuur is er op voorzien.
+Momenteel zijn er nog geen functies gedefini\"eerd in de parser, maar de infrastructuur is er op voorzien. Mits een eenvoudige uitbreiding van de tokenizer kan er zelf gebruik gemaakt worden van functies met een variabel aantal argumenten.
 
 

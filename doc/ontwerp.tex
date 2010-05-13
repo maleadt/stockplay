@@ -10,8 +10,8 @@
 \begin{itemize}
 	\item{\emph{Speler}: een gebruiker die deelneemt aan het spel. Hij kan hiervoor gebruik maken van de interactieve delen van de website en van een client op een mobiele telefoon.}
 	\item{\emph{Administrator}: deze gebruiker beheert het spel. Hij kan de gebruikers en effecten in het spel beheren, de status van de verschillende componenten bekijken en statistieken raadplegen.}
-	\item{\emph{Scraper}: deze gebruiker kan enkel beurzen, index, en aandelen bekijken en aanpassen, en zal dus gebruikt worden door de "scraper" om in het systeem in te loggen en data te pushen naar de database.}
-	\item{\emph{Computer}: deze gebruiker neemt, net zoals de "Speler", een deel aan het spel, maar wordt niet bestuurd door een mens maar door een artifici\"ele intelligentie. Dit onderscheid is nodig aangezien een AI extra informatie nodig heeft (zoals het gedrag van andere spelers) om van te leren.}
+	\item{\emph{Scraper}: deze gebruiker kan enkel beurzen, index, en aandelen bekijken en aanpassen, en zal dus gebruikt worden door de ``scraper'' om in het systeem in te loggen en data te pushen naar de database.}
+	\item{\emph{Computer}: deze gebruiker neemt, net zoals de ``Speler'', een deel aan het spel, maar wordt niet bestuurd door een mens maar door een artifici\"ele intelligentie. Dit onderscheid is nodig aangezien een AI extra informatie nodig heeft (zoals het gedrag van andere spelers) om van te leren.}
 \end{itemize}
 
 \paragraph{Informaticasystemen}Deze applicatie maakt gebruik van een software design pattern: de 'Three-tier architecture'. De applicatie heeft 3 tiers:
@@ -33,7 +33,7 @@ De presentation tier bestaat hier uit 3 onafhankelijke applicaties:
 \end{figure}
 
 \subparagraph{Scrapers}
-StockPlay gebruikt de echte reële beurs, waardoor de koersen van deze effecten moeten dus periodiek worden opgehaald om het spel te laten werken. Hiervoor maken we gebruik van in Perl geschreven scrapers die vanaf enkele vooraf bepaalde internetsites de koersen extraheren. (zoals \makeurl{De Tijd}{http://www.tijd.be/beurzen/euronext-brussel/continumarkt} of \makeurl{Beursduivel}{http://www.beursduivel.be/koersen-belmid.index}).
+StockPlay gebruikt de echte re\"ele beurs, waardoor de koersen van deze effecten moeten dus periodiek worden opgehaald om het spel te laten werken. Hiervoor maken we gebruik van in Perl geschreven scrapers die vanaf enkele vooraf bepaalde internetsites de koersen extraheren. (zoals \makeurl{De Tijd}{http://www.tijd.be/beurzen/euronext-brussel/continumarkt} of \makeurl{Beursduivel}{http://www.beursduivel.be/koersen-belmid.index}).
 De opgehaalde informatie wordt vervolgens doorgestuurd naar de backend dewelke deze koersinformatie vervolgens opslaat in de database.
 
 \subparagraph{Atrifici\"ele intelligentie}
@@ -242,7 +242,7 @@ Deze keuzes zijn eveneens voorzichtig gemaakt. Zo kent Perl nog verschillende an
 Op de internetwebsite zullen we een extra module ontwikkelen waarin grafieken dynamisch gemanipuleerd kunnen worden. De gebruikers zullen met eenvoudige muishandelingen andere grafische weergaven van de grafieken kunnen opvragen, zonder de pagina te herladen. Hiervoor zal gebruik gemaakt worden van de interpreter taal Javascript en de javascript bibliotheken \makeurl{JQuery}{http://jquery.com/} en \makeurl{Flot}{http://code.google.com/p/flot/}. JQuery is benodigd om de Flot bibliotheek werkend te krijgen en kunnen we ook op andere plaatsen op de website gebruiken. Deze bibliotheek gaat wat extra functies aan de HTML-elementen hangen en geeft ons eenvoudige middelen om met AJAX extra informatie op te halen.
 
 We gebruiken Flot omdat aan deze bibliotheek nog acief ontwikkeld wordt. Alsook is ze heel eenvoudig gehouden en kan je er makkelijk op voortbouwen. Je kan er op voortbouwen door de ingebouwde events op te vangen en door gebruik te maken van de ingebouwde plugin functionaliteit. Er is ook ondersteuning voor datumweergave en er zijn plugins waarmee je een selectievenster op de grafiek kan activeren (om in te zoomen) en om de grafiek te kunnen verslepen.
-De grafieken worden getekend met een combinatie van HTML elementen en het CANVAS element. De HTML elementen kunnen we gemakkelijk vormgeven met CSS. Canvas wordt geëmuleerd in Internet Explorer. Alsook kunnen we de grafieken van deze bibliotheek op een eenvoudige manier vullen met JSON.
+De grafieken worden getekend met een combinatie van HTML elementen en het CANVAS element. De HTML elementen kunnen we gemakkelijk vormgeven met CSS. Canvas wordt ge\"emuleerd in Internet Explorer. Alsook kunnen we de grafieken van deze bibliotheek op een eenvoudige manier vullen met JSON.
 
 \section{Hardware}
 

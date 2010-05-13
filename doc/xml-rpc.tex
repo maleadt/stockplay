@@ -54,7 +54,7 @@ Content-length: 181
 
 \subsection{Header requirements}
 
-The format of the URI in the first line of the header is not specified. For example, it could be empty, a single slash, if the server is only handling XML-RPC calls. However, if the server is handling a mix of incoming HTTP requests, we allow the URI to help route the request to the code that handles XML-RPC requests. (In the example, the URI is /RPC2, telling the server to route the request to the "RPC2" responder.)
+The format of the URI in the first line of the header is not specified. For example, it could be empty, a single slash, if the server is only handling XML-RPC calls. However, if the server is handling a mix of incoming HTTP requests, we allow the URI to help route the request to the code that handles XML-RPC requests. (In the example, the URI is /RPC2, telling the server to route the request to the ''RPC2'' responder.)
 
 A User-Agent and Host must be specified.
 
@@ -234,12 +234,12 @@ Server: UserLand Frontier/5.1.2-WinNT
 
 The following questions came up on the UserLand discussion group as XML-RPC was being implemented in Python.
 \begin{itemize}
-\item The Response Format section says "The body of the response is a single XML structure, a $<$methodResponse$>$, which \emph{ can}
-contain a single $<$params$>$..." This is confusing. Can we leave out the $<$params$>$? 
+\item The Response Format section says ``The body of the response is a single XML structure, a $<$methodResponse$>$, which \emph{ can}
+contain a single $<$params$>$...'' This is confusing. Can we leave out the $<$params$>$? 
 
-No you cannot leave it out if the procedure executed successfully. There are only two options, either a response contains a $<$params$>$ structure or it contains a $<$fault$>$ structure. That's why we used the word "can" in that sentence.
+No you cannot leave it out if the procedure executed successfully. There are only two options, either a response contains a $<$params$>$ structure or it contains a $<$fault$>$ structure. That's why we used the word ``can'' in that sentence.
 
-\item Is "boolean" a distinct data type, or can boolean values be interchanged with integers (e.g. zero=false, non-zero=true)? 
+\item Is ``boolean'' a distinct data type, or can boolean values be interchanged with integers (e.g. zero=false, non-zero=true)? 
 
 Yes, boolean is a distinct data type. Some languages/environments allow for an easy coercion from zero to false and one to true, but if you mean true, send a boolean type with the value true, so your intent can't possibly be misunderstood.
 
@@ -247,15 +247,15 @@ Yes, boolean is a distinct data type. Some languages/environments allow for an e
 
 An integer is a 32-bit signed number. You can include a plus or minus at the beginning of a string of numeric characters. Leading zeros are collapsed. Whitespace is not permitted. Just numeric characters preceeded by a plus or minus.
 
-\item What is the legal syntax (and range) for floating point values (doubles)? How is the exponent represented? How to deal with whitespace? Can infinity and "not a number" be represented? 
+\item What is the legal syntax (and range) for floating point values (doubles)? How is the exponent represented? How to deal with whitespace? Can infinity and ``not a number'' be represented? 
 
-There is no representation for infinity or negative infinity or "not a number". At this time, only decimal point notation is allowed, a plus or a minus, followed by any number of numeric characters, followed by a period and any number of numeric characters. Whitespace is not allowed. The range of allowable values is implementation-dependent, is not specified.
+There is no representation for infinity or negative infinity or ``not a number''. At this time, only decimal point notation is allowed, a plus or a minus, followed by any number of numeric characters, followed by a period and any number of numeric characters. Whitespace is not allowed. The range of allowable values is implementation-dependent, is not specified.
 
-\item What characters are allowed in strings? Non-printable characters? Null characters? Can a "string" be used to hold an arbitrary chunk of binary data? 
+\item What characters are allowed in strings? Non-printable characters? Null characters? Can a ``string'' be used to hold an arbitrary chunk of binary data? 
 
 Any characters are allowed in a string except $<$ and \&, which are encoded as \&lt; and \&amp;. A string can be used to encode binary data.
 
-\item Does the "struct" element keep the order of keys. Or in other words, is the struct "foo=1, bar=2" equivalent to "bar=2, foo=1" or not? 
+\item Does the ``struct'' element keep the order of keys. Or in other words, is the struct ``foo=1, bar=2'' equivalent to ``bar=2, foo=1'' or not? 
 
 The struct element does not preserve the order of the keys. The two structs are equivalent.
 
@@ -278,7 +278,7 @@ There have been additions as well:
 
 \subsection{As of 6/30/03 DW}
 
-Removed "ASCII" from definition of string.
+Removed ``ASCII'' from definition of string.
 
 Changed copyright dates, below, to 1999-2003 from 1998-99.
 
@@ -295,7 +295,7 @@ This document and translations of it may be copied and furnished to others, and 
 
 This document may not be modified in any way, such as by removing the copyright notice or references to UserLand or other organizations. Further, while these copyright restrictions apply to the written XML-RPC specification, no claim of ownership is made by UserLand to the protocol it describes. Any party may, for commercial or non-commercial purposes, implement this protocol without royalty or license fee to UserLand. The limited permissions granted herein are perpetual and will not be revoked by UserLand or its successors or assigns.
 
-This document and the information contained herein is provided on an "AS IS" basis and USERLAND DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE INFORMATION HEREIN WILL NOT INFRINGE ANY RIGHTS OR ANY IMPLIED WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
+This document and the information contained herein is provided on an ``AS IS'' basis and USERLAND DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE INFORMATION HEREIN WILL NOT INFRINGE ANY RIGHTS OR ANY IMPLIED WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
 
 
 % Change back to Dutch language
