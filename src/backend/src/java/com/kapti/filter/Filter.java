@@ -155,21 +155,24 @@ public class Filter implements Serializable {
             Constructor<? extends Condition> c = iRelation.getConstructor(List.class);
             Filter oFilter = new Filter();
 
-            // Merge the filters using the given relation
-            switch (iFilters.length) {
+            // Fetch all the root nodex
+            List<Condition> tNodes = new ArrayList<Condition>();
+            for (Filter tFilter : iFilters) {
+                if (! tFilter.empty())
+                    tNodes.add(tFilter.mRoot);
+            }
+
+            // Merge the root nodes using the given relation
+            switch (tNodes.size()) {
                 case 0:
                     break;
 
                 case 1:
-                    oFilter.mRoot = iFilters[0].mRoot;
+                    oFilter.mRoot = tNodes.get(0);
                     break;
                     
                 default:
-                    List<Convertable> tParameters = new ArrayList<Convertable>();
-                    for (Filter tFilter : iFilters) {
-                        tParameters.add(tFilter.mRoot);
-                    }
-                    oFilter.mRoot = c.newInstance(tParameters);
+                    oFilter.mRoot = c.newInstance(tNodes);
             }
 
             return oFilter;
