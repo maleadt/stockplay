@@ -202,12 +202,20 @@ public class UserHandler extends MethodClass {
         return sessionid;
     }
 
-    private boolean ResetPassword(int id, String newpassword) throws StockPlayException {
+    private boolean ResetPassword(String nickname, String newpassword) throws StockPlayException {
 
         GenericDAO<com.kapti.data.User, Integer> tUserDAO = getDAO().getUserDAO();
 
-        User u = tUserDAO.findById(id);
-        u.setPassword(newpassword);
-        return tUserDAO.update(u);
+        Filter f = Parser.getInstance().parse("nickname == '" + nickname + "'");
+
+        Collection<User> users = tUserDAO.findByFilter(f);
+
+        if (!users.isEmpty()) {
+            User u = users.iterator().next();
+            u.setPassword(newpassword);
+            return tUserDAO.update(u);
+        } else {
+            throw new StockPlayException(98,"No user found with nickname " + nickname);
+        }
     }
 }
