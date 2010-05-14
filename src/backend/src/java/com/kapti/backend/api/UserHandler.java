@@ -186,7 +186,7 @@ public class UserHandler extends MethodClass {
         }
     }
 
-    private String CreateSessionForUser(int id) throws StockPlayException {
+    public String CreateSessionForUser(int id) throws StockPlayException {
         GenericDAO<com.kapti.data.User, Integer> tUserDAO = getDAO().getUserDAO();
 
         User u = tUserDAO.findById(id);
@@ -202,7 +202,7 @@ public class UserHandler extends MethodClass {
         return sessionid;
     }
 
-    private boolean ResetPassword(String nickname, String newpassword) throws StockPlayException {
+    public boolean ResetPassword(String nickname, String newpassword) throws StockPlayException {
 
         GenericDAO<com.kapti.data.User, Integer> tUserDAO = getDAO().getUserDAO();
 
