@@ -48,10 +48,6 @@
 \newcommand{\lbsetdate}[1]{
   \gdef\lbdate{#1}
 }
-\newcommand{\lbstart}[1] {
-	\section{#1}
-	\lbsetdate{}
-}
 \newcommand{\lbentry}[5] {
 	\ifthenelse{\equal{\lbdate}{#1}}
 	{
@@ -74,5 +70,25 @@
 \newcommand{\lbstop}[1] {
 	& & & \\ \hline % TODO: consistentie fix, zie hierboven
 	\end{tabular}
+	\lbsetdate{}
 	% totaal aantal uren
 }
+
+% Compacte enumeraties
+\newenvironment{enumerate_compact}{
+\begin{enumerate}
+  \setlength{\itemsep}{1pt}
+  \setlength{\parskip}{0pt}
+  \setlength{\parsep}{0pt}
+}{\end{enumerate}}
+\newenvironment{itemize_compact}{
+\begin{itemize}
+  \setlength{\itemsep}{1pt}
+  \setlength{\parskip}{0pt}
+  \setlength{\parsep}{0pt}
+}{\end{itemize}}
+
+% Compacte environment voor use-cases
+\newenvironment{compact}{\setlength{\parskip}{0pt}}{}
+
+

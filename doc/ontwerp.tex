@@ -75,9 +75,6 @@ Vervolgens kan de gebruiker zijn portfolio bekijken, en daar volgende informatie
 Er is ook een pagina die een zicht biedt op alle effecten aanwezig in het spel.
 \subparagraph{Filters} Om het overzicht te behouden voorziet dat overzicht in verschillende filters:
 \begin{itemize}
-  \setlength{\itemsep}{1pt}
-  \setlength{\parskip}{0pt}
-  \setlength{\parsep}{0pt}
 	\item{per beurs}
 	\item{per type (aandeel, tracker, ...)}
 	\item{per index}
@@ -88,9 +85,6 @@ Er is ook een pagina die een zicht biedt op alle effecten aanwezig in het spel.
 \end{itemize}
 \subparagraph{Details per effect}Per aandeel kan vervolgens doorgeklikt worden naar een overzichtspagina, die de volgende informatie biedt:
 \begin{itemize}
-  \setlength{\itemsep}{1pt}
-  \setlength{\parskip}{0pt}
-  \setlength{\parsep}{0pt}
 	\item{grafiek met koers}
 	\item{hoog/laag van de dag}
 	\item{huidige koers}
@@ -103,9 +97,6 @@ Er is ook een pagina die een zicht biedt op alle effecten aanwezig in het spel.
 \paragraph{Transactiegeschiedenis}De gebruiker kan ook een overzicht bovenhalen waarop zijn transactiegeschiedenis zichtbaar is. 
 \subparagraph{Details per transactie}Ook hier kan men steeds doorklikken naar een detailpagina in kwestie:
 \begin{itemize}
-  \setlength{\itemsep}{1pt}
-  \setlength{\parskip}{0pt}
-  \setlength{\parsep}{0pt}
 	\item{het tijdstip}
 	\item{het effect}
 	\item{het type transactie}
@@ -116,18 +107,12 @@ Er is ook een pagina die een zicht biedt op alle effecten aanwezig in het spel.
 \end{itemize}
 \subparagraph{Filters}Het overzicht kan worden behouden met behulp van volgende filters:
 \begin{itemize}
-  \setlength{\itemsep}{1pt}
-  \setlength{\parskip}{0pt}
-  \setlength{\parsep}{0pt}
 	\item{enkel aankopen/verkopen}
 	\item{enkel met winst/verlies}
 \end{itemize}
 
 \paragraph{Klassementen}Er zijn ook verschillende klassementen aanwezig:
 \begin{itemize}
-  \setlength{\itemsep}{1pt}
-  \setlength{\parskip}{0pt}
-  \setlength{\parsep}{0pt}
 	\item{meest aangekochte aandelen}
 	\item{meest verkochte aandelen}
 	\item{spelers top 20 (waarde Portfolio)}
@@ -136,9 +121,6 @@ Er is ook een pagina die een zicht biedt op alle effecten aanwezig in het spel.
 
 \paragraph{Verhandelpagina effecten}De interface voorziet ook in een pagina om aandelen te kopen of verkopen. Hiervoor zijn verschillende mogelijkheden:
 \begin{itemize}
-  \setlength{\itemsep}{1pt}
-  \setlength{\parskip}{0pt}
-  \setlength{\parsep}{0pt}
 	\item{de prijs die je biedt voor het aandeel. Pas als het aandeel die koers bereikt wordt het aandeel effectief aangekocht}
 	\item{de hoeveelheid aandelen die je wenst aan te kopen}
 	\item{de max. geldigheidsduur van dit order (1 uur/dag/week/maand)}
@@ -183,12 +165,12 @@ De desktopapplicatie is opgesplitst in drie grote componenten.
 \end{figure}
 
 \paragraph{Gebruikersbeheer}Enerzijds is er het overzicht van de gebruikers. Per gebruiker zijn de volgende beheersopdrachten mogelijk: 
-\begin{itemize}
+\begin{itemize_compact}
 	\item{wijzigen van een gebruiker}
 	\item{verwijderen van een gebruiker}
 	\item{aanpassen van Portfolio: kopen/verkopen van effecten}
 	\item{de hoeveelheid cash van de gebruiker aanpassen}
-\end{itemize}
+\end{itemize_compact}
 
 \begin{figure}[h!]
 	\centering
@@ -209,18 +191,18 @@ De desktopapplicatie is opgesplitst in drie grote componenten.
 
 Om toegang te krijgen tot de backend vanuit de verschillende andere delen van het project (zoals de scraper, AI, of interfaces) moesten we op zoek gaan naar een goed communicatieprotocol dat aan verschillende vereisten moet voldoen:
 \begin{itemize}
-\item{taalonafhankelijk: aangezien de interfaces met behulp van verschillende programmeertalen gerealiseerd worden, moet de interface toegankelijk zijn vanuit verschillende programmeertalen.}
-\item{lichtgewicht: voor de communcicatie met onze mobiele interface, moet de gegenereerde data compact gehouden worden.}
-\item{toegankelijk: de interfaces moeten toegankelijk zijn vanaf een andere machine dan die waar de backend op draait.}
+\item{\emph{Taalonafhankelijk}: aangezien de interfaces met behulp van verschillende programmeertalen gerealiseerd worden, moet de interface toegankelijk zijn vanuit verschillende programmeertalen.}
+\item{\emph{Lichtgewicht}: voor de communcicatie met onze mobiele interface, moet de gegenereerde data compact gehouden worden.}
+\item{\emph{Toegankelijk}: de interfaces moeten toegankelijk zijn vanaf een andere machine dan die waar de backend op draait.}
 \end{itemize}
 
 Zo hebben we een aantal protocollen overwogen:
-\begin{itemize}
+\begin{itemize_compact}
 \item{een eigen binair protocol}
 \item{RMI}
 \item{SOAP}
 \item{XML-RPC}
-\end{itemize}
+\end{itemize_compact}
 
 Het binair protocol viel nogal snel af, aangezien lastig is om te implementeren, relatief foutgevoelig is, en geen garanties biedt qua toegankelijkheid. RMI was ons niet toegestaan te gebruiken, waardoor nog twee kandidaten overbleven: SOAP en XML-RPC. Bij het vergelijken van beide bleek SOAP nogal zwaarwichtig te zijn, en bovendien veel te uitgebreid voor onze (relatief eenvoudige) eisen.
 
@@ -228,14 +210,16 @@ Zo hebben we uiteindelijk gekozen voor het XML-RPC protocol. Dit is een lichtgew
 Het protocol voldoet ook aan de opgestelde eisen: aangezien het verder bouwt op het bestaande HTTP-protocol kan het gebruik maken van diens mogelijkheden (zoals compressie en encryptie) en kan het (indien een specifieke bibliotheek niet beschikbaar zou zijn) eenvoudig verwerkt worden met behulp van reeds bestaande HTTP- en XML-bibliotheken. Bovendien verschilt de communicatie niet van regulier HTTP-verkeer waardoor de toegankelijkheid in gelimiteerde netwerkomgevingen ook toeneemt.
 
 Voor de programmeertalen die we gaan gebruiken bij het implementeren bleken er reeds verschillende bibliotheken beschikbaar te zijn, wat het gemak van gebruik opnieuw verhoogt. Een opsomming van de specifieke bibliotheken die we zullen gebruiken om informatie te versturen en ontvangen over het XML-RPC protocol:
-\begin{itemize}
-\item{\textbf{Perl}: \makeurl{XML::RPC}{http://search.cpan.org/dist/XML-RPC/}}
+\begin{itemize_compact}
+\item{\textbf{Perl}: \makeurl{RPC::XML}{http://search.cpan.org/dist/RPC-XML/}}
 \item{\textbf{C\#}: \makeurl{XML-RPC.NET}{http://www.xml-rpc.net/}}
 \item{\textbf{Java}: \makeurl{Apache XML-RPC}{http://ws.apache.org/xmlrpc/}}
 \item{\textbf{Java ME}: \makeurl{kXML-RPC}{http://kxmlrpc.sourceforge.net/}}
-\end{itemize}
+\end{itemize_compact}
 
-Deze keuzes zijn eveneens voorzichtig gemaakt. Zo kent Perl nog verschillende andere XML-RPC bibliotheken (zoals de offici\"ele \makeurl{RPC::XML}{http://search.cpan.org/dist/RPC-XML/} bibliotheek), waarvan XML::RPC verschilt in het beperkt aantal afhankelijkheden. Om XML-RPC te gebruiken in Java zijn er ook alternatieven, zoals de \makeurl{Redstone XML-RPC bibliotheek}{http://xmlrpc.sourceforge.net/} die afviel door .... Voor C\# en Java.ME hebben we geen alternatieve bibliotheken gevonden.
+Deze keuzes zijn eveneens voorzichtig gemaakt. Zo kent Perl nog verschillende andere XML-RPC bibliotheken (zoals de compactere \makeurl{XML::RPC}{http://search.cpan.org/dist/XML-RPC/} bibliotheek). Initi\"eel hadden we ook gekozen voor deze XML::RPC module (onder andere wegens het beperktere aantal afhankelijkheden), maar naar mate het project vorderde liepen we tegen enkele limitaties van die bibliotheek (zoals gebrek aan compressie), en ook enkele structurele problemen. Zo probeert de XML::RPC module dynamisch-getypeerde Perl variabelen automagisch te gebruiken binnen het sterk-getypeerde XML-RPC protocol, wat verschillende keren vervelende bugs veroorzaakte. Daarom zijn we omgeschakeld naar RPC::XML, waar sterk-getypeerde variabelen ge\"emuleerd worden door gebruik van expliciete conversiefuncties die instaan voor de omzetting van de al-omvattende Perl variabelen, naar speciefieke RPC::XML dataobjecten (zoals RPC::XML::int, RPC::XML::struct, etc).
+Om XML-RPC te gebruiken in Java zijn er ook alternatieven, zoals de \makeurl{Redstone XML-RPC bibliotheek}{http://xmlrpc.sourceforge.net/} die afviel door zijn beperkte featureset, en door het feit dat het al enige tijd niet meer onderhouden was (dit in tegenstelling tot de Apache libraries, die ook een heel actieve community kent).
+Voor C\# en Java.ME hebben we geen alternatieve bibliotheken gevonden.
 
 \section{Dynamische grafieken}
 

@@ -28,9 +28,8 @@ Procedure parameters can be scalars, numbers, strings, dates, etc.; and can also
 
 \section{Specification}
 
-\subsection{Request example}
+An example request is shown in code fragment \ref{code:xmlrpc:request}
 
-Here's an example of an XML-RPC request:
 \begin{code}
 \begin{verbatim}
 POST /RPC2 HTTP/1.0
@@ -50,17 +49,19 @@ Content-length: 181
 </methodCall>
 \end{verbatim}
 \caption{Sample RML-RPC request}
+\label{code:xmlrpc:request}
 \end{code}
 
 \subsection{Header requirements}
 
 The format of the URI in the first line of the header is not specified. For example, it could be empty, a single slash, if the server is only handling XML-RPC calls. However, if the server is handling a mix of incoming HTTP requests, we allow the URI to help route the request to the code that handles XML-RPC requests. (In the example, the URI is /RPC2, telling the server to route the request to the ''RPC2'' responder.)
 
-A User-Agent and Host must be specified.
+\begin{itemize_compact}
+	\item A User-Agent and Host must be specified.
+	\item The Content-Type is text/xml.
+	\item The Content-Length must be specified and must be correct.
+\end{itemize_compact}
 
-The Content-Type is text/xml.
-
-The Content-Length must be specified and must be correct.
 
 \subsection{Payload format}
 
@@ -74,7 +75,8 @@ If the procedure call has parameters, the $<$methodCall$>$ must contain a $<$par
 
 \subsection{Scalar $<$value$>$s}
 
-$<$value$>$s can be scalars, type is indicated by nesting the value inside one of the tags listed in this table:
+$<$value$>$s can be scalars, type is indicated by nesting the value inside one of the tags listed in table \ref{tbl:xmlrpc:scalar}.
+If no type is indicated, the type is string.
 
 \begin{table}
 \begin{tabular}{| c | p{4cm} | p{6cm} |}
@@ -90,17 +92,15 @@ $<$base64$>$ & base64-encoded binary & eW91IGNhbid0IHJlYWQgdGhpcyE= \\
 \hline
 \end{tabular}
 \caption{Possible scalar values}
+\label{tbl:xmlrpc:scalar}
 \end{table}
 
-If no type is indicated, the type is string.
 
 \subsection{$<$struct$>$s}
 
-A value can also be of type $<$struct$>$.
+A value can also be of type $<$struct$>$. A $<$struct$>$ contains $<$member$>$s and each $<$member$>$ contains a $<$name$>$ and a $<$value$>$.
+An example of a two-element $<$struct$>$ is shown in code fragment \ref{code:xmlrpc:struct}.
 
-A $<$struct$>$ contains $<$member$>$s and each $<$member$>$ contains a $<$name$>$ and a $<$value$>$.
-
-Here's an example of a two-element $<$struct$>$:
 \begin{code}
 \begin{verbatim}
 <struct>
@@ -115,16 +115,16 @@ Here's an example of a two-element $<$struct$>$:
 </struct>
 \end{verbatim}
 \caption{Example of a two-element $<$struct$>$}
+\label{code:xmlrpc:struct}
 \end{code}
 
 $<$struct$>$s can be recursive, any $<$value$>$ may contain a $<$struct$>$ or any other type, including an $<$array$>$, described below.
 \subsection{$<$array$>$s}
 
 A value can also be of type $<$array$>$.
-
 An $<$array$>$ contains a single $<$data$>$ element, which can contain any number of $<$value$>$s.
+An example of a four-element array is shown in code fragment \ref{chap:xml-rpc}.
 
-Here's an example of a four-element array:
 \begin{code}
 \begin{verbatim}
 <array>
@@ -137,16 +137,16 @@ Here's an example of a four-element array:
 </array>
 \end{verbatim}
 \caption{Example of a four-element array.}
+\label{code:xmlrpc:array}
 \end{code}
 
 $<$array$>$ elements do not have names.
 
 You can mix types as the example above illustrates.
-
 $<$arrays$>$s can be recursive, any value may contain an $<$array$>$ or any other type, including a $<$struct$>$, described above.
 \subsection{Response example}
+An example of a response to an XML-RPC request is shown in code fragment \ref{code:xmlrpc:response}.
 
-Here's an example of a response to an XML-RPC request:
 \begin{code}
 \begin{verbatim}
 HTTP/1.1 200 OK
@@ -166,19 +166,19 @@ Server: UserLand Frontier/5.1.2-WinNT
 </methodResponse>
 \end{verbatim}
 \caption{Example of a XML-RPC response.}
+\label{code:xmlrpc:response}
 \end{code}
 
 \subsection{Response format}
 
 Unless there's a lower-level error, always return 200 OK.
-
 The Content-Type is text/xml. Content-Length must be present and correct.
-
 The body of the response is a single XML structure, a $<$methodResponse$>$, which can contain a single $<$params$>$ which contains a single $<$param$>$ which contains a single $<$value$>$.
 
 The $<$methodResponse$>$ could also contain a $<$fault$>$ which contains a $<$value$>$ which is a $<$struct$>$ containing two elements, one named $<$faultCode$>$, an $<$int$>$ and one named $<$faultString$>$, a $<$string$>$.
-
 A $<$methodResponse$>$ can not contain both a $<$fault$>$ and a $<$params$>$.
+An example of an XML-RPC fault is shown in code fragment \ref{code:xmlrpc:fault}.
+
 \subsection{Fault example}
 \begin{code}
 \begin{verbatim}
@@ -208,6 +208,7 @@ Server: UserLand Frontier/5.1.2-WinNT
 </methodResponse>
 \end{verbatim}
 \caption{Example of a XML-RPC fault message.}
+\label{code:xmlrpc:fault}
 \end{code}
 
 
