@@ -4,7 +4,21 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder" Runat="Server">
-    <asp:PasswordRecovery ID="PasswordRecovery1" runat="server">
-    </asp:PasswordRecovery>
+    <h1 id="H1" runat="server" meta:resourcekey="Title"></h1>
+
+    <div id="Recovery" runat="server">
+        <p runat="server" meta:resourcekey="Para1"></p>
+        <p runat="server" meta:resourcekey="Para2"></p>
+        <p runat="server">
+            <asp:Literal meta:resourcekey="Para3" runat="server"></asp:Literal>
+            <asp:TextBox ID="Username" runat="server"></asp:TextBox>
+        </p>
+        <asp:Button ID="Submit" meta:resourcekey="Submit" runat="server" 
+            onclick="Submit_Click" />
+        <asp:Label ID="ErrorLabel" meta:resourcekey="Error" runat="server" Visible="false" ForeColor="Red"></asp:Label>
+    </div>
+    <div id="Success" runat="server" visible="false">
+       <p runat="server" meta:resourcekey="SuccessPara"></p>
+    </div>
 </asp:Content>
 

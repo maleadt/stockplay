@@ -123,6 +123,12 @@
   <data name="LoginBox.Text" xml:space="preserve">
     <value>Welcome to Stockplay: &lt;a href="Login.aspx"&gt;Login&lt;/a&gt; or &lt;a href="Register.aspx"&gt;Register&lt;/a&gt;</value>
   </data>
+  <data name="PickLanguage.Text" xml:space="preserve">
+    <value>Pick a language</value>
+  </data>
+  <data name="PickLanguage.Value" xml:space="preserve">
+    <value>invalid</value>
+  </data>
   <data name="SearchBox.Value" xml:space="preserve">
     <value>Search security..</value>
   </data>

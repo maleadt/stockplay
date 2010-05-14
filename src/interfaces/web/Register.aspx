@@ -5,59 +5,60 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder" Runat="Server">
 
+    <!-- Wordt getoond na registratie -->
     <p class="para" id="FinishRegistration" visible="false" runat="server">
         <asp:Literal runat="server" meta:resourcekey="FinishRegistration" />
     </p>
+
+    <h1 id="H1" runat="server" meta:resourcekey="TableHeader"></h1>
     <table id="TableRegister" runat="server">
         <tr>
-            <td colspan="2"><h1 runat="server" meta:resourcekey="TableHeader"></h1></td>
-        </tr>
-        <tr>
-            <td runat="server" meta:resourcekey="Nickname"></td>
+            <td runat="server" class="col" meta:resourcekey="Nickname"></td>
             <td>
-                <asp:TextBox ID="UserName" runat="server"></asp:TextBox>
+                <asp:TextBox ID="UserName" CssClass="textbox" runat="server"></asp:TextBox>
                 <asp:RequiredFieldValidator ID="NicknameRequired" runat="server" ValidationGroup="CreateUser1"
                 ControlToValidate="UserName" meta:resourcekey="UsernameError">*</asp:RequiredFieldValidator>
             </td>
         </tr>
         <tr>
-            <td  runat="server" meta:resourcekey="Password"></td>
+            <td  runat="server" class="col" meta:resourcekey="Password"></td>
             <td>
-                <asp:TextBox ID="Password" runat="server" TextMode="Password"></asp:TextBox>
+                <asp:TextBox ID="Password" CssClass="passbox" runat="server" TextMode="Password"></asp:TextBox>
                 <asp:RequiredFieldValidator ID="PasswordRequired" runat="server" ValidationGroup="CreateUser1"
                 ControlToValidate="Password" meta:resourcekey="PasswordError">*</asp:RequiredFieldValidator>
             </td>
         </tr>
         <tr>
-            <td runat="server" meta:resourcekey="ConfirmPassword"></td>
+            <td runat="server" class="col" meta:resourcekey="ConfirmPassword"></td>
             <td>
-                <asp:TextBox ID="txtPasswordConfirm" runat="server" TextMode="Password"></asp:TextBox>
+                <asp:TextBox ID="txtPasswordConfirm" CssClass="passbox" runat="server" TextMode="Password"></asp:TextBox>
                 <asp:CompareValidator runat="server" ID="PasswordCompare" ControlToValidate="txtPasswordConfirm" ValidationGroup="CreateUser1"
                 ControlToCompare="Password" meta:resourcekey="ConfirmPasswordError">*</asp:CompareValidator>
             </td>
         </tr>
         <tr>
-            <td runat="server" meta:resourcekey="Lastname"></td>
+            <td runat="server" class="col" meta:resourcekey="Lastname"></td>
             <td>
-                <asp:TextBox ID="txtLastname" runat="server"></asp:TextBox>
+                <asp:TextBox ID="txtLastname" CssClass="textbox" runat="server"></asp:TextBox>
                 <asp:RequiredFieldValidator ID="LastnameRequired" runat="server" ValidationGroup="CreateUser1"
                 ControlToValidate="txtLastname" meta:resourcekey="LastnameError">*</asp:RequiredFieldValidator>
             </td>
         </tr>
         <tr>
-            <td runat="server" meta:resourcekey="Firstname"></td>
+            <td runat="server" class="col" meta:resourcekey="Firstname"></td>
             <td>
-                <asp:TextBox ID="txtFirstname" runat="server"></asp:TextBox>
+                <asp:TextBox ID="txtFirstname" CssClass="textbox" runat="server"></asp:TextBox>
                 <asp:RequiredFieldValidator ID="FirstnameRequired" runat="server" ValidationGroup="CreateUser1"
                 ControlToValidate="txtFirstname" meta:resourcekey="FirstnameError">*</asp:RequiredFieldValidator>
             </td>
         </tr>
         <tr>
-            <td runat="server" meta:resourcekey="Email"></td>
+            <td runat="server" class="col" meta:resourcekey="Email"></td>
             <td>
-                <asp:TextBox ID="Email" runat="server"></asp:TextBox>
+                <asp:TextBox ID="Email" CssClass="textbox" runat="server"></asp:TextBox>
                 <asp:RequiredFieldValidator ID="EmailRequired" runat="server" ValidationGroup="CreateUser1"
                 ControlToValidate="Email" ErrorMessage="You need to your e-mail adress" meta:resourcekey="EmailMissing">*</asp:RequiredFieldValidator>
+                <br />
                 <asp:RegularExpressionValidator ID="RegularExpressionValidator1" runat="server" 
                     ControlToValidate="Email" ValidationGroup="CreateUser1" Display="Dynamic" meta:resourcekey="EmailInvalid"
                     ValidationExpression="\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*"></asp:RegularExpressionValidator>
@@ -65,7 +66,8 @@
         </tr>
         <tr>
             <td></td>
-            <td><asp:Button ID="btnRegister" class="button" runat="server" meta:resourcekey="RegisterButton" /> 
+            <td id="buttons" runat="server">
+                <asp:Button ID="btnRegister" class="button" runat="server" meta:resourcekey="RegisterButton" /> 
                 <asp:Button ID="btnCancel" class="button" runat="server" meta:resourcekey="CancelButton" onclick="btnCancel_Click" />
                 <asp:Label ID="ErrorLabel" runat="server" ForeColor="Red" Visible="False" meta:resourcekey="ErrorLabel"></asp:Label>
             </td>

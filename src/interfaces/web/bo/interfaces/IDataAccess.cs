@@ -13,7 +13,7 @@ namespace StockPlay
         List<ISecurity> GetSecuritiesFromExchange(string id);
 
         //Indexes
-        List<IIndex> GetIndexesByIsin(params string[] isin);
+        //List<IIndex> GetIndexesByIsin(params string[] isin);
 	
 	    //Quotes
 	    IQuote GetLatestQuoteFromSecurity(string isin);
@@ -33,6 +33,7 @@ namespace StockPlay
 	    bool UpdateUser(IUser user, string sessionID, ISession sessionHandler);
 	    IUser GetUserByNickname(string nickname, string sessionID, ISession sessionHandler);
 	    string ValidateUser(string nickname, string password); //Geeft de sessionID terug, deze is de lege string als validatie is mislukt
+        void ResetPassword(string nickname, string newPassword);
 	
 	    //User Securities
 	    List<IUserSecurity> GetUserSecurities(int id, string sessionID, ISession sessionHandler);

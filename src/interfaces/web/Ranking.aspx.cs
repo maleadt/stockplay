@@ -13,7 +13,7 @@ using StockPlay;
 
 namespace StockPlay.Web
 {
-	public partial class Ranking : System.Web.UI.Page
+	public partial class Ranking : MulticulturalPage
 	{
 	    protected void Page_Load(object sender, EventArgs e)
 	    {

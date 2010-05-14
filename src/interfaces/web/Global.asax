@@ -10,10 +10,6 @@
         // Code that runs on application startup
         XmlConfigurator.Configure(); //Loggin automatisch configureren met Web.Config
         
-        //Globale parameters
-        Application["applicationStart"] = DateTime.Now;
-        Application["activeUsers"] = new Dictionary<string, DateTime>();
-        
         ILog sysLog = LogManager.GetLogger("Application");
         sysLog.Info("Website startup");
 
@@ -75,16 +71,14 @@
     void Session_Start(object sender, EventArgs e) 
     {
         // Code that runs when a new session is started
-
-        Dictionary<string, DateTime> users = (Dictionary<string, DateTime>)Application["activeUsers"];
         
         if (HttpContext.Current.User != null)
         {
             //controleren of sessie bestaat en nog niet verlopen is
-            if (!users.ContainsKey(HttpContext.Current.User.Identity.Name)
-                || users[HttpContext.Current.User.Identity.Name].Add(new TimeSpan(0,10,0)) > DateTime.Now )
+            if (Session["userID"] == null || Session["sessionID"] == null )
             {
                 FormsAuthentication.SignOut();
+                Response.Redirect("~/Login.aspx");
             }
         } 
     }

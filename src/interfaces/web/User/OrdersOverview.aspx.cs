@@ -14,7 +14,7 @@ using StockPlay;
 
 namespace StockPlay.Web
 {
-	public partial class User_OrdersOverview : System.Web.UI.Page
+	public partial class User_OrdersOverview : MulticulturalPage
 	{
 	    protected void Page_Load(object sender, EventArgs e)
 	    {

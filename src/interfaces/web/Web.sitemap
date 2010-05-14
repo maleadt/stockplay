@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <siteMap xmlns="http://schemas.microsoft.com/AspNet/SiteMap-File-1.0" enableLocalization="true">
     <siteMapNode>
-      <siteMapNode url="Default.aspx" title="$resources: Sitemap, Default" description="$resoures: Sitemap, DefaultDescription" />
+      <siteMapNode url="Default.aspx" title="$resources: Sitemap, Default" description="$resources: Sitemap, DefaultDescription"/>
       <siteMapNode url="User/Overview.aspx" title="$resources: Sitemap, Overview"  description="$resources: Sitemap, OverviewDescription">
         <siteMapNode url="User/Portfolio.aspx" title="$resources: Sitemap, Portfolio" description="$resources: Sitemap, PortfolioDescription" />
         <siteMapNode url="User/OrdersOverview.aspx" title="$resources: Sitemap, Orders" description="$resources: Sitemap, OrdersDescription"/>

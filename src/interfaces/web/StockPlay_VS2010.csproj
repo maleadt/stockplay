@@ -140,9 +140,8 @@
     <Content Include="grafiek\options.js" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="bo\implXMLRPC\Index.cs" />
     <Compile Include="bo\implXMLRPC\handlers\HandlerHelper.cs" />
-    <Compile Include="bo\interfaces\IIndex.cs" />
+    <Compile Include="bo\interfaces\ISession.cs" />
     <Compile Include="Default.aspx.designer.cs">
       <DependentUpon>Default.aspx</DependentUpon>
     </Compile>
@@ -173,6 +172,9 @@
     </Compile>
     <Compile Include="MasterPage.master.cs">
       <DependentUpon>MasterPage.master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="MulticulturalPage.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Ranking.aspx.designer.cs">
@@ -279,7 +281,9 @@
   <ItemGroup>
     <None Include="App_GlobalResources\Sitemap.nl.resx" />
     <None Include="App_GlobalResources\Sitemap.resx" />
-    <None Include="App_LocalResources\Default.aspx.nl.resx" />
+    <None Include="App_LocalResources\Default.aspx.nl.resx">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="App_LocalResources\Default.aspx.resx" />
     <None Include="App_LocalResources\ForgotPassword.aspx.nl.resx" />
     <None Include="App_LocalResources\ForgotPassword.aspx.resx" />
@@ -325,6 +329,9 @@
     <Reference Include="System.Web" />
     <Reference Include="System.XML" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
   <ProjectExtensions>
@@ -333,7 +340,7 @@
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>1041</DevelopmentServerPort>
+          <DevelopmentServerPort>49542</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>
           </IISUrl>

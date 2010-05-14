@@ -21,10 +21,10 @@ namespace StockPlay
 	    {
 	        IDataAccess data = DataAccessFactory.GetDataAccess();
 	
-            string sessionID = data.ValidateUser(nickname, oldPassword);
+            string sessionID = ValidateUserSession(nickname, oldPassword);
 
             //Indien oud paswoord incorrect
-	        if( ! sessionID.Equals(""))
+	        if(sessionID.Equals(""))
 	            return false;
 	
 	        try
@@ -98,17 +98,13 @@ namespace StockPlay
 	
 	    public override string ResetPassword(string username, string answer)
 	    {
-            //TODO - Deze functie aanmaken in de backend aangezien je nu eerst geauthenticeerd moet zijn
-            throw new NotSupportedException();
-            //IDataAccess data = DataAccessFactory.GetDataAccess();
-            //IUser user = data.GetUserByNickname(username);
-	
-            //string newPassword = System.Guid.NewGuid().ToString();
-	
-            //user.Password = newPassword;
-            //data.UpdateUser(user);
-	
-            //return newPassword;
+            IDataAccess data = DataAccessFactory.GetDataAccess();
+
+            string newPassword = System.Guid.NewGuid().ToString();
+
+            data.ResetPassword(username, newPassword);
+
+            return newPassword;
 	    }
 	
 	    public override bool UnlockUser(string userName)
@@ -140,9 +136,9 @@ namespace StockPlay
 
 
         
-        //De gebruiker wordt ingelogd en krijgt een sessionID terug. Indien deze sessionID
-        //een lege string is betekent dit dat het inloggen mislukt is. De sessionID wordt
-        //voor de rest van de sessie bewaard en wordt bij iedere request die validatie vereist
+        //De gebruiker wordt ingelogd en krijgt een sessionID terug. Indien zijn gegevens
+        //fout zijn, dan krijgen we een exceptie de we moeten opvangen en krijgt hij een lege string terug.
+        //De sessionID wordt voor de rest van de sessie bewaard en wordt bij iedere request die validatie vereist
         //meegestuurd met die request.
         public string ValidateUserSession(string nickname, string password)
         {

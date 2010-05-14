@@ -30,8 +30,8 @@ namespace StockPlay.implXMLRPC
         public Transaction(XmlRpcStruct transaction)
         {
             id = Convert.ToInt32(transaction["ID"]);
-            userId = Convert.ToInt32(transaction["USERID"]);
-            timestamp = (DateTime) (transaction["TIMESTAMP"]);
+            userId = Convert.ToInt32(transaction["USER"]);
+            timestamp = (DateTime) (transaction["TIME"]);
             isin = (string) (transaction["ISIN"]);
             type = (string) (transaction["TYPE"]);
             amount = Convert.ToInt32(transaction["AMOUNT"]);

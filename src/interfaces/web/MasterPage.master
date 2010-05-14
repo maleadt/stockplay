@@ -47,8 +47,14 @@
                                 <asp:LoginStatus ID="LoginStatus2" runat="server" 
                                     meta:resourcekey="LoginStatus2Resource1" />
                             </p>
+                            <p ID="testParagraaf" runat="server"></p>
                         </LoggedInTemplate>
                     </asp:LoginView>
+                    <asp:DropDownList runat="server" ID="DropDownList1" AutoPostBack="true" OnSelectedIndexChanged="DropDownList1_SelectedIndexChanged">
+                          <asp:ListItem meta:resourcekey="PickLanguage" />
+                          <asp:ListItem Value="en-US" Text="English" />
+                          <asp:ListItem Value="nl-NL" Text="Nederlands" />
+                    </asp:DropDownList> 
                 </div>
                 
             </div>

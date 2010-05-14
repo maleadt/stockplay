@@ -13,7 +13,7 @@ using StockPlay;
 
 namespace StockPlay.Web
 	{
-	public partial class Help : System.Web.UI.Page
+	public partial class Help : MulticulturalPage
 	{
 	    protected void Page_Load(object sender, EventArgs e)
 	    {

@@ -144,7 +144,7 @@
   <data name="NewEmail.InnerText" xml:space="preserve">
     <value>E-mail adress:</value>
   </data>
-  <data name="NewFistname.InnerText" xml:space="preserve">
+  <data name="NewFirstname.InnerText" xml:space="preserve">
     <value>First name:</value>
   </data>
   <data name="NewLastname.InnerText" xml:space="preserve">
@@ -183,11 +183,17 @@
   <data name="Title.InnerText" xml:space="preserve">
     <value>Account overview</value>
   </data>
+  <data name="Title2.InnerText" xml:space="preserve">
+    <value>Update account</value>
+  </data>
   <data name="Update.Text" xml:space="preserve">
     <value>Update</value>
   </data>
   <data name="UpdateError.Text" xml:space="preserve">
     <value>Old password is not correct</value>
+  </data>
+  <data name="UpdateSuccess.Text" xml:space="preserve">
+    <value>Your account has been successfully updated</value>
   </data>
   <data name="Username.InnerText" xml:space="preserve">
     <value>Username</value>

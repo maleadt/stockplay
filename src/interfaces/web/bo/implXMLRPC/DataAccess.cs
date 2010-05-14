@@ -11,7 +11,6 @@ using System.Web.UI.WebControls.WebParts;
 using System.Collections.Generic;
 using CookComputing.XmlRpc;
 using log4net;
-using log4net.Config;
 using System.Text;
 using StockPlay;
 using StockPlay.implXMLRPC.handlers;
@@ -135,7 +134,7 @@ namespace StockPlay.implXMLRPC
             {
                 sysLog.Error("Error when requesting SecuritiesList", e);
 
-                return null;
+                return new List<ISecurity>();
             }
         }
 
@@ -164,38 +163,38 @@ namespace StockPlay.implXMLRPC
             {
                 sysLog.Error("Error when requesting SecurityByIsin", e);
 
-                return null;
+                return new List<ISecurity>();
             }
         }
 
-        public List<IIndex> GetIndexesByIsin(params string[] isin)
-        {
-            try
-            {
-                //Filter opbouwen
-                StringBuilder parameters = new StringBuilder();
-                for (int i = 0; i < isin.Length - 1; i++)
-                    parameters.Append("ISIN == '" + isin[i] + "' || ");
-                parameters.Append("ISIN == '" + isin[isin.Length - 1] + "'");
+        //public List<IIndex> GetIndexesByIsin(params string[] isin)
+        //{
+        //    try
+        //    {
+        //        //Filter opbouwen
+        //        StringBuilder parameters = new StringBuilder();
+        //        for (int i = 0; i < isin.Length - 1; i++)
+        //            parameters.Append("ISIN == '" + isin[i] + "' || ");
+        //        parameters.Append("ISIN == '" + isin[isin.Length - 1] + "'");
 
-                sysLog.Info("Request: 'GetIndexByIsin' - Requested ISINs: '" + parameters.ToString() + "'");
+        //        sysLog.Info("Request: 'GetIndexByIsin' - Requested ISINs: '" + parameters.ToString() + "'");
 
-                List<IIndex> indexes = new List<IIndex>();
+        //        List<IIndex> indexes = new List<IIndex>();
 
-                //Securities ophalen via XML-RPC en omzetten naar objecten
-                XmlRpcStruct[] query = publicSecurityHandler.ListIndexes(parameters.ToString());
-                foreach (XmlRpcStruct index in query)
-                    indexes.Add(new Index(index));
+        //        //Securities ophalen via XML-RPC en omzetten naar objecten
+        //        XmlRpcStruct[] query = publicSecurityHandler.ListIndexes(parameters.ToString());
+        //        foreach (XmlRpcStruct index in query)
+        //            indexes.Add(new Index(index));
 
-                return indexes;
-            }
-            catch (Exception e)
-            {
-                sysLog.Error("Error when requesting IndexByIsin", e);
+        //        return indexes;
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        sysLog.Error("Error when requesting IndexByIsin", e);
 
-                return null;
-            }
-        }
+        //        return null;
+        //    }
+        //}
 
 
         public List<ISecurity> GetSecuritiesFromExchange(string id)
@@ -216,7 +215,7 @@ namespace StockPlay.implXMLRPC
             {
                 sysLog.Error("Error when requesting SecuritiesFromExchange", e);
 
-                return null;
+                return new List<ISecurity>();
             }
         }
 
@@ -273,7 +272,7 @@ namespace StockPlay.implXMLRPC
             {
                 sysLog.Error("Error when requesting LatestQuotesFromSecurity", e);
 
-                return null;
+                return new List<IQuote>();
             }
         }
 
@@ -306,7 +305,7 @@ namespace StockPlay.implXMLRPC
             {
                 sysLog.Error("Error when requesting QuotesFromSecurity", e);
 
-                return null;
+                return new List<IQuote>();
             }
 
         }
@@ -330,7 +329,7 @@ namespace StockPlay.implXMLRPC
             {
                 sysLog.Error("Error when requesting GetFirstTime", e);
 
-                return null;
+                return new List<DateTime>();
             }
         }        
 
@@ -383,7 +382,7 @@ namespace StockPlay.implXMLRPC
             {
                 sysLog.Error("Error when requesting Exchanges", e);
 
-                return null;
+                return new List<IExchange>();
             }
         }
 
@@ -528,7 +527,7 @@ namespace StockPlay.implXMLRPC
                 TransactionHandler privateTransactionHandler = HandlerHelper.getPrivateTransactionHandler(privateXmlRpcUrl, sessionID);
                 XmlRpcStruct[] transactionStruct = privateTransactionHandler.List("USERID == '" + id + "'");
 
-                foreach (XmlRpcStruct userTransaction in userTransactions)
+                foreach (XmlRpcStruct userTransaction in transactionStruct)
                     userTransactions.Add(new Transaction(userTransaction));
 
                 return userTransactions;
@@ -541,6 +540,20 @@ namespace StockPlay.implXMLRPC
                     sysLog.Error("Error when requesting UserTransactions", e);
 
                 return new List<ITransaction>();
+            }
+        }
+
+        public void ResetPassword(string nickname, string newPassword)
+        {
+            try
+            {
+                sysLog.Info("Request: ResetPassword - Requested User: '" + nickname + "'");
+
+                publicUserHandler.ResetPassword(nickname, newPassword);
+            }
+            catch (Exception e)
+            {
+                sysLog.Error("Error when requesting ResetPassword", e);
             }
         }
 

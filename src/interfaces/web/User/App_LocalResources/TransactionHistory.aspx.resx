@@ -123,11 +123,11 @@
   <data name="ID.HeaderText" xml:space="preserve">
     <value>TransactionID</value>
   </data>
-  <data name="Isin.HeaderText" xml:space="preserve">
-    <value>Isin</value>
-  </data>
   <data name="Page.Title" xml:space="preserve">
     <value>Transaction History</value>
+  </data>
+  <data name="Security.HeaderText" xml:space="preserve">
+    <value>Security</value>
   </data>
   <data name="Timestamp.HeaderText" xml:space="preserve">
     <value>Time</value>

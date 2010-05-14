@@ -14,8 +14,14 @@ a {
 	text-decoration: none;
 }
 
+hr 
+{
+    margin: 1em 1em 1em 1em;
+    border: 1px solid gray;
+}
+
 p.para {
-	margin: 0.5em 0 0.5em 0;
+	margin: 0.5em 2em 0.5em 2em;
 }
 
 a:hover {
@@ -59,13 +65,13 @@ a:hover {
 	width: 51em; 
 }
 
-/* MENU */
+/* MENUBALK */
 #menu {
 	float:left;
 	border-left: solid 1px #ace;
 }
 
-/* KEUZEMENU */
+/* MENU */
 #left ul {
 	padding-left: 1em;
 	margin-bottom: 0;
@@ -224,7 +230,7 @@ a:hover {
 #right h1 
 {
 	color: #ace;
-	margin-bottom: 1em;
+	margin: 0.5em 0 1em 0.25em;
 }
 
 /* OPMAAK VAN SECURITY DETAIL */
@@ -270,6 +276,45 @@ a:hover {
 	color: #d40000;
 }
 
+/* REGISTRATIEFORMULIER en LOGINFORMULIER */
+#ctl00_ContentPlaceHolder_TableRegister, #ctl00_ContentPlaceHolder_TableLogin 
+{
+    width: 29em;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#ctl00_ContentPlaceHolder_TableRegister .textbox, #ctl00_ContentPlaceHolder_TableLogin .textbox, #ctl00_ContentPlaceHolder_AccountUpdate .textbox
+{
+    width: 15em;
+    border: 1px solid #666666;
+    padding: 0.1em 0.25em 0.1em 0.25em;
+}
+
+#ctl00_ContentPlaceHolder_TableRegister .passbox, #ctl00_ContentPlaceHolder_TableLogin .passbox 
+{
+    width: 10em;
+    border: 1px solid #666666;
+    padding: 0.1em 0.25em 0.1em 0.25em;
+}
+
+#ctl00_ContentPlaceHolder_TableRegister input:focus , #ctl00_ContentPlaceHolder_TableLogin input:focus 
+{
+    border: 1px solid #fff17d;
+}
+
+/* LOGINFORMULIER */
+#ctl00_ContentPlaceHolder_btnLogin 
+{
+    float: right;
+}
+
+#ctl00_ContentPlaceHolder_buttons
+{
+    float: right;
+}
+
+
 /* OPMAAK BUTTONS */
 .button
 {
@@ -286,4 +331,9 @@ a:hover {
     color:#ffffff;
     background-color:#2c97d5;
     border-color: #c0e1fb;
+}
+
+#ctl00_ContentPlaceHolder_TableRegister .button:focus, #ctl00_ContentPlaceHolder_TableLogin .button:focus
+{
+    border: 2px solid #fff17d;
 }

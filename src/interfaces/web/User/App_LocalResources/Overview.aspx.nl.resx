@@ -144,7 +144,7 @@
   <data name="NewEmail.InnerText" xml:space="preserve">
     <value>E-mailadres:</value>
   </data>
-  <data name="NewFistname.InnerText" xml:space="preserve">
+  <data name="NewFirstname.InnerText" xml:space="preserve">
     <value>Voornaam:</value>
   </data>
   <data name="NewLastname.InnerText" xml:space="preserve">
@@ -175,7 +175,7 @@
     <value>Hier kan je de algemene informatie van uw account bekijken. Indien je deze gegevens wilt veranderen, dan kan je het formulier onderaan invullen.</value>
   </data>
   <data name="Para2.InnerText" xml:space="preserve">
-    <value>Vul het onderstaande formulier in om uw accountgegevens te updaten:</value>
+    <value>Vul het onderstaande formulier in om uw accountgegevens bij te werken:</value>
   </data>
   <data name="Portfolio.InnerText" xml:space="preserve">
     <value>Portfolio</value>
@@ -183,11 +183,17 @@
   <data name="Title.InnerText" xml:space="preserve">
     <value>Accountoverzicht</value>
   </data>
+  <data name="Title2.InnerText" xml:space="preserve">
+    <value>Account updaten</value>
+  </data>
   <data name="Update.Text" xml:space="preserve">
     <value>Update</value>
   </data>
   <data name="UpdateError.Text" xml:space="preserve">
     <value>Oud paswoord is niet correct</value>
+  </data>
+  <data name="UpdateSuccess.Text" xml:space="preserve">
+    <value>Uw account is succesvol aangepast</value>
   </data>
   <data name="Username.InnerText" xml:space="preserve">
     <value>Gebruikersnaam</value>

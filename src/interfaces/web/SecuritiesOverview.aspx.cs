@@ -14,7 +14,7 @@ using StockPlay;
 
 namespace StockPlay.Web
 {
-	public partial class SecuritiesOverview : System.Web.UI.Page
+	public partial class SecuritiesOverview : MulticulturalPage
 	{
 	    protected void Page_Load(object sender, EventArgs e)
 	    {
@@ -37,8 +37,10 @@ namespace StockPlay.Web
 	        }
 	
 	        securitiesView = (DataView) Session["securitiesView"];
-	
-	        SecuritiesGridview.DataSource = securitiesView;
+
+            securitiesView.Sort = "Date DESC"; //Nieuwste quotes bovenaan
+
+            SecuritiesGridview.DataSource = securitiesView;
 	        SecuritiesGridview.DataBind();
 	    }
 	

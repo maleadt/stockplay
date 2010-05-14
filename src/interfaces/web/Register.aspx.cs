@@ -16,7 +16,7 @@ using StockPlay;
 
 namespace StockPlay.Web
 {
-	public partial class Register : System.Web.UI.Page
+	public partial class Register : MulticulturalPage
 	{
 	    protected void Page_Load(object sender, EventArgs e)
 	    {

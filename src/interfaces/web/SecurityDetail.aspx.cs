@@ -14,7 +14,7 @@ using StockPlay;
 
 namespace StockPlay.Web
 {
-	public partial class SecurityDetail : System.Web.UI.Page
+	public partial class SecurityDetail : MulticulturalPage
 	{
 	
 	    public string ISINcode;

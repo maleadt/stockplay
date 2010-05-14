@@ -27,5 +27,8 @@ namespace StockPlay.implXMLRPC.handlers
 	
 	    [XmlRpcMethod("User.Validate")]
 	    string Validate(string nickname, string password);
+
+        [XmlRpcMethod("User.ResetPassword")]
+        int ResetPassword(string nickname, string newPassword);
 	}
 }
