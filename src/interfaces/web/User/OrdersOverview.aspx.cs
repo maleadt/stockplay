@@ -11,7 +11,6 @@ using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using System.Collections.Generic;
 using StockPlay;
-using web.bo;
 
 namespace StockPlay.Web
 {

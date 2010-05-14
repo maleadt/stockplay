@@ -270,6 +270,10 @@
     <Compile Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\User\TransactionHistory.aspx.designer.cs">
       <DependentUpon>..\..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\User\TransactionHistory.aspx</DependentUpon>
     </Compile>
+    <Compile Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\bo\interfaces\ISession.cs" />
+    <Compile Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\bo\interfaces\IIndex.cs" />
+    <Compile Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\bo\implXMLRPC\handlers\HandlerHelper.cs" />
+    <Compile Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\bo\implXMLRPC\Index.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\..\..\..\Hoger %28Hogeschool Gent%29\3 Bachelor Toegepaste Ingenieurswetenschappen Informatica\Vakoverschrijdend project\src\interfaces\web\App_GlobalResources\Sitemap.nl.resx" />

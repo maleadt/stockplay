@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -6,7 +6,7 @@ using CookComputing.XmlRpc;
 using System.Net;
 using System.Text;
 
-namespace web.bo.implXMLRPC.handlers
+namespace StockPlay.implXMLRPC.handlers
 {
     public static class HandlerHelper
     {
