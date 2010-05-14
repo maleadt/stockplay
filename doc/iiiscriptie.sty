@@ -41,40 +41,40 @@ Promotoren:
 \fi
 }
 \renewcommand\maketitle{%
-\begin{titlepage}%
+\begin{titlingpage}%
   \let\footnotesize\small
   \let\footnoterule\relax
   \let \footnote \thanks
 \hspace*{-2cm}
 \parbox[t][\textheight][t]{16cm}{
 \begin{minipage}{65mm}
-{\sf \@bedrijfslogo
+{\sffamily \@bedrijfslogo
 }
 \end{minipage}
 \hspace*{\fill}
-\begin{minipage}{55mm}\sf
+\begin{minipage}{55mm}\sffamily
 \includegraphics[height=14mm]{logohogent\@graphex}\linebreak
 \end{minipage}\\
-{\sf\normalsize \@studiejaar}
+{\sffamily\normalsize \@studiejaar}
 \hspace*{\fill}
-{\sf\normalsize \@departement}\\
-{\sf\normalsize\academiejaar}
+{\sffamily\normalsize \@departement}\\
+{\sffamily\normalsize\academiejaar}
 \hspace*{\fill}
-{\sf\normalsize \@deptadres}\\
+{\sffamily\normalsize \@deptadres}\\
 \par
   \null\vfil
   \vskip 120\p@
   \begin{center}%
-    {\sf \Huge \@title \par}%
+    {\sffamily \Huge \@title \par}%
   \end{center}\par
 \par
   \null\vfil
   \vskip 120\p@
-{\sf\normalsize \@soortrapport}\\
+{\sffamily\normalsize \@soortrapport}\\
 \ \\
-\sf\large\@author\\
-{\sf\emph\@promotor}
+\sffamily\large\@author\\
+{\sffamily\emph\@promotor}
 }%einde parbox
- \end{titlepage}%
+ \end{titlingpage}%
   \setcounter{footnote}{0}%
 }

@@ -3,7 +3,7 @@
 %
 
 % Preambule met standaardinstellingen
-\documentclass[a4paper,oneside]{report}
+\documentclass[a4paper,oneside,final]{memoir}
 
 % Noot: zorg ervoor dat Nederlandse woordsplitsing geactiveerd is.
 \usepackage[english,dutch]{babel}
@@ -17,11 +17,6 @@
 
 % Nuttig pakket voor URL's
 \usepackage{url}
-
-% Genereer een index
-% gebruik \index{tekst} om een index toe te voegen
-\usepackage{makeidx}
-\makeindex
 
 % Extra functies
 \input{functies.tex}
@@ -101,6 +96,5 @@ StockPlay is een spel waarmee beleggen op de beurs wordt gesimuleerd. De deelnem
 \chapter{Woordenboek}
 \input{woordenboek.tex}
 
-\printindex
 \end{document}
 

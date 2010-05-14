@@ -2,8 +2,6 @@ all: clean pdf qclean
 
 pdf: document.tex
 	pdflatex document.tex
-	makeindex document.idx
-	pdflatex document.tex
 	latex_count=5 ; \
 	while egrep -s 'Rerun (LaTeX|to get cross-references right)' document.log && [ $$latex_count -gt 0 ] ;\
 	    do \
