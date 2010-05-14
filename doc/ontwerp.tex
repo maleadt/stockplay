@@ -55,26 +55,26 @@ Deze interface wordt gebruik om deel te nemen aan het spel. Een gebruiker surft 
 
 \paragraph{De algemene overzichtspagina}
 Deze pagina geeft de gebruiker een zicht over:
-\begin{itemize}
+\begin{itemize_compact}
 	\item{de huidige waarde van de aangekochte effecten en de meer- of minwaarde op de aankoopprijs}
 	\item{zijn cashpositie}
 	\item{het totaal van zijn cashpositie en de huidige waarde van de effecten}
 	\item{het huidige rendement}
 	\item{een grafiek met een overzicht van hun rendement ten opzichte van het gemiddeld rendement, beste rendement, enz.}
 	\item{het algemeen klassement en eventuele tussenklassementen}
-\end{itemize}
+\end{itemize_compact}
 
 \paragraph{Portfolio}
 Vervolgens kan de gebruiker zijn portfolio bekijken, en daar volgende informatie uit halen:
-\begin{itemize}
+\begin{itemize_compact}
 	\item{een overzicht van het portfolio van de gebruiker}
 	\item{de effecten momenteel in bezit, aankoopprijs (per stuk en in totaal), huidige koers, rendement en winst/verlies op het aandeel}
-\end{itemize}
+\end{itemize_compact}
 
 \paragraph{Overzicht beschikbare effecten}
 Er is ook een pagina die een zicht biedt op alle effecten aanwezig in het spel.
 \subparagraph{Filters} Om het overzicht te behouden voorziet dat overzicht in verschillende filters:
-\begin{itemize}
+\begin{itemize_compact}
 	\item{per beurs}
 	\item{per type (aandeel, tracker, ...)}
 	\item{per index}
@@ -82,9 +82,9 @@ Er is ook een pagina die een zicht biedt op alle effecten aanwezig in het spel.
 	\item{aandelen die als favoriet zijn gekenmerkt door de gebruiker}
 	\item{per prijs}
 	\item{per volume}
-\end{itemize}
+\end{itemize_compact}
 \subparagraph{Details per effect}Per aandeel kan vervolgens doorgeklikt worden naar een overzichtspagina, die de volgende informatie biedt:
-\begin{itemize}
+\begin{itemize_compact}
 	\item{grafiek met koers}
 	\item{hoog/laag van de dag}
 	\item{huidige koers}
@@ -92,11 +92,11 @@ Er is ook een pagina die een zicht biedt op alle effecten aanwezig in het spel.
 	\item{verschil}
 	\item{omzet}
 	\item{mogelijkheid om te kopen/te verkopen}
-\end{itemize}
+\end{itemize_compact}
 
 \paragraph{Transactiegeschiedenis}De gebruiker kan ook een overzicht bovenhalen waarop zijn transactiegeschiedenis zichtbaar is. 
 \subparagraph{Details per transactie}Ook hier kan men steeds doorklikken naar een detailpagina in kwestie:
-\begin{itemize}
+\begin{itemize_compact}
 	\item{het tijdstip}
 	\item{het effect}
 	\item{het type transactie}
@@ -104,27 +104,27 @@ Er is ook een pagina die een zicht biedt op alle effecten aanwezig in het spel.
 	\item{de kostprijs voor de transactie}
 	\item{de winst/verlies door transactie}
 	\item{totaal van uw portefeuille}
-\end{itemize}
+\end{itemize_compact}
 \subparagraph{Filters}Het overzicht kan worden behouden met behulp van volgende filters:
-\begin{itemize}
+\begin{itemize_compact}
 	\item{enkel aankopen/verkopen}
 	\item{enkel met winst/verlies}
-\end{itemize}
+\end{itemize_compact}
 
 \paragraph{Klassementen}Er zijn ook verschillende klassementen aanwezig:
-\begin{itemize}
+\begin{itemize_compact}
 	\item{meest aangekochte aandelen}
 	\item{meest verkochte aandelen}
 	\item{spelers top 20 (waarde Portfolio)}
 	\item{spelers top 20 (puntentotaal)}
-\end{itemize}
+\end{itemize_compact}
 
 \paragraph{Verhandelpagina effecten}De interface voorziet ook in een pagina om aandelen te kopen of verkopen. Hiervoor zijn verschillende mogelijkheden:
-\begin{itemize}
+\begin{itemize_compact}
 	\item{de prijs die je biedt voor het aandeel. Pas als het aandeel die koers bereikt wordt het aandeel effectief aangekocht}
 	\item{de hoeveelheid aandelen die je wenst aan te kopen}
 	\item{de max. geldigheidsduur van dit order (1 uur/dag/week/maand)}
-\end{itemize}
+\end{itemize_compact}
 Tijdens de aankoop krijgt de gebruiker een overzicht van de totale kostprijs en de verschillende taksen die erop staan.
 
 \subsection{Desktopapplicatie}
@@ -132,17 +132,17 @@ Deze applicatie voorziet in het beheer van het hele systeem. De beheerder logt d
 De desktopapplicatie is opgesplitst in drie grote componenten.
 
 \paragraph{Systeemstatus}Het laatste grote deel van de applicatie biedt een overzicht van de systeemstatus. Daarbij kan de beheerder het volgende ondernemen:
-\begin{itemize}
+\begin{itemize_compact}
 \item{status van de componenten (scraper, database, website, ...) en starten/stoppen/herstarten van degene die dit aankunnen.}
 \item{statistieken bekijken}
-	\begin{itemize}
+	\begin{itemize_compact}
 	\item{aantal ingeschreven gebruikers sinds de start}
 	\item{aantal gebruikers online}
 	\item{aantal connecties per tijdseenheid op de backend}
 	\item{aantal transacties per tijdseenheid}
 	\item{aantal (succesvol/gefaalde/...) gescrapede aandelen per tijdseenheid}
-	\end{itemize}
-\end{itemize}
+	\end{itemize_compact}
+\end{itemize_compact}
 
 \begin{figure}[h!]
 	\centering
@@ -151,12 +151,12 @@ De desktopapplicatie is opgesplitst in drie grote componenten.
 \end{figure}
 
 \paragraph{Effectenbeheer}Er is ook een overzicht van de effecten voorzien, die de volgende functionaliteit biedt:
-\begin{itemize}
+\begin{itemize_compact}
 	\item{aanduiden van welke effecten moeten gescraped worden, welke effecten zichtbaar zijn bij de spelers}
 	\item{schorsen van handel in een effect}
 	\item{wijzigen van de gescrapede gegevens}
 	\item{overzicht van de aanwezigheid in portefeuilles bij spelers}
-\end{itemize}
+\end{itemize_compact}
 
 \begin{figure}[h!]
 	\centering

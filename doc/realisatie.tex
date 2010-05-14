@@ -100,12 +100,12 @@ Om de veiligheid te verhogen gebruiken we verschillende technieken. Eerst en voo
 Authenticatie en autorisatie gaat ook gepaard met een specifieke set aan mogelijke errormessages. Allemaal geklasseerd binnen de Service Exceptions, zijn de volgende subtypes mogelijk: ``invalid credentials'' wanneer het authenticeren mislukt is, ``unauthorized'' wanneer een gebruiker niet geautoriseerd is tot het gebruik van een bepaalde functie, en tenslotte ``session corrupt'' wanneer een gespecificeerde sessie ongeldig blijkt te zijn.
 
 Hoewel een administrator gebruikersprofielen (en bijhorende autorisatiebits) manueel kan aanpassen, onderscheiden we volgende categorie\"en:
-\begin{itemize}
+\begin{itemize_compact}
 \item{Gast}
 \item{Speler}
 \item{Administrator}
 \item{Scraper}
-\end{itemize}
+\end{itemize_compact}
 
 \subsection{System-klasse}
 
@@ -115,21 +115,21 @@ Deze klasse biedt de client mogelijkheden om het systeem te beheren. Zoals het o
 	{ status van de backend ophalen }
 	{ geen }
 	{ integer die de status beschrijft:
-		\begin{itemize}
+		\begin{itemize_compact}
 		\item{0: maintenance-mode}
 		\item{1: geen problemen gemeld}
-		\end{itemize} }
+		\end{itemize_compact} }
 	{ administrator-rechten }
 
 \function{Backend.Stats}
 	{ backend-statistieken ophalen }
 	{ geen }
 	{ struct met statistieken:
-		\begin{itemize}
+		\begin{itemize_compact}
 		\item{users: aantal gebruikers online}
 		\item{req: aantal verwerkte XML-RPC requests sinds de start}
 		\item{uptime: hoe lang de backend al draait}
-		\end{itemize} }
+		\end{itemize_compact} }
 	{ administrator-rechten }
 
 \function{Backend.Restart}
@@ -154,38 +154,38 @@ Deze klasse biedt de client mogelijkheden om het systeem te beheren. Zoals het o
 	{ informatie van de database ophalen }
 	{ geen }
 	{ integer die status beschrijft:
-		\begin{itemize}
+		\begin{itemize_compact}
 		\item{0: er kon geen verbinding naar de databank gelegd worden}
 		\item{1: succesvol verbonden met de database}
-		\end{itemize} }
+		\end{itemize_compact} }
 	{ administrator-rechten benodigd}
 
 \function{Database.Stats}
 	{ database-statistieken ophalen. Dit zijn de statistieken geleverd door de databank zelf, ze zijn dus niet beperkt tot acties ondernomen door de backend }
 	{ geen }
 	{ struct met statistieken:
-		\begin{itemize}
+		\begin{itemize_compact}
 		\item{uptime: hoe lang de databank al draait}
 		\item{rate: aantal transacties per seconde}
-		\end{itemize} }
+		\end{itemize_compact} }
 	{ administrator-rechten }
 
 \function{Scraper.Status}
 	{ status van de scraper ophalen }
 	{ geen }
 	{ integer die status beschrijft:
-		\begin{itemize}
+		\begin{itemize_compact}
 		\item{0: niet geactiveerd}
 		\item{1: inactief}
 		\item{2: bezig met data-mining}
-		\end{itemize} }
+		\end{itemize_compact} }
 	{ administrator-rechten }
 
 \function{Scraper.Stats}
 	{ scraper-statistieken ophalen }
 	{ geen }
 	{ struct met statistieken:
-		\begin{itemize}
+		\begin{itemize_compact}
 		\item{executes: aantal voltooide plugin-uitvoeringen}
 		\item{uptime: hoe lang de scraper al draait}
 		\item{traffic: hoeveelheid data verzonden en ontvangen}
@@ -195,7 +195,7 @@ Deze klasse biedt de client mogelijkheden om het systeem te beheren. Zoals het o
 		\item{indexes: aantal beschikbare indexen}
 		\item{delay: tijd tot de volgende plugin-uitvoering}
 		\item{memory: geheugengebruik}
-		\end{itemize} }
+		\end{itemize_compact} }
 	{ administrator-rechten }
 
 \function{Scraper.Restart}
@@ -218,53 +218,53 @@ Hier vindt men de nodige methodes terug om gebruikers te beheren. Dit is echter 
 \function{List}
 	{ lijst met publieke informatie opvragen van de gebruikers }
 	{ een filter, met de volgende mogelijke sleutels:
-		\begin{itemize}
+		\begin{itemize_compact}
 		\item{nickname: gebruikersnaam}
 		\item{regdate: datum van registratie}
 		\item{points: aantal behaalde punten}
-		\end{itemize} }
+		\end{itemize_compact} }
 	{ een lijst met structs:
-		\begin{itemize}
+		\begin{itemize_compact}
 		\item{id: gebruikers-id}
 		\item{nickname: gebruikersnaam}
 		\item{regdate: datum van registratie}
 		\item{points: aantal behaalde punten}
-		\end{itemize} }
+		\end{itemize_compact} }
 	{ geen benodigd }
 
 \function{Details}
 	{ lijst met publieke informatie opvragen van een gebruiker }
 	{ een filter, met de volgende mogelijke sleutels:
-		\begin{itemize}
+		\begin{itemize_compact}
 		\item{id: een gebruikers-id}
-		\end{itemize} }
+		\end{itemize_compact} }
 	{ een lijst met structs:
-		\begin{itemize}
+		\begin{itemize_compact}
 		\item{id: gebruikers-id}
 		\item{firstName: voornaam}
 		\item{lastName: achternaam}
 		\item{rrn: rijksregisternummer (nodig voor de eid authenticatie)}
 		\item{cash: huidige cashpositie}
 		\item{startkapitaal: start kapitaal}
-		\end{itemize} }
+		\end{itemize_compact} }
 	{ administrator-rechten of identificatie als de gebruiker beschreven is in het 'id' veld van de filter }
 
 \todo{specifieke foutcode genereren} 
 \function{Create}
 	{ aanmaken van een nieuwe gebruiker }
 	{ struct met de gebruikersinformatie:
-		\begin{itemize}
+		\begin{itemize_compact}
 		\item{}
-		\end{itemize} }
+		\end{itemize_compact} }
 	{ id van de aangemaakte gebruiker }
 	{ administrator-rechten }
 
 \function{Modify}
 	{ wijzigen van een bestaande gebruiker }
 	{ een filter die gebruikers selecteert, en een struct met de te-wijzigen gebruikersinformatie:
-		\begin{itemize}
+		\begin{itemize_compact}
 		\item{}
-		\end{itemize} }
+		\end{itemize_compact} }
 	{ een boolean die aangeeft of de actie al dan niet gelukt is }
 	{ administrator-rechten of identificatie als de gebruiker beschreven is in het 'id' veld van de filter }
 
@@ -277,62 +277,62 @@ Hier vindt men de nodige methodes terug om gebruikers te beheren. Dit is echter 
 \function{Portfolio.List}
 	{ basisinformatie van effecten in bezit opsommen (gebruik de functie Finance.Security.Details voor meer informatie) }
 	{ een filter, met de volgende mogelijke sleutels:
-		\begin{itemize}
+		\begin{itemize_compact}
 		\item{id: een gebruikers-id}
-		\end{itemize} }
+		\end{itemize_compact} }
 	{ array van structs met basisinformatie van de effecten:
-		\begin{itemize}
+		\begin{itemize_compact}
 		\item{symbool: identificatiecode van het aandeel}
-		\end{itemize} }
+		\end{itemize_compact} }
 	{ administrator-rechten of identificatie als de gebruiker beschreven is in het 'id' veld van de filter }
 
 \todo{behoudt Orders.List ook uitgevoerde orders van een bepaald timeframe? - we hadden normaal gezegd dat we hier alle order tonen, ook de uitgevoerde. Het timeframe/resente orders zetten is dan kwestie van het zetten van de juiste filter en kan de client dan zelf bepalen. Kan je je hier in vinden? - Laur}
 \function{Order.List}
 	{ wachtende orders bekijken }
 	{ een filter, met de volgende mogelijke sleutels:
-		\begin{itemize}
+		\begin{itemize_compact}
 		\item{id: gebruikers-id}
-		\end{itemize} }
+		\end{itemize_compact} }
 	{ lijst van structs met order-informatie:
-		\begin{itemize}
+		\begin{itemize_compact}
 		\item{id: id van order}
 		\item{type: aankoop of verkoop}
 		\item{effect: symbool van het effect}
 		\item{aantal: het aantal effecten dat het order verhandelt}
-		\end{itemize} }
+		\end{itemize_compact} }
 	{ administrator-rechten of identificatie als de gebruiker beschreven is in het 'id' veld van de filter }
 
 \todo{specifieke foutmelding als order aanmaken faalde}
 \function{Order.Create}
 	{ een nieuw order aanmaken }
 	{ struct met orderdetails:
-		\begin{itemize}
+		\begin{itemize_compact}
 		\item{id: gebruikers-id}
 		\item{type: aankoop of verkoop}
 		\item{effect: symbool van het effect}
 		\item{aantal: het aantal effecten dat het order verhandelt}
-		\end{itemize} }
+		\end{itemize_compact} }
 	{ id van het aangemaakte order }
 	{ administrator-rechten of identificatie als de gebruiker beschreven is in het 'id' veld van de filter }
 
 \function{Order.Cancel}
 	{ een bestaande order annuleren }
 	{ een filter, met de volgende mogelijjke sleutels:
-		\begin{itemize}
+		\begin{itemize_compact}
 		\item{id: gebruikers-id}
 		\item{order: order-id}
-		\end{itemize} }
+		\end{itemize_compact} }
 	{ geen }
 	{ administrator-rechten of identificatie als de gebruiker beschreven is in het 'id' veld van de filter }
 
 \function{Transaction.List}
 	{ lijst van uitgevoerde transacties weergeven }
 	{ een filter, met de volgende mogelijke sleutels:
-		\begin{itemize}
+		\begin{itemize_compact}
 		\item{id: gebruikers-id}
-		\end{itemize} }
+		\end{itemize_compact} }
 	{ array van structs die transactie-informatie bevatten:
-		\begin{itemize}
+		\begin{itemize_compact}
 		\item{id: identificatie van de transactie}
 		\item{timestamp: datum van de transactie}
 		\item{price: aankoopprijs}
@@ -340,7 +340,7 @@ Hier vindt men de nodige methodes terug om gebruikers te beheren. Dit is echter 
 		\item{symbol: symbool van het effect}
 		\item{type: soort effect}
 		\item{name: naam van het effect}
-		\end{itemize} }
+		\end{itemize_compact} }
 	{ administrator-rechten of identificatie als de gebruiker beschreven is in het 'id' veld van de filter }
 
 \subsection{Finance-klasse}
@@ -350,100 +350,100 @@ Tenslotte zijn er nog de methodes gerelateerd met het effectieve beurswezen, die
 \function{Exchange.List}
 	{ lijst van beurzen opvragen }
 	{ een filter, met de volgende mogelijke sleutels:
-		\begin{itemize}
+		\begin{itemize_compact}
 		\item{}
-		\end{itemize} }
+		\end{itemize_compact} }
 	{ array van structs met beurs-info:
-		\begin{itemize}
+		\begin{itemize_compact}
 		\item{id: identificatie-symbool van de beurs}
 		\item{discription: een langere beschrijving van de beurs}
 		\item{location: locatie van de beurs zich bevindt}
-		\end{itemize} }
+		\end{itemize_compact} }
 	{ gebruikers-rechten }
 
 \function{Exchange.Modify}
 	{ informatie van een beurs wijzigen }
 	{ een filter, en een struct met beursinformatie:
-		\begin{itemize}
+		\begin{itemize_compact}
 		\item{description}
 		\item{location}
-		\end{itemize} }
+		\end{itemize_compact} }
 	{ niks }
 	{ administrator-rechten of scraper-rechten }
 
 \function{Exchange.Create}
 	{ een beurs toevoegen }
 	{ een struct met beursinformatie:
-		\begin{itemize}
+		\begin{itemize_compact}
 		\item{description}
 		\item{location}
-		\end{itemize} }
+		\end{itemize_compact} }
 	{ niks }
 	{ administrator-rechten of scraper-rechten }
 
 \function{Index.List}
 	{ lijst van indexen opvragen }
 	{ een filter, met de volgende mogelijke sleutels:
-		\begin{itemize}
+		\begin{itemize_compact}
 		\item{}
-		\end{itemize} }
+		\end{itemize_compact} }
 	{ array van structs met index-informatie:
-		\begin{itemize}
+		\begin{itemize_compact}
 		\item{id: identificatie-symbool van de index}
 		\item{exchange: identificatie-symbool van de beurs waarop de index zich bevindt}
 		\item{description}
-		\end{itemize} }
+		\end{itemize_compact} }
 	{ gebruikers-rechten }
 
 \function{Index.Modify}
 	{ informatie van een index wijzigen }
 	{ een filter, en een struct met indexinformatie:
-		\begin{itemize}
+		\begin{itemize_compact}
 		\item{description}
-		\end{itemize} }
+		\end{itemize_compact} }
 	{ niks }
 	{ administrator-rechten of scraper-rechten }
 
 \function{Index.Create}
 	{ een index toevoegen }
 	{ en een struct met indexinformatie:
-		\begin{itemize}
+		\begin{itemize_compact}
 		\item{description}
-		\end{itemize} }
+		\end{itemize_compact} }
 	{ niks }
 	{ administrator-rechten of scraper-rechten }
 
 \function{Security.List}
 	{ lijst met oppervlakkige informatie van effecten opvragen }
 	{ een filter, met de volgende mogelijke sleutels:
-		\begin{itemize}
+		\begin{itemize_compact}
 		\item{}
-		\end{itemize} }
+		\end{itemize_compact} }
 	{ array van structs met informatie over het effect:
-		\begin{itemize}
+		\begin{itemize_compact}
 		\item{id: identificatie-symbool van het effect}
 		\item{beurs: identificatie-symbool van de beurs waarop het effect zich bevindt}
 		\item{index: identificatie-symbool van de index waarop het effect zich bevindt}
 		\item{koers: de huidige koers}
 		\item{flags: de gezette vlaggen}
-		\end{itemize} }
+		\end{itemize_compact} }
 	{ gebruikers-rechten }
 
 \function{Security.Modify}
 	{ informatie van een effect wijzigen }
 	{ een filter, en een struct met informatie over het effect:
-		\begin{itemize}
+		\begin{itemize_compact}
 		\item{...}
-		\end{itemize} }
+		\end{itemize_compact} }
 	{ aantal aangepaste effecten }
 	{ administrator-rechten of scraper-rechten }
 
 \function{Security.Create}
 	{ een effect toevoegen }
 	{ een struct met informatie over het effect:
-		\begin{itemize}
+		\begin{itemize_compact}
 		\item{...}
-		\end{itemize} }
+		\end{itemize_compact} }
 	{ niks }
 	{ administrator-rechten of scraper-rechten }
 	
@@ -457,26 +457,26 @@ Tenslotte zijn er nog de methodes gerelateerd met het effectieve beurswezen, die
 	{ defail-informatie van een effect opvragen }
 	{ een filter }
 	{ struct met defail-informatie over het effect:
-		\begin{itemize}
+		\begin{itemize_compact}
 		\item{salesvolume: omzet}
 		\item{buyprice: aankoopprijs}
 		\item{saleprice: verkoopprijs}
-		\end{itemize} }
+		\end{itemize_compact} }
 	{ gebruikers-rechten }
 
 \function{Security.Flag}
 	{ vlaggen van een effect wijzigen }
 	{ het type vlag, de instelling, en een filter met de volgende mogelijke sleutels:
-		\begin{itemize}
+		\begin{itemize_compact}
 		\item{}
-		\end{itemize} }
+		\end{itemize_compact} }
 	{ niks }
 	{ administrator-rechten }
 
 \function{Security.Update}
 	{ nieuwe quote aan een security toevoegen (of updaten) }
 	{ een struct dat een quote voorstelt, met de volgende inhoud:
-		\begin{itemize}
+		\begin{itemize_compact}
 		\item{security: id van het security dat geüpdatet moet worden}
 		\item{time: tijdstip waarop de quote gelde}
 		\item{price: huidige prijs}
@@ -485,15 +485,15 @@ Tenslotte zijn er nog de methodes gerelateerd met het effectieve beurswezen, die
 		\item{sell: verkoopsprijs}
 		\item{low: laagterecord van het aandeel}
 		\item{high: hoogterecord van het aandeel}
-		\end{itemize} }
+		\end{itemize_compact} }
 	{ niks }
 	{ scraper-rechten }
 
 De mogelijke vlaggen zijn:
-\begin{itemize}
+\begin{itemize_compact}
 \item{1: kunnen gebruikers het effect zien}
 \item{2: kunnen gebruikers het effect aankopen (impliceert flag 1)}
-\end{itemize}
+\end{itemize_compact}
 
 
 %
@@ -505,7 +505,7 @@ De mogelijke vlaggen zijn:
 \chapter{Dynamische grafieken}
 
 Zoals reeds vermeld maken we gebruik van de JQuery en FLOT bibliotheken om interactieve grafieken te maken. Die zullen volgende functionaliteit bevatten:
-\begin{itemize}
+\begin{itemize_compact}
 \item{zoomen in de grafiek doormiddel van het scrolwiel}
 \item{zoomen in de grafiek doormiddel van een dubbelklik op een locatie}
 \item{uitzoomen met een knop}
@@ -515,7 +515,7 @@ Zoals reeds vermeld maken we gebruik van de JQuery en FLOT bibliotheken om inter
 \item{eventueel: je zal extra referentie lijnen kunnen toevoegen}
 \item{je zal een beperkt aantal maal op je laatste handelingen kunnen terugkeren}
 \item{de opgehaalde punten zullen gecached worden en enkel indien vereist zal via AJAX nieuwe punten opgehaald worden}
-\end{itemize}
+\end{itemize_compact}
 
 
 %
