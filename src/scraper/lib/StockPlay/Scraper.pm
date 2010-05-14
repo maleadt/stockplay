@@ -39,7 +39,7 @@ use strict;
 use warnings;
 
 # Constants
-my $PLUGIN_MAX_AGE = 3600*24*7;
+my $PLUGIN_MAX_AGE = 3600*24*14;
 my $MINDELAY = 60;
 
 
@@ -136,7 +136,7 @@ sub _build_plugins {
 				$self->logger->debug("processing indexes");
 				my @s_indexes = $self->factory->getIndexes($exchange);
 				foreach my $index (@{$exchange->indexes}) {
-					unless (grep { $_->name eq $index->name } @s_indexes) {
+					unless (grep { $_->isin eq $index->isin } @s_indexes) {
 						$self->factory->createIndex($exchange, $index);
 						push(@s_indexes, $index);
 					}
