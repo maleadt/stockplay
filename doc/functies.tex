@@ -41,3 +41,38 @@
 	\hline
 	\end{tabular}
 }
+
+% Functiedefinities voor logboek handling
+\usepackage{ifthen}
+\newcommand{\lbdate}{}
+\newcommand{\lbsetdate}[1]{
+  \gdef\lbdate{#1}
+}
+\newcommand{\lbstart}[1] {
+	\section{#1}
+	\lbsetdate{}
+}
+\newcommand{\lbentry}[5] {
+	\ifthenelse{\equal{\lbdate}{#1}}
+	{
+	}
+	{
+		\ifthenelse{\equal{\lbdate}{}}{}{
+			& & & \\ \hline % TODO: workaround, zou niet nodig moeten zijn
+			\end{tabular}
+		}
+		\subsection{#1}
+		\begin{tabular}{|r r r p{8cm}|}
+		\hline
+		\textsc{Begin} & \textsc{Einde} & \textsc{Duur} & \textsc{Beschrijving} \\
+		\hline
+	}
+	\lbsetdate{#1}
+	#2 & #3 & #4 & #5 \\
+	%DATA & DATA2 & DATA3 & DATA4 \\
+}
+\newcommand{\lbstop}[1] {
+	& & & \\ \hline % TODO: consistentie fix, zie hierboven
+	\end{tabular}
+	% totaal aantal uren
+}
