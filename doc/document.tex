@@ -44,7 +44,8 @@ Laurens VAN ACKER\\
 Thijs WALCARIUS
 }
 
-% Pagina maken
+% Inhoudstabel maken en document starten
+\setlength\cftpartnumwidth{2em}
 \begin{document}
 \maketitle
 \pagenumbering{roman}
@@ -62,22 +63,27 @@ StockPlay is een spel waarmee beleggen op de beurs wordt gesimuleerd. De deelnem
 
 % Analyse
 \part{Analyse}
+\label{pt:analyse}
 \input{analyse.tex}
 
 % Ontwerp
 \part{Ontwerp}
+\label{pt:ontwerp}
 \input{ontwerp.tex}
 
 % Realisatie
 \part{Realisatie}
+\label{pt:realisatie}
 \input{realisatie.tex}
 
 % Invoering
 \part{Invoering}
+\label{pt:invoering}
 \input{invoering.tex}
 
 % Handleiding
 \part{Handleiding}
+\label{pt:handleiding}
 \input{handleiding.tex}
 
 %
@@ -85,6 +91,7 @@ StockPlay is een spel waarmee beleggen op de beurs wordt gesimuleerd. De deelnem
 %
 
 \part{Bijlagen}
+\label{pt:bijlagen}
 \appendix
 
 % XML-RPC
