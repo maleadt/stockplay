@@ -174,8 +174,9 @@ public class UserHandler extends MethodClass {
         Filter filter = parser.parse("nickname == '" + nickname + "'");
 
         Collection<com.kapti.data.User> tUsers = tUserDAO.findByFilter(filter);
-        if (tUsers.size() == 0)
+        if (tUsers.size() == 0) {
             throw new ServiceException(ServiceException.Type.INVALID_CREDENTIALS);
+        }
         Iterator<User> uIterator = tUsers.iterator();
         User user = uIterator.next();
         if (user.checkPassword(password)) {
@@ -199,5 +200,14 @@ public class UserHandler extends MethodClass {
         String sessionid = new BigInteger(130, random).toString(32);
         SessionsHandler.getInstance().registerSession(sessionid, user);
         return sessionid;
+    }
+
+    private boolean ResetPassword(int id, String newpassword) throws StockPlayException {
+
+        GenericDAO<com.kapti.data.User, Integer> tUserDAO = getDAO().getUserDAO();
+
+        User u = tUserDAO.findById(id);
+        u.setPassword(newpassword);
+        return tUserDAO.update(u);
     }
 }
