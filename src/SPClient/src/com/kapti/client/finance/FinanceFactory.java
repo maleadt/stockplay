@@ -308,4 +308,16 @@ public class FinanceFactory {
         return result;
 
     }
+
+    public Quote getLatestQuoteFromIndex(Index index) throws StockPlayException {
+         Collection<Quote> quotes = getLatestQuoteByFilter("isin == '" + index.getISIN() + "'");
+         Iterator<Quote> it = quotes.iterator();
+
+         Quote quote = null;
+         if(it.hasNext())
+             quote = it.next();
+
+         return quote;
+     }
+
 }
