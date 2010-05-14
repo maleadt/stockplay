@@ -13,7 +13,7 @@ namespace StockPlay
         List<ISecurity> GetSecuritiesFromExchange(string id);
 
         //Indexes
-        //List<IIndex> GetIndexesByIsin(params string[] isin);
+        List<IIndex> GetIndexesByIsin(params string[] isin);
 	
 	    //Quotes
 	    IQuote GetLatestQuoteFromSecurity(string isin);
