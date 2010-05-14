@@ -61,7 +61,7 @@ sub _build_exchanges {
 	);
 	$self->_addSecurities($brussel, 'http://www.tijd.be/beurzen/euronext-brussel/continumarkt');
 	my $bel20 = StockPlay::Index->new(
-		name		=> "bel20",
+		name		=> "BEL20",
 		symbol		=> "BEL20",
 		isin		=> "BE0389555039",
 		private => {
@@ -84,7 +84,7 @@ sub _build_exchanges {
 	$self->_addSecurities($parijs, 'http://www.tijd.be/beurzen/euronext-parijs/frenchb');
 	$self->_addSecurities($parijs, 'http://www.tijd.be/beurzen/euronext-parijs/frenchc');
 	my $cac40 = StockPlay::Index->new(
-		name		=> "cac40",
+		name		=> "CAC40",
 		symbol		=> "PX1",
 		isin		=> "FR0003500008",
 		private => {
