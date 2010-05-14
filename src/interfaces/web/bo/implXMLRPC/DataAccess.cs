@@ -15,7 +15,6 @@ using log4net.Config;
 using System.Text;
 using StockPlay;
 using web.bo.implXMLRPC.handlers;
-using web.bo;
 
 namespace StockPlay.implXMLRPC
 {
