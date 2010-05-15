@@ -92,6 +92,11 @@ public class XmlRpcWriter {
 			writer.text( "" + ( (Integer) value ).intValue() );
 			writer.endTag(null, "i4");
 		}
+                else if( value instanceof Double ) {
+			writer.startTag( null, "double" );
+			writer.text( "" + ( (Double) value ).doubleValue() );
+			writer.endTag(null, "double");
+		}
 		else if( value instanceof Boolean ) {
 			writer.startTag( null, "boolean" );
 			writer.text( ( (Boolean) value ).booleanValue() ? "1" : "0" );
