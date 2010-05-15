@@ -37,28 +37,30 @@ De cash positie van een gebruiker kan niet zomaar aangepast worden, dit wordt oo
 
 Zoals vermeld bij het technisch ontwerp, gebruiken we het XML-RPC protocol als communicatiemiddel tussen de backend en zijn interfaces. Hiertoe moeten we de set aan functies vastleggen die een client kan uitvoeren, en de bijhorende signatuur documenteren.
 
-Aangezien XML-RPC geen ondersteuning biedt voor namespaces of andere vormen van functieorganisatie, hanteren we zelf een mechanisme om dit te bekomen: een methode-naam bestaat altijd uit twee delen, gescheiden door een punt. Het deel voor het scheidingsteken duidt het pakket aan, het deel erna de methode die we willen oproepen.
+Aangezien XML-RPC geen ondersteuning biedt voor namespaces of andere vormen van functieorganisatie, hanteren we zelf een mechanisme om dit te bekomen: een methode-naam bestaat altijd uit meerdere delen, gescheiden door een punt. De delen voor het scheidingsteken duiden de ``klasse'', het deel erna de methode die we willen oproepen.
 Zo delen we de backend op in de volgende drie primaire klassen:
-\begin{itemize}
-\item{System: functionaliteit voor beheer en de statusinformatie van het systeem.}
-\item{User: beheer van gebruikers en ophalen gebruikersinformatie.}
-\item{Finance: functionaliteit gerelateerd aan het beurswezen.}
-\end{itemize}
-Hogere-orde klassen zijn eventueel ook mogelijk (zoals \emph{System.Database}), maar niet verplicht. De semantiek is daarbij identiek aan primaire klassen, met een punt als scheidingsteken.
+\begin{itemize_compact}
+\item{\emph{System}: functionaliteit voor beheer en de statusinformatie van het systeem.}
+\item{\emph{User}: beheer van gebruikers en ophalen gebruikersinformatie.}
+\item{\emph{Finance}: functionaliteit gerelateerd aan het beurswezen.}
+\end{itemize_compact}
 
 \subsection{Algemene foutcodes}
 
-De XML-RPC specificatie biedt ook ondersteuning voor foutberichten, in de form van een bericht met een $<$fault$>$ tag. Die tag moet steeds twee $<$member$>$ tags bevatten, namelijk een foutcode $<$faultCode$>$ van het integer type, en een foutbericht $<$faultString$>$ van het string type. Elk van de klassen kan zo specifieke foutmeldingen vastleggen.
-Maar er zijn ook generieke foutmeldingen, die van toepassing zijn op alle klassen. Deze foutmeldingen, waarvan de foutcode in het bereik $[0, 100[$ valt, worden hieronder beschreven:
-\todo{De lijst van foutmeldingen staat er niet rechstreeks onder. -Dieter}
+De XML-RPC specificatie biedt ook ondersteuning voor foutberichten, in de form van een bericht met een $<$fault$>$ tag. Die tag moet steeds twee $<$member$>$ tags bevatten, namelijk een foutcode $<$faultCode$>$ van het integer type, en een foutbericht $<$faultString$>$ van het string type.
+
+De mogelijke foutberichten die de backend kan opwerpen, zijn ondergedeeld in verschillende klassen. Bij elke klasse valt de foutcode dan in een specifiek vooraf-gedefini\"eerd bereik, zodat client-software eenvoudig kan detecteren om welk soort fout het gaat. De exacte foutcode, eveneens op voorhand vastgelegd, bepaald vervolgens exacat welke fout er opgeworpen is. Zie tabel \ref{tbl:real:xmlrpc:fouten} voor de mogelijke fouten.
+Bij elk type fout gaat zo een standaard foutbericht gepaard, maar de backend-ontwikkelaar kan die eventueel vervangen door een meer specifieke foutmelding.
+
+Om meer informatie over een specifieke fout te bekomen, moet naar de log van de backend gekeken worden. Daar wordt telkens de exacte ``stacktrace'' vermeld, zodat de fout eenvoudig te verhelpen wordt. Een speciaal type fout tenslotte, is de ``internal exception''. Deze treedt op wanneer een exceptie onverwacht optrad, en dus niet in een correcte try-catch blok opgevangen werd.
 
 \begin{table}
 \begin{tabular}{| c p{5cm} p{7cm} |}
 	\hline
-	Foutcode & Foutbericht & Controle \\
+	Foutcode & Foutbericht & Opmerking \\
 	\hline
 	
-	0 & Internal Failure & Verifieer de status van de backend, de log kan hierbij helpen. \\
+	0 & Internal Failure & Een ``untrapped exception'', niet opgevangen door een correcte try-catch clause. \\
 	\hline
 	
 	$[1-10[$ & \emph{Subsystem failures.} & \\
@@ -66,10 +68,12 @@ Maar er zijn ook generieke foutmeldingen, die van toepassing zijn op alle klasse
 	2 & Scraper Failure & Er is een probleem met de scraper (onbeschikbaar, uitgevallen, ...), zie de log voor meer details. \\
 	\hline
 	
-	$[10-20[$ & \emph{Service issues.} & \\
+	$[10-20[$ & \emph{Service exceptions.} & \\
 	10 & Service Unavailable & De backend kan tijdelijk niet gebruikt worden (werkzaamheden, overloaded, ...). \\
-	11 & Unauthorized & Meld u aan vooraleer deze functie te gebruiken. \\
-	12 & Not Enough Information & Er is niet genoeg informatie om het object aan te maken \\
+	11 & Unauthorized & De huidige gebruiker is niet geautoriseerd om de functie in kwestie uit t voeren. \\
+	12 & Invalid Credentials & De poging om aan te melden is mislukt, wegens een verkeerde username-password combinatie. \\
+	13 & Session Corrupt & De meegeleverde sessie is niet geregistreerd in de backend (verlopen of corrupt). \\
+	14 & Not Enough Information & Er is niet genoeg informatie om het object aan te maken (meestal betekent dit dat er een veld in de meegeleverde struct ontbreekt). \\
 	\hline
 	
 	$[20-30[$ & \emph{Invocation issues.} & \\
@@ -84,28 +88,60 @@ Maar er zijn ook generieke foutmeldingen, die van toepassing zijn op alle klasse
 
 	$[30-40[$ & \emph{Filter issues.} & \\
 	31 & Filter Failure & Er is een probleem met de doorgegeven filter, controleer deze. \\
+	32 & Debug Failure & De backend is er niet in geslaagd een debug-AST te genereren van de filter, is de benodigde software ge\"installeerd? \\
+	33 & Filter Failure & De backend slaagde er niet in twee filters samen te smelten om een resultaatset-reductie te bekomen. \\
+	
 	\hline
 \end{tabular}
-\caption{Generieke foutcodes in het backend-protocol.}
+\caption{Mogelijke fouten binnen het backend-protocol.}
+\label{tbl:real:xmlrpc:fouten}
 \end{table}
 
 \subsection{Authenticatie en autorisatie}
 
 Aangezien het XML-RPC protocol gebruik maakt van het HTTP-protocol, kunnen we diens functionaliteit gebruiken om authenticatie te bekomen. Daartoe zullen we gebruik maken van \emph{basic authentication}, waarbij de client indien gevraagd een gebruikersnaam en wachtwoord naar de server doorstuurd. Normaal zou dit geen extra code teweegbrengen, en zouden we volledig op de authenticatiemogelijkheden van het HTTP protocol kunnen berusten.
 
-Deze denkpiste gaf echter enkele problemen. Vooreerst is het sterk onveilig aangezien het passwoord continu in (quasi) plaintext doorgestuurd wordt. Het maakt echter verfijnde autorisatie moeilijk, tenzij we voor elk authenticatie-niveau een aparte URL zouden voorzien. Daarom hebben we gekozen om gebruik te maken van een eigen authenticatie-laag, waarbij een XML-RPC functie gebruikt wordt om de gebruiker aan te melden (dit in tegenstelling tot het gebruik maken van de HTTP laag). Na aanmelding geeft de functie in kwestie een sessie-ID terug, die een sessie serverside linkt aan een specifieke gebruiker. Zo kunnen we, opnieuw binnenin de XML-RPC laag, controleren of een gebruiker wel correct aangemeld is, en heel dynamisch requests toelaten of weigeren. Dit is gebaseerd op een flexibel rechten-systeem, waarbij elke gebruiker in de database gelinkt wordt aan een rol die bepaalde rechten toekent.
+Deze denkpiste gaf echter enkele problemen. Vooreerst is het sterk onveilig aangezien het wachtwoord continu in (quasi) plaintext doorgestuurd wordt. Het maakt echter verfijnde autorisatie moeilijk, tenzij we voor elk authenticatie-niveau een aparte URL zouden voorzien. Daarom hebben we gekozen om gebruik te maken van een eigen authenticatie-laag, waarbij een XML-RPC functie gebruikt wordt om de gebruiker aan te melden (dit in tegenstelling tot het gebruik maken van de HTTP laag). Na aanmelding geeft de functie in kwestie een sessie-ID terug, die een sessie serverside linkt aan een specifieke gebruiker. Zo kunnen we, opnieuw binnenin de XML-RPC laag, controleren of een gebruiker wel correct aangemeld is, en heel dynamisch requests toelaten of weigeren. Dit is gebaseerd op een flexibel rechten-systeem, waarbij elke gebruiker in de database gelinkt wordt aan een rol die bepaalde rechten toekent.
 
 Om de veiligheid te verhogen gebruiken we verschillende technieken. Eerst en vooral is de sessie tijdelijk, en worden ongebruikte sessie-keys regelmatig geinvalideerd. Ook hebben we het moeilijk gemaakt om sessie-keys te genereren, door ze op een unieke manier te linken aan data die enkel de gebruiker zelf kent (zijn wachtwoord). Om het tenslotten ook moeilijk te maken om een sessie-key te linken aan een gebruiker, implementeren we in onze sessie-hash een variabele seed.
 
-Authenticatie en autorisatie gaat ook gepaard met een specifieke set aan mogelijke errormessages. Allemaal geklasseerd binnen de Service Exceptions, zijn de volgende subtypes mogelijk: ``invalid credentials'' wanneer het authenticeren mislukt is, ``unauthorized'' wanneer een gebruiker niet geautoriseerd is tot het gebruik van een bepaalde functie, en tenslotte ``session corrupt'' wanneer een gespecificeerde sessie ongeldig blijkt te zijn.
+Authenticatie en autorisatie gaat ook gepaard met een specifieke set aan mogelijke errormessages. Allemaal geklasseerd binnen de Service Exceptions, zijn de volgende subtypes mogelijk: ``Invalid Credentials'' wanneer het authenticeren mislukt is, ``Unauthorized'' wanneer een gebruiker niet geautoriseerd is tot het gebruik van een bepaalde functie, en tenslotte ``Session Corrupt'' wanneer een gespecificeerde sessie ongeldig blijkt te zijn (zie tabel \ref{tbl:real:xmlrpc:fouten}).
 
-Hoewel een administrator gebruikersprofielen (en bijhorende autorisatiebits) manueel kan aanpassen, onderscheiden we volgende categorie\"en:
+De mogelijke autorisatieniveau's zijn beschreven in tabel \ref{tbl:real:xmlrpc:autorisatie}. Hoewel een administrator deze bij gebruikers manueel kan aanpassen, onderscheiden we toch volgende categorie\"en:
 \begin{itemize_compact}
 \item{Gast}
 \item{Speler}
 \item{Administrator}
 \item{Scraper}
 \end{itemize_compact}
+
+\begin{table}
+\begin{tabular}{| c p{7cm} |}
+	\hline
+	Autorisatie-niveau & Beschrijving \\
+	\hline
+	
+	BACKEND_ADMIN & Administrator rechten voor methodes betreffende de backend. \\
+	DATABASE_ADMIN & Administrator rechten voor methodes betreffende de database. \\
+	SCRAPER_ADMIN & Administrator rechten voor methodes betreffende de scraper. \\
+	POINTS_ADMIN & Administrator rechten voor methodes betreffende het puntenbeheer. \\
+	TRANSACTION_ADMIN & Administrator rechten voor methodes betreffende het transactie-beheer. \\
+	
+	SECURITY_UPDATE & Toegang tot methodes die effecten updaten (toevoegen van quotes). \\
+	SECURITY_CREATE & Toegang tot methodes die nieuwe effecten aanmaken. \\
+	SECURITY_REMOVE & Toegang tot methodes die effecten verwijderen. \\
+	SECURITY_MODIFY & Toegang tot methodes die effecten wijzigen. \\
+	
+	USER_REMOVE & Toegang tot methodes die gebruikers verwijderen.
+	
+	LOGGEDIN & Standaard-recht voor ingelogde gebruikers.
+	NONE & Standaard recht voor iedereen (ook gasten).
+	
+	\hline
+\end{tabular}
+\caption{Autorisatieniveau's binnen het backend-protocol.}
+\label{tbl:real:xmlrpc:autorisatie}
+\end{table}
 
 \subsection{System-klasse}
 
@@ -119,7 +155,7 @@ Deze klasse biedt de client mogelijkheden om het systeem te beheren. Zoals het o
 		\item{0: maintenance-mode}
 		\item{1: geen problemen gemeld}
 		\end{itemize_compact} }
-	{ administrator-rechten }
+	{ BACKEND_ADMIN }
 
 \function{Backend.Stats}
 	{ backend-statistieken ophalen }
@@ -130,7 +166,7 @@ Deze klasse biedt de client mogelijkheden om het systeem te beheren. Zoals het o
 		\item{req: aantal verwerkte XML-RPC requests sinds de start}
 		\item{uptime: hoe lang de backend al draait}
 		\end{itemize_compact} }
-	{ administrator-rechten }
+	{ BACKEND_ADMIN }
 
 \function{Backend.Restart}
 	{ de backend opnieuw opstarten }
@@ -142,13 +178,14 @@ Deze klasse biedt de client mogelijkheden om het systeem te beheren. Zoals het o
 	{ de backend stoppen }
 	{ geen }
 	{ bool die indiceert of de actie succesvol was }
-	{ administrator-rechten }
+	{ BACKEND_ADMIN }
 
 \function{Backend.ClearCache}
 	{ de backend cache legen }
 	{ geen }
 	{ bool die indiceert of de actie succesvol was }
-	{ administrator-rechten }
+	{ BACKEND_ADMIN }
+	
 
 \function{Database.Status}
 	{ informatie van de database ophalen }
@@ -158,7 +195,7 @@ Deze klasse biedt de client mogelijkheden om het systeem te beheren. Zoals het o
 		\item{0: er kon geen verbinding naar de databank gelegd worden}
 		\item{1: succesvol verbonden met de database}
 		\end{itemize_compact} }
-	{ administrator-rechten benodigd}
+	{ DATABASE_ADMIN }
 
 \function{Database.Stats}
 	{ database-statistieken ophalen. Dit zijn de statistieken geleverd door de databank zelf, ze zijn dus niet beperkt tot acties ondernomen door de backend }
@@ -168,7 +205,8 @@ Deze klasse biedt de client mogelijkheden om het systeem te beheren. Zoals het o
 		\item{uptime: hoe lang de databank al draait}
 		\item{rate: aantal transacties per seconde}
 		\end{itemize_compact} }
-	{ administrator-rechten }
+	{ DATABASE_ADMIN }
+
 
 \function{Scraper.Status}
 	{ status van de scraper ophalen }
@@ -179,7 +217,7 @@ Deze klasse biedt de client mogelijkheden om het systeem te beheren. Zoals het o
 		\item{1: inactief}
 		\item{2: bezig met data-mining}
 		\end{itemize_compact} }
-	{ administrator-rechten }
+	{ SCRAPER_ADMIN }
 
 \function{Scraper.Stats}
 	{ scraper-statistieken ophalen }
@@ -196,24 +234,42 @@ Deze klasse biedt de client mogelijkheden om het systeem te beheren. Zoals het o
 		\item{delay: tijd tot de volgende plugin-uitvoering}
 		\item{memory: geheugengebruik}
 		\end{itemize_compact} }
-	{ administrator-rechten }
+	{ SCRAPER_ADMIN }
 
 \function{Scraper.Restart}
 	{ de scraper herstarten }
 	{ geen }
 	{ bool die indiceert of de actie succesvol was }
-	{ administrator-rechten }
+	{ SCRAPER_ADMIN }
 
 \function{Scraper.Stop}
 	{ de scraper permanent stilleggen }
 	{ geen }
 	{ bool die indiceert of de actie succesvol was }
-	{ administrator-rechten }
+	{ SCRAPER_ADMIN }
 
 
 \subsection{User-klasse}
 
 Hier vindt men de nodige methodes terug om gebruikers te beheren. Dit is echter niet beperkt tot de administrator: ook gebruikers zelf kunnen hun eigen profiel (in beperktere mate) beheren.
+
+\function{Hello}
+	{ verwijderen van een bestaande gebruiker }
+	{ een filter die gebruikers selecteert }
+	{ een boolean die aangeeft of de actie al dan niet gelukt is }
+	{ NONE }
+	
+\function{Validate}
+	{ verwijderen van een bestaande gebruiker }
+	{ een filter die gebruikers selecteert }
+	{ een boolean die aangeeft of de actie al dan niet gelukt is }
+	{ NONE }
+		
+\function{CreateSessionForUser}
+	{ verwijderen van een bestaande gebruiker }
+	{ een filter die gebruikers selecteert }
+	{ een boolean die aangeeft of de actie al dan niet gelukt is }
+	{ BACKEND_ADMIN }
 
 \function{List}
 	{ lijst met publieke informatie opvragen van de gebruikers }
@@ -230,7 +286,7 @@ Hier vindt men de nodige methodes terug om gebruikers te beheren. Dit is echter 
 		\item{regdate: datum van registratie}
 		\item{points: aantal behaalde punten}
 		\end{itemize_compact} }
-	{ geen benodigd }
+	{ NONE }
 
 \function{Details}
 	{ lijst met publieke informatie opvragen van een gebruiker }
@@ -247,7 +303,13 @@ Hier vindt men de nodige methodes terug om gebruikers te beheren. Dit is echter 
 		\item{cash: huidige cashpositie}
 		\item{startkapitaal: start kapitaal}
 		\end{itemize_compact} }
-	{ administrator-rechten of identificatie als de gebruiker beschreven is in het 'id' veld van de filter }
+	{ BACKEND_ADMIN }
+	
+\function{Details}
+	{ publieke informatie opvragen van de gebruiker zelf }
+	{ geen }
+	{ idem als Details aanroep met een filter }
+	{ LOGGEDIN }
 
 \todo{specifieke foutcode genereren} 
 \function{Create}
@@ -257,7 +319,7 @@ Hier vindt men de nodige methodes terug om gebruikers te beheren. Dit is echter 
 		\item{}
 		\end{itemize_compact} }
 	{ id van de aangemaakte gebruiker }
-	{ administrator-rechten }
+	{ NONE }
 
 \function{Modify}
 	{ wijzigen van een bestaande gebruiker }
@@ -266,16 +328,29 @@ Hier vindt men de nodige methodes terug om gebruikers te beheren. Dit is echter 
 		\item{}
 		\end{itemize_compact} }
 	{ een boolean die aangeeft of de actie al dan niet gelukt is }
-	{ administrator-rechten of identificatie als de gebruiker beschreven is in het 'id' veld van de filter }
+	{ BACKEND_ADMIN }
+
+\function{Modify}
+	{ wijzigen van de gebruiker zelf }
+	{ geen }
+	{ idem als Modify aanroep met een filter }
+	{ BACKEND_ADMIN }
 
 \function{Remove}
 	{ verwijderen van een bestaande gebruiker }
 	{ een filter die gebruikers selecteert }
 	{ een boolean die aangeeft of de actie al dan niet gelukt is }
-	{ administrator-rechten }
+	{ USER_REMOVE }
+	
+\function{ResetPassword}
+	{ publieke informatie opvragen van de gebruiker zelf }
+	{ geen }
+	{ idem als Details aanroep met een filter }
+	{ NONE }
+
 
 \function{Portfolio.List}
-	{ basisinformatie van effecten in bezit opsommen (gebruik de functie Finance.Security.Details voor meer informatie) }
+	{ basisinformatie van effecten in bezit opsommen (gebruik vervolgens functie Finance.Security.Details voor meer informatie) }
 	{ een filter, met de volgende mogelijke sleutels:
 		\begin{itemize_compact}
 		\item{id: een gebruikers-id}
@@ -284,7 +359,7 @@ Hier vindt men de nodige methodes terug om gebruikers te beheren. Dit is echter 
 		\begin{itemize_compact}
 		\item{symbool: identificatiecode van het aandeel}
 		\end{itemize_compact} }
-	{ administrator-rechten of identificatie als de gebruiker beschreven is in het 'id' veld van de filter }
+	{ BACKEND_ADMIN, of LOGGEDIN (maar dan wordt de resultaatset gereduceerd tot effecten van de ingelogde gebruiker) }
 
 \todo{behoudt Orders.List ook uitgevoerde orders van een bepaald timeframe? - we hadden normaal gezegd dat we hier alle order tonen, ook de uitgevoerde. Het timeframe/resente orders zetten is dan kwestie van het zetten van de juiste filter en kan de client dan zelf bepalen. Kan je je hier in vinden? - Laur}
 \function{Order.List}
@@ -300,7 +375,7 @@ Hier vindt men de nodige methodes terug om gebruikers te beheren. Dit is echter 
 		\item{effect: symbool van het effect}
 		\item{aantal: het aantal effecten dat het order verhandelt}
 		\end{itemize_compact} }
-	{ administrator-rechten of identificatie als de gebruiker beschreven is in het 'id' veld van de filter }
+	{ BACKEND_ADMIN (moet ooit ORDER_ADMIN worden), of LOGGEDIN (maar dan wordt de resultaatset gereduceerd tot orders van de ingelogde gebruiker) }
 
 \todo{specifieke foutmelding als order aanmaken faalde}
 \function{Order.Create}
@@ -313,7 +388,7 @@ Hier vindt men de nodige methodes terug om gebruikers te beheren. Dit is echter 
 		\item{aantal: het aantal effecten dat het order verhandelt}
 		\end{itemize_compact} }
 	{ id van het aangemaakte order }
-	{ administrator-rechten of identificatie als de gebruiker beschreven is in het 'id' veld van de filter }
+	{ BACKEND_ADMIN (moet ooit ORDER_ADMIN worden), of LOGGEDIN (indien het 'id' veld in de ingegeven struct overeenstemp met die van de ingelogde gebruiker) }
 
 \function{Order.Cancel}
 	{ een bestaande order annuleren }
@@ -323,7 +398,17 @@ Hier vindt men de nodige methodes terug om gebruikers te beheren. Dit is echter 
 		\item{order: order-id}
 		\end{itemize_compact} }
 	{ geen }
-	{ administrator-rechten of identificatie als de gebruiker beschreven is in het 'id' veld van de filter }
+	{ BACKEND_ADMIN (moet ooit ORDER_ADMIN worden), of LOGGEDIN (maar dan wordt de set waarop de functie inwerkt gereduceerd tot orders van de ingelogde gebruiker) }
+
+\function{Order.Modify}
+	{ een bestaande order wijzigen }
+	{ een filter die orders selecteert, en een struct met de te-wijzigen orderinformatie:
+		\begin{itemize_compact}
+		\item{}
+		\end{itemize_compact} }
+	{ geen }
+	{ BACKEND_ADMIN (moet ooit ORDER_ADMIN worden), of LOGGEDIN (maar dan wordt de set waarop de functie inwerkt gereduceerd tot orders van de ingelogde gebruiker) }
+
 
 \function{Transaction.List}
 	{ lijst van uitgevoerde transacties weergeven }
@@ -341,7 +426,56 @@ Hier vindt men de nodige methodes terug om gebruikers te beheren. Dit is echter 
 		\item{type: soort effect}
 		\item{name: naam van het effect}
 		\end{itemize_compact} }
-	{ administrator-rechten of identificatie als de gebruiker beschreven is in het 'id' veld van de filter }
+	{ TRANSACTION_ADMIN, of LOGGEDIN (maar dan wordt de set waarop de functie inwerkt gereduceerd tot orders van de ingelogde gebruiker) }
+
+\function{Transaction.Create}
+	{ nieuwe transactie aanmaken }
+	{ struct met transactie-details:
+		\begin{itemize_compact}
+		\item{...}
+		\end{itemize_compact} }
+	{ id van de aangemaakte transactie }
+	{ TRANSACTION_ADMIN }
+
+\function{Transaction.Modify}
+	{ nieuwe transactie aanmaken }
+	{ een filter die transacties selecteert, en een struct met de te-wijzigen transactieinformatie:
+		\begin{itemize_compact}
+		\item{}
+		\end{itemize_compact} }
+	{ id van de aangemaakte transactie }
+	{ TRANSACTION_ADMIN }
+	
+\function{Points.List}
+	{ lijst van transactie-punten ophalen }
+	{ een filter, met de volgende mogelijke sleutels:
+		\begin{itemize_compact}
+		\item{id: gebruikers-id}
+		\end{itemize_compact} }
+	{ array van structs die transactiepunt-informatie bevatten:
+		\begin{itemize_compact}
+		\item{...}
+		\end{itemize_compact} }
+	{ POINTS_ADMIN, of LOGGEDIN (maar dan wordt de set waarop de functie inwerkt gereduceerd tot orders van de ingelogde gebruiker) }
+
+\function{Points.CreateTransaction}
+	{ nieuwe transactie aanmaken }
+	{ struct met transactie-details:
+		\begin{itemize_compact}
+		\item{...}
+		\end{itemize_compact} }
+	{ id van de aangemaakte transactie }
+	{ TRANSACTION_ADMIN }
+
+\function{Points.CreateTransactionify}
+	{ nieuwe transactie aanmaken }
+	{ een filter die transacties selecteert, en een struct met de te-wijzigen transactieinformatie:
+		\begin{itemize_compact}
+		\item{}
+		\end{itemize_compact} }
+	{ id van de aangemaakte transactie }
+	{ TRANSACTION_ADMIN }
+
 
 \subsection{Finance-klasse}
 
@@ -359,7 +493,7 @@ Tenslotte zijn er nog de methodes gerelateerd met het effectieve beurswezen, die
 		\item{discription: een langere beschrijving van de beurs}
 		\item{location: locatie van de beurs zich bevindt}
 		\end{itemize_compact} }
-	{ gebruikers-rechten }
+	{ NONE }
 
 \function{Exchange.Modify}
 	{ informatie van een beurs wijzigen }
@@ -369,7 +503,7 @@ Tenslotte zijn er nog de methodes gerelateerd met het effectieve beurswezen, die
 		\item{location}
 		\end{itemize_compact} }
 	{ niks }
-	{ administrator-rechten of scraper-rechten }
+	{ SECURITY_MODIFY }
 
 \function{Exchange.Create}
 	{ een beurs toevoegen }
@@ -379,7 +513,7 @@ Tenslotte zijn er nog de methodes gerelateerd met het effectieve beurswezen, die
 		\item{location}
 		\end{itemize_compact} }
 	{ niks }
-	{ administrator-rechten of scraper-rechten }
+	{ SECURITY_CREATE }
 
 \function{Index.List}
 	{ lijst van indexen opvragen }
@@ -393,7 +527,7 @@ Tenslotte zijn er nog de methodes gerelateerd met het effectieve beurswezen, die
 		\item{exchange: identificatie-symbool van de beurs waarop de index zich bevindt}
 		\item{description}
 		\end{itemize_compact} }
-	{ gebruikers-rechten }
+	{ NONE }
 
 \function{Index.Modify}
 	{ informatie van een index wijzigen }
@@ -402,7 +536,7 @@ Tenslotte zijn er nog de methodes gerelateerd met het effectieve beurswezen, die
 		\item{description}
 		\end{itemize_compact} }
 	{ niks }
-	{ administrator-rechten of scraper-rechten }
+	{ SECURITY_MODIFY }
 
 \function{Index.Create}
 	{ een index toevoegen }
@@ -411,7 +545,7 @@ Tenslotte zijn er nog de methodes gerelateerd met het effectieve beurswezen, die
 		\item{description}
 		\end{itemize_compact} }
 	{ niks }
-	{ administrator-rechten of scraper-rechten }
+	{ SECURITY_CREATE }
 
 \function{Security.List}
 	{ lijst met oppervlakkige informatie van effecten opvragen }
@@ -427,7 +561,7 @@ Tenslotte zijn er nog de methodes gerelateerd met het effectieve beurswezen, die
 		\item{koers: de huidige koers}
 		\item{flags: de gezette vlaggen}
 		\end{itemize_compact} }
-	{ gebruikers-rechten }
+	{ NONE }
 
 \function{Security.Modify}
 	{ informatie van een effect wijzigen }
@@ -436,7 +570,7 @@ Tenslotte zijn er nog de methodes gerelateerd met het effectieve beurswezen, die
 		\item{...}
 		\end{itemize_compact} }
 	{ aantal aangepaste effecten }
-	{ administrator-rechten of scraper-rechten }
+	{ SECURITY_MODIFY }
 
 \function{Security.Create}
 	{ een effect toevoegen }
@@ -445,13 +579,13 @@ Tenslotte zijn er nog de methodes gerelateerd met het effectieve beurswezen, die
 		\item{...}
 		\end{itemize_compact} }
 	{ niks }
-	{ administrator-rechten of scraper-rechten }
+	{ SECURITY_CREATE }
 	
-\function{Security.Delete}
-{ een effect verwijderen }
-{ een filter }
-{ aantal verwijderde effecten }
-{ administrator-rechten of scraper-rechten }
+\function{Security.Remove}
+	{ een effect verwijderen }
+	{ een filter }
+	{ aantal verwijderde effecten }
+	{ SECURITY_REMOVE }
 
 \function{Security.Details}
 	{ defail-informatie van een effect opvragen }
@@ -462,19 +596,10 @@ Tenslotte zijn er nog de methodes gerelateerd met het effectieve beurswezen, die
 		\item{buyprice: aankoopprijs}
 		\item{saleprice: verkoopprijs}
 		\end{itemize_compact} }
-	{ gebruikers-rechten }
-
-\function{Security.Flag}
-	{ vlaggen van een effect wijzigen }
-	{ het type vlag, de instelling, en een filter met de volgende mogelijke sleutels:
-		\begin{itemize_compact}
-		\item{}
-		\end{itemize_compact} }
-	{ niks }
-	{ administrator-rechten }
+	{ NONE }
 
 \function{Security.Update}
-	{ nieuwe quote aan een security toevoegen (of updaten) }
+	{ nieuwe quote aan een security toevoegen }
 	{ een struct dat een quote voorstelt, met de volgende inhoud:
 		\begin{itemize_compact}
 		\item{security: id van het security dat geüpdatet moet worden}
@@ -487,13 +612,17 @@ Tenslotte zijn er nog de methodes gerelateerd met het effectieve beurswezen, die
 		\item{high: hoogterecord van het aandeel}
 		\end{itemize_compact} }
 	{ niks }
-	{ scraper-rechten }
+	{ SECURITY_UPDATE }
 
-De mogelijke vlaggen zijn:
-\begin{itemize_compact}
-\item{1: kunnen gebruikers het effect zien}
-\item{2: kunnen gebruikers het effect aankopen (impliceert flag 1)}
-\end{itemize_compact}
+\function{Security.UpdateBulk}
+	{ reeks van nieuwe quotes toevoegen }
+	{ vector van structs die voldoen aan de signatuur van Security.Update }
+	{ niks }
+	{ SECURITY_UPDATE }
+
+\todo{.Quote functies}
+
+\todo{.Index functies}
 
 
 %
