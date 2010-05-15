@@ -1,0 +1,80 @@
+\chapter{Ontwikkelingsevolutie}
+
+\section{Planning}
+
+Door de strikte timing van het project met zijn verschillende iteraties kon er niet veel 
+
+\section{Taakverdeling}
+De grote omvang van het project zorgde ervoor dat al snel iedereen zich begon toe te leggen op bepaalde domeinen van het project, en dit met uitzondering van één onderdeel: de grote gemene deler van het project, de backend.
+
+\begin{itemize}
+	\item \b{Tim Besard: }
+	\begin{itemize}
+		\item Live beurskoersen-scraper
+		\item Historische beurskoersenscraper
+		\item Implementatie van XML-RPC-backend
+	\end{itemize}
+	
+	
+	
+	\item \b{Dieter Deforce: } 
+		\begin{itemize}
+			\item ADO.NET-interface met de backend\footnote{Het gebruik van ADO.NET was een vereiste van het project, en moest worden gedemonstreerd. De ADO.NET-interface werd na de demo uit het project gehaald}
+			\item De XML-RPC.NET-client die instaat voor de communicatie met de backend voor applicaties op het .NET-platform
+			\item De ASP.NET-website
+			\item De puntenmanager, die spelers op gezette tijden evalueert en punten toekent
+			\item Toevoegen functionaliteit in de backend
+		\end {itemize}
+		
+	\item \b{Laurens Van Acker: }
+	 \begin{itemize}
+	  \item Javascript-library ontwikkelen om dynamische grafieken weer te geven
+	  \item Grafisch ontwerp website
+	 	\item Transactiemanager: uitbouw structuur, verwerking van de geavanceerde orders.
+	 	\item Filtering: toevoegen van extra functionaliteit
+	 	\item Toevoegen functionaliteit in de backend
+	 \end{itemize}
+	 
+	 \item \b{Thijs Walcarius: }
+	 \begin{itemize}
+	 	\item Instellen van Oracle-database, ontwerp triggers
+	 	\item Java Administratieclient
+	 	\item Java ME mobiele client
+	 	\item Rudimentaire versie transactiemanager
+	 \end{itemize}
+\end{itemize}
+
+\chapter{Overzicht inhoud}
+Het project kan worden opgedeeld in 2 grote delen: een backend die instaat voor het beheer van alle data in het spel, en een heleboel modules die zich op deze backend enten en de data manipuleren.
+
+\section{Backend}
+De backend is het enige deel van dit project dat in rechtstreeks contact staat met de database. Het bepaalt wie welke informatie kan opvragen aan de hand van een uitgebreid authorisatiemechanisme, en laat toe om op een gebruiksvriendelijke manier informatie op te vragen en te manipuleren.
+Om de overhead door deze backend zo licht mogelijk te houden, werd er gekozen voor een zo licht mogelijk protocol: XML-RPC. Dit laat toe om een grote verscheidenheid aan modules te laten communiceren met de backend: van een volwaardige ASP.NET-website, over een scrapermodule in Perl, tot een eenvoudige applet in Java ME: het protocol is in staat om aan de behoeften van elke module te voldoen.
+\subsection{Filtering}
+Om elke client toe te laten om gerichte aanvragen te maken, was er nood aan een manier waarop specifieke objecten opgevraagd konden worden. Daarom werd ervoor gekozen om een eigen filtermechanisme te schrijven.
+
+\section{Website}
+Op het website-gedeelte van dit project kunnen spelers deelnemen aan het StockPlay-spel. Hier kunnen ze de effecten die in dit spel zitten bekijken, orders aanmaken en hun portefolio beheren.
+
+\section{Administratie desktopclient}
+Er werd bij dit project voor gekozen om de component met Java Swing in te vullen als administratieclient voor het project. Bij dit administratieprogramma krijgt een beheerder een overzicht over de status van de verschillende componenten. De beheerder kan ook de aanwezige effecten en gebruikers opvragen, en deze desgewenst aanmaken, wijzigen of verwijderen.
+
+\section{Beurskoersen-scraper}
+Het is evident dat een beursspel zonder live beurskoersen niet veel voorstelt.. De scraper is in dit project dan ook een van de meest vitale delen: de scraper haalt live koersinformatie van alle effecten uit het spel uit de AJAX-feed van de krant "De Tijd", en voegt deze continue toe aan het spel. De scraper is zodanig opgezet dat ze volledig modulair werkt, en extra bronnen kan aanspreken om bijkomende beursinformatie op te halen (bijvoorbeeld een tweede feed).
+\subsection{Historische beurskoersen-scraper}
+Er was ook nood aan meer extensieve informatie voor elk effect. Bijvoorbeeld om onze AI-speler goeie inschattingen te kunnen laten maken, alsook om voldoende informatie te kunnen tonen aan onze spelers in de grafieken, was er nood aan historische beurskoersen. Daarom werd ook een scraper gemaakt die op de website van Euronext de historische data ophaalde.
+
+\section{AI-speler}
+Om ook in de beginfase de eerste spelers van genoeg concurrentie te voorzien, werd er ook een AI-speler ontwikkeld. Deze AI-speler gebruikt een genetisch algoritme om zijn orders te bepalen. Door te variëren in de aangeboden parameters aan elke AI-instantie kunnen gemakkelijk verschillende AI-spelers worden aangemaakt. Dit laat toe om op een eenvoudige wijze het spel te voorzien van genoeg spelers om het ook voor de eerste menselijke spelers direct interessant te maken, en te houden natuurlijk!
+
+\section{Mobiele spelclient}
+Om aan te tonen dat onze keuze voor het XML-RPC protocol ons veel mogelijkheden bood, werd er ook een client ontwikkeld in de vorm van een Java ME-applet. Java ME bevat slechts zeer rudimentaire functionaliteit, maar toch was ook daarvoor een XML-RPC-client beschikbaar.
+Met deze client kan een speler zijn portfolio en zijn huidige orders opvragen. De client staat ook enkele rudimentaire bewerkingen toe zoals het cancellen van een nog niet uitgevoerd order, alsook het aanmaken van een nieuw order.
+
+\section{Transactiemanager}
+Spelers kunnen op de website orders aanmaken om een effect te kopen/verkopen, en dit wanneer het aan bepaalde voorwaarden voldoet (zie hoofdstuk \ref{chap:geavanceerde_orders}). De uitvoering van een order is echter een aparte taak: in het echte leven wordt een order doorgestuurd naar de beurs, en pas als alle voorwaarden voor de order voldaan zijn. Dit betekent dus dat aan alle technische voorwaarden is voldaan, en dat er een tegenpartij is die het effect wil kopen of verkopen tegen de aangegeven prijs.
+
+In onze applicatie gebeurt het verwerken van de orders en het omzetten naar transacties door een extra module die deze taak van de beurs simuleert: de transactiemanager. Deze module zal 1 keer per minuut alle actieve orders overlopen, en degene waar alle voorwaarden van voldaan zijn worden omgezet in transacties.
+
+\section{Puntenmanager}
+Deze applicatie zal op gezette tijden (dit door middel van een cronjob) alle spelers in het spel evalueren en op basis van hun prestaties over een bepaalde periode (dag, week, maand, ...) punten toekennen. Met deze punten is het mogelijk om een klassement op te stellen van de spelers in het spel. Zo kan elke speler in het spel, van beginner tot de meest gevorderde speler, zich telkens bepaalde doelen stellen (bijvoorbeeld: eerste in het weekklassement worden), en blijft het spel voor iedereen een haalbare kaart.
