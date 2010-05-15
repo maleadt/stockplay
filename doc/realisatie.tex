@@ -55,7 +55,7 @@ Bij elk type fout gaat zo een standaard foutbericht gepaard, maar de backend-ont
 Om meer informatie over een specifieke fout te bekomen, moet naar de log van de backend gekeken worden. Daar wordt telkens de exacte ``stacktrace'' vermeld, zodat de fout eenvoudig te verhelpen wordt. Een speciaal type fout tenslotte, is de ``internal exception''. Deze treedt op wanneer een exceptie onverwacht optrad, en dus niet in een correcte try-catch blok opgevangen werd.
 
 \begin{table}
-\begin{tabular}{| c p{5cm} p{7cm} |}
+\begin{tabular}{| c p{4cm} p{7cm} |}
 	\hline
 	Foutcode & Foutbericht & Opmerking \\
 	\hline
@@ -143,9 +143,11 @@ De mogelijke autorisatieniveau's zijn beschreven in tabel \ref{tbl:real:xmlrpc:a
 \label{tbl:real:xmlrpc:autorisatie}
 \end{table}
 
-\subsection{System-klasse}
+\subsection{System klasse}
 
 Deze klasse biedt de client mogelijkheden om het systeem te beheren. Zoals het ophalen van informatie, wijzigen van configuraties, en (her)starten of stoppen van bepaalde subsystemen.
+
+\subsubsection{Backend subklasse}
 
 \function{Backend.Status}
 	{ status van de backend ophalen }
@@ -153,7 +155,7 @@ Deze klasse biedt de client mogelijkheden om het systeem te beheren. Zoals het o
 	{ integer die de status beschrijft:
 		\begin{itemize_compact}
 		\item{0: maintenance-mode}
-		\item{1: geen problemen gemeld}
+		\item{1: functioneert normaal}
 		\end{itemize_compact} }
 	{ BACKEND\_ADMIN }
 
@@ -163,18 +165,18 @@ Deze klasse biedt de client mogelijkheden om het systeem te beheren. Zoals het o
 	{ struct met statistieken:
 		\begin{itemize_compact}
 		\item{users: aantal gebruikers online}
-		\item{req: aantal verwerkte XML-RPC requests sinds de start}
+		\item{req: aantal verwerkte XML-RPC requests sinds de start van de backend}
 		\item{uptime: hoe lang de backend al draait}
 		\end{itemize_compact} }
 	{ BACKEND\_ADMIN }
 
-\function{Backend.Restart}
+\function{Backend.Restart (NIET GE\"IMPLEMENTEERD)}
 	{ de backend opnieuw opstarten }
 	{ geen }
 	{ bool die indiceert of de actie succesvol was }
-	{ administrator-rechten }
+	{ BACKEND\_ADMIN }
 
-\function{Backend.Stop}
+\function{Backend.Stop (NIET GE\"IMPLEMENTEERD)}
 	{ de backend stoppen }
 	{ geen }
 	{ bool die indiceert of de actie succesvol was }
@@ -185,7 +187,9 @@ Deze klasse biedt de client mogelijkheden om het systeem te beheren. Zoals het o
 	{ geen }
 	{ bool die indiceert of de actie succesvol was }
 	{ BACKEND\_ADMIN }
-	
+
+
+\subsubsection{Database subklasse}
 
 \function{Database.Status}
 	{ informatie van de database ophalen }
@@ -208,7 +212,9 @@ Deze klasse biedt de client mogelijkheden om het systeem te beheren. Zoals het o
 	{ DATABASE\_ADMIN }
 
 
-\function{Scraper.Status}
+\subsubsection{Scraper subklasse}
+
+\function{Scraper.Status (NIET GE\"IMPLEMENTEERD)}
 	{ status van de scraper ophalen }
 	{ geen }
 	{ integer die status beschrijft:
@@ -219,7 +225,7 @@ Deze klasse biedt de client mogelijkheden om het systeem te beheren. Zoals het o
 		\end{itemize_compact} }
 	{ SCRAPER\_ADMIN }
 
-\function{Scraper.Stats}
+\function{Scraper.Stats (NIET GE\"IMPLEMENTEERD)}
 	{ scraper-statistieken ophalen }
 	{ geen }
 	{ struct met statistieken:
@@ -236,87 +242,102 @@ Deze klasse biedt de client mogelijkheden om het systeem te beheren. Zoals het o
 		\end{itemize_compact} }
 	{ SCRAPER\_ADMIN }
 
-\function{Scraper.Restart}
+\function{Scraper.Restart (NIET GE\"IMPLEMENTEERD)}
 	{ de scraper herstarten }
 	{ geen }
 	{ bool die indiceert of de actie succesvol was }
 	{ SCRAPER\_ADMIN }
 
-\function{Scraper.Stop}
+\function{Scraper.Stop (NIET GE\"IMPLEMENTEERD)}
 	{ de scraper permanent stilleggen }
 	{ geen }
 	{ bool die indiceert of de actie succesvol was }
 	{ SCRAPER\_ADMIN }
 
 
-\subsection{User-klasse}
+\subsection{User klasse}
 
 Hier vindt men de nodige methodes terug om gebruikers te beheren. Dit is echter niet beperkt tot de administrator: ook gebruikers zelf kunnen hun eigen profiel (in beperktere mate) beheren.
 
 \function{Hello}
-	{ verwijderen van een bestaande gebruiker }
-	{ een filter die gebruikers selecteert }
-	{ een boolean die aangeeft of de actie al dan niet gelukt is }
+	{ protocolcontrole uitvoeren }
+	{ de naam van de applicatie (string), en het nummer van de protocolimplementatie (int) }
+	{ een boolean die aangeeft of de actie al dan niet gelukt is, of een exceptie indien de vermelde protocolversie niet ondersteund wordt }
 	{ NONE }
 	
 \function{Validate}
-	{ verwijderen van een bestaande gebruiker }
-	{ een filter die gebruikers selecteert }
-	{ een boolean die aangeeft of de actie al dan niet gelukt is }
+	{ controleren van user credentials en genereren van een sessie-ID }
+	{ de gebruikersnaam (string) en wachtwoord (string) }
+	{ een sessie-ID voor verder gebruik, of een exceptie indien het aanmelden mislukt is }
 	{ NONE }
 		
 \function{CreateSessionForUser}
-	{ verwijderen van een bestaande gebruiker }
-	{ een filter die gebruikers selecteert }
-	{ een boolean die aangeeft of de actie al dan niet gelukt is }
+	{ manueel een sessie cre\"eren voor verder gebruik }
+	{ de user-id waarvoor een sessie moet gecre\"eerd worden }
+	{ een sessie-ID voor verder gebruik }
 	{ BACKEND\_ADMIN }
 
 \function{List}
 	{ lijst met publieke informatie opvragen van de gebruikers }
-	{ een filter, met de volgende mogelijke sleutels:
+	{ een filter om gebruikers te selecteren, met de volgende mogelijke sleutels:
 		\begin{itemize_compact}
+		\item{id: de ID van de gebruiker}
 		\item{nickname: gebruikersnaam}
-		\item{regdate: datum van registratie}
+		\item{firstname: de voornaam van de gebruiker}
+		\item{lastname: de achternaam van de gebruiker}
+		\item{rrn: het rijksregisternummer van de gebruiker}
+		\item{email: het e-mailadres van de gebruiker}
+		\item{regtime: datum van registratie}
+		\item{cash: de hoeveelheid cash die de gebruiker effectief bezit}
 		\item{points: aantal behaalde punten}
 		\end{itemize_compact} }
-	{ een lijst met structs:
+	{ een lijst met oppervlakkige gebruikersinformatie (in de vorm van een struct):
 		\begin{itemize_compact}
 		\item{id: gebruikers-id}
 		\item{nickname: gebruikersnaam}
+		\item{cash: de hoeveelheid cash die de gebruiker effectief bezit}
 		\item{regdate: datum van registratie}
+		\item{startamount: het kapitaal waarmee de gebruiker begonnen is}
 		\item{points: aantal behaalde punten}
+		\item{role: een verwijzing naar de rollen die de gebruiker beoefent}
 		\end{itemize_compact} }
 	{ NONE }
 
 \function{Details}
 	{ lijst met publieke informatie opvragen van een gebruiker }
-	{ een filter, met de volgende mogelijke sleutels:
-		\begin{itemize_compact}
-		\item{id: een gebruikers-id}
-		\end{itemize_compact} }
-	{ een lijst met structs:
-		\begin{itemize_compact}
-		\item{id: gebruikers-id}
-		\item{firstName: voornaam}
-		\item{lastName: achternaam}
-		\item{rrn: rijksregisternummer (nodig voor de eid authenticatie)}
-		\item{cash: huidige cashpositie}
-		\item{startkapitaal: start kapitaal}
-		\end{itemize_compact} }
+	{ een filter om gebruikers te selecteren, zie de List functie }
+	{ een lijst met gedetailleerde gebruikersinformatie (in de vorm van een struct):
+			\begin{itemize_compact}
+			\item{id: gebruikers-id}
+			\item{nickname: gebruikersnaam}
+			\item{firstname: de voornaam van de gebruiker}
+			\item{lastname: de achternaam van de gebruiker}
+			\item{email: het e-mailadres van de gebruiker}
+			\item{cash: de hoeveelheid cash die de gebruiker effectief bezit}
+			\item{regdate: datum van registratie}
+			\item{rrn: het rijksregisternummer van de gebruiker}
+			\item{startamount: het kapitaal waarmee de gebruiker begonnen is}
+			\item{points: aantal behaalde punten}
+			\item{role: een verwijzing naar de rollen die de gebruiker beoefent}
+			\end{itemize_compact} }
 	{ BACKEND\_ADMIN }
 	
 \function{Details}
 	{ publieke informatie opvragen van de gebruiker zelf }
-	{ geen }
+	{ geen (de filter wordt impliciet geconfigureerd op een selectie van details van de huidige gebruiker) }
 	{ idem als Details aanroep met een filter }
 	{ LOGGEDIN }
 
-\todo{specifieke foutcode genereren} 
 \function{Create}
 	{ aanmaken van een nieuwe gebruiker }
 	{ struct met de gebruikersinformatie:
 		\begin{itemize_compact}
-		\item{}
+		\item{nickname: gebruikersnaam}
+		\item{firstname: de voornaam van de gebruiker}
+		\item{lastname: de achternaam van de gebruiker}
+		\item{email: het e-mailadres van de gebruiker}
+		\item{rrn: het rijksregisternummer van de gebruiker}
+		\item{role: een verwijzing naar de rollen die de gebruiker beoefent}
 		\end{itemize_compact} }
 	{ id van de aangemaakte gebruiker }
 	{ NONE }
@@ -325,29 +346,36 @@ Hier vindt men de nodige methodes terug om gebruikers te beheren. Dit is echter 
 	{ wijzigen van een bestaande gebruiker }
 	{ een filter die gebruikers selecteert, en een struct met de te-wijzigen gebruikersinformatie:
 		\begin{itemize_compact}
-		\item{}
+			\item{nickname: gebruikersnaam}
+			\item{firstname: de voornaam van de gebruiker}
+			\item{lastname: de achternaam van de gebruiker}
+			\item{email: het e-mailadres van de gebruiker}
+			\item{rrn: het rijksregisternummer van de gebruiker}
+			\item{role: een verwijzing naar de rollen die de gebruiker beoefent}
 		\end{itemize_compact} }
 	{ een boolean die aangeeft of de actie al dan niet gelukt is }
 	{ BACKEND\_ADMIN }
 
 \function{Modify}
 	{ wijzigen van de gebruiker zelf }
-	{ geen }
+	{ idem als Modify aanroep met een filter, maar zonder een filter (die impliciet geconfigureerd wordt zodat de wijziging enkel van toepassing is op de huidige gebruiker) }
 	{ idem als Modify aanroep met een filter }
-	{ BACKEND\_ADMIN }
+	{ LOGGEDIN }
 
 \function{Remove}
 	{ verwijderen van een bestaande gebruiker }
-	{ een filter die gebruikers selecteert }
+	{ een filter die gebruikers selecteert, zie de List aanroep }
 	{ een boolean die aangeeft of de actie al dan niet gelukt is }
 	{ USER\_REMOVE }
 	
 \function{ResetPassword}
 	{ publieke informatie opvragen van de gebruiker zelf }
-	{ geen }
+	{ de gebruikersnaam (string), en het nieuwe wachtwoord (string) }
 	{ idem als Details aanroep met een filter }
-	{ NONE }
+	{ NONE (wegens tijdsgebrek, zou in een later stadium strikter gecontroleerd worden) }
 
+
+\subsubsection{Portfolio subklasse}
 
 \function{Portfolio.List}
 	{ basisinformatie van effecten in bezit opsommen (gebruik vervolgens functie Finance.Security.Details voor meer informatie) }
@@ -357,150 +385,229 @@ Hier vindt men de nodige methodes terug om gebruikers te beheren. Dit is echter 
 		\end{itemize_compact} }
 	{ array van structs met basisinformatie van de effecten:
 		\begin{itemize_compact}
-		\item{symbool: identificatiecode van het aandeel}
+		\item{isin: identificatiecode van het aandeel}
+		\item{amount: het aantal aandelen in bezit van de gebruiker}
+		\item{user: het ID van de gebruiker in kwestie}
 		\end{itemize_compact} }
-	{ BACKEND\_ADMIN, of LOGGEDIN (maar dan wordt de resultaatset gereduceerd tot effecten van de ingelogde gebruiker) }
+	{ BACKEND\_ADMIN, of LOGGEDIN (maar dan wordt de resultaatset gereduceerd tot portfolio van de ingelogde gebruiker) }
+
+\function{Portfolio.Create}
+	{ een nieuw effect toevoegen aan de portfolio van een gebruiker (praktisch wordt dit meestal gerealiseerd met triggers) }
+	{ een struct met de volgende sleutels:
+		\begin{itemize_compact}
+		\item{isin: identificatiecode van het aandeel}
+		\item{amount: het aantal aandelen in bezit van de gebruiker}
+		\item{user: het ID van de gebruiker in kwestie}
+		\end{itemize_compact} }
+	{ een boolean die aangeeft of de actie al dan niet gelukt is }
+	{ TRANSACTION\_ADMIN }
+
+
+\subsubsection{Order subklasse}
 
 \todo{behoudt Orders.List ook uitgevoerde orders van een bepaald timeframe? - we hadden normaal gezegd dat we hier alle order tonen, ook de uitgevoerde. Het timeframe/resente orders zetten is dan kwestie van het zetten van de juiste filter en kan de client dan zelf bepalen. Kan je je hier in vinden? - Laur}
 \function{Order.List}
 	{ wachtende orders bekijken }
 	{ een filter, met de volgende mogelijke sleutels:
 		\begin{itemize_compact}
-		\item{id: gebruikers-id}
+		\item{id: id van het order}
+		\item{userid: id van de gebruiker}
+		\item{isin: identificatiecode van het aandeel}
+		\item{amount: het aantal effecten dat het aandeel verhandelt}
+		\item{type: het type order}
+		\item{creationtime: het moment waarop het order aangemaakt is}
+		\item{expirationtime: het moment waarop het order vervalt}
+		\item{executiontime: het moment waarop het order uitgevoerd is}
+		\item{secondairylimit (sic): de secundaire limiet}
+		\item{status: de status van het order}
 		\end{itemize_compact} }
 	{ lijst van structs met order-informatie:
 		\begin{itemize_compact}
-		\item{id: id van order}
-		\item{type: aankoop of verkoop}
-		\item{effect: symbool van het effect}
-		\item{aantal: het aantal effecten dat het order verhandelt}
+		\item{id: id van het order}
+		\item{user: id van de gebruiker}
+		\item{type: het type order}
+		\item{isin: identificatiecode van het aandeel}
+		\item{amount: het aantal aandelen dat aangekocht worden}
+		\item{status: de status van het order}
+		\item{creationtime: het moment waarop het order aangemaakt is}
+		\item{expirationtime: het moment waarop het order vervalt}
+		\item{executiontime: het moment waarop het order uitgevoerd is}
+		\item{secondairylimit (sic): de secundaire limiet}
 		\end{itemize_compact} }
 	{ BACKEND\_ADMIN (moet ooit ORDER\_ADMIN worden), of LOGGEDIN (maar dan wordt de resultaatset gereduceerd tot orders van de ingelogde gebruiker) }
 
 \todo{specifieke foutmelding als order aanmaken faalde}
 \function{Order.Create}
 	{ een nieuw order aanmaken }
-	{ struct met orderdetails:
+	{ struct met orderdetails
 		\begin{itemize_compact}
-		\item{id: gebruikers-id}
-		\item{type: aankoop of verkoop}
-		\item{effect: symbool van het effect}
-		\item{aantal: het aantal effecten dat het order verhandelt}
+		\item{user: id van de gebruiker}
+		\item{isin: identificatiecode van het aandeel}
+		\item{type: het type order}
+		\item{amount: het aantal aandelen dat aangekocht worden}
+		\item{status: de status van het order}
+		\item{creationtime: het moment waarop het order aangemaakt is}
+		\item{expirationtime: het moment waarop het order vervalt}
+		\item{executiontime: het moment waarop het order uitgevoerd is}
+		\item{secondairylimit (sic): de secundaire limiet}
 		\end{itemize_compact} }
 	{ id van het aangemaakte order }
 	{ BACKEND\_ADMIN (moet ooit ORDER\_ADMIN worden), of LOGGEDIN (indien het 'id' veld in de ingegeven struct overeenstemp met die van de ingelogde gebruiker) }
 
 \function{Order.Cancel}
 	{ een bestaande order annuleren }
-	{ een filter, met de volgende mogelijjke sleutels:
-		\begin{itemize_compact}
-		\item{id: gebruikers-id}
-		\item{order: order-id}
-		\end{itemize_compact} }
+	{ een filter (zie Order.List) }
 	{ geen }
 	{ BACKEND\_ADMIN (moet ooit ORDER\_ADMIN worden), of LOGGEDIN (maar dan wordt de set waarop de functie inwerkt gereduceerd tot orders van de ingelogde gebruiker) }
 
 \function{Order.Modify}
 	{ een bestaande order wijzigen }
-	{ een filter die orders selecteert, en een struct met de te-wijzigen orderinformatie:
+	{ een filter die orders selecteert (zie Order.List), en een struct met de te-wijzigen orderinformatie:
 		\begin{itemize_compact}
-		\item{}
+		\item{type: het type order}
+		\item{amount: het aantal aandelen dat aangekocht worden}
+		\item{status: de status van het order}
+		\item{creationtime: het moment waarop het order aangemaakt is}
+		\item{expirationtime: het moment waarop het order vervalt}
+		\item{executiontime: het moment waarop het order uitgevoerd is}
+		\item{secondairylimit (sic): de secundaire limiet}
 		\end{itemize_compact} }
 	{ geen }
 	{ BACKEND\_ADMIN (moet ooit ORDER\_ADMIN worden), of LOGGEDIN (maar dan wordt de set waarop de functie inwerkt gereduceerd tot orders van de ingelogde gebruiker) }
 
 
+\subsubsection{Transaction subklasse}
+
 \function{Transaction.List}
 	{ lijst van uitgevoerde transacties weergeven }
 	{ een filter, met de volgende mogelijke sleutels:
 		\begin{itemize_compact}
-		\item{id: gebruikers-id}
+		\item{id: identificatie van de transactie}
+		\item{userid: identificatie van de gebruiker}
+		\item{timest: datum van uitvoering}
+		\item{isin: identificatiecode van het effect}
+		\item{type: type verhandeling}
+		\item{amount: aantal verhandelde effecten}
+		\item{price: prijs waarvoor het aandeel verhandeld is}
+		\item{comments: commentaar bij de verhandeling}
 		\end{itemize_compact} }
 	{ array van structs die transactie-informatie bevatten:
 		\begin{itemize_compact}
+		\item{amount: aantal verhandelde effecten}
 		\item{id: identificatie van de transactie}
-		\item{timestamp: datum van de transactie}
-		\item{price: aankoopprijs}
-		\item{amount: hoeveelheid}
-		\item{symbol: symbool van het effect}
-		\item{type: soort effect}
-		\item{name: naam van het effect}
+		\item{user: identificatie van de gebruiker}
+		\item{time: datum van uitvoering}
+		\item{isin: identificatiecode van het effect}
+		\item{type: type verhandeling}
+		\item{price: prijs waarvoor het aandeel verhandeld is}
+		\item{comments: commentaar bij de verhandeling}
 		\end{itemize_compact} }
 	{ TRANSACTION\_ADMIN, of LOGGEDIN (maar dan wordt de set waarop de functie inwerkt gereduceerd tot orders van de ingelogde gebruiker) }
+
+\textbf{Opmerking}: bij deze methode is geen verschil gemaakt tussen een reguliere List en een Details opvraging, aangezien de methode enkel kan aangeroepen worden door geautoriseerde gebruikers.
 
 \function{Transaction.Create}
 	{ nieuwe transactie aanmaken }
 	{ struct met transactie-details:
 		\begin{itemize_compact}
-		\item{...}
+		\item{amount: aantal verhandelde effecten}
+		\item{user: identificatie van de gebruiker}
+		\item{time: datum van uitvoering}
+		\item{isin: identificatiecode van het effect}
+		\item{type: type verhandeling}
+		\item{price: prijs waarvoor het aandeel verhandeld is}
+		\item{comments: commentaar bij de verhandeling}
 		\end{itemize_compact} }
 	{ id van de aangemaakte transactie }
 	{ TRANSACTION\_ADMIN }
 
 \function{Transaction.Modify}
 	{ nieuwe transactie aanmaken }
-	{ een filter die transacties selecteert, en een struct met de te-wijzigen transactieinformatie:
+	{ een filter die transacties selecteert (zie List), en een struct met de te-wijzigen transactieinformatie:
 		\begin{itemize_compact}
-		\item{}
+		\item{amount: aantal verhandelde effecten}
+		\item{time: datum van uitvoering}
+		\item{isin: identificatiecode van het effect}
+		\item{type: type verhandeling}
+		\item{price: prijs waarvoor het aandeel verhandeld is}
+		\item{comments: commentaar bij de verhandeling}
 		\end{itemize_compact} }
 	{ id van de aangemaakte transactie }
 	{ TRANSACTION\_ADMIN }
-	
+
+
+\subsubsection{Points subklasse}
+
 \function{Points.List}
 	{ lijst van transactie-punten ophalen }
 	{ een filter, met de volgende mogelijke sleutels:
 		\begin{itemize_compact}
-		\item{id: gebruikers-id}
+		\item{userid: gebruikers-id}
+		\item{timest: datum van uitvoering}
+		\item{delta: verandering van het puntenaantal door deze transactie}
+		\item{comments: commentaar bij de verhandeling}
 		\end{itemize_compact} }
 	{ array van structs die transactiepunt-informatie bevatten:
 		\begin{itemize_compact}
-		\item{...}
+		\item{userid: gebruikers-id}
+		\item{timestamp: datum van uitvoering}
+		\item{delta: verandering van het puntenaantal door deze transactie}
+		\item{comments: commentaar bij de verhandeling}
 		\end{itemize_compact} }
 	{ POINTS\_ADMIN, of LOGGEDIN (maar dan wordt de set waarop de functie inwerkt gereduceerd tot orders van de ingelogde gebruiker) }
 
 \function{Points.CreateTransaction}
-	{ nieuwe transactie aanmaken }
+	{ nieuwe transactie aanmaken op het huidige moment }
 	{ struct met transactie-details:
 		\begin{itemize_compact}
-		\item{...}
+		\item{user: gebruikers-id}
+		\item{delta: verandering van het puntenaantal door deze transactie}
+		\item{comments: commentaar bij de verhandeling}
 		\end{itemize_compact} }
 	{ id van de aangemaakte transactie }
 	{ TRANSACTION\_ADMIN }
 
-\function{Points.CreateTransactionify}
-	{ nieuwe transactie aanmaken }
-	{ een filter die transacties selecteert, en een struct met de te-wijzigen transactieinformatie:
+\function{Points.DeleteTransaction}
+	{ bestaande transactie verwijderen }
+	{ een object, dat de waarden bevat van de transactie die verwijderd moeten worden:
 		\begin{itemize_compact}
-		\item{}
+		\item{user: gebruikers-id}
+		\item{delta: verandering van het puntenaantal door deze transactie}
+		\item{comments: commentaar bij de verhandeling}
+		\item{timestamp: de tijd van verhandeling}
 		\end{itemize_compact} }
-	{ id van de aangemaakte transactie }
+	{ boolean die indiceert of het verwijderen succesvol was }
 	{ TRANSACTION\_ADMIN }
 
 
-\subsection{Finance-klasse}
+\subsection{Finance klasse}
 
 Tenslotte zijn er nog de methodes gerelateerd met het effectieve beurswezen, die (hoofdzakelijk) terug te vinden zijn in deze klasse. Enkel het ophalen van de portfolio bevindt zich, logischerwijs, in de User-klasse.
+
+\subsubsection{Exchange subklasse}
 
 \function{Exchange.List}
 	{ lijst van beurzen opvragen }
 	{ een filter, met de volgende mogelijke sleutels:
 		\begin{itemize_compact}
-		\item{}
+		\item{symbol: de symbool van de beurs}
+		\item{name: de naam van de beurs}
+		\item{location: de locatie van de beurs}
 		\end{itemize_compact} }
 	{ array van structs met beurs-info:
 		\begin{itemize_compact}
-		\item{id: identificatie-symbool van de beurs}
-		\item{discription: een langere beschrijving van de beurs}
-		\item{location: locatie van de beurs zich bevindt}
+		\item{symbol: de symbool van de beurs}
+		\item{name: de naam van de beurs}
+		\item{location: de locatie van de beurs}
 		\end{itemize_compact} }
 	{ NONE }
 
 \function{Exchange.Modify}
 	{ informatie van een beurs wijzigen }
-	{ een filter, en een struct met beursinformatie:
+	{ een filter om beurzen te selecteren (zie Exchange.List), en een struct met beursinformatie:
 		\begin{itemize_compact}
-		\item{description}
-		\item{location}
+		\item{name: de naam van de beurs}
+		\item{location: de locatie van de beurs}
 		\end{itemize_compact} }
 	{ niks }
 	{ SECURITY\_MODIFY }
@@ -509,23 +616,31 @@ Tenslotte zijn er nog de methodes gerelateerd met het effectieve beurswezen, die
 	{ een beurs toevoegen }
 	{ een struct met beursinformatie:
 		\begin{itemize_compact}
-		\item{description}
-		\item{location}
+		\item{symbol: de symbool van de beurs}
+		\item{name: de naam van de beurs}
+		\item{location: de locatie van de beurs}
 		\end{itemize_compact} }
 	{ niks }
 	{ SECURITY\_CREATE }
+
+
+\subsubsection{Index subklasse}
 
 \function{Index.List}
 	{ lijst van indexen opvragen }
 	{ een filter, met de volgende mogelijke sleutels:
 		\begin{itemize_compact}
-		\item{}
+		\item{name: de naam van de index}
+		\item{exchange: het symbool van de beurs waarop de index zich bevindt}
+		\item{isin: het identificatiesymbool van de index}
+		\item{symbol: het symbool van de index}
 		\end{itemize_compact} }
 	{ array van structs met index-informatie:
 		\begin{itemize_compact}
-		\item{id: identificatie-symbool van de index}
-		\item{exchange: identificatie-symbool van de beurs waarop de index zich bevindt}
-		\item{description}
+		\item{name: de naam van de index}
+		\item{exchange: het symbool van de beurs waarop de index zich bevindt}
+		\item{isin: het identificatiesymbool van de index}
+		\item{symbol: het symbool van de index}
 		\end{itemize_compact} }
 	{ NONE }
 
@@ -533,7 +648,7 @@ Tenslotte zijn er nog de methodes gerelateerd met het effectieve beurswezen, die
 	{ informatie van een index wijzigen }
 	{ een filter, en een struct met indexinformatie:
 		\begin{itemize_compact}
-		\item{description}
+		\item{name: de naam van de index}
 		\end{itemize_compact} }
 	{ niks }
 	{ SECURITY\_MODIFY }
@@ -542,32 +657,48 @@ Tenslotte zijn er nog de methodes gerelateerd met het effectieve beurswezen, die
 	{ een index toevoegen }
 	{ en een struct met indexinformatie:
 		\begin{itemize_compact}
-		\item{description}
+		\item{name: de naam van de index}
+		\item{exchange: het symbool van de beurs waarop de index zich bevindt}
+		\item{isin: het identificatiesymbool van de index}
+		\item{symbol: het symbool van de index}
 		\end{itemize_compact} }
 	{ niks }
 	{ SECURITY\_CREATE }
+
+
+\subsubsection{Security subklasse}
 
 \function{Security.List}
 	{ lijst met oppervlakkige informatie van effecten opvragen }
 	{ een filter, met de volgende mogelijke sleutels:
 		\begin{itemize_compact}
-		\item{}
+		\item{symbol: het symbool van het effect}
+		\item{name: de naam van het effect}
+		\item{exchange: de beurs waarop het effect zich bevindt}
+		\item{visible: een bool die beschrijft of het aandeel zichtbaar is}
+		\item{suspended: een bool die indiceert of het aandeel geschorst is}
+		\item{isin: identificatiecode van het effect}
 		\end{itemize_compact} }
 	{ array van structs met informatie over het effect:
 		\begin{itemize_compact}
-		\item{id: identificatie-symbool van het effect}
-		\item{beurs: identificatie-symbool van de beurs waarop het effect zich bevindt}
-		\item{index: identificatie-symbool van de index waarop het effect zich bevindt}
-		\item{koers: de huidige koers}
-		\item{flags: de gezette vlaggen}
+		\item{symbol: het symbool van het effect}
+		\item{name: de naam van het effect}
+		\item{exchange: de beurs waarop het effect zich bevindt}
+		\item{visible: een bool die beschrijft of het aandeel zichtbaar is}
+		\item{suspended: een bool die indiceert of het aandeel geschorst is}
+		\item{isin: identificatiecode van het effect}
 		\end{itemize_compact} }
 	{ NONE }
 
+\textbf{Opmerking}: ook hier hebben we geen onderscheid gemaakt tussen een List en Details methode, aangezien er niet echt datavelden zijn die niet mogen geraadpleegd worden door niet-geautoriseerde clients.
+
 \function{Security.Modify}
 	{ informatie van een effect wijzigen }
-	{ een filter, en een struct met informatie over het effect:
+	{ een filter (zie Security.List), en een struct met informatie over het effect:
 		\begin{itemize_compact}
-		\item{...}
+		\item{name: de naam van het effect}
+		\item{visible: een bool die beschrijft of het aandeel zichtbaar is}
+		\item{suspended: een bool die indiceert of het aandeel geschorst is}
 		\end{itemize_compact} }
 	{ aantal aangepaste effecten }
 	{ SECURITY\_MODIFY }
@@ -576,40 +707,35 @@ Tenslotte zijn er nog de methodes gerelateerd met het effectieve beurswezen, die
 	{ een effect toevoegen }
 	{ een struct met informatie over het effect:
 		\begin{itemize_compact}
-		\item{...}
+		\item{symbol: het symbool van het effect}
+		\item{name: de naam van het effect}
+		\item{exchange: de beurs waarop het effect zich bevindt}
+		\item{visible: een bool die beschrijft of het aandeel zichtbaar is}
+		\item{suspended: een bool die indiceert of het aandeel geschorst is}
+		\item{isin: identificatiecode van het effect}
 		\end{itemize_compact} }
 	{ niks }
 	{ SECURITY\_CREATE }
 	
 \function{Security.Remove}
 	{ een effect verwijderen }
-	{ een filter }
+	{ een filter (zie Security.List) }
 	{ aantal verwijderde effecten }
 	{ SECURITY\_REMOVE }
-
-\function{Security.Details}
-	{ defail-informatie van een effect opvragen }
-	{ een filter }
-	{ struct met defail-informatie over het effect:
-		\begin{itemize_compact}
-		\item{salesvolume: omzet}
-		\item{buyprice: aankoopprijs}
-		\item{saleprice: verkoopprijs}
-		\end{itemize_compact} }
-	{ NONE }
 
 \function{Security.Update}
 	{ nieuwe quote aan een security toevoegen }
 	{ een struct dat een quote voorstelt, met de volgende inhoud:
 		\begin{itemize_compact}
-		\item{security: id van het security dat geüpdatet moet worden}
-		\item{time: tijdstip waarop de quote gelde}
-		\item{price: huidige prijs}
-		\item{volume: omzet van het aandeel}
-		\item{buy: aankoopprijs}
-		\item{sell: verkoopsprijs}
-		\item{low: laagterecord van het aandeel}
-		\item{high: hoogterecord van het aandeel}
+		\item{isin: identificatiecode van het effect}
+		\item{time: tijdstip waarop de koers geldt}
+		\item{price: huidige koers van het aandeel}
+		\item{volume: omzet van het aandeel op de dag in kwestie (cumulatief voor 1 dag)}
+		\item{bid: biedprijs van het aandeel}
+		\item{ask: vraagprijs van het aandeel}
+		\item{low: laagterecord van het aandeel op de dag in kwestie}
+		\item{high: hoogterecord van het aandeel op de dag in kwestie}
+		\item{open: openingsprijs van het aandeel op de dag in kwestie}
 		\end{itemize_compact} }
 	{ niks }
 	{ SECURITY\_UPDATE }
@@ -620,9 +746,98 @@ Tenslotte zijn er nog de methodes gerelateerd met het effectieve beurswezen, die
 	{ niks }
 	{ SECURITY\_UPDATE }
 
-\todo{.Quote functies}
+\function{Security.Quotes}
+	{ quotes van een aandeel ophalen }
+	{ filter, met de volgende mogelijke sleutels:
+		\begin{itemize_compact}
+		\item{isin: identificatiecode van het effect}
+		\item{timestamp: tijd waarop de koers geldde}
+		\item{price: huidige koers van het aandeel}
+		\item{volume: omzet van het aandeel op de dag in kwestie (cumulatief voor 1 dag)}
+		\item{bid: biedprijs van het aandee}
+		\item{ask: vraagprijs van het aandee}
+		\item{low: laagterecord van het aandeel op de dag in kwestie}
+		\item{high: hoogterecord van het aandeel op de dag in kwestie}
+		\item{open: openingsprijs van het aandeel op de dag in kwestie}
+		\end{itemize_compact} }
+	{ array van structs met de koersen van het effect:
+		\begin{itemize_compact}
+		\item{isin: identificatiecode van het effect}
+		\item{time: tijdstip waarop de koers geldt}
+		\item{price: huidige koers van het aandeel}
+		\item{volume: omzet van het aandeel op de dag in kwestie (cumulatief voor 1 dag)}
+		\item{bid: biedprijs van het aandee}
+		\item{ask: vraagprijs van het aandee}
+		\item{low: laagterecord van het aandeel op de dag in kwestie}
+		\item{high: hoogterecord van het aandeel op de dag in kwestie}
+		\item{open: openingsprijs van het aandeel op de dag in kwestie}
+		\end{itemize_compact} }
+	{ NONE }
 
-\todo{.Index functies}
+\function{Security.Quotes}
+	{ quotes van een aandeel ophalen, aan een bepaalde resolutie }
+	{ 4 argumenten:
+		\begin{itemize}
+		\item{een datum die het begin van het bereik aanduidt}
+		\item{een datum die het eind van het bereik aanduidt}
+		\item{een integer die indiceert tot hoeveel punten de resolutie moet geschaald worden}
+		\item{een filter (zie Security.Quotes)}
+		\end{itemize} }
+	{ een array van structs met de koersen van het effect (zie Security.Quotes) }
+	{ NONE }
+
+\function{Security.LatestQuotes}
+	{ de laatste quotes van bepaalde aandelen ophalen }
+	{ een filter die de effecten selecteert (zie Security.Quotes) }
+	{ een array van structs met de laatste koersen van het effect (zie Security.Quotes) }
+	{ NONE }
+
+\function{Security.QuoteRange}
+	{ het bereik van de koersen van een aandeel ophalen }
+	{ de identificatiecode van een aandeel (string) }
+	{ het bereik, als een vector met twee datums in (start en einde van het bereik) }
+	{ NONE }
+
+\function{Security.getHighest}
+	{ de hoogste koers van een reeks aandelen ophalen }
+	{ een filter die de effecten selecteert (zie Security.Quotes) }
+	{ een struct, die de hoogste koers van de selectie voorstelt (zie Security.Quotes) }
+	{ NONE }
+
+\function{Security.getLowest}
+	{ de laagste koers van een reeks aandelen ophalen }
+	{ een filter die de effecten selecteert (zie Security.Quotes) }
+	{ een struct, die de laagste koers van de selectie voorstelt (zie Security.Quotes) }
+	{ NONE }
+
+
+\subsubsection{IndexSecurity subklasse}
+
+Deze klasse biedt, zoals de User.Portfolio klasse doet met Users, een link tussen Securities en Indexes.
+
+\function{IndexSecurity.List}
+	{ lijst van relaties tussen Indexes en Securities opvragen }
+	{ een filter, met de volgende mogelijke sleutels:
+		\begin{itemize_compact}
+		\item{index\_isin: identificatiesymbool van de index}
+		\item{security\_isin: identificatiesymbool van het effect}
+		\end{itemize_compact} }
+	{ array van structs die relaties uitdrukken:
+		\begin{itemize_compact}
+		\item{index\_isin: identificatiesymbool van de index}
+		\item{security\_isin: identificatiesymbool van het effect}
+		\end{itemize_compact} }
+	{ NONE }
+
+\function{Security.Create}
+	{ een effect toevoegen }
+	{ een struct die een relatie uitdrukt tussen een index en een effect:
+		\begin{itemize_compact}
+		\item{index\_isin: identificatiesymbool van de index}
+		\item{security\_isin: identificatiesymbool van het effect}
+		\end{itemize_compact} }
+	{ niks }
+	{ SECURITY\_CREATE }
 
 
 %
