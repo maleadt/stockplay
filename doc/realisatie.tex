@@ -579,6 +579,19 @@ Hier vindt men de nodige methodes terug om gebruikers te beheren. Dit is echter 
 	{ boolean die indiceert of het verwijderen succesvol was }
 	{ TRANSACTION\_ADMIN }
 
+\function{Points.Ranking}
+	{ ranking ophalen van een bepaalde groep gebruikers }
+	{ een filter die een groep gebruikers selecteer (zie Users.List) }
+	{ een array van structs, die Rank objecten voorstellen:
+		\begin{itemize_compact}
+		\item{id: gebruikers-id}
+		\item{total: het aantal punten dat de gebruiker heeft}
+		\item{rank: de rank van de gebruiker}
+		\end{itemize_compact} }
+
+\huge DIETER VUL DIT AAN, WAT DOET Points.EventRanking? EN CONTROLEER Points.Ranking OOK!
+\normalsize
+		
 
 \subsection{Finance klasse}
 
