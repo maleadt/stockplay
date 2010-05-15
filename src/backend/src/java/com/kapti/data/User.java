@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
-import java.util.HashMap;
 import java.security.MessageDigest;
 import java.util.HashMap;
 import java.util.Map;

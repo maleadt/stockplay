@@ -21,9 +21,9 @@ package com.kapti.data.persistence.oracle;
 import com.kapti.data.PointsTransaction;
 import com.kapti.data.PointsTransaction.PointsTransactionPK;
 import com.kapti.data.persistence.GenericDAO;
-import com.kapti.exceptions.DBException;
 import com.kapti.exceptions.FilterException;
 import com.kapti.exceptions.StockPlayException;
+import com.kapti.exceptions.SubsystemException;
 import com.kapti.filter.Filter;
 import java.sql.Timestamp;
 import java.sql.Connection;
@@ -103,7 +103,7 @@ public class PointsTransactionDAO implements GenericDAO<PointsTransaction, Point
                 }
             }
         } catch (SQLException ex) {
-            throw new DBException(ex);
+            throw new SubsystemException(SubsystemException.Type.DATABASE_FAILURE, ex.getCause());
         }
     }
 
@@ -142,7 +142,7 @@ public class PointsTransactionDAO implements GenericDAO<PointsTransaction, Point
                 }
             }
         } catch (SQLException ex) {
-            throw new DBException(ex);
+            throw new SubsystemException(SubsystemException.Type.DATABASE_FAILURE, ex.getCause());
         }
 
     }
@@ -189,7 +189,7 @@ public class PointsTransactionDAO implements GenericDAO<PointsTransaction, Point
                 }
             }
         } catch (SQLException ex) {
-            throw new DBException(ex);
+            throw new SubsystemException(SubsystemException.Type.DATABASE_FAILURE, ex.getCause());
         }
     }
 
@@ -228,7 +228,7 @@ public class PointsTransactionDAO implements GenericDAO<PointsTransaction, Point
                 }
             }
         } catch (SQLException ex) {
-            throw new DBException(ex);
+            throw new SubsystemException(SubsystemException.Type.DATABASE_FAILURE, ex.getCause());
         }
     }
 
@@ -266,7 +266,7 @@ public class PointsTransactionDAO implements GenericDAO<PointsTransaction, Point
                 }
             }
         } catch (SQLException ex) {
-            throw new DBException(ex);
+            throw new SubsystemException(SubsystemException.Type.DATABASE_FAILURE, ex.getCause());
         }
     }
 }

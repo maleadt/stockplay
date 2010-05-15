@@ -32,7 +32,7 @@ public final class InvocationException extends StockPlayException {
         NON_EXISTING_ENTITY(23, "Non Existing Entity"),
         PRE_EXISTING_ENTITY(24, "Pre Existing Entity"),
         READ_ONLY_KEY(25, "Request to modify a read only key"),
-        KEY_DOES_NOT_EXIST(25, "Requested key does not exist");
+        KEY_DOES_NOT_EXIST(26, "Requested key does not exist");
 
         private final int mCode;
         private final String mMessage;

@@ -89,7 +89,7 @@ public class IndexSecurityDAO implements GenericDAO<IndexSecurity, IndexSecurity
                 }
             }
         } catch (SQLException ex) {
-            throw new DBException(ex);
+            throw new SubsystemException(SubsystemException.Type.DATABASE_FAILURE, ex.getCause());
         }
     }
 
@@ -124,7 +124,7 @@ public class IndexSecurityDAO implements GenericDAO<IndexSecurity, IndexSecurity
                 }
             }
         } catch (SQLException ex) {
-            throw new DBException(ex);
+            throw new SubsystemException(SubsystemException.Type.DATABASE_FAILURE, ex.getCause());
         }
 
     }
@@ -169,7 +169,7 @@ public class IndexSecurityDAO implements GenericDAO<IndexSecurity, IndexSecurity
                 }
             }
         } catch (SQLException ex) {
-            throw new DBException(ex);
+            throw new SubsystemException(SubsystemException.Type.DATABASE_FAILURE, ex.getCause());
         }
     }
 
@@ -211,7 +211,7 @@ public class IndexSecurityDAO implements GenericDAO<IndexSecurity, IndexSecurity
                 }
             }
         } catch (SQLException ex) {
-            throw new DBException(ex);
+            throw new SubsystemException(SubsystemException.Type.DATABASE_FAILURE, ex.getCause());
         }*/
     }
 
@@ -249,7 +249,7 @@ public class IndexSecurityDAO implements GenericDAO<IndexSecurity, IndexSecurity
                 }
             }
         } catch (SQLException ex) {
-            throw new DBException(ex);
+            throw new SubsystemException(SubsystemException.Type.DATABASE_FAILURE, ex.getCause());
         }
     }
 }

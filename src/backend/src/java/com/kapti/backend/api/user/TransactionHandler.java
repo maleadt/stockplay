@@ -26,6 +26,7 @@ import com.kapti.data.persistence.GenericDAO;
 import com.kapti.exceptions.StockPlayException;
 import com.kapti.filter.Filter;
 import com.kapti.filter.parsing.Parser;
+import com.kapti.filter.relation.RelationAnd;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashMap;
@@ -45,8 +46,20 @@ public class TransactionHandler extends MethodClass {
         // Get DAO reference
         GenericDAO<Transaction, Integer> tTransactionDAO = getDAO().getTransactionDAO();
 
+        // Create a filter
         Parser parser = Parser.getInstance();
-        Filter filter = parser.parse(iFilter);
+        Filter filter = null;
+        Filter base = parser.parse(iFilter);
+        if (getRole().isTransactionAdmin()) {
+            filter = base;
+        } else {
+            Filter user = parser.parse("userid == '" + getUser().getId() + "'i");
+            if (!base.empty()) {
+                filter = Filter.merge(RelationAnd.class, base, user);
+            } else {
+                filter = user;
+            }
+        }
 
         // Fetch and convert all Indexs
         Collection<Transaction> tTransactions = tTransactionDAO.findByFilter(filter);

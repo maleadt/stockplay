@@ -95,7 +95,7 @@ public class RoleDAO implements GenericDAO<Role, Integer> {
                 }
             }
         } catch (SQLException ex) {
-            throw new DBException(ex);
+            throw new SubsystemException(SubsystemException.Type.DATABASE_FAILURE, ex.getCause());
         }
     }
 
@@ -144,7 +144,7 @@ public class RoleDAO implements GenericDAO<Role, Integer> {
                 }
             }
         } catch (SQLException ex) {
-            throw new DBException(ex);
+            throw new SubsystemException(SubsystemException.Type.DATABASE_FAILURE, ex.getCause());
         }
 
     }
@@ -198,7 +198,7 @@ public class RoleDAO implements GenericDAO<Role, Integer> {
                 }
             }
         } catch (SQLException ex) {
-            throw new DBException(ex);
+            throw new SubsystemException(SubsystemException.Type.DATABASE_FAILURE, ex.getCause());
         }
     }
 
@@ -246,7 +246,7 @@ public class RoleDAO implements GenericDAO<Role, Integer> {
                 }
             }
         } catch (SQLException ex) {
-            throw new DBException(ex);
+            throw new SubsystemException(SubsystemException.Type.DATABASE_FAILURE, ex.getCause());
         }
     }
 
@@ -282,7 +282,7 @@ public class RoleDAO implements GenericDAO<Role, Integer> {
                 }
             }
         } catch (SQLException ex) {
-            throw new DBException(ex);
+            throw new SubsystemException(SubsystemException.Type.DATABASE_FAILURE, ex.getCause());
         }
     }
 }

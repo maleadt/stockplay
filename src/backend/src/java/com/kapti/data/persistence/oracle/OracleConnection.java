@@ -27,7 +27,7 @@ public class OracleConnection {
 
     public static BasicDataSource ds = null;
 
-    public static Connection getConnection() throws DBException {
+    public static Connection getConnection() throws StockPlayException {
         try {
             if (ds == null) {
 
@@ -47,7 +47,7 @@ public class OracleConnection {
 
             return ds.getConnection();
         } catch (SQLException ex) {
-            throw new DBException("Error while creating connection-object", ex);
+            throw new SubsystemException(SubsystemException.Type.DATABASE_FAILURE, "Error while creating connection-object", ex.getCause());
         }
     }
 }

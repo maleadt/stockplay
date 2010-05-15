@@ -37,9 +37,9 @@ import com.kapti.data.UserSecurity.UserSecurityPK;
 import com.kapti.data.persistence.GenericDAO;
 import com.kapti.data.persistence.GenericQuoteDAO;
 import com.kapti.data.persistence.StockPlayDAO;
-import com.kapti.exceptions.DBException;
 import com.kapti.exceptions.ServiceException;
 import com.kapti.exceptions.StockPlayException;
+import com.kapti.exceptions.SubsystemException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -164,7 +164,7 @@ public class OracleStockPlayDAO implements StockPlayDAO {
                 }
             }
         } catch (SQLException ex) {
-            throw new DBException(ex);
+            throw new SubsystemException(SubsystemException.Type.DATABASE_FAILURE, ex.getCause());
         }
     }
 
@@ -196,7 +196,7 @@ public class OracleStockPlayDAO implements StockPlayDAO {
                 }
             }
         } catch (SQLException ex) {
-            throw new DBException(ex);
+            throw new SubsystemException(SubsystemException.Type.DATABASE_FAILURE, ex.getCause());
         }
     }
 
