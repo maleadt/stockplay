@@ -35,6 +35,7 @@ import com.kapti.data.User;
 import com.kapti.data.UserSecurity;
 import com.kapti.data.UserSecurity.UserSecurityPK;
 import com.kapti.data.persistence.GenericDAO;
+import com.kapti.data.persistence.GenericPointsTransactionDAO;
 import com.kapti.data.persistence.GenericQuoteDAO;
 import com.kapti.data.persistence.StockPlayDAO;
 import com.kapti.exceptions.ServiceException;
@@ -236,7 +237,7 @@ public class OracleStockPlayDAO implements StockPlayDAO {
         }
     }
 
-    public GenericDAO<PointsTransaction, PointsTransactionPK> getPointsTransactionDAO() {
+    public GenericPointsTransactionDAO getPointsTransactionDAO() {
         return PointsTransactionDAO.getInstance();
     }
 

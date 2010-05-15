@@ -23,7 +23,9 @@ import com.kapti.backend.helpers.DateHelper;
 import com.kapti.data.PointsTransaction;
 import com.kapti.data.PointsTransaction.Fields;
 import com.kapti.data.PointsTransaction.PointsTransactionPK;
+import com.kapti.data.Rank;
 import com.kapti.data.persistence.GenericDAO;
+import com.kapti.data.persistence.GenericPointsTransactionDAO;
 import com.kapti.exceptions.StockPlayException;
 import com.kapti.filter.Filter;
 import com.kapti.filter.parsing.Parser;
@@ -43,6 +45,48 @@ import java.util.Vector;
  * op conforme wijze terug te sturen.
  */
 public class PointsHandler extends MethodClass {
+
+    public Vector<HashMap<String, Object>> Ranking(String iFilter) throws StockPlayException {
+        // Get DAO reference
+        GenericPointsTransactionDAO tPointsTransactionDAO = getDAO().getPointsTransactionDAO();
+
+        // Create a filter
+        Parser parser = Parser.getInstance();
+        Filter filter = parser.parse(iFilter);
+
+        // Fetch and convert all Indexs
+        Collection<Rank> tRanking = tPointsTransactionDAO.findRankingByFilter(filter);
+        Vector<HashMap<String, Object>> oVector = new Vector<HashMap<String, Object>>();
+        for (Rank tRank : tRanking) {
+            oVector.add(tRank.toStruct(
+                    Rank.Fields.ID,
+                    Rank.Fields.TOTAL,
+                    Rank.Fields.RANK));
+        }
+
+        return oVector;
+    }
+
+    public Vector<HashMap<String, Object>> EventRanking(String iFilter) throws StockPlayException {
+        // Get DAO reference
+        GenericPointsTransactionDAO tPointsTransactionDAO = getDAO().getPointsTransactionDAO();
+
+        // Create a filter
+        Parser parser = Parser.getInstance();
+        Filter filter = parser.parse(iFilter);
+
+        // Fetch and convert all Indexs
+        Collection<Rank> tRanking = tPointsTransactionDAO.findRankingEventByFilter(filter);
+        Vector<HashMap<String, Object>> oVector = new Vector<HashMap<String, Object>>();
+        for (Rank tRank : tRanking) {
+            oVector.add(tRank.toStruct(
+                    Rank.Fields.ID,
+                    Rank.Fields.TOTAL,
+                    Rank.Fields.RANK));
+        }
+
+        return oVector;
+    }
 
     public Vector<HashMap<String, Object>> List(String iFilter) throws StockPlayException {
         // Get DAO reference

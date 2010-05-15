@@ -20,7 +20,8 @@ package com.kapti.data.persistence.oracle;
 
 import com.kapti.data.PointsTransaction;
 import com.kapti.data.PointsTransaction.PointsTransactionPK;
-import com.kapti.data.persistence.GenericDAO;
+import com.kapti.data.Rank;
+import com.kapti.data.persistence.GenericPointsTransactionDAO;
 import com.kapti.exceptions.FilterException;
 import com.kapti.exceptions.StockPlayException;
 import com.kapti.exceptions.SubsystemException;
@@ -38,13 +39,21 @@ import java.util.Date;
  *
  * @author Thijs
  */
-public class PointsTransactionDAO implements GenericDAO<PointsTransaction, PointsTransaction.PointsTransactionPK> {
+public class PointsTransactionDAO implements GenericPointsTransactionDAO {
     //
     // Member data
     //
 
     private static final String SELECT_POINTSTRANSACTION = "SELECT delta, comments FROM pointstransactions WHERE userid = ? AND timest = ?";
     private static final String SELECT_POINTSTRANSACTIONS = "SELECT userid, timest, delta, comments FROM pointstransactions";
+    private static final String SELECT_TOTAL_POINTS = 
+            "WITH x as (SELECT USERID, sum(DELTA) total, row_number() over(order by sum(DELTA) DESC) rank "
+            + "FROM POINTSTRANSACTIONS GROUP BY USERID) "
+            + "SELECT USERID, total, rank FROM x";
+    private static final String SELECT_POINTS_LATEST_EVENT =
+            "SELECT USERID, DELTA, row_number() over(order by DELTA DESC) RANK, COMMENTS "
+            + "FROM POINTSTRANSACTIONS "
+            + "WHERE TIMEST > sysdate-1 AND ($filter)";
     private static final String INSERT_POINTSTRANSACTION = "INSERT INTO pointstransactions(userid, timest, delta, comments) "
             + "VALUES(?, ?, ?, ?)";
     private static final String UPDATE_POINTSTRANSACTION = "UPDATE pointstransactions SET delta = ?, comments = ? WHERE userid = ? AND timest = ?";
@@ -145,6 +154,79 @@ public class PointsTransactionDAO implements GenericDAO<PointsTransaction, Point
             throw new SubsystemException(SubsystemException.Type.DATABASE_FAILURE, ex.getCause());
         }
 
+    }
+
+    public Collection<Rank> findRankingByFilter(Filter iFilter) throws StockPlayException {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            try {
+                conn = OracleConnection.getConnection();
+
+                StringBuilder tQuery = new StringBuilder(SELECT_TOTAL_POINTS);
+                if (!iFilter.empty()) {
+                    tQuery.append(" WHERE " + (String) iFilter.compile("sql"));
+                }
+                stmt = conn.prepareStatement(tQuery.toString());
+
+                rs = stmt.executeQuery();
+                ArrayList<Rank> list = new ArrayList<Rank>();
+                while (rs.next()) {
+                    Rank tRank = new Rank(rs.getInt(1), rs.getInt(2), rs.getInt(3));
+                    list.add(tRank);
+                }
+                return list;
+            } finally {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            }
+        } catch (SQLException ex) {
+            throw new SubsystemException(SubsystemException.Type.DATABASE_FAILURE, ex.getCause());
+        }
+    }
+
+    public Collection<Rank> findRankingEventByFilter(Filter iFilter) throws StockPlayException {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            try {
+                conn = OracleConnection.getConnection();
+
+                if(!iFilter.empty())
+                    stmt = conn.prepareStatement(SELECT_POINTS_LATEST_EVENT.replace("$filter", (String) iFilter.compile("sql")));
+                else
+                    stmt = conn.prepareStatement(SELECT_POINTS_LATEST_EVENT);
+                
+                rs = stmt.executeQuery();
+                ArrayList<Rank> list = new ArrayList<Rank>();
+                while (rs.next()) {
+                    Rank tRank = new Rank(rs.getInt(1), rs.getInt(2), rs.getInt(3));
+                    list.add(tRank);
+                }
+                return list;
+            } finally {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            }
+        } catch (SQLException ex) {
+            throw new SubsystemException(SubsystemException.Type.DATABASE_FAILURE, ex.getCause());
+        }
     }
 
     /**

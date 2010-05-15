@@ -33,7 +33,7 @@ public interface StockPlayDAO {
     public GenericDAO<User, Integer> getUserDAO();
     public GenericDAO<IndexSecurity, IndexSecurity.IndexSecurityPK> getIndexSecurityDAO();
     public GenericDAO<UserSecurity, UserSecurity.UserSecurityPK> getUserSecurityDAO();
-    public GenericDAO<PointsTransaction, PointsTransaction.PointsTransactionPK> getPointsTransactionDAO();
+    public GenericPointsTransactionDAO getPointsTransactionDAO();
     public GenericDAO<Role, Integer> getRolesDAO();
 
     public boolean testConnection();
