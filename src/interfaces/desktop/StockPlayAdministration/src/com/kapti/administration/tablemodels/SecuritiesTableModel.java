@@ -34,7 +34,7 @@ public class SecuritiesTableModel extends AbstractTableModel {
     private final static boolean[] editableColumns = new boolean[]{
         false,
         false,
-        true,
+        false,
         true,
         //true,
         true,
@@ -42,15 +42,17 @@ public class SecuritiesTableModel extends AbstractTableModel {
     //Andere opmaak van datums kan bekommen worden met een "SimpleDateFormat" toe te passen
     //maar geen enkel formaat dat ik ingeef wordt ooit geaccepteerd...
     Security[] securities = new Security[]{};
+    boolean[] changed = new boolean[]{};
 
     public SecuritiesTableModel() {
     }
 
     public void setSecurities(Collection<Security> securities) {
         this.securities = securities.toArray(this.securities);
+        this.changed= new boolean[this.securities.length];
         for (int i = 0; i < securities.size(); i++) {
             this.securities[i].addPropertyChangeListener(new SecurityPropertyChangeListener(this, i));
-
+            this.changed[i] =false;
         }
     }
 
@@ -65,13 +67,29 @@ public class SecuritiesTableModel extends AbstractTableModel {
         }
 
         public void propertyChange(PropertyChangeEvent evt) {
-
+            model.changed[index] = true;
             model.fireTableRowsUpdated(index, index);
+
         }
     }
 
     public Security[] getSecurities() {
         return securities;
+    }
+
+    public void setChangesSaved(){
+        for(int i = 0; i < changed.length; i++)
+            changed[i] = false;
+    }
+
+    public int getChangedRowsCount(){
+        int result = 0;
+        for(boolean c :changed)
+            if(c)
+                result++;
+
+        return result;
+
     }
 
     public int getRowCount() {
@@ -154,6 +172,7 @@ public class SecuritiesTableModel extends AbstractTableModel {
 
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
+        
         return editableColumns[columnIndex];
     }
 }

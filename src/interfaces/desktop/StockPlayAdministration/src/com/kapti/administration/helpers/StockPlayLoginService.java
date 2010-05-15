@@ -9,6 +9,7 @@ import com.kapti.client.user.UserFactory;
 import com.kapti.exceptions.StockPlayException;
 import java.util.Collection;
 import java.util.Iterator;
+import javax.swing.SwingWorker;
 import org.apache.log4j.Logger;
 import org.jdesktop.swingx.auth.LoginService;
 
@@ -19,6 +20,13 @@ import org.jdesktop.swingx.auth.LoginService;
 public class StockPlayLoginService extends LoginService {
 
     private static Logger logger = Logger.getLogger(StockPlayLoginService.class);
+
+    public StockPlayLoginService() {
+        this.setSynchronous(false);
+    }
+
+
+
 
     @Override
     public boolean authenticate(String name, char[] password, String server) throws Exception {

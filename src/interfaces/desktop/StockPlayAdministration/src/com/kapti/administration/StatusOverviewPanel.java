@@ -5,6 +5,7 @@
 package com.kapti.administration;
 
 import com.kapti.client.system.Backend;
+import com.kapti.client.system.Database;
 import com.kapti.client.system.StatusObject;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -23,13 +24,15 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import org.jdesktop.swingx.JXTitledSeparator;
 
 /**
  *
  * @author Thijs
  */
-public class StatusOverviewPanel extends JPanel implements ActionListener, ComponentListener {
+public class StatusOverviewPanel extends JPanel implements ActionListener, ComponentListener{
 
     private static StatusOverviewPanel instance = new StatusOverviewPanel();
 
@@ -38,9 +41,11 @@ public class StatusOverviewPanel extends JPanel implements ActionListener, Compo
     }
     private final ResourceBundle translations = ResourceBundle.getBundle("com/kapti/administration/translations");
     private StatusObject databaseStatus;
-    private JLabel uptimeLabel;
+    private JLabel backendUptimeLabel;
     private JLabel loggedInUsersLabel;
     private JLabel processedRequestsLabel;
+    private JLabel databaseUptimeLabel;
+    private JLabel databaseRateLabel;
     private Timer updateTimer;
     private StatusObject scraperStatus;
     private StatusObject backendStatus;
@@ -75,11 +80,18 @@ public class StatusOverviewPanel extends JPanel implements ActionListener, Compo
         scraperStatus = new StatusObject(translations.getString("SCRAPER"), "System.Scraper.Status");
         StatusView scraperView = new StatusView(this, 3, scraperStatus);
 
-        backendStatus= new StatusObject(translations.getString("BACKEND"), "System.Backend.Status");
+
+        backendStatus = new StatusObject(translations.getString("BACKEND"), "System.Backend.Status");
         StatusView backendView = new StatusView(this, 4, backendStatus);
+        backendView.setStartButtonDisabled(true);
+        backendView.setStopButtonDisabled(true);
+
 
         databaseStatus = new StatusObject(translations.getString("DATABASE"), "System.Database.Status");
-        StatusView Database = new StatusView(this, 5, databaseStatus);
+        StatusView databaseView = new StatusView(this, 5, databaseStatus);
+        databaseView.setStartButtonDisabled(true);
+        databaseView.setStopButtonDisabled(true);
+        databaseView.setRestartButtonDisabled(true);
         //StatusView Webserver = new StatusView(this, 6, new StatusObject("Webserver", "System.Scraper.Status"));
 
 
@@ -95,7 +107,7 @@ public class StatusOverviewPanel extends JPanel implements ActionListener, Compo
         cStats.gridx = 2;
 
 
-        JLabel statLoggedInUsersLabel = new JLabel(translations.getString("LOGGEDIN_USERS_COUNT"), JLabel.RIGHT);
+        JLabel statLoggedInUsersLabel = new JLabel(translations.getString("LOGGEDIN_USERS_COUNT") + " ", JLabel.RIGHT);
         add(statLoggedInUsersLabel, cStats);
 
         cStats.gridx = 3;
@@ -107,24 +119,50 @@ public class StatusOverviewPanel extends JPanel implements ActionListener, Compo
         cStats.gridy++;
         cStats.gridx = 2;
         cStats.gridwidth = 1;
-        JLabel statUptimeLabel = new JLabel(translations.getString("BACKEND_UPTIME"), JLabel.RIGHT);
+        JLabel statUptimeLabel = new JLabel(translations.getString("BACKEND_UPTIME") + " ", JLabel.RIGHT);
         add(statUptimeLabel, cStats);
 
         cStats.gridx = 3;
         cStats.gridwidth = GridBagConstraints.REMAINDER;
-        uptimeLabel = new JLabel("-");
-        add(uptimeLabel, cStats);
+        backendUptimeLabel = new JLabel("-");
+        add(backendUptimeLabel, cStats);
 
         cStats.gridy++;
         cStats.gridx = 2;
         cStats.gridwidth = 1;
-        JLabel statProcessedRequestsLabel = new JLabel(translations.getString("PROCESSED_REQUESTS"), JLabel.RIGHT);
+        JLabel statProcessedRequestsLabel = new JLabel(translations.getString("PROCESSED_REQUESTS") + " ", JLabel.RIGHT);
         add(statProcessedRequestsLabel, cStats);
 
         cStats.gridx = 3;
         cStats.gridwidth = GridBagConstraints.REMAINDER;
         processedRequestsLabel = new JLabel("-");
         add(processedRequestsLabel, cStats);
+
+        cStats.gridy++;
+        cStats.gridx = 2;
+        cStats.gridwidth = 1;
+        JLabel statDatabaseUptimeLabel = new JLabel(translations.getString("DATABASE_UPTIME") + " ", JLabel.RIGHT);
+        add(statDatabaseUptimeLabel, cStats);
+
+        cStats.gridx = 3;
+        cStats.gridwidth = GridBagConstraints.REMAINDER;
+        databaseUptimeLabel = new JLabel("-");
+        add(databaseUptimeLabel, cStats);
+
+        cStats.gridy++;
+        cStats.gridx = 2;
+        cStats.gridwidth = 1;
+        JLabel statDatabaseRateLabel = new JLabel(translations.getString("DATABASE_RATE") + " ", JLabel.RIGHT);
+        add(statDatabaseRateLabel, cStats);
+
+        cStats.gridx = 3;
+        cStats.gridwidth = GridBagConstraints.REMAINDER;
+        databaseRateLabel = new JLabel("-");
+        add(databaseRateLabel, cStats);
+
+        //    private JLabel databaseUptimeLabel;
+        // private JLabel databaseRateLabel;
+
 
         cStats.gridy++;
         add(new Box.Filler(new Dimension(0, 0), new Dimension(25, 0), new Dimension(100, 0)), cStats);
@@ -155,8 +193,34 @@ public class StatusOverviewPanel extends JPanel implements ActionListener, Compo
         uptime /= 24;
         int days = (int) uptime;
 
+        backendUptimeLabel.setText(timespanToString(backend.getUptime()));
 
-        uptimeLabel.setText(days + translations.getString("DAYS") + ", " + hours + translations.getString("HOURS") + ", " + minutes + translations.getString("MINUTES") + ", " + seconds + translations.getString("SECONDS"));
+        Database db = new Database();
+        databaseRateLabel.setText(Double.toString(db.getRate()) + " " + translations.getString("DATABASE_RATE_UNIT"));
+        databaseUptimeLabel.setText(timespanToString(db.getUptime()));
+
+
+
+
+
+    }
+
+    private String timespanToString(long timespan) {
+
+
+        int seconds = (int) timespan % 60;
+        timespan /= 60;
+        int minutes = (int) timespan % 60;
+        timespan /= 60;
+        int hours = (int) timespan % 24;
+        timespan /= 24;
+        int days = (int) timespan;
+
+
+        return days + translations.getString("DAYS")
+                + ", " + hours + " " + translations.getString("HOURS")
+                + ", " + minutes + " " + translations.getString("MINUTES")
+                + ", " + seconds + " " + translations.getString("SECONDS");
     }
 
     public void componentResized(ComponentEvent e) {
@@ -185,6 +249,7 @@ public class StatusOverviewPanel extends JPanel implements ActionListener, Compo
         }
     }
 
+
     private class StatusView implements ActionListener {
 
         private JPanel panel;
@@ -193,6 +258,9 @@ public class StatusOverviewPanel extends JPanel implements ActionListener, Compo
         JLabel nameLabel;
         JLabel statusLabel;
         JButton startButton, stopButton, restartButton;
+        boolean startButtonDisabled = false,
+                stopButtonDisabled = false,
+                restartButtonDisabled = false;
 
         public StatusView(JPanel panel, int row, StatusObject statObj) {
             this.panel = panel;
@@ -270,12 +338,50 @@ public class StatusOverviewPanel extends JPanel implements ActionListener, Compo
                 statusLabel.setForeground(Color.ORANGE);
             }
 
-            startButton.setEnabled(statObj.getStatus() != StatusObject.Status.STARTED
-                    && statObj.getStatus() != StatusObject.Status.STARTING);
-            stopButton.setEnabled(statObj.getStatus() != StatusObject.Status.STOPPED
-                    && statObj.getStatus() != StatusObject.Status.STOPPING);
-            restartButton.setEnabled(statObj.getStatus() != StatusObject.Status.STOPPED
-                    && statObj.getStatus() != StatusObject.Status.STOPPING);
+            if (startButtonDisabled) {
+                startButton.setEnabled(false);
+            } else {
+                startButton.setEnabled(statObj.getStatus() != StatusObject.Status.STARTED
+                        && statObj.getStatus() != StatusObject.Status.STARTING);
+            }
+
+            if (stopButtonDisabled) {
+                stopButton.setEnabled(false);
+            } else {
+                stopButton.setEnabled(statObj.getStatus() != StatusObject.Status.STOPPED
+                        && statObj.getStatus() != StatusObject.Status.STOPPING);
+            }
+
+            if (restartButtonDisabled) {
+                restartButton.setEnabled(false);
+            } else {
+                restartButton.setEnabled(statObj.getStatus() != StatusObject.Status.STOPPED
+                        && statObj.getStatus() != StatusObject.Status.STOPPING);
+            }
+        }
+
+        public boolean isRestartButtonDisabled() {
+            return restartButtonDisabled;
+        }
+
+        public void setRestartButtonDisabled(boolean restartButtonDisabled) {
+            this.restartButtonDisabled = restartButtonDisabled;
+        }
+
+        public boolean isStartButtonDisabled() {
+            return startButtonDisabled;
+        }
+
+        public void setStartButtonDisabled(boolean startButtonDisabled) {
+            this.startButtonDisabled = startButtonDisabled;
+        }
+
+        public boolean isStopButtonDisabled() {
+            return stopButtonDisabled;
+        }
+
+        public void setStopButtonDisabled(boolean stopButtonDisabled) {
+            this.stopButtonDisabled = stopButtonDisabled;
         }
     }
 }

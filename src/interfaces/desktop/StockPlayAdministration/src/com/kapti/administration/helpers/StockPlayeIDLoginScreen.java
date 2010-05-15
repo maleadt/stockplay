@@ -14,18 +14,19 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -37,17 +38,19 @@ import org.jdesktop.swingx.JXErrorPane;
  *
  * @author Thijs
  */
-public class StockPlayeIDLoginScreen extends JFrame implements PropertyChangeListener, LoginScreen {
+public class StockPlayeIDLoginScreen extends JFrame implements PropertyChangeListener, LoginScreen, ActionListener {
 
     JPanel panel = null;
-    JLabel step1Label = new JLabel("1. Detecteren van kaartlezers");
-    JLabel step2Label = new JLabel("2. Gelieve uw eID in de lezer te steken");
-    JLabel step3Label = new JLabel("3. Controle van eID op StockPlay server");
-    JLabel step4Label = new JLabel("4. Verificatie pincode");
-    JLabel step5Label = new JLabel("5. Inloggen op StockPlay server");
-    JLabel titleLabel = new JLabel("Login met eID");
+    JLabel step1Label = new JLabel(translations.getString("EID_1"));
+    JLabel step2Label = new JLabel(translations.getString("EID_2"));
+    JLabel step3Label = new JLabel(translations.getString("EID_3"));
+    JLabel step4Label = new JLabel(translations.getString("EID_4"));
+    JLabel step5Label = new JLabel(translations.getString("EID_5"));
+    JLabel titleLabel = new JLabel(translations.getString("EID_LOGIN_TITLE"));
+    JButton cancelButton = new JButton(translations.getString("EID_LOGIN_CANCEL"));
     private final static Color activeColor = Color.BLACK;
     private final static Color inactiveColor = Color.LIGHT_GRAY;
+    private static final ResourceBundle translations = ResourceBundle.getBundle("com/kapti/administration/translations");
     private long RRN = -1;
     private List<ActionListener> listeners = new ArrayList<ActionListener>();
 
@@ -102,6 +105,11 @@ public class StockPlayeIDLoginScreen extends JFrame implements PropertyChangeLis
         });
 
 
+        add(cancelButton, BorderLayout.SOUTH);
+
+        cancelButton.addActionListener(this);
+
+
         pack();
         setLocationRelativeTo(null);
 
@@ -138,7 +146,7 @@ public class StockPlayeIDLoginScreen extends JFrame implements PropertyChangeLis
             UserFactory uf = UserFactory.getInstance();
 
             if (!uf.verifyLogin(prefs.getEidAdminUsername(), prefs.getEidAdminPassword())) {
-                JOptionPane.showMessageDialog(rootPane, "Er is een probleem opgetreden tijdens het inloggen op de StockPlay server met de opgegeven gegevens! Controleer uw instellingen!", "Fout tijdens inloggen!", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(rootPane, translations.getString("EID_SERVER_ERROR_MESSAGE"), translations.getString("EID_SERVER_ERROR_TITLE"), JOptionPane.ERROR_MESSAGE);
                 return null;
             }
 
@@ -146,7 +154,7 @@ public class StockPlayeIDLoginScreen extends JFrame implements PropertyChangeLis
             Iterator<User> it = users.iterator();
 
             if (!it.hasNext()) {
-                JOptionPane.showMessageDialog(rootPane, "Er is geen account gekoppeld met de de ingelezen eID! Gelieve te controleren of u deze juist heeft geregistreerd!", "Fout tijdens inloggen!", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(rootPane, translations.getString("EID_NOACCOUNT_ERROR_MESSAGE"), translations.getString("EID_NOACCOUNT_ERROR_TITLE"), JOptionPane.ERROR_MESSAGE);
                 return null;
 
             }
@@ -161,10 +169,10 @@ public class StockPlayeIDLoginScreen extends JFrame implements PropertyChangeLis
                 if (!eid.isAuthenticated()) {
 
                     if (eid.isUserCancelled()) {
-                        JOptionPane.showMessageDialog(rootPane, "De verificatie van uw pin is mislukt omdat u het verificatieproces hebt geannuleerd", "Fout bij verifiëren pin", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(rootPane, translations.getString("EID_PINCANCEL_ERROR_MESSAGE"), translations.getString("EID_PINCANCEL_ERROR_TITLE"), JOptionPane.ERROR_MESSAGE);
                         return null;
                     } else {
-                        if (JOptionPane.showConfirmDialog(rootPane, String.format("De ingegeven pin was ongeldig! U heeft nog %d poging(en)! Wilt u opnieuw proberen aanmelden?", eid.getTriesLeft()), "Ongeldige PIN", JOptionPane.YES_NO_CANCEL_OPTION)
+                        if (JOptionPane.showConfirmDialog(rootPane, String.format(translations.getString("EID_PIN_ERROR_MESSAGE"), eid.getTriesLeft()), translations.getString("EID_PIN_ERROR_TITLE"), JOptionPane.YES_NO_CANCEL_OPTION)
                                 != JOptionPane.YES_OPTION) {
                             return null;
                         }
@@ -192,7 +200,7 @@ public class StockPlayeIDLoginScreen extends JFrame implements PropertyChangeLis
                 Logger.getLogger(StockPlayeIDLoginScreen.class.getName()).log(Level.SEVERE, null, ex);
             } catch (ExecutionException ex) {
 
-                JXErrorPane.showDialog(new Exception("Er is een fout opgetreden tijdens het verwerken van de eID-login", ex));
+                JXErrorPane.showDialog(new Exception(translations.getString("EID_PROCESS_ERROR"), ex));
                 fireActionEvent(new ActionEvent(this, 0, ""));
                 Logger.getLogger(StockPlayeIDLoginScreen.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -223,5 +231,10 @@ public class StockPlayeIDLoginScreen extends JFrame implements PropertyChangeLis
 
     public boolean isSuccess() {
         return success;
+    }
+
+    public void actionPerformed(ActionEvent e) {
+        fireActionEvent(new ActionEvent(this, 0, ""));
+        setVisible(false);
     }
 }

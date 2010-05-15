@@ -60,7 +60,7 @@ public class SecuritiesListPanel extends JPanel implements TableModelListener, L
     private JButton hideSecurity = new JButton(translations.getString("HIDE_SECURITY"));
     private JButton resumeSecurity = new JButton(translations.getString("RESUME_SECURITY"));
     private JButton suspendSecurity = new JButton(translations.getString("SUSPEND_SECURITY"));
-    private JButton saveButton = new JButton(translations.getString("SAVE"));
+    private JButton saveButton = new JButton(translations.getString("SAVE") + " (0)");
     private JButton refreshButton = new JButton(translations.getString("REFRESH"));
     //filtering
     private ExchangeRowFilter exchangeRowFilter = null;
@@ -163,6 +163,7 @@ public class SecuritiesListPanel extends JPanel implements TableModelListener, L
 
         saveButton.setActionCommand(SAVE_ACTION);
         saveButton.addActionListener(this);
+        saveButton.setEnabled(false);
 
         //we laden hier onze gegevens in
 
@@ -171,6 +172,8 @@ public class SecuritiesListPanel extends JPanel implements TableModelListener, L
 
     public void tableChanged(TableModelEvent e) {
         checkButtons();
+        saveButton.setText(translations.getString("SAVE") + " (" + securitiesTableModel.getChangedRowsCount() +  ")");
+        saveButton.setEnabled(securitiesTableModel.getChangedRowsCount() > 0);
     }
 
     public void valueChanged(ListSelectionEvent e) {

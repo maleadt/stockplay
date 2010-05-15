@@ -380,6 +380,8 @@ public class UsersListPanel extends JPanel implements TableModelListener, ListSe
 
     public void tableChanged(TableModelEvent e) {
         checkButtons();
+
+
     }
 
     public void valueChanged(ListSelectionEvent e) {

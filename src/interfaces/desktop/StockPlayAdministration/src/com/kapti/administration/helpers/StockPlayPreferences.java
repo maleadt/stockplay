@@ -16,6 +16,7 @@ import java.util.prefs.Preferences;
 public class StockPlayPreferences {
 
     Preferences prefs = Preferences.userNodeForPackage(StockPlayPreferences.class);
+    private static final String SERVERURLPREF = "serverurl";
     private static final String LOCALEPREF = "locale";
     private static final String USERNAMESPREF = "usernames";
     private static final String SAVEUSERNAMESPREF = "saveusernames";
@@ -25,6 +26,17 @@ public class StockPlayPreferences {
     private static final String EIDADMINUSERNAMEPREF = "eid-username";
     private static final String EIDADMINPASSWORDPREF = "eid-password";
     private static Locale[] supportedLocales = {new Locale("nl", "be"), Locale.ENGLISH};
+
+
+
+        public String getServerURL() {
+
+        return prefs.get(SERVERURLPREF, "http://be04.kapti.com/backend/public");
+    }
+
+    public void setServerURL(String serverurl) {
+        prefs.put(SERVERURLPREF, serverurl);
+    }
 
     public String getEidAdminUsername() {
 
@@ -131,7 +143,7 @@ public class StockPlayPreferences {
     }
 
     public boolean getLoginWithEid() {
-        return prefs.getBoolean(LOGINWITHEIDPREF, true);
+        return prefs.getBoolean(LOGINWITHEIDPREF, false);
     }
 
     public void setLoginWithEid(boolean loginwitheid) {

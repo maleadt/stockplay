@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jdesktop.swingx.JXLoginPane;
@@ -27,47 +28,41 @@ import org.jdesktop.swingx.JXLoginPane.Status;
  */
 public class StockPlayLoginScreen implements LoginScreen {
 
-
+    private static final ResourceBundle translations = ResourceBundle.getBundle("com/kapti/administration/translations");
     private List<ActionListener> listeners = new ArrayList<ActionListener>();
-    public void addActionListener(ActionListener listener){
+
+    public void addActionListener(ActionListener listener) {
         listeners.add(listener);
     }
 
-    public void removeActionListener(ActionListener listener){
+    public void removeActionListener(ActionListener listener) {
         listeners.remove(listener);
     }
 
+    private void fireActionEvent(ActionEvent e) {
 
-    private void fireActionEvent(ActionEvent e){
-
-        for(ActionListener listener : listeners){
+        for (ActionListener listener : listeners) {
             listener.actionPerformed(e);
         }
     }
-
     private boolean success = false;
 
     public boolean isSuccess() {
         return success;
     }
-
     private User user = null;
 
     public User getUser() {
         return user;
     }
-
-
-
     private final JXLoginPane loginPane = new JXLoginPane();
     private JXLoginFrame loginFrame;
-
 
     public StockPlayLoginScreen() {
         StockPlayPreferences prefs = new StockPlayPreferences();
 
-        loginPane.setBannerText("Stockplay");
-        loginPane.setMessage("Geef uw gegevens in om in te loggen:");
+        loginPane.setBannerText(translations.getString("STOCKPLAY"));
+        loginPane.setMessage(translations.getString("LOGIN_MESSAGE"));
 
         if (prefs.getSavePasswords() && prefs.getSaveUsernames()) {
             loginPane.setSaveMode(JXLoginPane.SaveMode.BOTH);
@@ -83,7 +78,7 @@ public class StockPlayLoginScreen implements LoginScreen {
         loginPane.setPasswordStore(new StockPlayPasswordStore());
 
         loginFrame = JXLoginPane.showLoginFrame(loginPane);
-        loginFrame.setTitle("StockPlay login");
+        loginFrame.setTitle(translations.getString("LOGIN_TITLE"));
         loginFrame.setVisible(true);
 
         loginFrame.addWindowListener(new WindowAdapter() {
@@ -91,19 +86,21 @@ public class StockPlayLoginScreen implements LoginScreen {
             @Override
             public void windowClosed(WindowEvent e) {
                 if (loginPane.getStatus() == Status.SUCCEEDED) {
-                    success= true;
-                    fireActionEvent(new ActionEvent(this, 1,""));
+                    success = true;
                     try {
                         Collection<User> users = UserFactory.getInstance().getUsersByFilter("nickname == '" + loginPane.getUserName() + "'");
                         Iterator<User> it = users.iterator();
-                        if(it.hasNext())
+                        if (it.hasNext()) {
                             user = it.next();
+                        }
+
+                        fireActionEvent(new ActionEvent(this, 1, ""));
                     } catch (StockPlayException ex) {
                         Logger.getLogger(StockPlayLoginScreen.class.getName()).log(Level.SEVERE, null, ex);
                     }
+                } else {
+                    fireActionEvent(new ActionEvent(this, 0, ""));
                 }
-                else
-                    fireActionEvent(new ActionEvent(this, 0,""));
             }
         });
     }

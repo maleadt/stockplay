@@ -3,8 +3,10 @@ package com.kapti.administration.tablemodels;
 import com.kapti.client.user.User;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.ResourceBundle;
-import java.util.Vector;
 import javax.swing.table.AbstractTableModel;
 
 /**
@@ -19,18 +21,22 @@ public class UsersTableModel extends AbstractTableModel {
     private final static boolean[] editableColumns = new boolean[]{false, true, true, true, true, true, false, false, false, false, true};
 
 
-    Vector<User> users = new Vector<User>();
+    Map<Integer,User> users = new HashMap<Integer,User>();
 
     public UsersTableModel() {
     }
 
     public void setUsers(Collection<User> users) {
         this.users.clear();
-        this.users.addAll(users);
+        int rownr = 0;
+        for(User u : users){
+            this.users.put(rownr++, u);
+        }
+
     }
 
     public User[] getUsers() {
-        return (User[])users.toArray();
+        return (User[]) users.values().toArray();
     }
 
     public int getRowCount() {
@@ -46,22 +52,25 @@ public class UsersTableModel extends AbstractTableModel {
     }
 
     public void setUserAt(int rowIndex, User user) {
-        users.set(rowIndex, user);
+        users.put(rowIndex, user);
         this.fireTableRowsUpdated(rowIndex, rowIndex);
     }
 
-    public void removeUserAt(int rowIndex){
+    public void removeUserAt(int rowIndex) {
         users.remove(rowIndex);
         fireTableRowsDeleted(rowIndex, rowIndex);
     }
 
-    public void removeUser(User user){
-        removeUserAt(users.indexOf(user));
+    public void removeUser(User user) {
+        for(Entry<Integer, User> entry : users.entrySet())
+            if(entry.getValue().equals(user))
+                removeUserAt(entry.getKey());
     }
 
-    public void addUser(User user){
-        users.add(user);
-        this.fireTableRowsInserted(users.indexOf(user), users.indexOf(user));
+    public void addUser(User user) {
+        int rownr = users.size();
+        users.put(rownr, user);
+        this.fireTableRowsInserted(rownr, rownr);
     }
 
     public Object getValueAt(int rowIndex, int columnIndex) {
@@ -103,10 +112,10 @@ public class UsersTableModel extends AbstractTableModel {
 
         switch (columnIndex) {
             case 1:
-                user.setNickname((String)aValue);
+                user.setNickname((String) aValue);
                 break;
             case 2:
-                user.setEmail((String)aValue);
+                user.setEmail((String) aValue);
                 break;
             case 3:
                 user.setLastname((String) aValue);
@@ -118,13 +127,13 @@ public class UsersTableModel extends AbstractTableModel {
                 user.setRole((User.Role) aValue);
                 break;
             case 7:
-                user.setPoints((Integer)aValue);
+                user.setPoints((Integer) aValue);
                 break;
             case 8:
-                user.setCash((Double)aValue);
+                user.setCash((Double) aValue);
                 break;
             case 10:
-                user.setRijksregisternummer((Long)aValue);
+                user.setRijksregisternummer((Long) aValue);
                 break;
         }
     }
@@ -141,6 +150,7 @@ public class UsersTableModel extends AbstractTableModel {
 
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
-        return editableColumns[columnIndex];
+        return false;
+        //return editableColumns[columnIndex];
     }
 }

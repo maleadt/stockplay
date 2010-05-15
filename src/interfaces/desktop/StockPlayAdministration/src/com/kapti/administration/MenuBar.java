@@ -5,24 +5,14 @@
 package com.kapti.administration;
 
 import com.kapti.administration.actions.ActionsFactory;
-import com.kapti.administration.helpers.StockPlayLoginScreen;
-import com.kapti.administration.helpers.StockPlayLoginService;
-import com.kapti.administration.helpers.StockPlayPasswordStore;
 import com.kapti.administration.helpers.StockPlayPreferences;
-import com.kapti.administration.helpers.StockPlayUsernameStore;
-import com.kapti.client.user.User;
-import com.kapti.client.user.UserFactory;
-import com.kapti.exceptions.StockPlayException;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.Locale;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.ResourceBundle;
 import javax.swing.Action;
 import javax.swing.ButtonGroup;
 import javax.swing.JCheckBoxMenuItem;
@@ -41,6 +31,7 @@ import org.jdesktop.swingx.JXLoginPane.Status;
  * @author Thijs
  */
 public class MenuBar extends JMenuBar {
+    private static final ResourceBundle translations = ResourceBundle.getBundle("com/kapti/administration/translations");
 
     JCheckBoxMenuItem saveUsernamesMenuItem = null;
     JCheckBoxMenuItem savePasswordsMenuItem = null;
@@ -51,9 +42,9 @@ public class MenuBar extends JMenuBar {
         StockPlayPreferences preferences = new StockPlayPreferences();
         ActionsFactory actFactory = ActionsFactory.getInstance();
 
-        JMenu fileMenu = new JMenu("Bestand");
+        JMenu fileMenu = new JMenu(translations.getString("FILE"));
 
-        JMenuItem exitItem = new JMenuItem("Afsluiten");
+        JMenuItem exitItem = new JMenuItem(translations.getString("EXIT"));
         exitItem.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
@@ -63,29 +54,29 @@ public class MenuBar extends JMenuBar {
         fileMenu.add(exitItem);
         add(fileMenu);
 
-        JMenu statusMenu = new JMenu("Status");
+        JMenu statusMenu = new JMenu(translations.getString("STATUS"));
 
         for (Action act : actFactory.getStatusActions()) {
             statusMenu.add(act);
         }
         add(statusMenu);
 
-        JMenu securitiesMenu = new JMenu("Effectenbeheer");
+        JMenu securitiesMenu = new JMenu(translations.getString("SECURITIESMANAGEMENTMENUITEM"));
         for (Action act : actFactory.getSecuritiesActions()) {
             securitiesMenu.add(act);
         }
         add(securitiesMenu);
 
-        JMenu usersMenu = new JMenu("Gebruikersbeheer");
+        JMenu usersMenu = new JMenu(translations.getString("USERMANAGEMENTMENUITEM"));
         for (Action act : actFactory.getUsersActions()) {
             usersMenu.add(act);
         }
         add(usersMenu);
 
 
-        JMenu settingsMenu = new JMenu("Instellingen");
+        JMenu settingsMenu = new JMenu(translations.getString("SETTINGS"));
 
-        JMenuItem languageItem = new JMenuItem("Taal:");
+        JMenuItem languageItem = new JMenuItem(translations.getString("LANGUAGE"));
         languageItem.setEnabled(false);
         languageItem.setFont(languageItem.getFont().deriveFont(Font.BOLD));
         settingsMenu.add(languageItem);
@@ -103,12 +94,12 @@ public class MenuBar extends JMenuBar {
 
         settingsMenu.add(new JSeparator());
 
-        JMenuItem loginItem = new JMenuItem("Login:");
+        JMenuItem loginItem = new JMenuItem(translations.getString("LOGIN"));
         loginItem.setEnabled(false);
         loginItem.setFont(languageItem.getFont().deriveFont(Font.BOLD));
         settingsMenu.add(loginItem);
 
-        saveUsernamesMenuItem = new JCheckBoxMenuItem("Gebruikersnamen opslaan");
+        saveUsernamesMenuItem = new JCheckBoxMenuItem(translations.getString("SAVE_USERNAMES"));
         saveUsernamesMenuItem.setState(preferences.getSaveUsernames());
         saveUsernamesMenuItem.addActionListener(new ActionListener() {
 
@@ -120,7 +111,7 @@ public class MenuBar extends JMenuBar {
 
         settingsMenu.add(saveUsernamesMenuItem);
 
-        savePasswordsMenuItem = new JCheckBoxMenuItem("Paswoorden opslaan");
+        savePasswordsMenuItem = new JCheckBoxMenuItem(translations.getString("SAVE_PASSWORDS"));
         savePasswordsMenuItem.setState(preferences.getSavePasswords());
         savePasswordsMenuItem.addActionListener(new ActionListener() {
 
@@ -134,7 +125,7 @@ public class MenuBar extends JMenuBar {
 
 
 
-        loginWithEidMenuItem = new JCheckBoxMenuItem("Login met eID");
+        loginWithEidMenuItem = new JCheckBoxMenuItem(translations.getString("LOGIN_WITH_EID"));
         loginWithEidMenuItem.setState(preferences.getLoginWithEid());
         loginWithEidMenuItem.addActionListener(new ActionListener() {
 
@@ -148,13 +139,13 @@ public class MenuBar extends JMenuBar {
                     //credentials opvragen
                     JXLoginPane loginPane = new JXLoginPane();
                     JXLoginFrame loginFrame;
-                    loginPane.setBannerText("Stockplay");
-                    JOptionPane.showMessageDialog(null, "StockPlay heeft een administratoraccount nodig om het gebruik van de eID-login toe te laten\nGeef in het volgende scherm de nodige logingegevens op.", "eID-login instellingen", JOptionPane.INFORMATION_MESSAGE);
+                    loginPane.setBannerText(translations.getString("LOGIN_EID_BANNER"));
+                    JOptionPane.showMessageDialog(null, translations.getString("LOGIN_EID_MESSAGE"), translations.getString("LOGIN_EID_TITLE"), JOptionPane.INFORMATION_MESSAGE);
 
-                    loginPane.setMessage("Geef een administratoraccount op: ");
+                    loginPane.setMessage(translations.getString("LOGIN_EID_MESSAGE2"));
 
                     loginFrame = JXLoginPane.showLoginFrame(loginPane);
-                    loginFrame.setTitle("StockPlay eID login account");
+                    loginFrame.setTitle(translations.getString("LOGIN_EID_TITLE2"));
                     loginFrame.setVisible(true);
 
                     loginFrame.addWindowListener(new WindowAdapter() {
@@ -168,12 +159,12 @@ public class MenuBar extends JMenuBar {
                                 prefs.setEidAdminUsername(loginFrame.getPanel().getUserName());
                                 prefs.setEidAdminPassword(new String(loginFrame.getPanel().getPassword()));
                                 prefs.setLoginWithEid(true);
-                                JOptionPane.showMessageDialog(null, "Het activeren van het eID-loginscherm is gelukt!", "eID-login instelling", JOptionPane.INFORMATION_MESSAGE);
+                                JOptionPane.showMessageDialog(null, translations.getString("LOGIN_EID_SUCCESS"), translations.getString("LOGIN_EID_SUCCESS_TITLE"), JOptionPane.INFORMATION_MESSAGE);
 
 
                             } else {
 
-                                JOptionPane.showMessageDialog(null, "Het activeren van het eID-loginscherm is mislukt, probeer opnieuw!", "eID-login instelling", JOptionPane.ERROR_MESSAGE);
+                                JOptionPane.showMessageDialog(null, translations.getString("LOGIN_EID_FAIL"), translations.getString("LOGIN_EID_FAIL_TITLE"), JOptionPane.ERROR_MESSAGE);
                                 loginWithEidMenuItem.setState(false);
 
                             }
@@ -205,7 +196,7 @@ public class MenuBar extends JMenuBar {
             StockPlayPreferences preferences = new StockPlayPreferences();
             preferences.setLocale(locale);
 
-            JOptionPane.showMessageDialog(null, "De taal zal worden aangepast de volgende keer als deze applicatie wordt gestart.");
+            JOptionPane.showMessageDialog(null, translations.getString("LANGUAGE_CHANGED_MESSAGE"));
         }
     }
 }
