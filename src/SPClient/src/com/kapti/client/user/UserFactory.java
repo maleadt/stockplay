@@ -56,7 +56,7 @@ public class UserFactory {
         ArrayList<User> result = new ArrayList<User>();
         try {
             XmlRpcClient client = SPClientFactory.getPrivateClient();
-            Object[] users = (Object[]) client.execute("User.List", new Object[]{filter});
+            Object[] users = (Object[]) client.execute("User.Details", new Object[]{filter});
 
             for (Object obj : users) {
                 result.add(User.fromStruct((HashMap) obj));
