@@ -35,7 +35,7 @@ public class StockPlayLoginService extends LoginService {
             if (UserFactory.getInstance().verifyLogin(name, new String(password))) {
 
                 //we bekijken of de gebruiker genoeg rechten heeft
-                Collection<User> users = UserFactory.getInstance().getUsersByFilter("nickname EQUALS '" + name + "'");
+                Collection<User> users = UserFactory.getInstance().getUsersDetailsByFilter("nickname EQUALS '" + name + "'");
                 Iterator<User> it = users.iterator();
 
                 if (it.hasNext()) {

@@ -128,7 +128,7 @@ public class UsersListPanel extends JPanel implements TableModelListener, ListSe
 
             @Override
             protected Collection<User> doInBackground() throws Exception {
-                return UserFactory.getInstance().getAllUsers();
+                return UserFactory.getInstance().getAllUsersWithDetails();
             }
 
             @Override

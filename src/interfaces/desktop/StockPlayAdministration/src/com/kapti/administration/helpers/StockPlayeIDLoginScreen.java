@@ -150,7 +150,7 @@ public class StockPlayeIDLoginScreen extends JFrame implements PropertyChangeLis
                 return null;
             }
 
-            Collection<User> users = uf.getUsersByFilter("rrn == '" + eid.getRijksRegisterNummer() + "'");
+            Collection<User> users = uf.getUsersDetailsByFilter("rrn == '" + eid.getRijksRegisterNummer() + "'");
             Iterator<User> it = users.iterator();
 
             if (!it.hasNext()) {

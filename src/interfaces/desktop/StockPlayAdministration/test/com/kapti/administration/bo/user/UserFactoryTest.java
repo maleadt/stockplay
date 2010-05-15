@@ -93,7 +93,7 @@ public class UserFactoryTest {
     @Test
     public void testGetAllUsers() throws Exception {
         System.out.println("getAllUsers");
-        Collection result = userFactory.getAllUsers();
+        Collection result = userFactory.getAllUsersWithDetails();
         assertTrue(!result.isEmpty());
     }
 
@@ -105,7 +105,7 @@ public class UserFactoryTest {
         System.out.println("getUsersByFilter");
         String filter = "nickname EQUALS 'UserFactoryTestUser'";
 
-        Collection result = userFactory.getUsersByFilter(filter);
+        Collection result = userFactory.getUsersDetailsByFilter(filter);
         assertTrue(!result.isEmpty());
 
     }

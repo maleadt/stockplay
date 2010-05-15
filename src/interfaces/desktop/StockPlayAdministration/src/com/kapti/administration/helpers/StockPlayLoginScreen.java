@@ -88,7 +88,7 @@ public class StockPlayLoginScreen implements LoginScreen {
                 if (loginPane.getStatus() == Status.SUCCEEDED) {
                     success = true;
                     try {
-                        Collection<User> users = UserFactory.getInstance().getUsersByFilter("nickname == '" + loginPane.getUserName() + "'");
+                        Collection<User> users = UserFactory.getInstance().getUsersDetailsByFilter("nickname == '" + loginPane.getUserName() + "'");
                         Iterator<User> it = users.iterator();
                         if (it.hasNext()) {
                             user = it.next();
