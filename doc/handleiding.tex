@@ -1,39 +1,69 @@
 \chapter{Handleiding desktop applicatie}
 
-De desktopapplicatie bevindt zich op de computer 'Nernst'.
-Op deze machine kan je inloggen met de gebruikersnaam 'Administrator' en het bekende wachtwoord 'e=mc**2'.
-De desktopapplicatie bevindt zich in de map 'VOP Groep 7' op het bureaublad en kan je opstarten doormiddel van de snelkoppeling 'StockPlay administratie'.
+De desktopapplicatie bevindt zich op de computer ``Nernst''.
+Op deze machine kan je inloggen met de gebruikersnaam ``Administrator'' en het bekende wachtwoord ``e=mc**2''.
+De desktopapplicatie bevindt zich in de map ''VOP Groep 7'' op het bureaublad en kan je opstarten door middel van de snelkoppeling ''StockPlay administratie''.
 
 \section{Algemene zaken}
+\label{sec:handl:admin:algemeen}
 
-Inloggen:
-De inloggegevens voor deze demo zijn ``Administrator'' en ``chocolademousse''. Je kan ook zelf een account aanmaken in gebruikersbeheer. Als deze de rechten ``Administrator'' bezit, dan kan je hiermee ook inloggen.
+\subsection{Verifi\"eren connectiviteit}
+
+Indien bij het opstarten van de applicatie de StockPlay servers niet toegankelijk blijken te zijn, wordt de gebruiker hiervan ge\"informeerd zoals te zien is in figuur \ref{fig:handl:admin:verbindingsfout}. Controleer of de PC waarop de applicatie gedraait wordt, wel internetconnectiviteit heeft. Indien dit het geval is, moeten er contact opgenomen worden met de ondersteunende dienst om de backend en client-configuratie te controleren.
 
 \begin{figure}[h!]
 	\centering
-		\includegraphics[width=\textwidth]{images/handleiding/handleiding1.png}
+		\includegraphics[width=\textwidth]{images/handleiding/administratie/verbindingsfout}
 	\caption{Aanmeldformulier}
+	\label{fig:handl:admin:verbindingsfout}
 \end{figure}
 
-Het standaard openingsscherm bevat een overzicht van de status van de verschillende componenten.
-Alsook bevat deze enkele belangrijke statistieken:
+\subsection{Inloggen}
+
+De inloggegevens voor deze demo zijn ``Administrator'' en ``chocolademousse''. Vul die gegevens in en druk op ``Login'', zoals te zien is in figuur \ref{fig:handl:admin:login}. Indien verkeerde credentials ingevoerd worden, krijgt de gebruiker hier melding van zoals te zien is in figuur \ref{fig:handl:admin:login-failure}.
+Je kan ook zelf een account aanmaken, zie daarvoor \ref{sec:handl:admin:gebruikers}. Als deze de rechten ``Administrator'' bezit, dan kan je hiermee ook inloggen.
+
+\begin{figure}[h!]
+	\centering
+		\includegraphics[width=\textwidth]{images/handleiding/administratie/login}
+	\caption{Aanmeldformulier}
+	\label{fig:handl:admin:login}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+		\includegraphics[width=\textwidth]{images/handleiding/administratie/login-failure}
+	\caption{Aanmeldformulier}
+	\label{fig:handl:admin:login-failure}
+\end{figure}
+
+Het standaard openingsscherm bevat een overzicht van de status van de verschillende componenten, zoals te zien is in figuur \ref{fig:handl:admin:status-overzicht}.
+Alsook bevat deze enkele belangrijke statistieken over de backend:
+\begin{enumerate_compact}
+\item Het aantal ingelogde gebruikers
+\item Hoe lang de backend reeds draait
+\item Hoeveel requests de backend reeds verwerkt heeft
+\end{enumerate_compact}
 Op het moment van schrijven is de logica in de 'backend' die achter de Start/Stop/Restart-knoppen zit nog niet uitgewerkt.
 
 \begin{figure}[h!]
 	\centering
-		\includegraphics[width=\textwidth]{images/handleiding/handleiding7.png}
+		\includegraphics[width=\textwidth]{images/handleiding/administratie/status-overzicht}
 	\caption{Overzicht van de componenten}
+		\label{fig:handl:admin:status-overzicht}
 \end{figure}
 
 \section{Beheer van effecten}
+\label{sec:handl:admin:effecten}
 
-Als je op ``Effectenbeheer'' in de linkerkolom klikt verschijnt onderstaand scherm (het inladen van de effecten duurt een kan even duren).
+Als je op ``Effectenbeheer'' in de linkerkolom klikt verschijnt een overzicht van alle effecten, zoals te zien in figuur \ref{sec:handl:admin:effecten} (het inladen van de effecten duurt een kan even duren).
 In het uitschuifmenu bevinden zich enkele filters die je kan activeren door ze aan te klikken.
 
 \begin{figure}[h!]
 	\centering
-		\includegraphics[width=\textwidth]{images/handleiding/handleiding6.png}
+		\includegraphics[width=\textwidth]{images/handleiding/administratie/effecten-overzicht}
 	\caption{Overzichtsscherm voor het effectenbeheer}
+		\label{fig:handl:admin:effecten-overzicht}
 \end{figure}
 
 Op elk effect kan je de volgende acties uitvoeren:
@@ -48,14 +78,16 @@ Op elk effect kan je de volgende acties uitvoeren:
 Om de wijzigingen permanent te maken klik je vervolgens op de knop ``Opslaan''.
 
 \section{Beheer van gebruikers}
+\label{sec:handl:admin:gebruikers}
 
-Als je ``Gebruikersbeheer'' in het navigatiemenu aanklikt, verschijnt het gebruikersbeheer.
+Als je ``Gebruikersbeheer'' in het navigatiemenu aanklikt, verschijnt het gebruikersbeheer zoals in figuur \ref{fig:handl:admin:gebruikers-overzicht}.
 Links verschijnt er ook terug een aantal filters die je kan activeren.
 
 \begin{figure}[h!]
 	\centering
-		\includegraphics[width=\textwidth]{images/handleiding/handleiding5.png}
+		\includegraphics[width=\textwidth]{images/handleiding/administratie/gebruikers-overzicht}
 	\caption{Gebruikersbeheer}
+		\label{fig:handl:admin:gebruikers-overzicht}
 \end{figure}
 
 Opmerking: In tegenstelling tot de wijzigingen die je uitgevoerd hebt bij het effectenbeheer zijn alle acties hier direct definitief!!
@@ -63,18 +95,24 @@ Opmerking: In tegenstelling tot de wijzigingen die je uitgevoerd hebt bij het ef
 De mogelijk acties zijn:
 \begin{itemize}
 \item{Aanmaken van een nieuwe gebruiker met ``Registreer gebruiker''.}
+\item{Bewerken van een bestaande gebruiker met ``Bewerk gebruiker''.}
 \end{itemize}
+
+\subsection{Gebruiker toevoegen}
+
+Na het klikken op de knop ``Registreer gebruiker'' verschijnt een scherm zoals in figuur \ref{fig:handl:admin:gebruikers-nieuw}. Hierin moet je de velden ''nickname'', ``wachtwoord'', ''achternaam'', ''voornaam'' en ''e-mailadres'' invullen. 
+De velden startbedrag, cash en punten worden bij het registeren van de gebruiker in de backend automatisch voor je ingevuld.
 
 \begin{figure}[h!]
 	\centering
-		\includegraphics[width=\textwidth]{images/handleiding/handleiding4.png}
+		\includegraphics[width=\textwidth]{images/handleiding/administratie/gebruikers-nieuw}
 	\caption{Een nieuwe gebruiker aanmaken}
+		\label{fig:handl:admin:gebruikers-nieuw}
 \end{figure}
 
-Om een nieuwe gebruiker te registeren moet je de velden ''nickname'', ``wachtwoord'', ''achternaam'', ''voornaam'' en ''e-mailadres'' invullen. 
-De velden startbedrag, cash en punten worden bij het registeren van de gebruiker in de backend automatisch voor je ingevuld.
+\subsection{Gebruiker bewerken}
 
-Bij het bewerken van een gebruiker verschijnt een gelijkaardig venster als dat van ``Registreer gebruiker''.
+Bij het bewerken van een gebruiker verschijnt een gelijkaardig venster als dat van ``Registreer gebruiker'' (figuur \ref{fig:handl:admin:gebruikers-edit})
 Dit venster verschilt hierin in de volgende punten:
 
 \begin{itemize}
@@ -84,14 +122,18 @@ Dit venster verschilt hierin in de volgende punten:
 
 \begin{figure}[h!]
 	\centering
-		\includegraphics[width=\textwidth]{images/handleiding/handleiding3.png}
+		\includegraphics[width=\textwidth]{images/handleiding/administratie/gebruikers-edit}
 	\caption{Details voor een gebruiker bekijken}
+		\label{fig:handl:admin:gebruikers-edit}
 \end{figure}
+
+Het wijzigen van de cashpositie wordt gedaan in een apart venster, waarin extra details zoals de ``reden van wijziging'' kunnen ingevuld worden. Zie daarvoor figuur \ref{fig:handl:admin:gebruikers-edit-cash}.
 
 \begin{figure}[h!]
 	\centering
-		\includegraphics[width=\textwidth]{images/handleiding/handleiding2.png}
+		\includegraphics[width=\textwidth]{images/handleiding/administratie/gebruikers-edit-cash}
 	\caption{Een wijziging in de cashpositie van een gebruiker vastleggen.}
+			\label{fig:handl:admin:gebruikers-edit-cash}
 \end{figure}
 
 \chapter{Handleiding webapplicatie}
