@@ -47,11 +47,33 @@ public class UserFactory {
     private UserFactory() {
     }
 
-    public Collection<User> getAllUsers() throws StockPlayException {
+        public Collection<User> getAllUsers() throws StockPlayException {
         return getUsersByFilter("");
     }
 
     public Collection<User> getUsersByFilter(String filter) throws StockPlayException {
+
+        ArrayList<User> result = new ArrayList<User>();
+        try {
+            XmlRpcClient client = SPClientFactory.getPrivateClient();
+            Object[] users = (Object[]) client.execute("User.List", new Object[]{filter});
+
+            for (Object obj : users) {
+                result.add(User.fromStruct((HashMap) obj));
+            }
+            return result;
+
+        } catch (XmlRpcException ex) {
+            System.out.println("Filter: " + filter);
+            throw new RequestError(ex);
+        }
+    }
+
+    public Collection<User> getAllUsersWithDetails() throws StockPlayException {
+        return getUsersDetailsByFilter("");
+    }
+
+    public Collection<User> getUsersDetailsByFilter(String filter) throws StockPlayException {
 
         ArrayList<User> result = new ArrayList<User>();
         try {
@@ -70,7 +92,7 @@ public class UserFactory {
     }
 
     public User getUserById(int id) throws StockPlayException {
-        Collection<User> users = getUsersByFilter("id == " + id);
+        Collection<User> users = getUsersDetailsByFilter("id == " + id);
         Iterator<User> it = users.iterator();
 
         if (it.hasNext()) {
