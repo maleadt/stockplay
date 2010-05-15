@@ -46,9 +46,12 @@ public class User implements Serializable {
     //
 
     public static enum Fields {
+
         ID, NICKNAME, PASSWORD, EMAIL, LASTNAME, FIRSTNAME, REGDATE, ROLE, POINTS, STARTAMOUNT, CASH, RRN
     }
-    public static Map<Fields, Class> Types = new HashMap<Fields, Class>() { {
+    public static Map<Fields, Class> Types = new HashMap<Fields, Class>() {
+
+        {
             put(Fields.ID, Integer.class);
             put(Fields.NICKNAME, String.class);
             put(Fields.PASSWORD, String.class);
@@ -61,8 +64,8 @@ public class User implements Serializable {
             put(Fields.STARTAMOUNT, Double.class);
             put(Fields.CASH, Double.class);
             put(Fields.RRN, String.class);
-    } };
-
+        }
+    };
     private int id = -1;
     private String nickname = "";
     private String password = "";
@@ -87,18 +90,17 @@ public class User implements Serializable {
 //        this.firstname = firstname;
 //        this.regdate = regdate;
 //    }
+    public User() {
+    }
 
-    public User(){}
-
-    public User (int id){
+    public User(int id) {
         this.id = id;
     }
 
     //
     // Methods
     //
-
-    private void setId(int id){
+    private void setId(int id) {
         this.id = id;
     }
 
@@ -171,7 +173,8 @@ public class User implements Serializable {
     public void setRole(int role) {
         this.role = Role.fromId(role);
     }
-    public void setRole(Role role){
+
+    public void setRole(Role role) {
         this.role = role;
     }
 
@@ -239,8 +242,6 @@ public class User implements Serializable {
         this.regdate = regdate;
     }
 
-
-
     /**
      * Geeft het User-object in een generiek HashMap-object terug, zodat het geserialiseerd kan worden voor XML-RPC
      * @param iFields De velden die moeten worden opgenomen in de struct (Opmerking: een paswoord kan niet worden opgevraagd!)
@@ -302,8 +303,9 @@ public class User implements Serializable {
             } catch (IllegalArgumentException e) {
                 throw new InvocationException(InvocationException.Type.KEY_DOES_NOT_EXIST, "requested key '" + tKey + "' does not exist");
             }
-            if (!Types.get(tField).isInstance(iStruct.get(tKey)))
+            if (!Types.get(tField).isInstance(iStruct.get(tKey))) {
                 throw new InvocationException(InvocationException.Type.BAD_REQUEST, "provided key '" + tKey + "' requires a " + Types.get(tField) + " instead of an " + iStruct.get(tKey).getClass());
+            }
 
 
             switch (tField) {
@@ -355,34 +357,18 @@ public class User implements Serializable {
             } catch (IllegalArgumentException e) {
                 throw new InvocationException(InvocationException.Type.KEY_DOES_NOT_EXIST, "requested key '" + tKey + "' does not exist");
             }
-            if (!Types.get(tField).isInstance(iStruct.get(tKey)))
+            if (!Types.get(tField).isInstance(iStruct.get(tKey))) {
                 throw new InvocationException(InvocationException.Type.BAD_REQUEST, "provided key '" + tKey + "' requires a " + Types.get(tField) + " instead of an " + iStruct.get(tKey).getClass());
+            }
             tStructMap.put(tField, tKey);
         }
 
-        // Check needed keys
-        //if (tStructMap.containsKey(Fields.ID)){// && tStructMap.containsKey(Fields.NICKNAME) && tStructMap.containsKey(Fields.EMAIL) && tStructMap.containsKey(Fields.FIRSTNAME) && tStructMap.containsKey(Fields.LASTNAME) && tStructMap.containsKey(Fields.REGDATE)) {
-            User tUser = new User();
-              //      (Integer) iStruct.get(tStructMap.get(Fields.ID)));
-//                    (String) iStruct.get(tStructMap.get(Fields.NICKNAME)),
-//                    (String) iStruct.get(tStructMap.get(Fields.EMAIL)),
-//                    (String) iStruct.get(tStructMap.get(Fields.LASTNAME)),
-//                    (String) iStruct.get(tStructMap.get(Fields.FIRSTNAME)),
-//                    (Date) iStruct.get(tStructMap.get(Fields.REGDATE)));
-       //     iStruct.remove(tStructMap.get(Fields.ID));
-//            iStruct.remove(tStructMap.get(Fields.NICKNAME));
-//            iStruct.remove(tStructMap.get(Fields.EMAIL));
-//            iStruct.remove(tStructMap.get(Fields.LASTNAME));
-//            iStruct.remove(tStructMap.get(Fields.FIRSTNAME));
-//            iStruct.remove(tStructMap.get(Fields.REGDATE));
-            return tUser;
-//        } else {
-//            throw new ServiceException(ServiceException.Type.NOT_ENOUGH_INFORMATION);
-//        }
+        User tUser = new User();
+        return tUser;
+
     }
 
-
-        public enum Role {
+    public enum Role {
 
         USER(0),
         ADMIN(1),
@@ -390,7 +376,6 @@ public class User implements Serializable {
         TRANSACTIONMANAGER(3),
         POINTSMANAGER(4),
         AI(5);
-
         int id;
 
         private Role(int id) {
@@ -409,6 +394,5 @@ public class User implements Serializable {
         public int getId() {
             return id;
         }
-
     }
 }

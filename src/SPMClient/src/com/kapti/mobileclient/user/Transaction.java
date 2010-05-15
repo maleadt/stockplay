@@ -152,7 +152,7 @@ public class Transaction {
             } else if (key.equals(TYPEFIELD)) {
                 t.type = (String) h.get(TYPEFIELD);
             } else if (key.equals(USERFIELD)) {
-                t.userid = Integer.parseInt((String) h.get(USERFIELD));
+                t.userid = ((Integer) h.get(USERFIELD)).intValue();
             } 
 
         }

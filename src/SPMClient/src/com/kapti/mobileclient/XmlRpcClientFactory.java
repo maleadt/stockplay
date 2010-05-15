@@ -13,8 +13,8 @@ import org.kxmlrpc.XmlRpcClient;
  */
 public class XmlRpcClientFactory {
 
-    //private static final String SERVER_URL = "http://tim_besard.iii.hogent.be:6800/backend/public";
-    private static final String SERVER_URL = "http://be04.kapti.com:6800/backend/public";
+    private static final String SERVER_URL = "http://localhost:6800/backend/public";
+    //private static final String SERVER_URL = "http://be04.kapti.com:6800/backend/public";
 
     private static String sessionID = null;
 
@@ -29,5 +29,9 @@ public class XmlRpcClientFactory {
 
     public static void setSessionID(String sessionID){
         XmlRpcClientFactory.sessionID = sessionID;
+    }
+
+    public static void resetSession(){
+        XmlRpcClientFactory.sessionID = null;
     }
 }

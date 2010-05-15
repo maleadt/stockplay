@@ -123,19 +123,19 @@ public class SecurityHandler extends MethodClass {
         Filter filter = parser.parse(iFilter);
 
         // Get the Indexs we need to modify
-        Collection<com.kapti.data.Security> tIndexs = tSecurityDAO.findByFilter(filter);
+        Collection<com.kapti.data.Security> tSecurities = tSecurityDAO.findByFilter(filter);
 
         // Now apply the new properties
         // TODO: controleren of de struct geen ID field bevat, deze kan _enkel_
         //       gebruikt worden om een initiële Exchange aa nte maken (Create)
-        for (com.kapti.data.Security tIndex : tIndexs) {
-            tIndex.applyStruct(iDetails);
-            tSecurityDAO.update(tIndex);
+        for (com.kapti.data.Security tSecurity : tSecurities) {
+            tSecurity.applyStruct(iDetails);
+            tSecurityDAO.update(tSecurity);
         }
 
         //Deze waarde kan gebruikt worden bij de unit tests om te verzekeren
         //dat het correct aantal securities aangepast zijn.
-        return tIndexs.size();
+        return tSecurities.size();
     }
 
     public int Create(HashMap<String, Object> iDetails) throws StockPlayException {

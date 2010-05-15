@@ -45,7 +45,7 @@ public class PortfolioHandler extends MethodClass {
     //
 
     public Vector<HashMap<String, Object>> List() throws StockPlayException {
-        return List("id == '" + getUser().getId() + "'i");
+        return List("userid == '" + getUser().getId() + "'i");
     }
 
     public Vector<HashMap<String, Object>> List(String iFilter) throws StockPlayException {

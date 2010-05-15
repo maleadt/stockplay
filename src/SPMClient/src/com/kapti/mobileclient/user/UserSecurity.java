@@ -115,7 +115,7 @@ public class UserSecurity {
             } else if (key.equals(ISINFIELD)) {
                 t.isin = (String) h.get(ISINFIELD);
             } else if (key.equals(USERFIELD)) {
-                t.userid = Integer.parseInt((String) h.get(USERFIELD));
+                t.userid = ((Integer) h.get(USERFIELD)).intValue();
             }
         }
 

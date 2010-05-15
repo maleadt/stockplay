@@ -88,15 +88,21 @@ public class Order {
      * @return the value of security
      */
     public Security getSecurity() {
-        if (security == null && isin != null) {
-            try {
-                security = FinanceFactory.getInstance().getSecurityById(isin);
-            } catch (StockPlayException ex) {
-                ex.printStackTrace();
-            }
-        }
+//        if (security == null && isin != null) {
+//            try {
+//                security = FinanceFactory.getInstance().getSecurityById(isin);
+//            } catch (StockPlayException ex) {
+//                ex.printStackTrace();
+//            }
+//        }
         return security;
     }
+
+    public String getIsin() {
+        return isin;
+    }
+
+    
 
     /**
      * Set the value of security
@@ -260,12 +266,18 @@ public class Order {
                 t.amount = ((Integer) h.get(AMOUNTFIELD)).intValue();
             } else if (key.equals(ISINFIELD)) {
                 t.isin = (String) h.get(ISINFIELD);
+                try {
+                    t.security = FinanceFactory.getInstance().getSecurityById(t.isin);
+                } catch (StockPlayException ex) {
+                    ex.printStackTrace();
+                }
+
             } else if (key.equals(PRICEFIELD)) {
                 t.price = Double.valueOf((String) h.get(PRICEFIELD));
             } else if (key.equals(TYPEFIELD)) {
                 t.type = (String) h.get(TYPEFIELD);
             } else if (key.equals(USERFIELD)) {
-                t.userid = Integer.parseInt((String) h.get(USERFIELD));
+                t.userid = ((Integer)h.get(USERFIELD)).intValue();
             } else if (key.equals(CREATIONTIMEFIELD)) {
                 t.creationTime = (Date) h.get(CREATIONTIMEFIELD);
             } else if (key.equals(EXECUTIONTIMEFIELD)) {
@@ -284,21 +296,21 @@ public class Order {
 
         Hashtable h = new Hashtable();
 
-        h.put(IDFIELD, new Integer(getId()));
+//        h.put(IDFIELD, new Integer(getId()));
         h.put(USERFIELD, new Integer(getUser().getId()));
         h.put(ISINFIELD, getSecurity().getISIN());
 
-        if (getCreationTime() != null) {
-            h.put(CREATIONTIMEFIELD, getCreationTime());
-        }
-
-        if (getExecutionTime() != null) {
-            h.put(EXECUTIONTIMEFIELD, getExecutionTime());
-        }
-
-        if (getExpirationTime() != null) {
-            h.put(EXPIRATIONTIMEFIELD, getExpirationTime());
-        }
+//        if (getCreationTime() != null) {
+//            h.put(CREATIONTIMEFIELD, getCreationTime());
+//        }
+//
+//        if (getExecutionTime() != null) {
+//            h.put(EXECUTIONTIMEFIELD, getExecutionTime());
+//        }
+//
+//        if (getExpirationTime() != null) {
+//            h.put(EXPIRATIONTIMEFIELD, getExpirationTime());
+//        }
 
         h.put(AMOUNTFIELD, new Integer(getAmount()));
         h.put(PRICEFIELD,getPrice());

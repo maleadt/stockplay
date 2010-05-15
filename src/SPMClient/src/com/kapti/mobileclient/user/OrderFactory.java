@@ -46,7 +46,7 @@ public class OrderFactory {
         try {
             XmlRpcClient client = XmlRpcClientFactory.getXmlRpcClient();
             Vector params = new Vector();
-            params.addElement(filter);
+            //params.addElement(filter);
             Vector users = (Vector) client.execute("User.Order.List", params);
 
             for(Enumeration e = users.elements(); e.hasMoreElements();)
@@ -71,9 +71,9 @@ public class OrderFactory {
         Hashtable h = t.toStruct();
 
         //verwijder illegale velden
-        h.remove(Order.IDFIELD);
-        h.remove(Order.CREATIONTIMEFIELD);
-        h.remove(Order.EXECUTIONTIMEFIELD);
+//        h.remove(Order.IDFIELD);
+//        h.remove(Order.CREATIONTIMEFIELD);
+//        h.remove(Order.EXECUTIONTIMEFIELD);
 
         try {
         if (t.getId() > 0) {
@@ -82,7 +82,12 @@ public class OrderFactory {
 
             Vector params = new Vector();
             params.addElement("id == '" + t.getId() + "'");
-            params.addElement(h);
+
+
+            Hashtable h2 = new Hashtable();
+            h2.put(Order.STATUSFIELD, t.status);
+
+            params.addElement(h2);
       
             return ((Boolean) client.execute("User.Order.Modify", params)).booleanValue();
         }else {
