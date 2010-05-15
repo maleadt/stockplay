@@ -36,6 +36,8 @@ public interface StockPlayDAO {
     public GenericDAO<PointsTransaction, PointsTransaction.PointsTransactionPK> getPointsTransactionDAO();
     public GenericDAO<Role, Integer> getRolesDAO();
 
+    public boolean testConnection();
+
     public long getUptime() throws StockPlayException;
     public double getRate() throws StockPlayException;
 }

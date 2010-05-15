@@ -53,6 +53,7 @@ public class OracleStockPlayDAO implements StockPlayDAO {
     // Granted via 'grant select on sys.v_$instance to stockplay'
     private static final String SELECT_UPTIME = "SELECT (sysdate - startup_time)*24*60*60 FROM sys.v_$instance";
     private static final String SELECT_RATE = "SELECT MAX(VALUE) FROM sys.v_$sysmetric WHERE METRIC_NAME = 'User Transaction Per Sec' GROUP BY METRIC_NAME";
+    private static final String SELECT_TEST = "SELECT 1 FROM DUAL";
 
     // Caches
     
@@ -166,6 +167,41 @@ public class OracleStockPlayDAO implements StockPlayDAO {
         } catch (SQLException ex) {
             throw new SubsystemException(SubsystemException.Type.DATABASE_FAILURE, ex.getCause());
         }
+    }
+
+    public boolean testConnection() {
+        boolean tConnectivity;
+
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            try {
+                conn = OracleConnection.getConnection();
+                stmt = conn.prepareStatement(SELECT_TEST);
+
+                rs = stmt.executeQuery();
+                if (rs.next()) {
+                    tConnectivity = true;
+                } else {
+                    tConnectivity = false;
+                }
+            } finally {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            }
+        } catch (Exception ex) {
+            tConnectivity = false;
+        }
+
+        return tConnectivity;
     }
 
     public double getRate() throws StockPlayException {

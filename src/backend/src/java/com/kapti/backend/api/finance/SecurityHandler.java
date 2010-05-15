@@ -94,27 +94,6 @@ public class SecurityHandler extends MethodClass {
         return oVector;
     }
 
-    public List<Map<String, Object>> ListIndexes(String iFilter) throws StockPlayException {
-        // Get DAO reference
-        GenericDAO<com.kapti.data.Index, String> tIndexDAO = getDAO().getIndexDAO();
-
-        Parser parser = Parser.getInstance();
-        Filter filter = parser.parse(iFilter);
-
-        // Fetch and convert all Indexs
-        Collection<com.kapti.data.Index> tIndexes = tIndexDAO.findByFilter(filter);
-        Vector<Map<String, Object>> oVector = new Vector<Map<String, Object>>();
-        for (com.kapti.data.Index tIndex : tIndexes) {
-            oVector.add(tIndex.toStruct(
-                    com.kapti.data.Index.Fields.ISIN,
-                    com.kapti.data.Index.Fields.SYMBOL,
-                    com.kapti.data.Index.Fields.NAME,
-                    com.kapti.data.Index.Fields.EXCHANGE));
-        }
-
-        return oVector;
-    }
-
     public int Modify(String iFilter, HashMap<String, Object> iDetails) throws StockPlayException {
         // Get DAO reference
         GenericDAO<com.kapti.data.Security, String> tSecurityDAO = getDAO().getSecurityDAO();
@@ -126,15 +105,13 @@ public class SecurityHandler extends MethodClass {
         Collection<com.kapti.data.Security> tSecurities = tSecurityDAO.findByFilter(filter);
 
         // Now apply the new properties
-        // TODO: controleren of de struct geen ID field bevat, deze kan _enkel_
-        //       gebruikt worden om een initiële Exchange aa nte maken (Create)
         for (com.kapti.data.Security tSecurity : tSecurities) {
             tSecurity.applyStruct(iDetails);
             tSecurityDAO.update(tSecurity);
         }
 
-        //Deze waarde kan gebruikt worden bij de unit tests om te verzekeren
-        //dat het correct aantal securities aangepast zijn.
+        // Deze waarde kan gebruikt worden bij de unit tests om te verzekeren
+        // dat het correct aantal securities aangepast zijn.
         return tSecurities.size();
     }
 
@@ -163,33 +140,6 @@ public class SecurityHandler extends MethodClass {
             tSecurityDAO.delete(security);
 
         return tSecurities.size();
-    }
-
-    public List<Map<String, Object>> Details(String iFilter) throws StockPlayException {
-        // Get DAO reference
-        GenericQuoteDAO tQuoteDAO = getDAO().getQuoteDAO();
-
-        Parser parser = Parser.getInstance();
-        Filter filter = parser.parse(iFilter);
-
-        // Fetch and convert all Indexs
-        Collection<com.kapti.data.Quote> tQuotes = tQuoteDAO.findLatestByFilter(filter);
-        Vector<Map<String, Object>> oVector = new Vector<Map<String, Object>>();
-        for (com.kapti.data.Quote tQuote : tQuotes) {
-            oVector.add(tQuote.toStruct(
-                    Quote.Fields.ISIN,
-                    Quote.Fields.TIME,
-                    Quote.Fields.PRICE,
-                    Quote.Fields.VOLUME,
-                    Quote.Fields.BID,
-                    Quote.Fields.ASK,
-                    Quote.Fields.LOW,
-                    Quote.Fields.HIGH,
-                    Quote.Fields.OPEN
-                    ));
-        }
-
-        return oVector;
     }
 
     /**

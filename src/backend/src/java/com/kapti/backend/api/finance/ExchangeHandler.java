@@ -92,8 +92,6 @@ public class ExchangeHandler extends MethodClass {
         Collection<com.kapti.data.Exchange> tExchanges = exDAO.findByFilter(filter);
 
         // Now apply the new properties
-        // TODO: controleren of de struct geen ID field bevat, deze kan _enkel_
-        //       gebruikt worden om een initiële Exchange aa nte maken (Create)
         for (com.kapti.data.Exchange tExchange : tExchanges) {
             tExchange.applyStruct(iDetails);
             exDAO.update(tExchange);

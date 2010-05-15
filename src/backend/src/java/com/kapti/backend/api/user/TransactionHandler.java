@@ -72,7 +72,8 @@ public class TransactionHandler extends MethodClass {
                     com.kapti.data.Transaction.Fields.ISIN,
                     com.kapti.data.Transaction.Fields.TIME,
                     com.kapti.data.Transaction.Fields.TYPE,
-                    com.kapti.data.Transaction.Fields.USER));
+                    com.kapti.data.Transaction.Fields.USER,
+                    com.kapti.data.Transaction.Fields.COMMENTS));
         }
 
         return oVector;        

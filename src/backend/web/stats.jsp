@@ -78,8 +78,10 @@
         </p>
 
         <h2>Cache</h2>
-           <form action="stats.jsp" method="post">
-            <input type="submit" name="submit" value="Clear" />
+        <form action="stats.jsp" method="post">
+            <p>
+                <input type="submit" name="submit" value="Clear" />
+            </p>
         </form>
         <%
             String iAction = request.getParameter("submit");
@@ -87,7 +89,6 @@
                 com.kapti.cache.Manager.clear();
             }
         %>
-
         <table border="1">
             <tr>
                 <th>Cache</th>

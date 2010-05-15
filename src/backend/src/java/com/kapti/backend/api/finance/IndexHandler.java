@@ -61,16 +61,16 @@ public class IndexHandler extends MethodClass {
     
     public Vector<HashMap<String, Object>> List(String iFilter) throws StockPlayException {
         // Get DAO reference
-        GenericDAO<com.kapti.data.Index, String> exDAO = getDAO().getIndexDAO();
+        GenericDAO<com.kapti.data.Index, String> tIndexDAO = getDAO().getIndexDAO();
 
         Parser parser = Parser.getInstance();
         Filter filter = parser.parse(iFilter);
 
         // Fetch and convert all exchanges
-        Collection<com.kapti.data.Index> tExchanges = exDAO.findByFilter(filter);
+        Collection<com.kapti.data.Index> tIndexes = tIndexDAO.findByFilter(filter);
         Vector<HashMap<String, Object>> oVector = new Vector<HashMap<String, Object>>();
-        for (com.kapti.data.Index tExchange : tExchanges) {
-            oVector.add(tExchange.toStruct(
+        for (com.kapti.data.Index tIndex : tIndexes) {
+            oVector.add(tIndex.toStruct(
                     com.kapti.data.Index.Fields.ISIN,
                     com.kapti.data.Index.Fields.SYMBOL,
                     com.kapti.data.Index.Fields.NAME,

@@ -309,9 +309,6 @@ public class User implements Serializable {
 
 
             switch (tField) {
-                case ID:
-                    setId((Integer) tValue);
-                    break;
                 case FIRSTNAME:
                     setFirstname((String) tValue);
                     break;
@@ -363,9 +360,13 @@ public class User implements Serializable {
             tStructMap.put(tField, tKey);
         }
 
-        User tUser = new User();
-        return tUser;
-
+        // Check needed keys
+//        if (tStructMap.containsKey(Fields.ID)){// && tStructMap.containsKey(Fields.NICKNAME) && tStructMap.containsKey(Fields.EMAIL) && tStructMap.containsKey(Fields.FIRSTNAME) && tStructMap.containsKey(Fields.LASTNAME) && tStructMap.containsKey(Fields.REGDATE)) {
+            User tUser = new User();
+            return tUser;
+//        } else {
+//            throw new ServiceException(ServiceException.Type.NOT_ENOUGH_INFORMATION);
+//        }
     }
 
     public enum Role {

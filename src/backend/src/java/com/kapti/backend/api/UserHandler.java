@@ -116,12 +116,8 @@ public class UserHandler extends MethodClass {
             oVector.add(tUser.toStruct(
                     com.kapti.data.User.Fields.ID,
                     com.kapti.data.User.Fields.NICKNAME,
-                    com.kapti.data.User.Fields.EMAIL,
-                    com.kapti.data.User.Fields.LASTNAME,
-                    com.kapti.data.User.Fields.FIRSTNAME,
                     com.kapti.data.User.Fields.CASH,
                     com.kapti.data.User.Fields.ROLE,
-                    com.kapti.data.User.Fields.RRN,
                     com.kapti.data.User.Fields.STARTAMOUNT,
                     com.kapti.data.User.Fields.REGDATE,
                     com.kapti.data.User.Fields.POINTS));

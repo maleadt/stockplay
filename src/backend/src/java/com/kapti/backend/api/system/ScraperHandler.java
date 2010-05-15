@@ -48,6 +48,7 @@ public class ScraperHandler extends MethodClass {
     }
     
     public HashMap<String, Object> Stats() throws StockPlayException {
-        throw new UnsupportedOperationException("Not supported yet.");
+        HashMap<String, Object> oStats = new HashMap<String, Object>();
+        return oStats;
     }
 }

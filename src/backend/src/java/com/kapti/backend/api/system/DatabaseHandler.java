@@ -19,6 +19,8 @@
 package com.kapti.backend.api.system;
 
 import com.kapti.backend.api.MethodClass;
+import com.kapti.data.persistence.StockPlayDAO;
+import com.kapti.data.persistence.StockPlayDAOFactory;
 import com.kapti.exceptions.StockPlayException;
 import java.util.HashMap;
 
@@ -36,7 +38,11 @@ public class DatabaseHandler extends MethodClass {
     //
 
     public int Status() throws StockPlayException {
-        return 1;
+        StockPlayDAO tDAO = StockPlayDAOFactory.getDAO();
+        if (tDAO.testConnection())
+            return 1;
+        else
+            return 0;
     }
 
     public HashMap<String, Object> Stats() throws StockPlayException {
