@@ -19,7 +19,6 @@
 package com.kapti.backend.api.user;
 
 import com.kapti.backend.api.MethodClass;
-import com.kapti.backend.helpers.DateHelper;
 import com.kapti.data.PointsTransaction;
 import com.kapti.data.PointsTransaction.Fields;
 import com.kapti.data.PointsTransaction.PointsTransactionPK;
@@ -30,10 +29,8 @@ import com.kapti.exceptions.StockPlayException;
 import com.kapti.filter.Filter;
 import com.kapti.filter.parsing.Parser;
 import com.kapti.filter.relation.RelationAnd;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.TimeZone;
 import java.util.Vector;
 
 /**
@@ -76,13 +73,15 @@ public class PointsHandler extends MethodClass {
         Filter filter = parser.parse(iFilter);
 
         // Fetch and convert all Indexs
-        Collection<Rank> tRanking = tPointsTransactionDAO.findRankingEventByFilter(filter);
+        Collection<PointsTransaction> tRanking = tPointsTransactionDAO.findRankingEventByFilter(filter);
         Vector<HashMap<String, Object>> oVector = new Vector<HashMap<String, Object>>();
-        for (Rank tRank : tRanking) {
-            oVector.add(tRank.toStruct(
-                    Rank.Fields.ID,
-                    Rank.Fields.TOTAL,
-                    Rank.Fields.RANK));
+        for (PointsTransaction tPoints : tRanking) {
+            oVector.add(tPoints.toStruct(
+                    Fields.USER,
+                    Fields.TYPE,
+                    Fields.TIMESTAMP,
+                    Fields.DELTA,
+                    Fields.COMMENTS));
         }
 
         return oVector;
@@ -113,6 +112,7 @@ public class PointsHandler extends MethodClass {
         for (PointsTransaction tTransaction : tTransactions) {
             oVector.add(tTransaction.toStruct(
                     Fields.USER,
+                    Fields.TYPE,
                     Fields.TIMESTAMP,
                     Fields.DELTA,
                     Fields.COMMENTS));
@@ -126,7 +126,7 @@ public class PointsHandler extends MethodClass {
         GenericDAO<PointsTransaction, PointsTransactionPK> tPointsTransactionDAO = getDAO().getPointsTransactionDAO();
 
         // Instantiate a new transaction
-        iDetails.put(Fields.TIMESTAMP.toString(), DateHelper.convertCalendar(Calendar.getInstance(), TimeZone.getTimeZone("GMT")).getTime());
+        //iDetails.put(Fields.TIMESTAMP.toString(), DateHelper.convertCalendar(Calendar.getInstance(), TimeZone.getTimeZone("GMT")).getTime());
         PointsTransaction tTransaction = PointsTransaction.fromStruct(iDetails);
         tTransaction.applyStruct(iDetails);
 

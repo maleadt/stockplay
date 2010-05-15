@@ -79,13 +79,14 @@ public class Main {
         //Instantie aanmaken (deze klassen hebben een lege constructor en hierdoor kan je gewoon newInstance aanroepen)
         IIndividualEvent individualEvent = (IIndividualEvent) loadedClass.newInstance();
 
+        Date startDate = new Date();
         Iterator<User> iterator = users.iterator();
 
         while(iterator.hasNext()) {
             User user = iterator.next();
 
             if(individualEvent.getPoints(user) != 0) {
-                PointsTransaction points = PointsTransactionFactory.getInstance().createTransaction(user, individualEvent.getType(), new Date());
+                PointsTransaction points = PointsTransactionFactory.getInstance().createTransaction(user, individualEvent.getType(), startDate);
                 points.setDelta(individualEvent.getPoints(user));
                 points.setComment(individualEvent.getDescription());
                 PointsTransactionFactory.getInstance().makePersistent(points);
@@ -115,13 +116,14 @@ public class Main {
         //Object maken
         ARankingEvent rankingEvent = (ARankingEvent) cons.newInstance(args);
 
+        Date startDate = new Date();
         Iterator<User> iterator = users.iterator();
 
         while(iterator.hasNext()) {
             User user = iterator.next();
 
             if(rankingEvent.getDescription(user) != null) {
-                PointsTransaction points = PointsTransactionFactory.getInstance().createTransaction(user, rankingEvent.getType(), new Date());
+                PointsTransaction points = PointsTransactionFactory.getInstance().createTransaction(user, rankingEvent.getType(), startDate);
                 points.setDelta(rankingEvent.getPoints(user));
                 points.setComment(rankingEvent.getDescription(user));
                 PointsTransactionFactory.getInstance().makePersistent(points);

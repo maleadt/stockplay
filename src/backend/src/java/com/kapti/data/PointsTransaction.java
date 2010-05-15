@@ -52,7 +52,6 @@ public class PointsTransaction implements Serializable {
             put(Fields.COMMENTS, String.class);
     } };
 
-    private PointsType type;
     private int delta;
     private String comments;
     private PointsTransactionPK pk;
@@ -67,11 +66,7 @@ public class PointsTransaction implements Serializable {
     }
 
     public PointsType getType() {
-        return type;
-    }
-
-    public void setType(PointsType type) {
-        this.type = type;
+        return pk.getType();
     }
 
     public String getComments() {
@@ -136,9 +131,6 @@ public class PointsTransaction implements Serializable {
                 throw new InvocationException(InvocationException.Type.BAD_REQUEST, "provided key '" + tKey + "' requires a " + Types.get(tField) + " instead of an " + iStruct.get(tKey).getClass());
 
             switch (tField) {
-                case TYPE:
-                    setType(PointsType.valueOf((String)tValue));
-                    break;
                 case DELTA:
                     setDelta((Integer) tValue);
                     break;
@@ -168,9 +160,10 @@ public class PointsTransaction implements Serializable {
 
         // Check needed keys
         if (tStructMap.containsKey(Fields.USER) && tStructMap.containsKey(Fields.TIMESTAMP) && tStructMap.containsKey(Fields.TYPE)) {
-            PointsTransaction tTransaction = new PointsTransaction((Integer) iStruct.get(tStructMap.get(Fields.USER)), PointsType.valueOf((String)iStruct.get(tStructMap.get(Fields.TYPE))), (Date) iStruct.get(tStructMap.get(Fields.TIMESTAMP)));
+            PointsTransaction tTransaction = new PointsTransaction((Integer) iStruct.get(tStructMap.get(Fields.USER)), PointsType.valueOf((String) iStruct.get(tStructMap.get(Fields.TYPE))), (Date) iStruct.get(tStructMap.get(Fields.TIMESTAMP)));
             iStruct.remove(tStructMap.get(Fields.USER));
             iStruct.remove(tStructMap.get(Fields.TIMESTAMP));
+            iStruct.remove(tStructMap.get(Fields.TYPE));
             return tTransaction;
         } else {
             throw new ServiceException(ServiceException.Type.NOT_ENOUGH_INFORMATION);
@@ -190,6 +183,7 @@ public class PointsTransaction implements Serializable {
 
         public PointsTransactionPK(int user, PointsType type, Date timestamp) {
             this.user = user;
+            this.type = type;
             this.timestamp = timestamp;
         }
 

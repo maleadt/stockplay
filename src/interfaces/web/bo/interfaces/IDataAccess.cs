@@ -44,7 +44,7 @@ namespace StockPlay
 
         //Points
         List<IRank> GetRanking(int start, int stop); //Geeft alle spelers die tussen start en stop geranschikt staan
-        List<IRank> GetRankingEvent(string name); //Haalt de laatste punten op van een bepaalde rankingevent
+        List<IPointsTransaction> GetRankingEvent(string name); //Haalt de laatste punten op van een bepaalde rankingevent
 	
 	    //Orders
 	    void CreateOrder(int userId, string isin, int amount, double price, double alternativeLimit, string type, string sessionID, ISession sessionHandler);

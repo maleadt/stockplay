@@ -21,15 +21,69 @@ namespace StockPlay.Web
             if (!IsPostBack)
             {
                 IDataAccess data = DataAccessFactory.GetDataAccess();
-                if(Request.Params["event"] == null)
-                    RankingGridView.DataSource = GenerateDataTable(data.GetRanking(1, 20));
+                if (Request.Params["event"] == null)
+                {
+                    RankingGridView.Visible = true;
+                    PointsTransactionGridView.Visible = false;
+
+                    RankingGridView.DataSource = GenerateRankingTable(data.GetRanking(1, 20));
+                    RankingGridView.DataBind();
+                }
                 else
-                    RankingGridView.DataSource = GenerateDataTable(data.GetRankingEvent(Request.Params["event"]));
-                RankingGridView.DataBind();
+                {
+                    RankingGridView.Visible = false;
+                    PointsTransactionGridView.Visible = true;
+
+                    DataTable table = GeneratePointsTransactionTable(data.GetRankingEvent(Request.Params["event"]));
+                    DataView view = table.DefaultView;
+                    view.Sort = "Points DESC";
+
+                    PointsTransactionGridView.DataSource = view;
+                    PointsTransactionGridView.DataBind();
+                }
             }
 	    }
 
-        private DataTable GenerateDataTable(List<IRank> ranking)
+        private DataTable GeneratePointsTransactionTable(List<IPointsTransaction> list)
+        {
+            //Bijbehorende users opvragen
+            IDataAccess data = DataAccessFactory.GetDataAccess();
+
+            List<int> userIDs = new List<int>();
+            foreach (IPointsTransaction transaction in list)
+                userIDs.Add(transaction.UserID);
+
+            List<IUser> users = data.GetUserListById(userIDs.ToArray());
+
+            //Usernames in een woordenboek steken om snel op te halen
+            Dictionary<int, IUser> userDictionary = new Dictionary<int, IUser>();
+
+            foreach (IUser user in users)
+                userDictionary.Add(user.ID, user);
+
+            DataTable transactionTable = new DataTable("PointsTransactionTable");
+
+            transactionTable.Columns.Add("Username");
+            transactionTable.Columns["Username"].DataType = typeof(string);
+            transactionTable.Columns.Add("Points");
+            transactionTable.Columns["Points"].DataType = typeof(int);
+            transactionTable.Columns.Add("Comments");
+            transactionTable.Columns["Comments"].DataType = typeof(string);
+
+            foreach (IPointsTransaction transaction in list)
+            {
+                DataRow row = transactionTable.NewRow();
+                row[0] = userDictionary[transaction.UserID].Nickname;
+                row[1] = transaction.Delta;
+                row[2] = transaction.Comments;
+
+                transactionTable.Rows.Add(row);
+            }
+
+            return transactionTable;
+        }
+
+        private DataTable GenerateRankingTable(List<IRank> ranking)
         {
             //Bijbehorende users opvragen
             IDataAccess data = DataAccessFactory.GetDataAccess();
@@ -69,21 +123,6 @@ namespace StockPlay.Web
             }
 
             return rankingTable;
-        }
-
-        protected void TransactionGridvie_RowDatabound(object sender, GridViewRowEventArgs e)
-        {
-            if (e.Row.RowType == DataControlRowType.DataRow)
-            {
-                if(Request.Params["event"] == null || Request.Params["event"].Equals("Cash"))
-                    e.Row.Cells[3].Visible = false;
-            }
-
-            if (e.Row.RowType == DataControlRowType.Header)
-            {
-                if (Request.Params["event"] == null || Request.Params["event"].Equals("Cash"))
-                    e.Row.Cells[3].Visible = false;
-            }
         }
 	}
 }

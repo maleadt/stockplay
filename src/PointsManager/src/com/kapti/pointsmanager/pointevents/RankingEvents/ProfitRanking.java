@@ -4,6 +4,7 @@ import com.kapti.client.user.PointsType;
 import com.kapti.client.user.User;
 import com.kapti.exceptions.StockPlayException;
 import com.kapti.pointsmanager.util.Profit;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -25,6 +26,8 @@ public class ProfitRanking extends ARankingEvent {
 
     private static Logger logger = Logger.getLogger(ProfitRanking.class);
 
+    private HashMap<User, Double> profitMap;
+
     public ProfitRanking(Collection<User> users) {
         super(users);
     }
@@ -36,7 +39,7 @@ public class ProfitRanking extends ARankingEvent {
 
     @Override
     protected HashMap<User, Integer> calculateWinners(Collection<User> users) {
-
+        profitMap = new HashMap<User, Double>();
         List<Profit> profitList = new ArrayList<Profit>();
 
         //Winst van alle gebruikers berekenen
@@ -46,7 +49,9 @@ public class ProfitRanking extends ARankingEvent {
             User user = iterator.next();
 
             try {
-                profitList.add(new Profit(user));
+                Profit profit = new Profit(user);
+                profitList.add(profit);
+                profitMap.put(user, profit.getProfit());
             } catch (StockPlayException ex) {
                 logger.error("Error when trying to calculate profit for user " + user.getId(), ex);
             }
@@ -66,8 +71,10 @@ public class ProfitRanking extends ARankingEvent {
 
     @Override
     public String getDescription(User user) {
-        if(winners.containsKey(user))
-            return "Finished nr. " + (RANKINGPLAATSEN-winners.get(user)+1) + " on Profitranking";
+        if(winners.containsKey(user)) {
+            DecimalFormat df = new DecimalFormat("#.##");
+            return "Nr. " + (RANKINGPLAATSEN-winners.get(user)+1) + " (" + df.format(profitMap.get(user)) + "€)";
+        }
         else
             return null;
     }

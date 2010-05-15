@@ -7,6 +7,7 @@ package com.kapti.pointsmanager.pointevents.RankingEvents;
 
 import com.kapti.client.user.PointsType;
 import com.kapti.client.user.User;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -49,8 +50,10 @@ public class CashRanking extends ARankingEvent {
 
     @Override
     public String getDescription(User user) {
-        if(winners.containsKey(user))
-            return "Finished nr. " + (RANKINGPLAATSEN-winners.get(user)+1) + " on Cashranking";
+        if(winners.containsKey(user)) {
+            DecimalFormat df = new DecimalFormat("#.##");
+            return "Nr. " + (RANKINGPLAATSEN-winners.get(user)+1) + " (" + df.format(user.getCash()) + "€)";
+        }
         else
             return null;
     }

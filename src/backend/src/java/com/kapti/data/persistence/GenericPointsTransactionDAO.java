@@ -27,5 +27,5 @@ import java.util.Collection;
 
 public interface GenericPointsTransactionDAO extends GenericDAO<PointsTransaction, PointsTransaction.PointsTransactionPK> {
     @Cachable Collection<Rank> findRankingByFilter(Filter iFilter) throws StockPlayException;
-    @Cachable Collection<Rank> findRankingEventByFilter(Filter iFilter) throws StockPlayException;
+    @Cachable Collection<PointsTransaction> findRankingEventByFilter(Filter iFilter) throws StockPlayException;
 }

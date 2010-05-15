@@ -47,14 +47,17 @@ public class PointsTransactionDAO implements GenericPointsTransactionDAO {
 
     private static final String SELECT_POINTSTRANSACTION = "SELECT delta, comments FROM pointstransactions WHERE userid = ? AND type = ? AND timest = ?";
     private static final String SELECT_POINTSTRANSACTIONS = "SELECT userid, type, timest, delta, comments FROM pointstransactions";
-    private static final String SELECT_TOTAL_POINTS = 
+    private static final String SELECT_RANKING =
             "WITH x as (SELECT USERID, sum(DELTA) total, row_number() over(order by sum(DELTA) DESC) rank "
             + "FROM POINTSTRANSACTIONS GROUP BY USERID) "
             + "SELECT USERID, total, rank FROM x";
     private static final String SELECT_POINTS_LATEST_EVENT =
-            "SELECT USERID, TYPE, DELTA, row_number() over(order by DELTA DESC) RANK, COMMENTS "
-            + "FROM POINTSTRANSACTIONS "
-            + "WHERE TIMEST > sysdate-1 AND ($filter)";
+          "WITH x as(SELECT USERID, TYPE, TIMEST, DELTA, COMMENTS, MAX(TIMEST) OVER() MAXTIME "
+          + "FROM PointsTransactions "
+          + "WHERE ($filter)) "
+          + "SELECT USERID, TYPE, TIMEST, DELTA, COMMENTS "
+          + "FROM x "
+          + "WHERE TIMEST = MAXTIME";
     private static final String INSERT_POINTSTRANSACTION = "INSERT INTO pointstransactions(userid, type, timest, delta, comments) "
             + "VALUES(?, ?, ?, ?, ?)";
     private static final String UPDATE_POINTSTRANSACTION = "UPDATE pointstransactions SET delta = ?, comments = ? WHERE userid = ? AND type = ? AND timest = ?";
@@ -166,7 +169,7 @@ public class PointsTransactionDAO implements GenericPointsTransactionDAO {
             try {
                 conn = OracleConnection.getConnection();
 
-                StringBuilder tQuery = new StringBuilder(SELECT_TOTAL_POINTS);
+                StringBuilder tQuery = new StringBuilder(SELECT_RANKING);
                 if (!iFilter.empty()) {
                     tQuery.append(" WHERE " + (String) iFilter.compile("sql"));
                 }
@@ -195,7 +198,7 @@ public class PointsTransactionDAO implements GenericPointsTransactionDAO {
         }
     }
 
-    public Collection<Rank> findRankingEventByFilter(Filter iFilter) throws StockPlayException {
+    public Collection<PointsTransaction> findRankingEventByFilter(Filter iFilter) throws StockPlayException {
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -209,10 +212,12 @@ public class PointsTransactionDAO implements GenericPointsTransactionDAO {
                     stmt = conn.prepareStatement(SELECT_POINTS_LATEST_EVENT);
                 
                 rs = stmt.executeQuery();
-                ArrayList<Rank> list = new ArrayList<Rank>();
+                ArrayList<PointsTransaction> list = new ArrayList<PointsTransaction>();
                 while (rs.next()) {
-                    Rank tRank = new Rank(rs.getInt(1), rs.getInt(2), rs.getInt(3));
-                    list.add(tRank);
+                    PointsTransaction tPointsTransaction = new PointsTransaction(rs.getInt(1), PointsType.valueOf(rs.getString(2)), new Date(rs.getTimestamp(3).getTime()));
+                    tPointsTransaction.setDelta(rs.getInt(4));
+                    tPointsTransaction.setComments(rs.getString(5));
+                    list.add(tPointsTransaction);
                 }
                 return list;
             } finally {

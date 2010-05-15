@@ -7,16 +7,23 @@
     <h1 runat="server" meta:resourcekey="Title"></h1>
 
     <a href="~/Ranking.aspx" meta:resourcekey="Global" runat="server"></a> |
-    <a href="~/Ranking.aspx?event=Profit" meta:resourcekey="Profitrank" runat="server"></a> |
-    <a href="~/Ranking.aspx?event=Cash" meta:resourcekey="Cashrank" runat="server"></a>
+    <a href="~/Ranking.aspx?event=PROFIT" meta:resourcekey="Profitrank" runat="server"></a> |
+    <a href="~/Ranking.aspx?event=CASH" meta:resourcekey="Cashrank" runat="server"></a>
 
-    <asp:GridView ID="RankingGridView" runat="server" AutoGenerateColumns="False" GridLines="None" CellSpacing="-1"
-                OnRowDataBound="TransactionGridvie_RowDatabound">
+    <asp:GridView ID="RankingGridView" runat="server" AutoGenerateColumns="False" GridLines="None" CellSpacing="-1" Visible="false">
         <Columns>
             <asp:BoundField DataField="Username" meta:resourcekey="Username" />
             <asp:BoundField DataField="Total" meta:resourcekey="Total" />
             <asp:BoundField DataField="Rank" meta:resourcekey="Rank" />
             <asp:BoundField DataField="Cash" meta:resourcekey="Cash" />
+        </Columns>
+    </asp:GridView>
+
+    <asp:GridView ID="PointsTransactionGridView" runat="server" AutoGenerateColumns="False" GridLines="None" CellSpacing="-1" Visible="false">
+        <Columns>
+            <asp:BoundField DataField="Username" meta:resourcekey="Username" />
+            <asp:BoundField DataField="Points" meta:resourcekey="Total" />
+            <asp:BoundField DataField="Comments" meta:resourcekey="Comments" />
         </Columns>
     </asp:GridView>
 </asp:Content>

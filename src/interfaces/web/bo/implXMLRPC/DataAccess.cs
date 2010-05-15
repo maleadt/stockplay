@@ -628,26 +628,26 @@ namespace StockPlay.implXMLRPC
             }
         }
 
-        public List<IRank> GetRankingEvent(string name)
+        public List<IPointsTransaction> GetRankingEvent(string name)
         {
             try
             {
                 sysLog.Info("Request: GetRanking - Requested rankingevent: '" + name + "'");
 
-                List<IRank> rankings = new List<IRank>();
+                List<IPointsTransaction> pointTransactions = new List<IPointsTransaction>();
 
-                XmlRpcStruct[] rankingStruct = publicPointsTransactionHandler.EventRanking("COMMENTS =~ '" + name + "'ri");
+                XmlRpcStruct[] pointTransactionStruct = publicPointsTransactionHandler.EventRanking("TYPE == '" + name + "'");
 
-                foreach (XmlRpcStruct ranking in rankingStruct)
-                    rankings.Add(new Rank(ranking));
+                foreach (XmlRpcStruct pointTransaction in pointTransactionStruct)
+                    pointTransactions.Add(new PointsTransaction(pointTransaction));
 
-                return rankings;
+                return pointTransactions;
             }
             catch (Exception e)
             {
                 sysLog.Error("Error when getting rankings", e);
 
-                return new List<IRank>();
+                return new List<IPointsTransaction>();
             }
         }
 

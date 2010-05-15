@@ -33,7 +33,7 @@ public class ProfitEvent implements IIndividualEvent {
 
     public String getDescription() {
         DecimalFormat df = new DecimalFormat("#.##");
-        return DESCRIPTION + " by " + df.format(percentage*100) + "%";
+        return DESCRIPTION + " (" + df.format(percentage*100) + "%)";
     }
 
     public int getPoints(User user) {
