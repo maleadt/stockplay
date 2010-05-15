@@ -32,6 +32,7 @@ namespace StockPlay.implXMLRPC
         private double cash;
         private long rrn;
 
+        //Gebruiker met alle ingevuld attributen, deze krijgen we bij aanvragen van User.Details
         public User(int id, string nickname, string password, string email, bool isAdmin, string lastname, string firstname, DateTime regDate,
                     long rrn, int points, double startAmount, double cash)
         {
@@ -53,16 +54,21 @@ namespace StockPlay.implXMLRPC
         {
             this.id = Convert.ToInt32(user["ID"]);
             this.nickname = (string) user["NICKNAME"];
-            this.password = (string) user["PASSWORD"];
-            this.email = (string) user["EMAIL"];
-            this.isAdmin = Convert.ToBoolean(user["ISADMIN"]);
-            this.lastname = (string) user["LASTNAME"];
-            this.firstname = (string) user["FIRSTNAME"];
-            this.regDate = (DateTime) user["REGDATE"];
-            this.rrn = Convert.ToInt64((string)user["RRN"]);
-            this.points = Convert.ToInt32(user["POINTS"]);
-            this.startAmount = Convert.ToDouble(user["STARTAMOUNT"]);
-            this.cash = Convert.ToDouble(user["CASH"]);
+
+            //Enkel indien een DETAILS werd opgeroepen bevat de struct meer informatie
+            if (user.Count > 2)
+            {
+                this.password = (string)user["PASSWORD"];
+                this.email = (string)user["EMAIL"];
+                this.isAdmin = Convert.ToBoolean(user["ISADMIN"]);
+                this.lastname = (string)user["LASTNAME"];
+                this.firstname = (string)user["FIRSTNAME"];
+                this.regDate = (DateTime)user["REGDATE"];
+                this.rrn = Convert.ToInt64((string)user["RRN"]);
+                this.points = Convert.ToInt32(user["POINTS"]);
+                this.startAmount = Convert.ToDouble(user["STARTAMOUNT"]);
+                this.cash = Convert.ToDouble(user["CASH"]);
+            }
         }
 
         public XmlRpcStruct toStruct()

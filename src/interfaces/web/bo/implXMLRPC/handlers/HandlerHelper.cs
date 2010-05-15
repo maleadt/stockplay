@@ -75,6 +75,15 @@ namespace StockPlay.implXMLRPC.handlers
             return handler;
         }
 
+        public static PointsTransactionHandler getPublicPointsTransactionHandler(string xmlRpcUrl)
+        {
+            PointsTransactionHandler handler = XmlRpcProxyGen.Create<PointsTransactionHandler>();
+            handler.Url = xmlRpcUrl;
+            handler.EnableCompression = true;
+
+            return handler;
+        }
+
         public static ExchangeHandler getPrivateExchangeHandler(string xmlRpcUrl, string sessionID)
         {
             ExchangeHandler handler = getPublicExchangeHandler(xmlRpcUrl);

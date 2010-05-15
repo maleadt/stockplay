@@ -58,7 +58,6 @@
     { 
         // Code that runs when an unhandled error occurs
 
-        //In het geval een gebruiker niet geauthenticeerd is (bv. sessie verlopen)
         Exception ex = Server.GetLastError();
 
         //Niet opgevangen excepties doorspelen aan de logger

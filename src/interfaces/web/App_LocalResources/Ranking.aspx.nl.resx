@@ -117,13 +117,34 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Notification.InnerText" xml:space="preserve">
-    <value>Het spijt ons, maar de ranking pagina is nog niet beschikbaar.</value>
+  <data name="Cash.HeaderText" xml:space="preserve">
+    <value>Cash</value>
+  </data>
+  <data name="Cashrank.InnerText" xml:space="preserve">
+    <value>Cashranking</value>
+  </data>
+  <data name="Global.InnerText" xml:space="preserve">
+    <value>Globale rangschikking</value>
   </data>
   <data name="Page.Title" xml:space="preserve">
     <value>Ranking</value>
   </data>
+  <data name="Profit.InnerText" xml:space="preserve">
+    <value>Winstranking</value>
+  </data>
+  <data name="Profitrank.InnerText" xml:space="preserve">
+    <value>Winstranking</value>
+  </data>
+  <data name="Rank.HeaderText" xml:space="preserve">
+    <value>Rang</value>
+  </data>
   <data name="Title.InnerText" xml:space="preserve">
     <value>Ranking</value>
+  </data>
+  <data name="Total.HeaderText" xml:space="preserve">
+    <value>Puntentotaal</value>
+  </data>
+  <data name="Username.HeaderText" xml:space="preserve">
+    <value>Gebruiker</value>
   </data>
 </root>

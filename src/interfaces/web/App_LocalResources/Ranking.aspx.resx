@@ -117,13 +117,31 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Notification.InnerText" xml:space="preserve">
-    <value>We are sorry, but the ranking page is not yet available.</value>
+  <data name="Cash.HeaderText" xml:space="preserve">
+    <value>Cash</value>
+  </data>
+  <data name="Cashrank.InnerText" xml:space="preserve">
+    <value>Cash ranking</value>
+  </data>
+  <data name="Global.InnerText" xml:space="preserve">
+    <value>Global ranking</value>
   </data>
   <data name="Page.Title" xml:space="preserve">
     <value>Ranking</value>
   </data>
+  <data name="Profitrank.InnerText" xml:space="preserve">
+    <value>Profit ranking</value>
+  </data>
+  <data name="Rank.HeaderText" xml:space="preserve">
+    <value>Rank</value>
+  </data>
   <data name="Title.InnerText" xml:space="preserve">
     <value>Ranking</value>
+  </data>
+  <data name="Total.HeaderText" xml:space="preserve">
+    <value>Points total</value>
+  </data>
+  <data name="Username.HeaderText" xml:space="preserve">
+    <value>User</value>
   </data>
 </root>

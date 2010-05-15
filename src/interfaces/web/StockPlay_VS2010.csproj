@@ -140,9 +140,12 @@
     <Content Include="grafiek\options.js" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="bo\implXMLRPC\handlers\PointsTransactionHandler.cs" />
     <Compile Include="bo\implXMLRPC\handlers\HandlerHelper.cs" />
     <Compile Include="bo\implXMLRPC\Index.cs" />
+    <Compile Include="bo\implXMLRPC\Rank.cs" />
     <Compile Include="bo\interfaces\IIndex.cs" />
+    <Compile Include="bo\interfaces\IRank.cs" />
     <Compile Include="bo\interfaces\ISession.cs" />
     <Compile Include="Default.aspx.designer.cs">
       <DependentUpon>Default.aspx</DependentUpon>

@@ -38,6 +38,7 @@ namespace StockPlay.implXMLRPC
         private SecurityHandler publicSecurityHandler;
         private TransactionHandler publicTransactionHandler;
         private UserHandler publicUserHandler;
+        private PointsTransactionHandler publicPointsTransactionHandler;
 
         private string publicXmlRpcUrl;
         private string privateXmlRpcUrl;
@@ -69,6 +70,7 @@ namespace StockPlay.implXMLRPC
             publicSecurityHandler = HandlerHelper.getPublicSecurityHandler(publicXmlRpcUrl);
             publicTransactionHandler = HandlerHelper.getPublicTransactionHandler(publicXmlRpcUrl);
             publicUserHandler = HandlerHelper.getPublicUserHandler(publicXmlRpcUrl);
+            publicPointsTransactionHandler = HandlerHelper.getPublicPointsTransactionHandler(publicXmlRpcUrl);
 
             exchangeCache = new Dictionary<string, IExchange>();
         }
@@ -88,9 +90,9 @@ namespace StockPlay.implXMLRPC
 
         #region IDataAccess Members
 
-        /**
+        /******************************************************
          * SECURITIES
-         */
+         ******************************************************/
 
         public List<ISecurity> GetSecuritiesList()
         {
@@ -182,7 +184,7 @@ namespace StockPlay.implXMLRPC
                 List<IIndex> indexes = new List<IIndex>();
 
                 //Securities ophalen via XML-RPC en omzetten naar objecten
-                XmlRpcStruct[] query = publicSecurityHandler.ListIndexes(parameters.ToString());
+                XmlRpcStruct[] query = publicIndexHandler.List(parameters.ToString());
                 foreach (XmlRpcStruct index in query)
                     indexes.Add(new Index(index));
 
@@ -219,9 +221,9 @@ namespace StockPlay.implXMLRPC
             }
         }
 
-        /**
+        /******************************************************
          * QUOTES
-         */
+         ******************************************************/
 
         public IQuote GetLatestQuoteFromSecurity(string isin)
         {
@@ -386,9 +388,9 @@ namespace StockPlay.implXMLRPC
             }
         }
 
-        /**
+        /******************************************************
          * USERS
-         */
+         ******************************************************/
 
         public void CreateUser(int id, string nickname, string password, string email, bool isAdmin, string lastname, string firstname, DateTime regTime,
                                 long rrn, int points, double startAmount, double cash)
@@ -458,7 +460,35 @@ namespace StockPlay.implXMLRPC
             return true;
         }
 
-        public IUser GetUserByNickname(string nickname, string sessionID, ISession sessionHandler)
+        public List<IUser> GetUserListById(params int[] id)
+        {
+            try
+            {
+                //Filter opbouwen
+                StringBuilder parameters = new StringBuilder();
+                for (int i = 0; i < id.Length - 1; i++)
+                    parameters.Append("ID == '" + id[i] + "' || ");
+                parameters.Append("ID == '" + id[id.Length - 1] + "'");
+
+                sysLog.Info("Request: UserListById - Requested users: '" + parameters.ToString() + "'");
+
+                List<IUser> users = new List<IUser>();
+
+                XmlRpcStruct[] userStruct = publicUserHandler.List(parameters.ToString()); //Filter is niet nodig, deze wordt samengesteld in de backend adhv sessie
+                foreach(XmlRpcStruct user in userStruct)
+                    users.Add(new User(user));
+
+                return users;
+            }
+            catch (Exception e)
+            {
+                sysLog.Error("Error when requesting userList", e);
+
+                return new List<IUser>();
+            }
+        }
+
+        public IUser GetUserDetailsByNickname(string nickname, string sessionID, ISession sessionHandler)
         {
             try
             {
@@ -467,7 +497,7 @@ namespace StockPlay.implXMLRPC
                 IUser user = null;
 
                 UserHandler privateUserHandler = HandlerHelper.getPrivateUserHandler(privateXmlRpcUrl, sessionID);
-                XmlRpcStruct[] userStruct = privateUserHandler.List("NICKNAME == '" + nickname + "'");
+                XmlRpcStruct[] userStruct = privateUserHandler.Details(""); //Filter is niet nodig, deze wordt samengesteld in de backend adhv sessie
                 if (userStruct.Length > 0)
                     user = new User(userStruct[0]);
 
@@ -486,7 +516,17 @@ namespace StockPlay.implXMLRPC
 
         public string ValidateUser(string nickname, string password)
         {
-            return publicUserHandler.Validate(nickname, password);
+            try
+            {
+                sysLog.Info("Request: ValidateUser - Requested Nickname: '" + nickname + "'");
+                return publicUserHandler.Validate(nickname, password);
+            }
+            catch (Exception e)
+            {
+                sysLog.Error("Error when validating user: ", e);
+
+                return string.Empty;
+            }
         }
 
         public List<IUserSecurity> GetUserSecurities(int id, string sessionID, ISession session)
@@ -515,6 +555,10 @@ namespace StockPlay.implXMLRPC
                 return new List<IUserSecurity>();
             }
         }
+
+        /******************************************************
+         * TRANSACTIONS
+         ******************************************************/
 
         public List<ITransaction> GetUserTransactions(int id, string sessionID, ISession sessionHandler)
         {
@@ -557,9 +601,59 @@ namespace StockPlay.implXMLRPC
             }
         }
 
-        /**
+        /******************************************************
+         * POINTS
+         ******************************************************/
+
+        public List<IRank> GetRanking(int start, int stop)
+        {
+            try
+            {
+                sysLog.Info("Request: GetRanking - Requested ranks: '" + start + "' - '" + stop + "'");
+
+                List<IRank> rankings = new List<IRank>();
+
+                XmlRpcStruct[] rankingStruct = publicPointsTransactionHandler.Ranking("RANK >= " + start + " && RANK <= " + stop);
+
+                foreach (XmlRpcStruct ranking in rankingStruct)
+                    rankings.Add(new Rank(ranking));
+
+                return rankings;
+            }
+            catch (Exception e)
+            {
+                sysLog.Error("Error when getting rankings", e);
+
+                return new List<IRank>();
+            }
+        }
+
+        public List<IRank> GetRankingEvent(string name)
+        {
+            try
+            {
+                sysLog.Info("Request: GetRanking - Requested rankingevent: '" + name + "'");
+
+                List<IRank> rankings = new List<IRank>();
+
+                XmlRpcStruct[] rankingStruct = publicPointsTransactionHandler.EventRanking("COMMENTS =~ '" + name + "'ri");
+
+                foreach (XmlRpcStruct ranking in rankingStruct)
+                    rankings.Add(new Rank(ranking));
+
+                return rankings;
+            }
+            catch (Exception e)
+            {
+                sysLog.Error("Error when getting rankings", e);
+
+                return new List<IRank>();
+            }
+        }
+
+        /******************************************************
          * ORDERS
-         */
+         ******************************************************/
 
         public void CreateOrder(int userId, string isin, int amount, double price, double alternativeOrder, string type, string sessionID, ISession sessionHandler)
         {

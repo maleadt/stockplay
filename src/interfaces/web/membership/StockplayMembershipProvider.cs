@@ -29,7 +29,7 @@ namespace StockPlay
 	
 	        try
 	        {
-                IUser user = data.GetUserByNickname(nickname, sessionID, this);
+                IUser user = data.GetUserDetailsByNickname(nickname, sessionID, this);
 	            user.Password = newPassword;
 	            data.UpdateUser(user, sessionID, this);
 	        }
@@ -74,7 +74,7 @@ namespace StockPlay
 	    public MembershipUser GetUser(string nickname, string sessionID)
 	    {
 	        IDataAccess data = DataAccessFactory.GetDataAccess();
-	        IUser user = data.GetUserByNickname(nickname, sessionID, this);
+	        IUser user = data.GetUserDetailsByNickname(nickname, sessionID, this);
 	
 	        StockplayMembershipUser membershipUser = null;
 	        if(user != null)
@@ -117,7 +117,7 @@ namespace StockPlay
 	        IDataAccess data = DataAccessFactory.GetDataAccess();
 	        try
 	        {
-	            IUser userData = data.GetUserByNickname(user.UserName, sessionID, this);
+	            IUser userData = data.GetUserDetailsByNickname(user.UserName, sessionID, this);
 	            StockplayMembershipUser userMembership = (StockplayMembershipUser) user;
 	
 	            userData.Nickname = userMembership.UserName;
