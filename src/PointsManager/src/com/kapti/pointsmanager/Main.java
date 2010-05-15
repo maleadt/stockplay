@@ -9,7 +9,6 @@ import com.kapti.pointsmanager.pointevents.IndividualEvents.IIndividualEvent;
 import com.kapti.pointsmanager.pointevents.RankingEvents.ARankingEvent;
 import com.kapti.pointsmanager.pointevents.RankingEvents.ProfitRanking;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.lang.reflect.Constructor;
@@ -62,6 +61,7 @@ public class Main {
                 line = input.readLine();
             }
 
+            logger.info("Succesfully completed points calculation");
             System.out.println("Succesfully completed points calculation");
         }
         catch(FileNotFoundException ex) {
@@ -85,11 +85,12 @@ public class Main {
             User user = iterator.next();
 
             if(individualEvent.getPoints(user) != 0) {
-                PointsTransaction points = PointsTransactionFactory.getInstance().createTransaction(user, new Date());
+                PointsTransaction points = PointsTransactionFactory.getInstance().createTransaction(user, individualEvent.getType(), new Date());
                 points.setDelta(individualEvent.getPoints(user));
                 points.setComment(individualEvent.getDescription());
                 PointsTransactionFactory.getInstance().makePersistent(points);
 
+                logger.info(individualEvent.getType().toString() + " " + user.getNickname() + " " + individualEvent.getDescription() + " " + individualEvent.getPoints(user));
                 System.out.println(user.getNickname());
                 System.out.println(individualEvent.getDescription());
                 System.out.println(individualEvent.getPoints(user));
@@ -120,11 +121,12 @@ public class Main {
             User user = iterator.next();
 
             if(rankingEvent.getDescription(user) != null) {
-                PointsTransaction points = PointsTransactionFactory.getInstance().createTransaction(user, new Date());
+                PointsTransaction points = PointsTransactionFactory.getInstance().createTransaction(user, rankingEvent.getType(), new Date());
                 points.setDelta(rankingEvent.getPoints(user));
                 points.setComment(rankingEvent.getDescription(user));
                 PointsTransactionFactory.getInstance().makePersistent(points);
 
+                logger.info(rankingEvent.getType().toString() + " " + user.getNickname() + " " + rankingEvent.getDescription(user) + " " + rankingEvent.getPoints(user));
                 System.out.println(user.getNickname());
                 System.out.println(rankingEvent.getPoints(user));
                 System.out.println(rankingEvent.getDescription(user));

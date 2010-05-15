@@ -20,6 +20,7 @@ package com.kapti.data.persistence.oracle;
 
 import com.kapti.data.PointsTransaction;
 import com.kapti.data.PointsTransaction.PointsTransactionPK;
+import com.kapti.data.PointsType;
 import com.kapti.data.Rank;
 import com.kapti.data.persistence.GenericPointsTransactionDAO;
 import com.kapti.exceptions.FilterException;
@@ -44,20 +45,20 @@ public class PointsTransactionDAO implements GenericPointsTransactionDAO {
     // Member data
     //
 
-    private static final String SELECT_POINTSTRANSACTION = "SELECT delta, comments FROM pointstransactions WHERE userid = ? AND timest = ?";
-    private static final String SELECT_POINTSTRANSACTIONS = "SELECT userid, timest, delta, comments FROM pointstransactions";
+    private static final String SELECT_POINTSTRANSACTION = "SELECT delta, comments FROM pointstransactions WHERE userid = ? AND type = ? AND timest = ?";
+    private static final String SELECT_POINTSTRANSACTIONS = "SELECT userid, type, timest, delta, comments FROM pointstransactions";
     private static final String SELECT_TOTAL_POINTS = 
             "WITH x as (SELECT USERID, sum(DELTA) total, row_number() over(order by sum(DELTA) DESC) rank "
             + "FROM POINTSTRANSACTIONS GROUP BY USERID) "
             + "SELECT USERID, total, rank FROM x";
     private static final String SELECT_POINTS_LATEST_EVENT =
-            "SELECT USERID, DELTA, row_number() over(order by DELTA DESC) RANK, COMMENTS "
+            "SELECT USERID, TYPE, DELTA, row_number() over(order by DELTA DESC) RANK, COMMENTS "
             + "FROM POINTSTRANSACTIONS "
             + "WHERE TIMEST > sysdate-1 AND ($filter)";
-    private static final String INSERT_POINTSTRANSACTION = "INSERT INTO pointstransactions(userid, timest, delta, comments) "
-            + "VALUES(?, ?, ?, ?)";
-    private static final String UPDATE_POINTSTRANSACTION = "UPDATE pointstransactions SET delta = ?, comments = ? WHERE userid = ? AND timest = ?";
-    private static final String DELETE_POINTSTRANSACTION = "DELETE FROM pointstransactions WHERE userid = ? AND timest = ?";
+    private static final String INSERT_POINTSTRANSACTION = "INSERT INTO pointstransactions(userid, type, timest, delta, comments) "
+            + "VALUES(?, ?, ?, ?, ?)";
+    private static final String UPDATE_POINTSTRANSACTION = "UPDATE pointstransactions SET delta = ?, comments = ? WHERE userid = ? AND type = ? AND timest = ?";
+    private static final String DELETE_POINTSTRANSACTION = "DELETE FROM pointstransactions WHERE userid = ? AND type = ? AND timest = ?";
 
 
     //
@@ -88,12 +89,13 @@ public class PointsTransactionDAO implements GenericPointsTransactionDAO {
                 stmt = conn.prepareStatement(SELECT_POINTSTRANSACTION);
 
                 stmt.setInt(1, pk.getUser());
-                stmt.setTimestamp(2, new Timestamp(pk.getTimestamp().getTime()));
+                stmt.setString(2, pk.getType().toString());
+                stmt.setTimestamp(3, new Timestamp(pk.getTimestamp().getTime()));
 
 
                 rs = stmt.executeQuery();
                 if (rs.next()) {
-                    PointsTransaction tPointsTransaction = new PointsTransaction(pk.getUser(), pk.getTimestamp());
+                    PointsTransaction tPointsTransaction = new PointsTransaction(pk.getUser(), pk.getType(), pk.getTimestamp());
                     tPointsTransaction.setDelta(rs.getInt(1));
                     tPointsTransaction.setComments(rs.getString(2));
                     return tPointsTransaction;
@@ -133,9 +135,9 @@ public class PointsTransactionDAO implements GenericPointsTransactionDAO {
                 rs = stmt.executeQuery();
                 ArrayList<PointsTransaction> list = new ArrayList<PointsTransaction>();
                 while (rs.next()) {
-                    PointsTransaction tPointsTransaction = new PointsTransaction(rs.getInt(1), new Date(rs.getTimestamp(2).getTime()));
-                    tPointsTransaction.setDelta(rs.getInt(3));
-                    tPointsTransaction.setComments(rs.getString(4));
+                    PointsTransaction tPointsTransaction = new PointsTransaction(rs.getInt(1), PointsType.valueOf(rs.getString(2)), new Date(rs.getTimestamp(3).getTime()));
+                    tPointsTransaction.setDelta(rs.getInt(4));
+                    tPointsTransaction.setComments(rs.getString(5));
                     list.add(tPointsTransaction);
                 }
                 return list;
@@ -254,9 +256,10 @@ public class PointsTransactionDAO implements GenericPointsTransactionDAO {
                 stmt = conn.prepareStatement(INSERT_POINTSTRANSACTION);
 
                 stmt.setInt(1, entity.getUser());
-                stmt.setTimestamp(2, new Timestamp(entity.getTimestamp().getTime()));
-                stmt.setInt(3, entity.getDelta());
-                stmt.setString(4, entity.getComments());
+                stmt.setString(2, entity.getType().toString());
+                stmt.setTimestamp(3, new Timestamp(entity.getTimestamp().getTime()));
+                stmt.setInt(4, entity.getDelta());
+                stmt.setString(5, entity.getComments());
 
                 return stmt.executeUpdate();
             } finally {
@@ -291,7 +294,8 @@ public class PointsTransactionDAO implements GenericPointsTransactionDAO {
                 stmt = conn.prepareStatement(UPDATE_POINTSTRANSACTION);
 
                 stmt.setInt(3, entity.getUser());
-                stmt.setTimestamp(4, new Timestamp(entity.getTimestamp().getTime()));
+                stmt.setString(4, entity.getType().toString());
+                stmt.setTimestamp(5, new Timestamp(entity.getTimestamp().getTime()));
                 stmt.setInt(1, entity.getDelta());
                 stmt.setString(2, entity.getComments());
 
@@ -330,7 +334,8 @@ public class PointsTransactionDAO implements GenericPointsTransactionDAO {
                 stmt = conn.prepareStatement(DELETE_POINTSTRANSACTION);
 
                 stmt.setInt(1, entity.getUser());
-                stmt.setTimestamp(2, new Timestamp(entity.getTimestamp().getTime()));
+                stmt.setString(2, entity.getType().toString());
+                stmt.setTimestamp(3, new Timestamp(entity.getTimestamp().getTime()));
 
 
                 return stmt.executeUpdate() == 1;

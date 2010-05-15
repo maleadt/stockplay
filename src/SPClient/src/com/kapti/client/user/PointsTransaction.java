@@ -41,11 +41,12 @@ public class PointsTransaction {
 
     public static enum Fields {
 
-        USER, TIMESTAMP, DELTA, COMMENTS
+        USER, TYPE, TIMESTAMP, DELTA, COMMENTS
     }
 
-    PointsTransaction(User user, Date time) {
+    PointsTransaction(User user, PointsType type, Date time) {
         this.user = user;
+        this.type = type;
         this.time = time;
     }
 
@@ -54,6 +55,29 @@ public class PointsTransaction {
         this.time = time;
         this.delta = delta;
         this.comment = comment;
+    }
+
+    protected PointsType type;
+    public static final String PROP_TYPE = "type";
+
+    /**
+     * Get the value of user
+     *
+     * @return the value of user
+     */
+    public PointsType getType() {
+        return type;
+    }
+
+    /**
+     * Set the value of user
+     *
+     * @param user new value of user
+     */
+    public void setType(PointsType type) {
+        PointsType oldType = this.type;
+        this.type = type;
+        propertyChangeSupport.firePropertyChange(PROP_TYPE, oldType, type);
     }
 
     protected User user;
@@ -182,7 +206,7 @@ public class PointsTransaction {
             logger.error("Error while retrieving user for pointstransaction", ex);
         }
 
-        PointsTransaction t = new PointsTransaction(user, (Date) h.get(Fields.TIMESTAMP.toString()));
+        PointsTransaction t = new PointsTransaction(user,(PointsType) h.get(Fields.TYPE.toString()) , (Date) h.get(Fields.TIMESTAMP.toString()));
 
         t.setDelta((Integer) h.get(Fields.DELTA.toString()));
         t.setComment((String) h.get(Fields.COMMENTS.toString()));
@@ -195,6 +219,7 @@ public class PointsTransaction {
         HashMap h = new HashMap();
 
         h.put(Fields.USER.toString(), getUser().getId());
+        h.put(Fields.TYPE.toString(), getType().toString());
         h.put(Fields.TIMESTAMP.toString(), getTime());
         h.put(Fields.DELTA.toString(), getDelta());
 

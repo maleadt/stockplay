@@ -392,7 +392,8 @@ public class User implements Cloneable {
         u.setPoints((Integer) h.get(User.Fields.POINTS.toString()));
         u.setStartamount((Double) h.get(User.Fields.STARTAMOUNT.toString()));
         u.setCash((Double) h.get(User.Fields.CASH.toString()));
-        u.setRijksregisternummer(Long.parseLong((String) h.get(User.Fields.RRN.toString())));
+        if(h.containsKey(User.Fields.RRN.toString()))
+            u.setRijksregisternummer(Long.parseLong((String) h.get(User.Fields.RRN.toString())));
 
         return u;
     }

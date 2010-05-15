@@ -1,5 +1,6 @@
 package com.kapti.pointsmanager.pointevents.IndividualEvents;
 
+import com.kapti.client.user.PointsType;
 import com.kapti.client.user.User;
 
 /**
@@ -10,7 +11,10 @@ import com.kapti.client.user.User;
  */
 public interface IIndividualEvent {
 
-    //Beschrijving van de gebeurtenis waarvoor punten worden uitgedeeld
+    //Beschrijving van het type event
+    public PointsType getType();
+
+    //Reden waarom de punten uitgedeeld werden
     public String getDescription();
 
     //Punten die de gebruiker krijgt toegekend (eventueel 0 als hij niet in aanmerking komt)

@@ -1,5 +1,6 @@
 package com.kapti.pointsmanager.pointevents.RankingEvents;
 
+import com.kapti.client.user.PointsType;
 import com.kapti.client.user.User;
 import java.util.Collection;
 import java.util.HashMap;
@@ -23,6 +24,8 @@ public abstract class ARankingEvent {
     //Berekent een HashMap met de winnaars voor dit event, samen
     //met de rang die ze behaald hebben
     protected abstract HashMap<User, Integer> calculateWinners(Collection<User> users);
+
+    public abstract PointsType getType();
 
     //Geeft een gepersonaliseerd bericht met de rang van de speler (NULL indien hij niet in aanmerking komt)
     public abstract String getDescription(User user);

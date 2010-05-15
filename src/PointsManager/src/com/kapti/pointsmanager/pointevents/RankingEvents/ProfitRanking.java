@@ -1,5 +1,6 @@
 package com.kapti.pointsmanager.pointevents.RankingEvents;
 
+import com.kapti.client.user.PointsType;
 import com.kapti.client.user.User;
 import com.kapti.exceptions.StockPlayException;
 import com.kapti.pointsmanager.util.Profit;
@@ -26,6 +27,11 @@ public class ProfitRanking extends ARankingEvent {
 
     public ProfitRanking(Collection<User> users) {
         super(users);
+    }
+
+    @Override
+    public PointsType getType() {
+        return PointsType.PROFIT;
     }
 
     @Override

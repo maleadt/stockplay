@@ -42,15 +42,17 @@ public class PointsTransaction implements Serializable {
     //
 
     public static enum Fields {
-        USER, TIMESTAMP, DELTA, COMMENTS
+        USER, TIMESTAMP, TYPE, DELTA, COMMENTS
     }
     public static Map<Fields, Class> Types = new HashMap<Fields, Class>() { {
             put(Fields.USER, Integer.class);        // Deel van de
             put(Fields.TIMESTAMP, Date.class);      // PointsTransactionPK
+            put(Fields.TYPE, String.class);
             put(Fields.DELTA, Integer.class);
             put(Fields.COMMENTS, String.class);
     } };
 
+    private PointsType type;
     private int delta;
     private String comments;
     private PointsTransactionPK pk;
@@ -60,8 +62,16 @@ public class PointsTransaction implements Serializable {
     // Construction
     //
 
-    public PointsTransaction(int user, Date timestamp) {
-        this.pk = new PointsTransactionPK(user, timestamp);
+    public PointsTransaction(int user, PointsType type, Date timestamp) {
+        this.pk = new PointsTransactionPK(user, type, timestamp);
+    }
+
+    public PointsType getType() {
+        return type;
+    }
+
+    public void setType(PointsType type) {
+        this.type = type;
     }
 
     public String getComments() {
@@ -99,6 +109,9 @@ public class PointsTransaction implements Serializable {
                 case TIMESTAMP:
                     oStruct.put(tField.name(), getTimestamp());
                     break;
+                case TYPE:
+                    oStruct.put(tField.name(), getType().name());
+                    break;
                 case DELTA:
                     oStruct.put(tField.name(), getDelta());
                     break;
@@ -123,6 +136,9 @@ public class PointsTransaction implements Serializable {
                 throw new InvocationException(InvocationException.Type.BAD_REQUEST, "provided key '" + tKey + "' requires a " + Types.get(tField) + " instead of an " + iStruct.get(tKey).getClass());
 
             switch (tField) {
+                case TYPE:
+                    setType(PointsType.valueOf((String)tValue));
+                    break;
                 case DELTA:
                     setDelta((Integer) tValue);
                     break;
@@ -151,8 +167,8 @@ public class PointsTransaction implements Serializable {
         }
 
         // Check needed keys
-        if (tStructMap.containsKey(Fields.USER) && tStructMap.containsKey(Fields.TIMESTAMP)) {
-            PointsTransaction tTransaction = new PointsTransaction((Integer) iStruct.get(tStructMap.get(Fields.USER)), (Date) iStruct.get(tStructMap.get(Fields.TIMESTAMP)));
+        if (tStructMap.containsKey(Fields.USER) && tStructMap.containsKey(Fields.TIMESTAMP) && tStructMap.containsKey(Fields.TYPE)) {
+            PointsTransaction tTransaction = new PointsTransaction((Integer) iStruct.get(tStructMap.get(Fields.USER)), PointsType.valueOf((String)iStruct.get(tStructMap.get(Fields.TYPE))), (Date) iStruct.get(tStructMap.get(Fields.TIMESTAMP)));
             iStruct.remove(tStructMap.get(Fields.USER));
             iStruct.remove(tStructMap.get(Fields.TIMESTAMP));
             return tTransaction;
@@ -168,12 +184,17 @@ public class PointsTransaction implements Serializable {
 
     public class PointsTransactionPK implements Serializable {
 
+        private PointsType type;
         private int user;
         private Date timestamp;
 
-        public PointsTransactionPK(int user, Date timestamp) {
+        public PointsTransactionPK(int user, PointsType type, Date timestamp) {
             this.user = user;
             this.timestamp = timestamp;
+        }
+
+        public PointsType getType() {
+            return type;
         }
 
         public Date getTimestamp() {

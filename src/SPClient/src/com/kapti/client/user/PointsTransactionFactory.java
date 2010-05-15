@@ -51,8 +51,8 @@ public class PointsTransactionFactory {
     private PointsTransactionFactory() {
     }
 
-    public PointsTransaction createTransaction(User user, Date time) {
-        return new PointsTransaction(user, time);
+    public PointsTransaction createTransaction(User user, PointsType type, Date time) {
+        return new PointsTransaction(user, type, time);
     }
 
     public Collection<PointsTransaction> getAllTransactions() throws StockPlayException {

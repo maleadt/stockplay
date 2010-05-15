@@ -3,6 +3,7 @@ package com.kapti.pointsmanager.pointevents.IndividualEvents;
 import com.kapti.client.finance.FinanceFactory;
 import com.kapti.client.finance.Index;
 import com.kapti.client.finance.Quote;
+import com.kapti.client.user.PointsType;
 import com.kapti.client.user.User;
 import com.kapti.exceptions.StockPlayException;
 import com.kapti.pointsmanager.util.Profit;
@@ -25,6 +26,10 @@ public class ProfitEvent implements IIndividualEvent {
     private static int MULTIPLIER = 10;
 
     private double percentage; //Percentage van laatste gebruiker
+
+    public PointsType getType() {
+        return PointsType.PROFIT;
+    }
 
     public String getDescription() {
         DecimalFormat df = new DecimalFormat("#.##");
@@ -55,5 +60,4 @@ public class ProfitEvent implements IIndividualEvent {
             return 0;
         }
     }
-
 }

@@ -5,6 +5,7 @@
 
 package com.kapti.pointsmanager.pointevents.RankingEvents;
 
+import com.kapti.client.user.PointsType;
 import com.kapti.client.user.User;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,6 +25,11 @@ public class CashRanking extends ARankingEvent {
 
     public CashRanking(Collection<User> users) {
         super(users);
+    }
+
+    @Override
+    public PointsType getType() {
+        return PointsType.CASH;
     }
 
     @Override
