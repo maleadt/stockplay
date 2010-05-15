@@ -121,21 +121,21 @@ De mogelijke autorisatieniveau's zijn beschreven in tabel \ref{tbl:real:xmlrpc:a
 	Autorisatie-niveau & Beschrijving \\
 	\hline
 	
-	BACKEND_ADMIN & Administrator rechten voor methodes betreffende de backend. \\
-	DATABASE_ADMIN & Administrator rechten voor methodes betreffende de database. \\
-	SCRAPER_ADMIN & Administrator rechten voor methodes betreffende de scraper. \\
-	POINTS_ADMIN & Administrator rechten voor methodes betreffende het puntenbeheer. \\
-	TRANSACTION_ADMIN & Administrator rechten voor methodes betreffende het transactie-beheer. \\
+	BACKEND\_ADMIN & Administrator rechten voor methodes betreffende de backend. \\
+	DATABASE\_ADMIN & Administrator rechten voor methodes betreffende de database. \\
+	SCRAPER\_ADMIN & Administrator rechten voor methodes betreffende de scraper. \\
+	POINTS\_ADMIN & Administrator rechten voor methodes betreffende het puntenbeheer. \\
+	TRANSACTION\_ADMIN & Administrator rechten voor methodes betreffende het transactie-beheer. \\
 	
-	SECURITY_UPDATE & Toegang tot methodes die effecten updaten (toevoegen van quotes). \\
-	SECURITY_CREATE & Toegang tot methodes die nieuwe effecten aanmaken. \\
-	SECURITY_REMOVE & Toegang tot methodes die effecten verwijderen. \\
-	SECURITY_MODIFY & Toegang tot methodes die effecten wijzigen. \\
+	SECURITY\_UPDATE & Toegang tot methodes die effecten updaten (toevoegen van quotes). \\
+	SECURITY\_CREATE & Toegang tot methodes die nieuwe effecten aanmaken. \\
+	SECURITY\_REMOVE & Toegang tot methodes die effecten verwijderen. \\
+	SECURITY\_MODIFY & Toegang tot methodes die effecten wijzigen. \\
 	
-	USER_REMOVE & Toegang tot methodes die gebruikers verwijderen.
+	USER\_REMOVE & Toegang tot methodes die gebruikers verwijderen. \\
 	
-	LOGGEDIN & Standaard-recht voor ingelogde gebruikers.
-	NONE & Standaard recht voor iedereen (ook gasten).
+	LOGGEDIN & Standaard-recht voor ingelogde gebruikers. \\
+	NONE & Standaard recht voor iedereen (ook gasten). \\
 	
 	\hline
 \end{tabular}
@@ -155,7 +155,7 @@ Deze klasse biedt de client mogelijkheden om het systeem te beheren. Zoals het o
 		\item{0: maintenance-mode}
 		\item{1: geen problemen gemeld}
 		\end{itemize_compact} }
-	{ BACKEND_ADMIN }
+	{ BACKEND\_ADMIN }
 
 \function{Backend.Stats}
 	{ backend-statistieken ophalen }
@@ -166,7 +166,7 @@ Deze klasse biedt de client mogelijkheden om het systeem te beheren. Zoals het o
 		\item{req: aantal verwerkte XML-RPC requests sinds de start}
 		\item{uptime: hoe lang de backend al draait}
 		\end{itemize_compact} }
-	{ BACKEND_ADMIN }
+	{ BACKEND\_ADMIN }
 
 \function{Backend.Restart}
 	{ de backend opnieuw opstarten }
@@ -178,13 +178,13 @@ Deze klasse biedt de client mogelijkheden om het systeem te beheren. Zoals het o
 	{ de backend stoppen }
 	{ geen }
 	{ bool die indiceert of de actie succesvol was }
-	{ BACKEND_ADMIN }
+	{ BACKEND\_ADMIN }
 
 \function{Backend.ClearCache}
 	{ de backend cache legen }
 	{ geen }
 	{ bool die indiceert of de actie succesvol was }
-	{ BACKEND_ADMIN }
+	{ BACKEND\_ADMIN }
 	
 
 \function{Database.Status}
@@ -195,7 +195,7 @@ Deze klasse biedt de client mogelijkheden om het systeem te beheren. Zoals het o
 		\item{0: er kon geen verbinding naar de databank gelegd worden}
 		\item{1: succesvol verbonden met de database}
 		\end{itemize_compact} }
-	{ DATABASE_ADMIN }
+	{ DATABASE\_ADMIN }
 
 \function{Database.Stats}
 	{ database-statistieken ophalen. Dit zijn de statistieken geleverd door de databank zelf, ze zijn dus niet beperkt tot acties ondernomen door de backend }
@@ -205,7 +205,7 @@ Deze klasse biedt de client mogelijkheden om het systeem te beheren. Zoals het o
 		\item{uptime: hoe lang de databank al draait}
 		\item{rate: aantal transacties per seconde}
 		\end{itemize_compact} }
-	{ DATABASE_ADMIN }
+	{ DATABASE\_ADMIN }
 
 
 \function{Scraper.Status}
@@ -217,7 +217,7 @@ Deze klasse biedt de client mogelijkheden om het systeem te beheren. Zoals het o
 		\item{1: inactief}
 		\item{2: bezig met data-mining}
 		\end{itemize_compact} }
-	{ SCRAPER_ADMIN }
+	{ SCRAPER\_ADMIN }
 
 \function{Scraper.Stats}
 	{ scraper-statistieken ophalen }
@@ -234,19 +234,19 @@ Deze klasse biedt de client mogelijkheden om het systeem te beheren. Zoals het o
 		\item{delay: tijd tot de volgende plugin-uitvoering}
 		\item{memory: geheugengebruik}
 		\end{itemize_compact} }
-	{ SCRAPER_ADMIN }
+	{ SCRAPER\_ADMIN }
 
 \function{Scraper.Restart}
 	{ de scraper herstarten }
 	{ geen }
 	{ bool die indiceert of de actie succesvol was }
-	{ SCRAPER_ADMIN }
+	{ SCRAPER\_ADMIN }
 
 \function{Scraper.Stop}
 	{ de scraper permanent stilleggen }
 	{ geen }
 	{ bool die indiceert of de actie succesvol was }
-	{ SCRAPER_ADMIN }
+	{ SCRAPER\_ADMIN }
 
 
 \subsection{User-klasse}
@@ -269,7 +269,7 @@ Hier vindt men de nodige methodes terug om gebruikers te beheren. Dit is echter 
 	{ verwijderen van een bestaande gebruiker }
 	{ een filter die gebruikers selecteert }
 	{ een boolean die aangeeft of de actie al dan niet gelukt is }
-	{ BACKEND_ADMIN }
+	{ BACKEND\_ADMIN }
 
 \function{List}
 	{ lijst met publieke informatie opvragen van de gebruikers }
@@ -303,7 +303,7 @@ Hier vindt men de nodige methodes terug om gebruikers te beheren. Dit is echter 
 		\item{cash: huidige cashpositie}
 		\item{startkapitaal: start kapitaal}
 		\end{itemize_compact} }
-	{ BACKEND_ADMIN }
+	{ BACKEND\_ADMIN }
 	
 \function{Details}
 	{ publieke informatie opvragen van de gebruiker zelf }
@@ -328,19 +328,19 @@ Hier vindt men de nodige methodes terug om gebruikers te beheren. Dit is echter 
 		\item{}
 		\end{itemize_compact} }
 	{ een boolean die aangeeft of de actie al dan niet gelukt is }
-	{ BACKEND_ADMIN }
+	{ BACKEND\_ADMIN }
 
 \function{Modify}
 	{ wijzigen van de gebruiker zelf }
 	{ geen }
 	{ idem als Modify aanroep met een filter }
-	{ BACKEND_ADMIN }
+	{ BACKEND\_ADMIN }
 
 \function{Remove}
 	{ verwijderen van een bestaande gebruiker }
 	{ een filter die gebruikers selecteert }
 	{ een boolean die aangeeft of de actie al dan niet gelukt is }
-	{ USER_REMOVE }
+	{ USER\_REMOVE }
 	
 \function{ResetPassword}
 	{ publieke informatie opvragen van de gebruiker zelf }
@@ -359,7 +359,7 @@ Hier vindt men de nodige methodes terug om gebruikers te beheren. Dit is echter 
 		\begin{itemize_compact}
 		\item{symbool: identificatiecode van het aandeel}
 		\end{itemize_compact} }
-	{ BACKEND_ADMIN, of LOGGEDIN (maar dan wordt de resultaatset gereduceerd tot effecten van de ingelogde gebruiker) }
+	{ BACKEND\_ADMIN, of LOGGEDIN (maar dan wordt de resultaatset gereduceerd tot effecten van de ingelogde gebruiker) }
 
 \todo{behoudt Orders.List ook uitgevoerde orders van een bepaald timeframe? - we hadden normaal gezegd dat we hier alle order tonen, ook de uitgevoerde. Het timeframe/resente orders zetten is dan kwestie van het zetten van de juiste filter en kan de client dan zelf bepalen. Kan je je hier in vinden? - Laur}
 \function{Order.List}
@@ -375,7 +375,7 @@ Hier vindt men de nodige methodes terug om gebruikers te beheren. Dit is echter 
 		\item{effect: symbool van het effect}
 		\item{aantal: het aantal effecten dat het order verhandelt}
 		\end{itemize_compact} }
-	{ BACKEND_ADMIN (moet ooit ORDER_ADMIN worden), of LOGGEDIN (maar dan wordt de resultaatset gereduceerd tot orders van de ingelogde gebruiker) }
+	{ BACKEND\_ADMIN (moet ooit ORDER\_ADMIN worden), of LOGGEDIN (maar dan wordt de resultaatset gereduceerd tot orders van de ingelogde gebruiker) }
 
 \todo{specifieke foutmelding als order aanmaken faalde}
 \function{Order.Create}
@@ -388,7 +388,7 @@ Hier vindt men de nodige methodes terug om gebruikers te beheren. Dit is echter 
 		\item{aantal: het aantal effecten dat het order verhandelt}
 		\end{itemize_compact} }
 	{ id van het aangemaakte order }
-	{ BACKEND_ADMIN (moet ooit ORDER_ADMIN worden), of LOGGEDIN (indien het 'id' veld in de ingegeven struct overeenstemp met die van de ingelogde gebruiker) }
+	{ BACKEND\_ADMIN (moet ooit ORDER\_ADMIN worden), of LOGGEDIN (indien het 'id' veld in de ingegeven struct overeenstemp met die van de ingelogde gebruiker) }
 
 \function{Order.Cancel}
 	{ een bestaande order annuleren }
@@ -398,7 +398,7 @@ Hier vindt men de nodige methodes terug om gebruikers te beheren. Dit is echter 
 		\item{order: order-id}
 		\end{itemize_compact} }
 	{ geen }
-	{ BACKEND_ADMIN (moet ooit ORDER_ADMIN worden), of LOGGEDIN (maar dan wordt de set waarop de functie inwerkt gereduceerd tot orders van de ingelogde gebruiker) }
+	{ BACKEND\_ADMIN (moet ooit ORDER\_ADMIN worden), of LOGGEDIN (maar dan wordt de set waarop de functie inwerkt gereduceerd tot orders van de ingelogde gebruiker) }
 
 \function{Order.Modify}
 	{ een bestaande order wijzigen }
@@ -407,7 +407,7 @@ Hier vindt men de nodige methodes terug om gebruikers te beheren. Dit is echter 
 		\item{}
 		\end{itemize_compact} }
 	{ geen }
-	{ BACKEND_ADMIN (moet ooit ORDER_ADMIN worden), of LOGGEDIN (maar dan wordt de set waarop de functie inwerkt gereduceerd tot orders van de ingelogde gebruiker) }
+	{ BACKEND\_ADMIN (moet ooit ORDER\_ADMIN worden), of LOGGEDIN (maar dan wordt de set waarop de functie inwerkt gereduceerd tot orders van de ingelogde gebruiker) }
 
 
 \function{Transaction.List}
@@ -426,7 +426,7 @@ Hier vindt men de nodige methodes terug om gebruikers te beheren. Dit is echter 
 		\item{type: soort effect}
 		\item{name: naam van het effect}
 		\end{itemize_compact} }
-	{ TRANSACTION_ADMIN, of LOGGEDIN (maar dan wordt de set waarop de functie inwerkt gereduceerd tot orders van de ingelogde gebruiker) }
+	{ TRANSACTION\_ADMIN, of LOGGEDIN (maar dan wordt de set waarop de functie inwerkt gereduceerd tot orders van de ingelogde gebruiker) }
 
 \function{Transaction.Create}
 	{ nieuwe transactie aanmaken }
@@ -435,7 +435,7 @@ Hier vindt men de nodige methodes terug om gebruikers te beheren. Dit is echter 
 		\item{...}
 		\end{itemize_compact} }
 	{ id van de aangemaakte transactie }
-	{ TRANSACTION_ADMIN }
+	{ TRANSACTION\_ADMIN }
 
 \function{Transaction.Modify}
 	{ nieuwe transactie aanmaken }
@@ -444,7 +444,7 @@ Hier vindt men de nodige methodes terug om gebruikers te beheren. Dit is echter 
 		\item{}
 		\end{itemize_compact} }
 	{ id van de aangemaakte transactie }
-	{ TRANSACTION_ADMIN }
+	{ TRANSACTION\_ADMIN }
 	
 \function{Points.List}
 	{ lijst van transactie-punten ophalen }
@@ -456,7 +456,7 @@ Hier vindt men de nodige methodes terug om gebruikers te beheren. Dit is echter 
 		\begin{itemize_compact}
 		\item{...}
 		\end{itemize_compact} }
-	{ POINTS_ADMIN, of LOGGEDIN (maar dan wordt de set waarop de functie inwerkt gereduceerd tot orders van de ingelogde gebruiker) }
+	{ POINTS\_ADMIN, of LOGGEDIN (maar dan wordt de set waarop de functie inwerkt gereduceerd tot orders van de ingelogde gebruiker) }
 
 \function{Points.CreateTransaction}
 	{ nieuwe transactie aanmaken }
@@ -465,7 +465,7 @@ Hier vindt men de nodige methodes terug om gebruikers te beheren. Dit is echter 
 		\item{...}
 		\end{itemize_compact} }
 	{ id van de aangemaakte transactie }
-	{ TRANSACTION_ADMIN }
+	{ TRANSACTION\_ADMIN }
 
 \function{Points.CreateTransactionify}
 	{ nieuwe transactie aanmaken }
@@ -474,7 +474,7 @@ Hier vindt men de nodige methodes terug om gebruikers te beheren. Dit is echter 
 		\item{}
 		\end{itemize_compact} }
 	{ id van de aangemaakte transactie }
-	{ TRANSACTION_ADMIN }
+	{ TRANSACTION\_ADMIN }
 
 
 \subsection{Finance-klasse}
@@ -503,7 +503,7 @@ Tenslotte zijn er nog de methodes gerelateerd met het effectieve beurswezen, die
 		\item{location}
 		\end{itemize_compact} }
 	{ niks }
-	{ SECURITY_MODIFY }
+	{ SECURITY\_MODIFY }
 
 \function{Exchange.Create}
 	{ een beurs toevoegen }
@@ -513,7 +513,7 @@ Tenslotte zijn er nog de methodes gerelateerd met het effectieve beurswezen, die
 		\item{location}
 		\end{itemize_compact} }
 	{ niks }
-	{ SECURITY_CREATE }
+	{ SECURITY\_CREATE }
 
 \function{Index.List}
 	{ lijst van indexen opvragen }
@@ -536,7 +536,7 @@ Tenslotte zijn er nog de methodes gerelateerd met het effectieve beurswezen, die
 		\item{description}
 		\end{itemize_compact} }
 	{ niks }
-	{ SECURITY_MODIFY }
+	{ SECURITY\_MODIFY }
 
 \function{Index.Create}
 	{ een index toevoegen }
@@ -545,7 +545,7 @@ Tenslotte zijn er nog de methodes gerelateerd met het effectieve beurswezen, die
 		\item{description}
 		\end{itemize_compact} }
 	{ niks }
-	{ SECURITY_CREATE }
+	{ SECURITY\_CREATE }
 
 \function{Security.List}
 	{ lijst met oppervlakkige informatie van effecten opvragen }
@@ -570,7 +570,7 @@ Tenslotte zijn er nog de methodes gerelateerd met het effectieve beurswezen, die
 		\item{...}
 		\end{itemize_compact} }
 	{ aantal aangepaste effecten }
-	{ SECURITY_MODIFY }
+	{ SECURITY\_MODIFY }
 
 \function{Security.Create}
 	{ een effect toevoegen }
@@ -579,13 +579,13 @@ Tenslotte zijn er nog de methodes gerelateerd met het effectieve beurswezen, die
 		\item{...}
 		\end{itemize_compact} }
 	{ niks }
-	{ SECURITY_CREATE }
+	{ SECURITY\_CREATE }
 	
 \function{Security.Remove}
 	{ een effect verwijderen }
 	{ een filter }
 	{ aantal verwijderde effecten }
-	{ SECURITY_REMOVE }
+	{ SECURITY\_REMOVE }
 
 \function{Security.Details}
 	{ defail-informatie van een effect opvragen }
@@ -612,13 +612,13 @@ Tenslotte zijn er nog de methodes gerelateerd met het effectieve beurswezen, die
 		\item{high: hoogterecord van het aandeel}
 		\end{itemize_compact} }
 	{ niks }
-	{ SECURITY_UPDATE }
+	{ SECURITY\_UPDATE }
 
 \function{Security.UpdateBulk}
 	{ reeks van nieuwe quotes toevoegen }
 	{ vector van structs die voldoen aan de signatuur van Security.Update }
 	{ niks }
-	{ SECURITY_UPDATE }
+	{ SECURITY\_UPDATE }
 
 \todo{.Quote functies}
 
