@@ -171,7 +171,12 @@ public class FinanceFactory {
             XmlRpcClient client = SPClientFactory.getPrivateClient();
 
             try {
-                Integer result = (Integer) client.execute("Finance.Security.Modify", new Object[]{"isin EQUALS '" + security.getISIN() + "'", security.toStruct()});
+                HashMap sec = security.toStruct();
+                sec.remove(Security.Fields.EXCHANGE);
+                sec.remove(Security.Fields.ISIN);
+                sec.remove(Security.Fields.SYMBOL);
+
+                Integer result = (Integer) client.execute("Finance.Security.Modify", new Object[]{"isin EQUALS '" + security.getISIN() + "'",sec});
                 if (result == 1) {
                     security.setDirty(false);
                     securities.put(security.getISIN(), security);

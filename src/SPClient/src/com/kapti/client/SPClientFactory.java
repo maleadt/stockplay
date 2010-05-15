@@ -40,6 +40,8 @@ public class SPClientFactory {
 
     static Logger logger = Logger.getLogger(SPClientFactory.class);
     private static String sessionID = null;
+    private static final ResourceBundle settings = ResourceBundle.getBundle("com/kapti/client/settings");
+    private static String serverURL = settings.getString("server");
 
     public static String getSessionID() {
         return sessionID;
@@ -49,6 +51,15 @@ public class SPClientFactory {
         SPClientFactory.sessionID = sessionid;
     }
 
+    public static String getServerURL() {
+        return serverURL;
+    }
+
+    public static void setServerURL(String serverURL) {
+        SPClientFactory.serverURL = serverURL;
+    }
+    
+
     public static XmlRpcClient getPrivateClient() throws NotLoggedInException {
 
         if (sessionID == null) {
@@ -57,9 +68,9 @@ public class SPClientFactory {
 
         try {
 
-            ResourceBundle settings = ResourceBundle.getBundle("com/kapti/client/settings");
+
             XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
-            config.setServerURL(new URL(settings.getString("server")));
+            config.setServerURL(new URL(serverURL));
             config.setGzipCompressing(settings.getString("gzip").equals("1"));
             config.setGzipRequesting(settings.getString("gzip").equals("1"));
             config.setEnabledForExtensions(true);
@@ -81,10 +92,8 @@ public class SPClientFactory {
 
     public static XmlRpcClient getPublicClient() {
         try {
-
-            ResourceBundle settings = ResourceBundle.getBundle("com/kapti/client/settings");
             XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
-            config.setServerURL(new URL(settings.getString("serverpublic")));
+            config.setServerURL(new URL(serverURL));
             config.setGzipCompressing(settings.getString("gzip").equals("1"));
             config.setGzipRequesting(settings.getString("gzip").equals("1"));
             config.setEnabledForExtensions(true);
@@ -103,11 +112,12 @@ public class SPClientFactory {
 
     }
 
-    public static boolean checkConnectivity(){
+    public static boolean checkConnectivity() {
 
-        XmlRpcClient client = getPublicClient();
+
         try {
-            return (Integer) client.execute("User.Hello", new Object[] {"Administration", 1}) == 1;
+            XmlRpcClient client = getPublicClient();
+            return (Integer) client.execute("User.Hello", new Object[]{"Administration", 1}) == 1;
         } catch (XmlRpcException ex) {
             java.util.logging.Logger.getLogger(SPClientFactory.class.getName()).log(Level.SEVERE, null, ex);
             return false;

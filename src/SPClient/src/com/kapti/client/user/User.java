@@ -40,7 +40,7 @@ public class User implements Cloneable {
         ID, NICKNAME, PASSWORD, EMAIL, LASTNAME, FIRSTNAME, REGDATE, ROLE, POINTS, STARTAMOUNT, CASH, RRN
     }
 
-    public enum Role {
+    public static enum Role {
 
         USER(0),
         ADMIN(1),
