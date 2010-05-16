@@ -6,6 +6,7 @@ package com.kapti.data.persistence;
 
 import com.kapti.data.PointsTransaction;
 import com.kapti.data.PointsTransaction.PointsTransactionPK;
+import com.kapti.data.PointsType;
 import com.kapti.data.User;
 import com.kapti.filter.Filter;
 import com.kapti.filter.parsing.Parser;
@@ -79,7 +80,7 @@ public class PointsTransactionDAOTest {
     @Test
     public void testCreate() throws Exception {
         System.out.println("create");
-        PointsTransaction entity = new PointsTransaction(userid, time);
+        PointsTransaction entity = new PointsTransaction(userid, PointsType.MANUAL, time);
         entity.setDelta(100);
         entity.setComments("testsuite");
 
@@ -131,7 +132,7 @@ public class PointsTransactionDAOTest {
     @Test
     public void testUpdate() throws Exception {
         System.out.println("update");
-        PointsTransaction entity = new PointsTransaction(userid, time);
+        PointsTransaction entity = new PointsTransaction(userid,PointsType.MANUAL, time);
         entity.setDelta(200);
         entity.setComments("testsuite2");
         boolean expResult = true;
@@ -145,7 +146,7 @@ public class PointsTransactionDAOTest {
     @Test
     public void testDelete() throws Exception {
         System.out.println("delete");
-        PointsTransaction entity = new PointsTransaction(userid, time);
+        PointsTransaction entity = new PointsTransaction(userid,PointsType.MANUAL, time);
         boolean expResult = true;
         boolean result = pointsDAO.delete(entity);
         assertEquals(expResult, result);

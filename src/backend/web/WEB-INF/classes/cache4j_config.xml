@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="Windows-1251"?>
 <cache-factory clean-interval="30s">
      <cache id="exchanges" desc=""
-            ttl="1h"
+            ttl="12h"
             idle="30m"
             max-size="10000"
             max-memory-size="50m" />
      <cache id="indexes" desc=""
-            ttl="1h"
+            ttl="12h"
             idle="30m"
             max-size="10000"
             max-memory-size="50m" />
@@ -21,32 +21,32 @@
             max-size="10000"
             max-memory-size="50m" />
      <cache id="users" desc=""
-            ttl="1h"
-            idle="30m"
+            ttl="30m"
+            idle="15m"
             max-size="10000"
             max-memory-size="50m" />
      <cache id="orders" desc=""
-            ttl="1h"
-            idle="30m"
-            max-size="10000"
+            ttl="2m"
+            idle="1m"
+            max-size="25"
             max-memory-size="50m" />
      <cache id="transactions" desc=""
-            ttl="1h"
-            idle="30m"
-            max-size="10000"
+            ttl="2m"
+            idle="1m"
+            max-size="25"
             max-memory-size="50m" />
      <cache id="indexsecurities" desc=""
-            ttl="1h"
+            ttl="12h"
             idle="30m"
             max-size="10000"
             max-memory-size="50m" />
      <cache id="usersecurities" desc=""
-            ttl="1h"
-            idle="30m"
-            max-size="10000"
+            ttl="2m"
+            idle="1m"
+            max-size="50"
             max-memory-size="50m" />
      <cache id="roles" desc=""
-            ttl="1h"
+            ttl="12h"
             idle="30m"
             max-size="10000"
             max-memory-size="50m" />

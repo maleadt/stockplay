@@ -34,7 +34,6 @@ public class OracleConnection {
                 ds = new BasicDataSource();
                 ds.setDriverClassName("oracle.jdbc.driver.OracleDriver");
 
-                //ds.setUrl("jdbc:oracle:thin:@//localhost:1521/xe");
                 ds.setUrl("jdbc:oracle:thin:@//be01.kapti.com:1521/xe");
                 
                 ds.setUsername("stockplay");
@@ -42,6 +41,8 @@ public class OracleConnection {
                 ds.setTestOnBorrow(true);
                 ds.setTestOnReturn(true);
                 ds.setTestWhileIdle(true);
+                ds.setRemoveAbandoned(true);
+                ds.setMaxWait(15*1000); // 15 seconden timeout
                 ds.setValidationQuery("select 1 from dual");
             }
 

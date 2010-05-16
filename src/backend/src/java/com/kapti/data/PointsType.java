@@ -27,5 +27,6 @@ import java.io.Serializable;
 public enum PointsType implements Serializable {
     PROFIT,
     CASH,
-    BEL20
+    BEL20,
+    MANUAL
 }
