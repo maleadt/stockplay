@@ -166,7 +166,7 @@
     <value>Are you sure?</value>
   </data>
   <data name="QuoteError.ErrorMessage" xml:space="preserve">
-    <value>Please enter a correct price, greater than 1</value>
+    <value>Please enter a correct price, greater than 0</value>
   </data>
   <data name="stoploss.Text" xml:space="preserve">
     <value>Stop Loss Order</value>
@@ -175,12 +175,21 @@
     <value>Trailing Stop Order</value>
   </data>
   <data name="Para6" xml:space="preserve">
-    <value>Onder limiet:</value>
+    <value>Lower limit:</value>
   </data>
   <data name="Para7" xml:space="preserve">
-    <value>Boven limiet:</value>
+    <value>Upper limit:</value>
   </data>
   <data name="Para8" xml:space="preserve">
     <value>Punten:</value>
+  </data>
+  <data name="BovenError.ErroMessage" xml:space="preserve">
+    <value>Please enter a valid upper limit</value>
+  </data>
+  <data name="OnderError.ErrorMessage" xml:space="preserve">
+    <value>Please enter a valid lower limit</value>
+  </data>
+  <data name="LimitError.ErrorMessage" xml:space="preserve">
+    <value>The upper limit must be larger than the lower limit!</value>
   </data>
 </root>

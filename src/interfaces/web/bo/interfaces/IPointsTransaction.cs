@@ -18,6 +18,7 @@ namespace StockPlay
     {
         PROFIT,
         CASH,
-        BEL20
+        BEL20,
+        MANUAL
     }
 }

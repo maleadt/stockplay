@@ -166,7 +166,7 @@
     <value>Bent u zeker?</value>
   </data>
   <data name="QuoteError.ErrorMessage" xml:space="preserve">
-    <value>Geef een geldige prijs op, die minstens hoger is dan 1</value>
+    <value>Geef een geldige prijs op, die groter is dan 0</value>
   </data>
   <data name="stoploss.Text" xml:space="preserve">
     <value>Stop Loss Order</value>
@@ -182,5 +182,14 @@
   </data>
   <data name="Para8" xml:space="preserve">
     <value>Punten:</value>
+  </data>
+  <data name="BovenError.ErrorMessage" xml:space="preserve">
+    <value>Vul een geldige bovenlimiet in</value>
+  </data>
+  <data name="OnderError.ErrorMessage" xml:space="preserve">
+    <value>Vul een geldige onderlimiet in</value>
+  </data>
+  <data name="LimitError.ErrorMessage" xml:space="preserve">
+    <value>De boven limiet moet groter zijn dan de onder limiet!</value>
   </data>
 </root>

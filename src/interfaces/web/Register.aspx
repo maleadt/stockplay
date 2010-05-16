@@ -4,13 +4,13 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder" Runat="Server">
+    <h1 id="H1" runat="server" meta:resourcekey="TableHeader"></h1>
 
     <!-- Wordt getoond na registratie -->
     <p class="para" id="FinishRegistration" visible="false" runat="server">
-        <asp:Literal runat="server" meta:resourcekey="FinishRegistration" />
+        <asp:Literal ID="Literal1" runat="server" meta:resourcekey="FinishRegistration" />
     </p>
 
-    <h1 id="H1" runat="server" meta:resourcekey="TableHeader"></h1>
     <table id="TableRegister" runat="server">
         <tr>
             <td runat="server" class="col" meta:resourcekey="Nickname"></td>

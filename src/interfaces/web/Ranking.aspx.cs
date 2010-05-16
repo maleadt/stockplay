@@ -108,8 +108,6 @@ namespace StockPlay.Web
             rankingTable.Columns["Total"].DataType = typeof(int);
             rankingTable.Columns.Add("Rank");
             rankingTable.Columns["Rank"].DataType = typeof(int);
-            rankingTable.Columns.Add("Cash");
-            rankingTable.Columns["Cash"].DataType = typeof(double);
 
             foreach (IRank rank in ranking)
             {
@@ -117,7 +115,6 @@ namespace StockPlay.Web
                 row[0] = userDictionary[rank.UserID].Nickname;
                 row[1] = rank.Total;
                 row[2] = rank.RankNumber;
-                row[3] = userDictionary[rank.UserID].Cash;
 
                 rankingTable.Rows.Add(row);
             }

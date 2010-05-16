@@ -6,7 +6,7 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder" Runat="Server">
     <h1 runat="server" meta:resourcekey="Title"></h1>
 
-    <p runat="server" meta:resourcekey="Para1"></p>
+    <p runat="server" class="para" meta:resourcekey="Para1"></p>
 
     <table class="table" id="account">
         <tr>
@@ -46,7 +46,7 @@
 
     <h1 id="H1" runat="server" meta:resourcekey="Title2"></h1>
 
-    <p runat="server" meta:resourcekey="Para2"></p>
+    <p runat="server" class="para" meta:resourcekey="Para2"></p>
     <table class="table" id="AccountUpdate" runat="server">
         <tr>
             <td runat="server" meta:resourcekey="OldPassword"></td>

@@ -12,7 +12,10 @@ namespace StockPlay.implXMLRPC.handlers
 	
 	    [XmlRpcMethod("User.Create")]
 	    int Create(XmlRpcStruct user);
-	
+
+        [XmlRpcMethod("User.Details")]
+        XmlRpcStruct[] Details();
+
 	    [XmlRpcMethod("User.Details")]
 	    XmlRpcStruct[] Details(string iFilter);
 	

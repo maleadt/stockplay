@@ -141,6 +141,12 @@
   <data name="OverviewDescription" xml:space="preserve">
     <value>Bekijk uw accountoverzicht</value>
   </data>
+  <data name="PointsTransaction" xml:space="preserve">
+    <value>Puntengeschiedenis</value>
+  </data>
+  <data name="PointsTransactionDescription" xml:space="preserve">
+    <value>Bekijk de punten die u al behaald hebt op StockPlay</value>
+  </data>
   <data name="Portfolio" xml:space="preserve">
     <value>Portfolio</value>
   </data>

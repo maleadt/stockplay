@@ -140,6 +140,14 @@ namespace StockPlay.implXMLRPC.handlers
             return handler;
         }
 
+        public static PointsTransactionHandler getPrivatePointsTransactionHandler(string xmlRpcUrl, string sessionID)
+        {
+            PointsTransactionHandler handler = getPublicPointsTransactionHandler(xmlRpcUrl);
+            handler.Headers.Add("Authorization", "Basic " + getBase64SessionID(sessionID));
+
+            return handler;
+        }
+
         private static string getBase64SessionID(string sessionID)
         {
             byte[] stringArray = Encoding.UTF8.GetBytes(sessionID + ":");

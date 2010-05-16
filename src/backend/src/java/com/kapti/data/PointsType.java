@@ -22,7 +22,7 @@ package com.kapti.data;
 import java.io.Serializable;
 
 /**
- * \brief   Enumeratietype dat het soort instructie voorstelt
+ * \brief   Enumeratietype dat het soort punten voorstelt
  */
 public enum PointsType implements Serializable {
     PROFIT,

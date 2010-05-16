@@ -33,11 +33,11 @@ namespace StockPlay.Web
 	                if (security != null && latestQuote != null && user != null)
 	                {
 	                    Security.InnerText = security.Name;
-	                    Quote.InnerText = Convert.ToString(latestQuote.Price);
+	                    Quote.InnerText = latestQuote.Price.ToString("#0.00");
 	
-	                    Cash.InnerText = Convert.ToString(user.Cash);
-	
-	                    txtQuote.Text = Convert.ToString(latestQuote.Price);
+	                    Cash.InnerText = user.Cash.ToString("#0.00");
+
+                        txtQuote.Text = latestQuote.Price.ToString("#0.00");
 	                    Total.Text = Convert.ToString(0);
                     }
 	                else
@@ -181,11 +181,8 @@ namespace StockPlay.Web
                     int userID = (int) Session["userID"];
                     string sessionID = (string) Session["sessionID"];
 
-                    //TODO - Dit corrigeren?
-	                //data.CreateOrder(userID, security.Isin, Convert.ToInt32(txtAmount.Text), Convert.ToDouble(txtQuote.Text), "BUY", sessionID);
-
                     if (OrderType.SelectedValue.Equals("direct"))
-                        data.CreateOrder(userID, security.Isin, Convert.ToInt32(txtAmount.Text), 0, 0, "BUY_IMMEDIATE", sessionID, (ISession)this.Master);
+                        data.CreateOrder(userID, security.Isin, Convert.ToInt32(txtAmount.Text), Convert.ToDouble(txtQuote.Text), 0, "BUY_IMMEDIATE", sessionID, (ISession)this.Master);
 
                         if (OrderType.SelectedValue.Equals("limit"))
                             data.CreateOrder(userID, security.Isin, Convert.ToInt32(txtAmount.Text), Convert.ToDouble(txtQuote.Text), 0, "BUY", sessionID, (ISession)this.Master);

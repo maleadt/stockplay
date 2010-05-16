@@ -15,7 +15,6 @@
             <asp:BoundField DataField="Username" meta:resourcekey="Username" />
             <asp:BoundField DataField="Total" meta:resourcekey="Total" />
             <asp:BoundField DataField="Rank" meta:resourcekey="Rank" />
-            <asp:BoundField DataField="Cash" meta:resourcekey="Cash" />
         </Columns>
     </asp:GridView>
 

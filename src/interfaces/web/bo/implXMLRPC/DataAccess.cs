@@ -497,7 +497,7 @@ namespace StockPlay.implXMLRPC
                 IUser user = null;
 
                 UserHandler privateUserHandler = HandlerHelper.getPrivateUserHandler(privateXmlRpcUrl, sessionID);
-                XmlRpcStruct[] userStruct = privateUserHandler.Details(""); //Filter is niet nodig, deze wordt samengesteld in de backend adhv sessie
+                XmlRpcStruct[] userStruct = privateUserHandler.Details(); //Filter is niet nodig, deze wordt samengesteld in de backend adhv sessie
                 if (userStruct.Length > 0)
                     user = new User(userStruct[0]);
 
@@ -632,7 +632,7 @@ namespace StockPlay.implXMLRPC
         {
             try
             {
-                sysLog.Info("Request: GetRanking - Requested rankingevent: '" + name + "'");
+                sysLog.Info("Request: GetRankingEvent - Requested rankingevent: '" + name + "'");
 
                 List<IPointsTransaction> pointTransactions = new List<IPointsTransaction>();
 
@@ -645,6 +645,33 @@ namespace StockPlay.implXMLRPC
             }
             catch (Exception e)
             {
+                sysLog.Error("Error when getting rankingevent", e);
+
+                return new List<IPointsTransaction>();
+            }
+        }
+
+        public List<IPointsTransaction> GetPointTransactions(int userID, string sessionId, ISession sessionHandler)
+        {
+            try
+            {
+                sysLog.Info("Request: GetPointTransactions - Requested UserID: '" + userID + "'");
+
+                List<IPointsTransaction> pointTransactions = new List<IPointsTransaction>();
+
+                PointsTransactionHandler privatePointsTransactionHandler = HandlerHelper.getPrivatePointsTransactionHandler(privateXmlRpcUrl, sessionId);
+                XmlRpcStruct[] pointTransactionStruct = privatePointsTransactionHandler.List("USERID == '" + userID + "'");
+
+                foreach (XmlRpcStruct pointTransaction in pointTransactionStruct)
+                    pointTransactions.Add(new PointsTransaction(pointTransaction));
+
+                return pointTransactions;
+            }
+            catch (Exception e)
+            {
+                if (e.Message.Contains(corruptSession) || e.Message.Contains(invalidSession))
+                    sessionHandler.handleSessionTimeout();
+                else
                 sysLog.Error("Error when getting rankings", e);
 
                 return new List<IPointsTransaction>();

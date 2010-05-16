@@ -9,8 +9,10 @@
     <p class="para" runat="server" meta:resourcekey="Para1"></p>
 
     <div id="DeleteMessage" runat="server" visible="false">
-        <p> <asp:Literal runat="server" Text="<%$ Resources:Para21 %>" /> <b id="OrderId" runat="server"></b> <asp:Literal ID="Literal1" runat="server" Text="<%$ Resources:Para22 %>" /> <b id="SecurityID" runat="server"></b>?</p>
-        <p>
+        <p class="para">
+            <asp:Literal runat="server" Text="<%$ Resources:Para21 %>" /> <b id="OrderId" runat="server"></b> <asp:Literal ID="Literal1" runat="server" Text="<%$ Resources:Para22 %>" /> <b id="SecurityID" runat="server"></b>?
+        </p>
+        <p class="para">
             <asp:Button ID="btnConfirm" class="button" meta:resourcekey="Confirm" runat="server" OnClick="btnConfirm_Click" />
             <asp:Button ID="btnCancel" class="button" meta:resourcekey="Cancel" runat="server" OnClick="btnCancel_Click" />
         </p>

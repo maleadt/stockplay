@@ -28,7 +28,7 @@ namespace StockPlay.implXMLRPC
         public PointsTransaction(XmlRpcStruct pointsTransaction)
         {
             userId = Convert.ToInt32(pointsTransaction["USER"]);
-            timestamp = Convert.ToDateTime(pointsTransaction["AMOUNT"]);
+            timestamp = Convert.ToDateTime(pointsTransaction["TIMESTAMP"]);
             type = (PointsType)Enum.Parse(typeof(PointsType), (string)pointsTransaction["TYPE"]);
             delta = Convert.ToInt32(pointsTransaction["DELTA"]);
             comments = (string)pointsTransaction["COMMENTS"];

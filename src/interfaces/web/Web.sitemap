@@ -6,6 +6,7 @@
         <siteMapNode url="User/Portfolio.aspx" title="$resources: Sitemap, Portfolio" description="$resources: Sitemap, PortfolioDescription" />
         <siteMapNode url="User/OrdersOverview.aspx" title="$resources: Sitemap, Orders" description="$resources: Sitemap, OrdersDescription"/>
         <siteMapNode url="User/TransactionHistory.aspx" title="$resources: Sitemap, TransactionHistory" description="$resources: Sitemap, TransactionHistoryDescription" />
+        <siteMapNode url="User/PointsTransaction.aspx" title="$resources: Sitemap, PointsTransaction" description="$resources: Sitemap, PointsTransactionDescription" />
       </siteMapNode>
       <siteMapNode url="SecuritiesOverview.aspx" title="$resources: Sitemap, SecuritiesOverview" description="$resources: Sitemap, SecuritiesOverviewDescription">
         <siteMapNode url="SecuritiesOverview.aspx?exchange=BSE" title="$resources: Sitemap, SecuritiesOverviewBSE" description="$resources: Sitemap, SecuritiesOverviewBSEDescription" />
