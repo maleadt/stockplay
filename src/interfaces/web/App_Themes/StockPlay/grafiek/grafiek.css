@@ -6,11 +6,11 @@
 }
 
 #plotTestContainer {
-	width: 560px;
+	width: 633px;
 }
 
 #plotTest div.draw {
-	height: 200px;
+	height: 230px;
 }
 
 #volumes {
@@ -58,7 +58,7 @@
 	float: right;
 	position: relative;
 	padding: 0 0.4em;
-	top: -188px;
+	top: -218px;
 	right: 12px;
 	display: none;
 	font-size: 1.0em;
@@ -133,10 +133,10 @@
 
 .plot .overlay {
 	position: relative;
-	top: -110px;
+	top: -140px;
 	background: url(images/overlay.png) no-repeat top left;
 	height: 50px;
-	width: 606px;
+	width: 680px;
 	left: -28px;
 	display: none;
 }
