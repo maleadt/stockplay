@@ -7,6 +7,7 @@ package com.kapti.administration;
 import com.kapti.administration.ValueChangeWithReasonDialog.ComputeChange;
 import com.kapti.client.user.PointsTransaction;
 import com.kapti.client.user.PointsTransactionFactory;
+import com.kapti.client.user.PointsType;
 import com.kapti.client.user.Transaction;
 import com.kapti.client.user.TransactionFactory;
 import com.kapti.client.user.User;
@@ -427,7 +428,7 @@ public class EditUserDialog extends JDialog implements ActionListener {
             PointsTransaction pt = null;
             if (pointsChange.getDelta() != 0) {
 
-                pt = ptf.createTransaction(user, Calendar.getInstance().getTime());
+                pt = ptf.createTransaction(user, PointsType.MANUAL, Calendar.getInstance().getTime());
                 pt.setComment(pointsChange.getReason());
                 pt.setDelta(pointsChange.getDelta());
             }
