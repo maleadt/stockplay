@@ -45,10 +45,10 @@ public class QuoteDAO implements GenericQuoteDAO {
                                                                 + " FROM ( SELECT  QUOTES.*, MAX(TIMESTAMP) OVER (PARTITION BY ISIN) AS MAX_TIMESTAMP FROM QUOTES ) WHERE TIMESTAMP = MAX_TIMESTAMP AND ( $filter )";
     private static final String SELECT_SPAN_QUOTE =         "select isin, median(timestamp) as timestamp, AVG(price) AS price, MAX(volume) AS volume, AVG(bid) AS bid, AVG(ask) AS ask, MIN(low) AS low, MAX(high) AS high, open"
                                                            + " from ( SELECT q.*, time_diff(?, TIMESTAMP) as diff, time_diff(?, min(TIMESTAMP) over(order by timestamp asc)) as diff_start, time_diff(?, max(TIMESTAMP) over(order by timestamp desc)) as diff_end from quotes q where (TIMESTAMP BETWEEN ? AND ?) ) s"
-                                                           + " GROUP BY isin, trunc(? * (diff - diff_start) / (diff_end - diff_start)), open";
+                                                           + " GROUP BY isin, trunc(? * (diff - diff_start) / (diff_end - diff_start)), open ORDER BY timestamp";
     private static final String SELECT_SPAN_QUOTE_FILTER = "select isin, median(timestamp) as timestamp, AVG(price) AS price, MAX(volume) AS volume, AVG(bid) AS bid, AVG(ask) AS ask, MIN(low) AS low, MAX(high) AS high, open"
                                                            + " from ( SELECT q.*, time_diff(?, TIMESTAMP) as diff, time_diff(?, min(TIMESTAMP) over(order by timestamp asc)) as diff_start, time_diff(?, max(TIMESTAMP) over(order by timestamp desc)) as diff_end from quotes q where (TIMESTAMP BETWEEN ? AND ?) AND ($filter) ) s"
-                                                           + " GROUP BY isin, trunc(? * (diff - diff_start) / (diff_end - diff_start)), open";
+                                                           + " GROUP BY isin, trunc(? * (diff - diff_start) / (diff_end - diff_start)), open ORDER BY timestamp";
     
     //  CREATE OR REPLACE FUNCTION time_diff (
     //DATE_1 IN DATE, DATE_2 IN DATE) RETURN NUMBER IS
