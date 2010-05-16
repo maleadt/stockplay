@@ -57,7 +57,7 @@ public class PointsTransaction {
         this.comment = comment;
     }
 
-    protected PointsType type;
+    protected PointsType type = PointsType.MANUAL;
     public static final String PROP_TYPE = "type";
 
     /**
