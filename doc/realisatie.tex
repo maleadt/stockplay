@@ -1190,7 +1190,7 @@ Uiteindelijk zijn we meer gaan kijken naar bestaande en beproefde pakketten om o
 \begin{verbatim}
 id == 42 && name EQUALS 'StockPlay'
 \end{verbatim}
-\caption{De uiteindelijke filter-syntax.}
+\caption{De uiteindelijke filter-syntax}
 \end{code}
 
 
@@ -1231,7 +1231,7 @@ Nu we een lijst hebben van tokens, moet een tweede typische karakteristiek van `
 
 We hebben deze stap gerealiseerd via het \emph{Shunting-Yard algoritme} van Edsger Dijkstra. Dit stack-based algoritme wordt vaak gebruikt bij het verwerken van infix-genoteerde mathematische uitdrukkingen, maar kan mits kleine wijzigingen perfect gebruikt worden voor het verwerken van onze filter. Voor de effectieve implementatie van dit algoritme verwijzen we naar het ruime aanbod van voorbeelden online.
 
-Een beperking van dit algoritme is echter dat elke functie of operator steeds moet vastleggen hoeveel parameters die accepteert. Zonder dit kan het algoritme niet beslissen hoeveel parameters er van de stack moeten gehaald worden. In de huidige opzet van ons filterontwerp hebben we echter dergelijke functies niet nodig, en daarom is er ook geen voorziening geïmplementeerd om er mee te kunnen opgaan. Moest dit echter wel het geval zijn, is het mogelijk het shunting-yard aloritme \makeurl{uit te breiden}{http://www.kallisti.net.nz/blog/2008/02/extension-to-the-shunting-yard-algorithm-to-allow-variable-numbers-of-arguments-to-functions/} voor gebruik met een willekeurig aantal parameters, wat zeker handig is in de context van functies.
+Een beperking van dit algoritme is echter dat elke functie of operator steeds moet vastleggen hoeveel parameters die accepteert. Zonder dit kan het algoritme niet beslissen hoeveel parameters er van de stack moeten gehaald worden. In de huidige opzet van ons filterontwerp hebben we echter dergelijke functies niet nodig, en daarom is er ook geen voorziening ge\"implementeerd om er mee te kunnen opgaan. Moest dit echter wel het geval zijn, is het mogelijk het shunting-yard aloritme \makeurl{uit te breiden}{http://www.kallisti.net.nz/blog/2008/02/extension-to-the-shunting-yard-algorithm-to-allow-variable-numbers-of-arguments-to-functions/} voor gebruik met een willekeurig aantal parameters, wat zeker handig is in de context van functies.
 
 \begin{code}
 \begin{verbatim}
@@ -1412,12 +1412,12 @@ Een conditie wordt gebruikt om een specifieke vergelijkingsoperatie toe te passe
 \begin{itemize}
 \item == of EQUALS: vereist dat twee velden identiek zijn [Key, *]
 \item != of NOTEQUALS: vereist dat twee velden verschillend zijn [Key, *]
-\item > of GREATHERTHAN: vereist dat het ene veld groter is dan het andere [Key, *]
-\item < of LESSTHAN: vereist dat het ene veld kleiner is dan het andere [Key, *]
-\item >= of GREATHERTHANOREQUAL: vereist dat het ene veld strikt groter is dan het andere [Key, *]
-\item <= of LESSTHANOREQUAL: vereist dat het ene veld strikt kleiner is dan het andere [Key, *]
-\item =~ of LIKE: vereist dat het ene veld voldoet aan de string (met wildcards) in het tweede veld [Key, String]
-\item !~ of NOTLIKE: vereist dat het ene veld verschilt van de string (met wildcards) in het tweede veld [Key, String]
+\item $>$ of GREATHERTHAN: vereist dat het ene veld groter is dan het andere [Key, *]
+\item $<$ of LESSTHAN: vereist dat het ene veld kleiner is dan het andere [Key, *]
+\item $>$= of GREATHERTHANOREQUAL: vereist dat het ene veld strikt groter is dan het andere [Key, *]
+\item $<$= of LESSTHANOREQUAL: vereist dat het ene veld strikt kleiner is dan het andere [Key, *]
+\item =\textasciitilde of LIKE: vereist dat het ene veld voldoet aan de string (met wildcards) in het tweede veld [Key, String]
+\item !\textasciitilde of NOTLIKE: vereist dat het ene veld verschilt van de string (met wildcards) in het tweede veld [Key, String]
 \end{itemize}
 
 \subsection{Relaties}
