@@ -160,8 +160,8 @@
                     <Property name="commands" typeID="1C#CommandEventSource" value="A3:3_R283_R323_R34"/>
                     <Property name="title" typeID="Pjava.lang.String" value="VStockPlay Login"/>
                     <Property name="commandListener" typeID="C#CommandListener" value="R7"/>
-                    <Property name="username" typeID="Pjava.lang.String" value="Vthijs"/>
-                    <Property name="password" typeID="Pjava.lang.String" value="Vthijs"/>
+                    <Property name="username" typeID="Pjava.lang.String" value="V"/>
+                    <Property name="password" typeID="Pjava.lang.String" value="V"/>
                     <Property name="useButton" typeID="Pboolean" value="Vtrue"/>
                     <Property name="loginTitle" typeID="Pjava.lang.String" value="V"/>
                     <Property name="backgroundColor" typeID="Pint" value="V-3355444"/>
@@ -255,7 +255,7 @@
                     <Property name="commands" typeID="1C#CommandEventSource" value="A2:3_R613_R62"/>
                     <Property name="title" typeID="Pjava.lang.String" value="VVerifying credentials"/>
                     <Property name="commandListener" typeID="C#CommandListener" value="R7"/>
-                    <Property name="text" typeID="Pjava.lang.String" value="VPlease wait while we're &#10;verifying your credentials"/>
+                    <Property name="text" typeID="Pjava.lang.String" value="VPlease wait while we're verifying your credentials"/>
                     <Property name="task" typeID="Corg.netbeans.microedition.util.CancellableTask" value="R63"/>
                     <Component componentID="62" typeID="C#WaitScreenFailureCommandEventSource">
                         <Property name="eventHandler" typeID="C#EventHandler" value="R68"/>
@@ -292,7 +292,7 @@
                     <Property name="commands" typeID="1C#CommandEventSource" value="A2:3_R723_R74"/>
                     <Property name="title" typeID="Pjava.lang.String" value="VOrder Form"/>
                     <Property name="commandListener" typeID="C#CommandListener" value="R7"/>
-                    <Property name="items" typeID="1Cjavax.microedition.lcdui.Item" value="A5:3_R754_R1163_R763_R774_R117"/>
+                    <Property name="items" typeID="1Cjavax.microedition.lcdui.Item" value="A4:3_R754_R1163_R763_R77"/>
                     <Component componentID="76" typeID="Cjavax.microedition.lcdui.TextField">
                         <Property name="instanceName" typeID="Pjava.lang.String" value="VcreateOrderPrice"/>
                         <Property name="codeGenerated" typeID="Pboolean" value="Vtrue"/>
@@ -348,15 +348,6 @@
                         <Property name="itemCommandListener" typeID="C#ItemCommandListener" value="R17"/>
                         <Property name="maxSize" typeID="Pint" value="V32"/>
                         <Property name="constraints" typeID="Pint" value="V0"/>
-                    </Component>
-                    <Component componentID="117" typeID="Cjavax.microedition.lcdui.DateField">
-                        <Property name="instanceName" typeID="Pjava.lang.String" value="VcreateOrderExpiration"/>
-                        <Property name="codeGenerated" typeID="Pboolean" value="Vtrue"/>
-                        <Property name="label" typeID="Pjava.lang.String" value="VExpiration date:"/>
-                        <Property name="itemCommandListener" typeID="C#ItemCommandListener" value="R17"/>
-                        <Property name="date" typeID="Plong" value="Unew java.util.Date (System.currentTimeMillis () + 1000*60*60*24*31 )"/>
-                        <Property name="timeZone" typeID="Pjava.lang.String" value="VEurope/Brussels"/>
-                        <Property name="inputMode" typeID="Pint" value="V3"/>
                     </Component>
                     <Component componentID="116" typeID="Cjavax.microedition.lcdui.TextField">
                         <Property name="instanceName" typeID="Pjava.lang.String" value="VcreateOrderAmount"/>
@@ -427,7 +418,7 @@
                         <Property name="label" typeID="Pjava.lang.String" value="VOrders:"/>
                         <Property name="commands" typeID="1C#ItemCommandEventSource" value="A1:4_R153"/>
                         <Property name="itemCommandListener" typeID="C#ItemCommandListener" value="R17"/>
-                        <Property name="title" typeID="Pjava.lang.String" value="V&lt;null&gt;"/>
+                        <Property name="title" typeID="Pjava.lang.String" value="V"/>
                         <Property name="model" typeID="Corg.netbeans.microedition.lcdui.TableModel" value="R97"/>
                         <Component componentID="153" typeID="C#ItemCommandEventSource">
                             <Property name="item" typeID="Cjavax.microedition.lcdui.Item" value="R96"/>
@@ -583,49 +574,6 @@
                         </Component>
                     </Component>
                 </Component>
-                <Component componentID="139" typeID="Cjavax.microedition.lcdui.TextBox">
-                    <Property name="instanceName" typeID="Pjava.lang.String" value="VselectStockForm"/>
-                    <Property name="codeGenerated" typeID="Pboolean" value="Vtrue"/>
-                    <Property name="commands" typeID="1C#CommandEventSource" value="A2:4_R1464_R149"/>
-                    <Property name="title" typeID="Pjava.lang.String" value="VSelect Stock:"/>
-                    <Property name="commandListener" typeID="C#CommandListener" value="R7"/>
-                    <Property name="maxSize" typeID="Pint" value="V15"/>
-                    <Property name="constraints" typeID="Pint" value="V1048576"/>
-                    <Component componentID="146" typeID="C#CommandEventSource">
-                        <Property name="eventHandler" typeID="C#EventHandler" value="R147"/>
-                        <Property name="displayable" typeID="Cjavax.microedition.lcdui.Displayable" value="R139"/>
-                        <Property name="command" typeID="Cjavax.microedition.lcdui.Command" value="R145"/>
-                        <Component componentID="147" typeID="C#SwitchDisplayableEventHandler">
-                            <Property name="eventSource" typeID="C#EventSource" value="R146"/>
-                            <Property name="displayable" typeID="Cjavax.microedition.lcdui.Displayable" value="R141"/>
-                        </Component>
-                    </Component>
-                    <Component componentID="149" typeID="C#CommandEventSource">
-                        <Property name="eventHandler" typeID="C#EventHandler" value="R150"/>
-                        <Property name="displayable" typeID="Cjavax.microedition.lcdui.Displayable" value="R139"/>
-                        <Property name="command" typeID="Cjavax.microedition.lcdui.Command" value="R148"/>
-                        <Component componentID="150" typeID="C#PreviousScreenEventHandler">
-                            <Property name="eventSource" typeID="C#EventSource" value="R149"/>
-                        </Component>
-                    </Component>
-                </Component>
-                <Component componentID="141" typeID="Corg.netbeans.microedition.lcdui.WaitScreen">
-                    <Property name="instanceName" typeID="Pjava.lang.String" value="VloadingStockWaitScreen"/>
-                    <Property name="codeGenerated" typeID="Pboolean" value="Vtrue"/>
-                    <Property name="commands" typeID="1C#CommandEventSource" value="A2:4_R1424_R143"/>
-                    <Property name="title" typeID="Pjava.lang.String" value="VStock info is loading.."/>
-                    <Property name="commandListener" typeID="C#CommandListener" value="R7"/>
-                    <Property name="text" typeID="Pjava.lang.String" value="VPlease wait while the stock&#10; information is being loaded"/>
-                    <Property name="task" typeID="Corg.netbeans.microedition.util.CancellableTask" value="R144"/>
-                    <Component componentID="143" typeID="C#WaitScreenFailureCommandEventSource">
-                        <Property name="displayable" typeID="Cjavax.microedition.lcdui.Displayable" value="R141"/>
-                        <Property name="command" typeID="Cjavax.microedition.lcdui.Command" value="R52"/>
-                    </Component>
-                    <Component componentID="142" typeID="C#WaitScreenSuccessCommandEventSource">
-                        <Property name="displayable" typeID="Cjavax.microedition.lcdui.Displayable" value="R141"/>
-                        <Property name="command" typeID="Cjavax.microedition.lcdui.Command" value="R51"/>
-                    </Component>
-                </Component>
                 <Component componentID="154" typeID="Cjavax.microedition.lcdui.Alert">
                     <Property name="instanceName" typeID="Pjava.lang.String" value="VorderCancelledAlert"/>
                     <Property name="codeGenerated" typeID="Pboolean" value="Vtrue"/>
@@ -695,24 +643,22 @@
         </Component>
     </Document>
     <FlowScene version="1">
-        <Node componentID="89" descriptorID="componentNode89" x="1142" y="389"/>
-        <Node componentID="81" descriptorID="componentNode81" x="1707" y="389"/>
-        <Node componentID="119" descriptorID="componentNode119" x="866" y="160"/>
-        <Node componentID="70" descriptorID="componentNode70" x="611" y="389"/>
-        <Node componentID="2" descriptorID="componentNode2" x="318" y="538"/>
-        <Node componentID="50" descriptorID="componentNode50" x="1437" y="160"/>
-        <Node componentID="109" descriptorID="componentNode109" x="1142" y="725"/>
-        <Node componentID="141" descriptorID="componentNode141" x="2000" y="160"/>
         <Node componentID="22" descriptorID="componentNode22" x="611" y="725"/>
-        <Node componentID="69" descriptorID="componentNode69" x="34" y="389"/>
-        <Node componentID="87" descriptorID="componentNode87" x="1142" y="32"/>
-        <Node componentID="154" descriptorID="componentNode154" x="1437" y="895"/>
-        <Node componentID="26" descriptorID="componentNode26" x="34" y="725"/>
+        <Node componentID="70" descriptorID="componentNode70" x="611" y="389"/>
         <Node componentID="98" descriptorID="componentNode98" x="1437" y="538"/>
-        <Node componentID="42" descriptorID="componentNode42" x="611" y="32"/>
-        <Node componentID="156" descriptorID="componentNode156" x="999" y="916"/>
-        <Node componentID="139" descriptorID="componentNode139" x="2297" y="389"/>
-        <Node componentID="92" descriptorID="componentNode92" x="866" y="538"/>
+        <Node componentID="69" descriptorID="componentNode69" x="34" y="389"/>
+        <Node componentID="154" descriptorID="componentNode154" x="1437" y="895"/>
+        <Node componentID="81" descriptorID="componentNode81" x="1707" y="389"/>
+        <Node componentID="26" descriptorID="componentNode26" x="34" y="725"/>
         <Node componentID="60" descriptorID="componentNode60" x="318" y="160"/>
+        <Node componentID="89" descriptorID="componentNode89" x="1142" y="389"/>
+        <Node componentID="92" descriptorID="componentNode92" x="866" y="538"/>
+        <Node componentID="87" descriptorID="componentNode87" x="1142" y="32"/>
+        <Node componentID="119" descriptorID="componentNode119" x="866" y="160"/>
+        <Node componentID="42" descriptorID="componentNode42" x="611" y="32"/>
+        <Node componentID="109" descriptorID="componentNode109" x="1142" y="725"/>
+        <Node componentID="156" descriptorID="componentNode156" x="999" y="916"/>
+        <Node componentID="50" descriptorID="componentNode50" x="1437" y="160"/>
+        <Node componentID="2" descriptorID="componentNode2" x="318" y="538"/>
     </FlowScene>
 </VisualDesign>

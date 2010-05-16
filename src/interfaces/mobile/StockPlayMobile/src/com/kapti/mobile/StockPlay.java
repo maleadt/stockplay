@@ -32,11 +32,8 @@ public class StockPlay extends MIDlet implements CommandListener, ItemCommandLis
     private Vector portfoliosecurities;
     private Vector orders;
     private Vector cancellableorders;
-    //private Security detailSecurity;
-    //private Quote detailQuote;
-    //private String securitysymbol;
+
     //<editor-fold defaultstate="collapsed" desc=" Generated Fields ">//GEN-BEGIN:|fields|0|
-    private java.util.Hashtable __previousDisplayables = new java.util.Hashtable();
     private Command exitCommand;
     private Command okCommand;
     private Command backCommand;
@@ -61,7 +58,6 @@ public class StockPlay extends MIDlet implements CommandListener, ItemCommandLis
     private TextField createOrderPrice;
     private ChoiceGroup createOrderType;
     private TextField createOrderStockSymbol;
-    private DateField createOrderExpiration;
     private TextField createOrderAmount;
     private Alert orderCreatedAlert;
     private WaitScreen createOrderWaitScreen;
@@ -73,8 +69,6 @@ public class StockPlay extends MIDlet implements CommandListener, ItemCommandLis
     private WaitScreen ordersWaitScreen;
     private WaitScreen cancelOrderWaitScreen;
     private List mainMenuList;
-    private TextBox selectStockForm;
-    private WaitScreen loadingStockWaitScreen;
     private Alert orderCancelledAlert;
     private Alert orderCancelFailedAlert;
     private Image logo;
@@ -96,19 +90,6 @@ public class StockPlay extends MIDlet implements CommandListener, ItemCommandLis
     }
 
     //<editor-fold defaultstate="collapsed" desc=" Generated Methods ">//GEN-BEGIN:|methods|0|
-    /**
-     * Switches a display to previous displayable of the current displayable.
-     * The <code>display</code> instance is obtain from the <code>getDisplay</code> method.
-     */
-    private void switchToPreviousDisplayable() {
-        Displayable __currentDisplayable = getDisplay().getCurrent();
-        if (__currentDisplayable != null) {
-            Displayable __nextDisplayable = (Displayable) __previousDisplayables.get(__currentDisplayable);
-            if (__nextDisplayable != null) {
-                switchDisplayable(null, __nextDisplayable);
-            }
-        }
-    }
     //</editor-fold>//GEN-END:|methods|0|
     //<editor-fold defaultstate="collapsed" desc=" Generated Method: initialize ">//GEN-BEGIN:|0-initialize|0|0-preInitialize
     /**
@@ -153,10 +134,6 @@ public class StockPlay extends MIDlet implements CommandListener, ItemCommandLis
     public void switchDisplayable(Alert alert, Displayable nextDisplayable) {//GEN-END:|5-switchDisplayable|0|5-preSwitch
         // write pre-switch user code here
         Display display = getDisplay();//GEN-BEGIN:|5-switchDisplayable|1|5-postSwitch
-        Displayable __currentDisplayable = display.getCurrent();
-        if (__currentDisplayable != null  &&  nextDisplayable != null) {
-            __previousDisplayables.put(nextDisplayable, __currentDisplayable);
-        }
         if (alert == null) {
             display.setCurrent(nextDisplayable);
         } else {
@@ -203,107 +180,88 @@ public class StockPlay extends MIDlet implements CommandListener, ItemCommandLis
                 // write pre-action user code here
                 switchDisplayable(getOrderCreatedAlert(), getMainMenuList());//GEN-LINE:|7-commandAction|12|82-postAction
                 // write post-action user code here
-            }//GEN-BEGIN:|7-commandAction|13|143-preAction
-        } else if (displayable == loadingStockWaitScreen) {
-            if (command == WaitScreen.FAILURE_COMMAND) {//GEN-END:|7-commandAction|13|143-preAction
-                // write pre-action user code here
-//GEN-LINE:|7-commandAction|14|143-postAction
-                // write post-action user code here
-            } else if (command == WaitScreen.SUCCESS_COMMAND) {//GEN-LINE:|7-commandAction|15|142-preAction
-                // write pre-action user code here
-//GEN-LINE:|7-commandAction|16|142-postAction
-                // write post-action user code here
-            }//GEN-BEGIN:|7-commandAction|17|28-preAction
+            }//GEN-BEGIN:|7-commandAction|13|28-preAction
         } else if (displayable == loginScreen) {
-            if (command == LoginScreen.LOGIN_COMMAND) {//GEN-END:|7-commandAction|17|28-preAction
+            if (command == LoginScreen.LOGIN_COMMAND) {//GEN-END:|7-commandAction|13|28-preAction
                 // write pre-action user code here
-                switchDisplayable(null, getVerifyCredentialsScreen());//GEN-LINE:|7-commandAction|18|28-postAction
+                switchDisplayable(null, getVerifyCredentialsScreen());//GEN-LINE:|7-commandAction|14|28-postAction
                 // write post-action user code here
-            } else if (command == exitCommand) {//GEN-LINE:|7-commandAction|19|32-preAction
+            } else if (command == exitCommand) {//GEN-LINE:|7-commandAction|15|32-preAction
                 // write pre-action user code here
-                exitMIDlet();//GEN-LINE:|7-commandAction|20|32-postAction
+                exitMIDlet();//GEN-LINE:|7-commandAction|16|32-postAction
                 // write post-action user code here
-            } else if (command == okCommand) {//GEN-LINE:|7-commandAction|21|34-preAction
+            } else if (command == okCommand) {//GEN-LINE:|7-commandAction|17|34-preAction
                 // write pre-action user code here
-                switchDisplayable(null, getVerifyCredentialsScreen());//GEN-LINE:|7-commandAction|22|34-postAction
+                switchDisplayable(null, getVerifyCredentialsScreen());//GEN-LINE:|7-commandAction|18|34-postAction
                 // write post-action user code here
-            }//GEN-BEGIN:|7-commandAction|23|121-preAction
+            }//GEN-BEGIN:|7-commandAction|19|121-preAction
         } else if (displayable == mainMenuList) {
-            if (command == List.SELECT_COMMAND) {//GEN-END:|7-commandAction|23|121-preAction
+            if (command == List.SELECT_COMMAND) {//GEN-END:|7-commandAction|19|121-preAction
                 // write pre-action user code here
-                mainMenuListAction();//GEN-LINE:|7-commandAction|24|121-postAction
+                mainMenuListAction();//GEN-LINE:|7-commandAction|20|121-postAction
                 // write post-action user code here
-            } else if (command == exitCommand1) {//GEN-LINE:|7-commandAction|25|131-preAction
+            } else if (command == exitCommand1) {//GEN-LINE:|7-commandAction|21|131-preAction
                 // write pre-action user code here
-                exitMIDlet();//GEN-LINE:|7-commandAction|26|131-postAction
+                exitMIDlet();//GEN-LINE:|7-commandAction|22|131-postAction
                 // write post-action user code here
-            } else if (command == itemCommand1) {//GEN-LINE:|7-commandAction|27|133-preAction
+            } else if (command == itemCommand1) {//GEN-LINE:|7-commandAction|23|133-preAction
                 // write pre-action user code here
-                mainMenuListAction();//GEN-LINE:|7-commandAction|28|133-postAction
+                mainMenuListAction();//GEN-LINE:|7-commandAction|24|133-postAction
                 // write post-action user code here
-            }//GEN-BEGIN:|7-commandAction|29|94-preAction
+            }//GEN-BEGIN:|7-commandAction|25|94-preAction
         } else if (displayable == ordersOverviewForm) {
-            if (command == backCommand2) {//GEN-END:|7-commandAction|29|94-preAction
+            if (command == backCommand2) {//GEN-END:|7-commandAction|25|94-preAction
                 // write pre-action user code here
-                switchDisplayable(null, getMainMenuList());//GEN-LINE:|7-commandAction|30|94-postAction
+                switchDisplayable(null, getMainMenuList());//GEN-LINE:|7-commandAction|26|94-postAction
                 // write post-action user code here
-            }//GEN-BEGIN:|7-commandAction|31|100-preAction
+            }//GEN-BEGIN:|7-commandAction|27|100-preAction
         } else if (displayable == ordersWaitScreen) {
-            if (command == WaitScreen.FAILURE_COMMAND) {//GEN-END:|7-commandAction|31|100-preAction
+            if (command == WaitScreen.FAILURE_COMMAND) {//GEN-END:|7-commandAction|27|100-preAction
                 // write pre-action user code here
-                switchDisplayable(null, getOrdersOverviewForm());//GEN-LINE:|7-commandAction|32|100-postAction
+                switchDisplayable(null, getOrdersOverviewForm());//GEN-LINE:|7-commandAction|28|100-postAction
                 // write post-action user code here
-            } else if (command == WaitScreen.SUCCESS_COMMAND) {//GEN-LINE:|7-commandAction|33|99-preAction
+            } else if (command == WaitScreen.SUCCESS_COMMAND) {//GEN-LINE:|7-commandAction|29|99-preAction
                 // write pre-action user code here
-                switchDisplayable(null, getOrdersOverviewForm());//GEN-LINE:|7-commandAction|34|99-postAction
+                switchDisplayable(null, getOrdersOverviewForm());//GEN-LINE:|7-commandAction|30|99-postAction
                 // write post-action user code here
-            }//GEN-BEGIN:|7-commandAction|35|44-preAction
+            }//GEN-BEGIN:|7-commandAction|31|44-preAction
         } else if (displayable == portfolio) {
-            if (command == backCommand) {//GEN-END:|7-commandAction|35|44-preAction
+            if (command == backCommand) {//GEN-END:|7-commandAction|31|44-preAction
                 // write pre-action user code here
-                switchDisplayable(null, getMainMenuList());//GEN-LINE:|7-commandAction|36|44-postAction
+                switchDisplayable(null, getMainMenuList());//GEN-LINE:|7-commandAction|32|44-postAction
                 // write post-action user code here
-            }//GEN-BEGIN:|7-commandAction|37|54-preAction
+            }//GEN-BEGIN:|7-commandAction|33|54-preAction
         } else if (displayable == portfoliowaitScreen) {
-            if (command == WaitScreen.FAILURE_COMMAND) {//GEN-END:|7-commandAction|37|54-preAction
+            if (command == WaitScreen.FAILURE_COMMAND) {//GEN-END:|7-commandAction|33|54-preAction
                 // write pre-action user code here
-                switchDisplayable(null, getPortfolio());//GEN-LINE:|7-commandAction|38|54-postAction
+                switchDisplayable(null, getPortfolio());//GEN-LINE:|7-commandAction|34|54-postAction
                 // write post-action user code here
-            } else if (command == WaitScreen.SUCCESS_COMMAND) {//GEN-LINE:|7-commandAction|39|53-preAction
+            } else if (command == WaitScreen.SUCCESS_COMMAND) {//GEN-LINE:|7-commandAction|35|53-preAction
                 // write pre-action user code here
-                switchDisplayable(null, getPortfolio());//GEN-LINE:|7-commandAction|40|53-postAction
+                switchDisplayable(null, getPortfolio());//GEN-LINE:|7-commandAction|36|53-postAction
                 // write post-action user code here
-            }//GEN-BEGIN:|7-commandAction|41|149-preAction
-        } else if (displayable == selectStockForm) {
-            if (command == cancelCommand) {//GEN-END:|7-commandAction|41|149-preAction
-                // write pre-action user code here
-                switchToPreviousDisplayable();//GEN-LINE:|7-commandAction|42|149-postAction
-                // write post-action user code here
-            } else if (command == okCommand1) {//GEN-LINE:|7-commandAction|43|146-preAction
-                // write pre-action user code here
-                switchDisplayable(null, getLoadingStockWaitScreen());//GEN-LINE:|7-commandAction|44|146-postAction
-                // write post-action user code here
-            }//GEN-BEGIN:|7-commandAction|45|24-preAction
+            }//GEN-BEGIN:|7-commandAction|37|24-preAction
         } else if (displayable == splashScreen) {
-            if (command == SplashScreen.DISMISS_COMMAND) {//GEN-END:|7-commandAction|45|24-preAction
+            if (command == SplashScreen.DISMISS_COMMAND) {//GEN-END:|7-commandAction|37|24-preAction
                 // write pre-action user code here
-                switchDisplayable(null, getLoginScreen());//GEN-LINE:|7-commandAction|46|24-postAction
+                switchDisplayable(null, getLoginScreen());//GEN-LINE:|7-commandAction|38|24-postAction
                 // write post-action user code here
-            }//GEN-BEGIN:|7-commandAction|47|62-preAction
+            }//GEN-BEGIN:|7-commandAction|39|62-preAction
         } else if (displayable == verifyCredentialsScreen) {
-            if (command == WaitScreen.FAILURE_COMMAND) {//GEN-END:|7-commandAction|47|62-preAction
+            if (command == WaitScreen.FAILURE_COMMAND) {//GEN-END:|7-commandAction|39|62-preAction
                 // write pre-action user code here
-                switchDisplayable(getWrongCredentialsAlert(), getLoginScreen());//GEN-LINE:|7-commandAction|48|62-postAction
+                switchDisplayable(getWrongCredentialsAlert(), getLoginScreen());//GEN-LINE:|7-commandAction|40|62-postAction
                 // write post-action user code here
-            } else if (command == WaitScreen.SUCCESS_COMMAND) {//GEN-LINE:|7-commandAction|49|61-preAction
+            } else if (command == WaitScreen.SUCCESS_COMMAND) {//GEN-LINE:|7-commandAction|41|61-preAction
                 // write pre-action user code here
-                switchDisplayable(null, getMainMenuList());//GEN-LINE:|7-commandAction|50|61-postAction
+                switchDisplayable(null, getMainMenuList());//GEN-LINE:|7-commandAction|42|61-postAction
                 // write post-action user code here
-            }//GEN-BEGIN:|7-commandAction|51|7-postCommandAction
-        }//GEN-END:|7-commandAction|51|7-postCommandAction
+            }//GEN-BEGIN:|7-commandAction|43|7-postCommandAction
+        }//GEN-END:|7-commandAction|43|7-postCommandAction
         // write post-action user code here
-    }//GEN-BEGIN:|7-commandAction|52|
-    //</editor-fold>//GEN-END:|7-commandAction|52|
+    }//GEN-BEGIN:|7-commandAction|44|
+    //</editor-fold>//GEN-END:|7-commandAction|44|
+
 
     //<editor-fold defaultstate="collapsed" desc=" Generated Getter: exitCommand ">//GEN-BEGIN:|18-getter|0|18-preInit
     /**
@@ -356,8 +314,8 @@ public class StockPlay extends MIDlet implements CommandListener, ItemCommandLis
             loginScreen.setCommandListener(this);
             loginScreen.setBGColor(-3355444);
             loginScreen.setFGColor(0);
-            loginScreen.setPassword("thijs");
-            loginScreen.setUsername("thijs");
+            loginScreen.setPassword("");
+            loginScreen.setUsername("");
             loginScreen.setLoginTitle("");
             loginScreen.setUseLoginButton(true);
             loginScreen.setLoginButtonText("Login");//GEN-END:|26-getter|1|26-postInit
@@ -604,7 +562,7 @@ public class StockPlay extends MIDlet implements CommandListener, ItemCommandLis
             verifyCredentialsScreen = new WaitScreen(getDisplay());//GEN-BEGIN:|60-getter|1|60-postInit
             verifyCredentialsScreen.setTitle("Verifying credentials");
             verifyCredentialsScreen.setCommandListener(this);
-            verifyCredentialsScreen.setText("Please wait while we\'re \nverifying your credentials");
+            verifyCredentialsScreen.setText("Please wait while we\'re verifying your credentials");
             verifyCredentialsScreen.setTask(getVerifyOrdersTask());//GEN-END:|60-getter|1|60-postInit
             // write post-init user code here
         }//GEN-BEGIN:|60-getter|2|
@@ -698,7 +656,7 @@ public class StockPlay extends MIDlet implements CommandListener, ItemCommandLis
     public Form getCreateOrderForm() {
         if (createOrderForm == null) {//GEN-END:|70-getter|0|70-preInit
             // write pre-init user code here
-            createOrderForm = new Form("Order Form", new Item[] { getCreateOrderStockSymbol(), getCreateOrderAmount(), getCreateOrderPrice(), getCreateOrderType(), getCreateOrderExpiration() });//GEN-BEGIN:|70-getter|1|70-postInit
+            createOrderForm = new Form("Order Form", new Item[] { getCreateOrderStockSymbol(), getCreateOrderAmount(), getCreateOrderPrice(), getCreateOrderType() });//GEN-BEGIN:|70-getter|1|70-postInit
             createOrderForm.addCommand(getOrderCommand());
             createOrderForm.addCommand(getBackCommand1());
             createOrderForm.setCommandListener(this);//GEN-END:|70-getter|1|70-postInit
@@ -859,8 +817,6 @@ public class StockPlay extends MIDlet implements CommandListener, ItemCommandLis
                             break;
                     }
 
-                    o.setExpirationTime(createOrderExpiration.getDate());
-
                     if (!OrderFactory.getInstance().makePersistent(o)) {
                         throw new Exception("Saving the order failed!");
                     }
@@ -917,7 +873,7 @@ public class StockPlay extends MIDlet implements CommandListener, ItemCommandLis
             tableItem1 = new TableItem(getDisplay(), "Orders:");//GEN-BEGIN:|96-getter|1|96-postInit
             tableItem1.addCommand(getBackCommand1());
             tableItem1.setItemCommandListener(this);
-            tableItem1.setTitle("<null>");
+            tableItem1.setTitle("");
             tableItem1.setModel(getOrdersTableModel());//GEN-END:|96-getter|1|96-postInit
             // write post-init user code here
         }//GEN-BEGIN:|96-getter|2|
@@ -940,7 +896,7 @@ public class StockPlay extends MIDlet implements CommandListener, ItemCommandLis
 
                 String[][] values = new String[orders.size()][4];
                 getCancelOrderChoiceGroup().deleteAll();
-                cancellableorders = new Vector();;
+                cancellableorders = new Vector();
 
                 for (int i = 0; i < orders.size(); i++) {
                     Order o = (Order) orders.elementAt(i);
@@ -953,7 +909,7 @@ public class StockPlay extends MIDlet implements CommandListener, ItemCommandLis
 
 
 
-                    if (!o.getStatus().equals(Order.OrderStatus.EXECUTED) && !o.getStatus().equals(Order.OrderStatus.FAILED)) {
+                    if (o.getStatus().equals(Order.OrderStatus.ACCEPTED)) {
                         getCancelOrderChoiceGroup().append(o.getSecurity().getSymbol(), null);
                         cancellableorders.addElement(o);
 
@@ -1123,21 +1079,7 @@ public class StockPlay extends MIDlet implements CommandListener, ItemCommandLis
     }
     //</editor-fold>//GEN-END:|116-getter|2|
 
-    //<editor-fold defaultstate="collapsed" desc=" Generated Getter: createOrderExpiration ">//GEN-BEGIN:|117-getter|0|117-preInit
-    /**
-     * Returns an initiliazed instance of createOrderExpiration component.
-     * @return the initialized component instance
-     */
-    public DateField getCreateOrderExpiration() {
-        if (createOrderExpiration == null) {//GEN-END:|117-getter|0|117-preInit
-            // write pre-init user code here
-            createOrderExpiration = new DateField("Expiration date:", DateField.DATE_TIME, java.util.TimeZone.getTimeZone("Europe/Brussels"));//GEN-BEGIN:|117-getter|1|117-postInit
-            createOrderExpiration.setDate(new java.util.Date(System.currentTimeMillis() + 1000*60*60*24*31 ));//GEN-END:|117-getter|1|117-postInit
-            // write post-init user code here
-        }//GEN-BEGIN:|117-getter|2|
-        return createOrderExpiration;
-    }
-    //</editor-fold>//GEN-END:|117-getter|2|
+
 
     //<editor-fold defaultstate="collapsed" desc=" Generated Getter: exitCommand1 ">//GEN-BEGIN:|130-getter|0|130-preInit
     /**
@@ -1233,42 +1175,9 @@ public class StockPlay extends MIDlet implements CommandListener, ItemCommandLis
     }
     //</editor-fold>//GEN-END:|134-getter|2|
 
-    //<editor-fold defaultstate="collapsed" desc=" Generated Getter: selectStockForm ">//GEN-BEGIN:|139-getter|0|139-preInit
-    /**
-     * Returns an initiliazed instance of selectStockForm component.
-     * @return the initialized component instance
-     */
-    public TextBox getSelectStockForm() {
-        if (selectStockForm == null) {//GEN-END:|139-getter|0|139-preInit
-            // write pre-init user code here
-            selectStockForm = new TextBox("Select Stock:", null, 15, TextField.ANY | TextField.INITIAL_CAPS_WORD);//GEN-BEGIN:|139-getter|1|139-postInit
-            selectStockForm.addCommand(getOkCommand1());
-            selectStockForm.addCommand(getCancelCommand());
-            selectStockForm.setCommandListener(this);//GEN-END:|139-getter|1|139-postInit
-            // write post-init user code here
-        }//GEN-BEGIN:|139-getter|2|
-        return selectStockForm;
-    }
-    //</editor-fold>//GEN-END:|139-getter|2|
 
-    //<editor-fold defaultstate="collapsed" desc=" Generated Getter: loadingStockWaitScreen ">//GEN-BEGIN:|141-getter|0|141-preInit
-    /**
-     * Returns an initiliazed instance of loadingStockWaitScreen component.
-     * @return the initialized component instance
-     */
-    public WaitScreen getLoadingStockWaitScreen() {
-        if (loadingStockWaitScreen == null) {//GEN-END:|141-getter|0|141-preInit
-            // write pre-init user code here
-            loadingStockWaitScreen = new WaitScreen(getDisplay());//GEN-BEGIN:|141-getter|1|141-postInit
-            loadingStockWaitScreen.setTitle("Stock info is loading..");
-            loadingStockWaitScreen.setCommandListener(this);
-            loadingStockWaitScreen.setText("Please wait while the stock\n information is being loaded");
-            loadingStockWaitScreen.setTask(getLoadStockTask());//GEN-END:|141-getter|1|141-postInit
-            // write post-init user code here
-        }//GEN-BEGIN:|141-getter|2|
-        return loadingStockWaitScreen;
-    }
-    //</editor-fold>//GEN-END:|141-getter|2|
+
+
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc=" Generated Getter: loadStockTask ">//GEN-BEGIN:|144-getter|0|144-preInit

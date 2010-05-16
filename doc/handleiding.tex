@@ -190,3 +190,19 @@ Alle datapunten in de grafiek worden dynamisch opgehaald via AJAX technologie na
 Klik links op ``Securities Overview'' of een van de beurzen die aanwezig is in het spel om een lijst te krijgen van effecten. Klik op de ``Buy'' knop van het gewenste aandeel. Deze knop is ook te vinden op een detailpagina van een effect.
 
 Je kan een prijs een een aantal aandelen opgeven die je wenst te kopen. Als aan de voorwaarden vervolgens voldaan wordt, dan zal de transactionmanager deze op bepaalde tijdstippen omzetten naar een geldige transactie. Hierbij zal het order dan uitgevoerd worden en worden de effecten aan het portfolio toegevoegd.
+
+\chapter{Mobiele client}
+
+\b{Opmerking: } Omdat het onmogelijk is om bij de vastgestelde testopstelling van dit project een URL bereikbaar te maken vanaf het internet, is het niet mogelijk om de Java ME-client uit te testen op een echte GSM. Er is immers geen haalbare oplossing om een verbinding op te zetten tussen de server waar de backend van dit project op draait, en de GSM zelf. Daarom kan de applicatie enkel worden opgeleverd in een emulator.
+
+\section{Algemeen}
+Bij het opstarten van de applicatie verschijnt er eerst een spashscreen, dat na enkele seconden wordt vervolgd door het loginscherm. Gebruik om in te loggen een gebruikersaccount dat werd aangemaakt via de website of de administratieclient.
+Nadat er succesvol kon worden ingelogd, verschijnt een menu met de volgende mogelijkheden:
+\begin{itemize}
+	\item{View Portfolio}
+	\item{View Orders}
+	\item{Create order}
+\end{itemize}
+
+\section{View Portfolio}
+In dit scherm wordt een eenvoudig overzicht getoond met alle aandelen die zich in het portefolio van de gebruiker bevinden. Van elk effect die de speler in bezit heeft wordt de naam, de koersverandering van die dag
