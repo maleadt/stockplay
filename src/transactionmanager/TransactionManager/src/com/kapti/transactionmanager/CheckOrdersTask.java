@@ -51,9 +51,6 @@ public class CheckOrdersTask implements Runnable {
     private OrderFactory orderFactory = OrderFactory.getInstance();
     private static Data data = Data.getReference();
 
-    public CheckOrdersTask() {
-    }
-
     public void run() {
     try {
         logger.info("Starting Orderprocessing");
@@ -68,40 +65,48 @@ public class CheckOrdersTask implements Runnable {
             OrderVerifier verifier = orderVerifierFactory.getOrderVerifierByType(order.getType());
             Quote quote = currentQuotes.get(order.getSecurity());
 
-//            if (verifier != null && verifier.verifyOrder(order, quote) &&
-//                (((order.getType() != Order.Type.BUY || order.getType() != Order.Type.IMMEDIATE_BUY)) &&
-//                order.getUser().getCash() > quote.getPrice() * order.getAmount())) {
+                //            if (verifier != null && verifier.verifyOrder(order, quote) &&
+                //                (((order.getType() != Order.Type.BUY || order.getType() != Order.Type.IMMEDIATE_BUY)) &&
+                //                order.getUser().getCash() > quote.getPrice() * order.getAmount())) {
 
-                if ((verifier != null) && (verifier.verifyOrder(order))) {
+                if (
+                    (verifier != null) &&
+                    (verifier.verifyOrder(order) &&
+                    (
+                        (order.getType() == Order.Type.BRACKET_LIMIT_SELL || order.getType() == Order.Type.SELL || order.getType() == Order.Type.SELL_IMMEDIATE || order.getType() == Order.Type.STOP_LOSS_SELL || order.getType() == Order.Type.TRAILING_STOP_SELL))
+                            ||
+                        (order.getUser().getCash() > quote.getPrice() * order.getAmount())
+                    )
+                ) {
 
+                    // De voorwaarden om het order te kunnen uitvoeren zijn voldaan, we voeren het uit!
+                    Transaction transaction = transactionFactory.createTransaction();
+                    transaction.setUser(order.getUser());
+                    transaction.setAmount(order.getAmount());
+                    transaction.setSecurity(order.getSecurity());
+                    transaction.setTime(new Date());
+                    transaction.setComment("Execution of order " + order.getId());
+                    transaction.setPrice(quote.getPrice());
 
-                // De voorwaarden om het order te kunnen uitvoeren zijn voldaan, we voeren het uit!
-                Transaction transaction = transactionFactory.createTransaction();
-                transaction.setUser(order.getUser());
-                transaction.setAmount(order.getAmount());
-                transaction.setSecurity(order.getSecurity());
-                transaction.setTime(new Date());
-                transaction.setComment("Execution of order " + order.getId());
-                transaction.setPrice(quote.getPrice());
-                if (order.getType() == Order.Type.BUY || order.getType() == Order.Type.BUY_IMMEDIATE)
-                    transaction.setType(Transaction.Type.BUY);
-                else
-                    transaction.setType(Transaction.Type.SELL);
-                try {
-                    if (transactionFactory.execute(transaction)) {
-                        logger.info("Order " + order.getId() + " was executed with transaction " + transaction.getId());
-                        order.setStatus(Order.OrderStatus.EXECUTED);
-                    } else {
-                        logger.warn("Failed to execute order " + order.getId());
-                        order.setStatus(Order.OrderStatus.FAILED);
+                    if (order.getType() == Order.Type.BUY || order.getType() == Order.Type.BUY_IMMEDIATE || order.getType() == Order.Type.BRACKET_LIMIT_BUY || order.getType() == Order.Type.STOP_LOSS_BUY || order.getType() == Order.Type.TRAILING_STOP_BUY)
+                        transaction.setType(Transaction.Type.BUY);
+                    else
+                        transaction.setType(Transaction.Type.SELL);
+                    try {
+                        if (transactionFactory.execute(transaction)) {
+                            order.setStatus(Order.OrderStatus.EXECUTED);
+                            logger.info("Order " + order.getId() + " was executed with transaction " + transaction.getId());
+                        } else {
+                            order.setStatus(Order.OrderStatus.FAILED);
+                            logger.warn("Failed to execute order " + order.getId());
+                        }
+                        orderFactory.makePersistent(order);
+
+                        // We passen de user aan in onze cache
+                        order.getUser().setCash(order.getUser().getCash() - quote.getPrice() * order.getAmount());
+                    } catch (StockPlayException ex) {
+                        logger.error("Exception occured while executing order " + order.getId(), ex);
                     }
-                    orderFactory.makePersistent(order);
-
-                    // We passen de user aan in onze cache
-                    order.getUser().setCash(order.getUser().getCash() - quote.getPrice() * order.getAmount());
-                } catch (StockPlayException ex) {
-                    logger.error("Exception occured while executing order " + order.getId(), ex);
-                }
             }
         }
         logger.info("Orderprocessing ended -- waiting for new call");

@@ -239,6 +239,7 @@ public class OrderDAO implements GenericDAO<Order, Integer> {
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
+
         try {
             try {
                 conn = OracleConnection.getConnection();
@@ -251,18 +252,18 @@ public class OrderDAO implements GenericDAO<Order, Integer> {
                 stmt.setInt(4, entity.getAmount());
                 stmt.setString(5, entity.getType().toString());
                 stmt.setString(6, entity.getStatus().toString());
-                stmt.setTimestamp(7, new Timestamp(entity.getCreationTime().getTime()));
-                if (entity.getExpirationTime() != null) {
-                    stmt.setTimestamp(8, new Timestamp(entity.getExpirationTime().getTime()));
-                } else {
-                    stmt.setNull(8, Types.TIMESTAMP);
-                }
 
-                if (entity.getExecutionTime() != null) {
+                stmt.setTimestamp(7, new Timestamp(entity.getCreationTime().getTime()));
+                if (entity.getExpirationTime() != null)
+                    stmt.setTimestamp(8, new Timestamp(entity.getExpirationTime().getTime()));
+                else
+                    stmt.setNull(8, Types.TIMESTAMP);
+                
+                if (entity.getExecutionTime() != null)
                     stmt.setTimestamp(9, new Timestamp(entity.getExpirationTime().getTime()));
-                } else {
+                else
                     stmt.setNull(9, Types.TIMESTAMP);
-                }
+                
                 stmt.setDouble(10, entity.getSecondairyLimit());
 
                 return stmt.executeUpdate() == 1;

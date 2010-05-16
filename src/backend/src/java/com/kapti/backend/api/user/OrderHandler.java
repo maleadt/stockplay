@@ -57,7 +57,7 @@ public class OrderHandler extends MethodClass {
         Parser parser = Parser.getInstance();
         Filter filter = null;
         Filter base = parser.parse(iFilter);
-        if (getRole().isBackendAdmin()) {   // TODO: isOrderAdmin
+        if (getRole().isBackendAdmin() || getRole().isTransactionAdmin()) {
             filter = base;
         } else {
             Filter user = parser.parse("userid == '" + getUser().getId() + "'i");
@@ -94,7 +94,7 @@ public class OrderHandler extends MethodClass {
         GenericDAO<com.kapti.data.Order, Integer> orDAO = getDAO().getOrderDAO();
 
         // Restrict the input hash
-        if (!getRole().isBackendAdmin()) {   // TODO: isOrderAdmin
+        if (!getRole().isBackendAdmin() || getRole().isTransactionAdmin()) {
             for (String tKey : iDetails.keySet()) {
                 if (tKey.equalsIgnoreCase(Order.Fields.USER.toString())) {
                     int tId = (Integer) iDetails.get(tKey);
@@ -121,23 +121,23 @@ public class OrderHandler extends MethodClass {
         Parser parser = Parser.getInstance();
         Filter filter = null;
         Filter base = parser.parse(iFilter);
-        if (getRole().isBackendAdmin()) {   // TODO: isOrderAdmin
+        if (getRole().isBackendAdmin() || getRole().isTransactionAdmin()) {
             filter = base;
         } else {
             Filter user = parser.parse("userid == '" + getUser().getId() + "'i");
             filter = Filter.merge(RelationAnd.class, base, user);
         }
 
-        // Get the exchanges we need to modify
+        // Get the orders we need to modify
         Collection<com.kapti.data.Order> tOrders = orDAO.findByFilter(filter);
 
         // Now apply the cancelation
         boolean success = true;
+
         for (com.kapti.data.Order tOrder : tOrders) {
             tOrder.applyStruct(iDetails);
-            if (!orDAO.update(tOrder)) {
+            if (!orDAO.update(tOrder))
                 success = false;
-            }
         }
         return success;
     }
@@ -150,7 +150,7 @@ public class OrderHandler extends MethodClass {
         Parser parser = Parser.getInstance();
         Filter filter = null;
         Filter base = parser.parse(iFilter);
-        if (getRole().isBackendAdmin()) {   // TODO: isOrderAdmin
+        if (getRole().isBackendAdmin() || getRole().isTransactionAdmin()) {
             filter = base;
         } else {
             Filter user = parser.parse("userid == '" + getUser().getId() + "'i");

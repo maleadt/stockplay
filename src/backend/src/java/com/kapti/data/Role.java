@@ -23,7 +23,6 @@ import com.kapti.exceptions.ServiceException;
 import com.kapti.exceptions.StockPlayException;
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -36,6 +35,7 @@ import java.util.Map;
  * construeren of aan te passen aan de hand van dergelijke data.
  */
 public class Role implements Serializable {
+
     //
     // Member data
     //
@@ -185,9 +185,6 @@ public class Role implements Serializable {
     public void setTransactionAdmin(boolean transactionAdmin) {
         this.transactionAdmin = transactionAdmin;
     }
-
-
-
 
     //
     // Methods

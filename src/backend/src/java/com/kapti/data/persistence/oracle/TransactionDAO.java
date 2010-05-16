@@ -163,12 +163,19 @@ public class TransactionDAO implements GenericDAO<Transaction, Integer> {
                 stmt = conn.prepareStatement(INSERT_TRANSACTION);
 
                 stmt.setInt(1, entity.getUser());
+                System.out.println("User: " + entity.getUser());
                 stmt.setTimestamp(2, new Timestamp(entity.getTime().getTime()));
+                System.out.println("Timestamp: " + entity.getTime());
                 stmt.setString(3, entity.getIsin());
+                System.out.println("Isin: " + entity.getIsin());
                 stmt.setString(4, entity.getType().toString());
+                System.out.println("Type: " + entity.getType().toString());
                 stmt.setInt(5, entity.getAmount());
+                System.out.println("Amount: " + entity.getAmount());
                 stmt.setDouble(6, entity.getPrice());
+                System.out.println("Price: " + entity.getPrice());
                 stmt.setString(7, entity.getComments());
+                System.out.println("Comments: " + entity.getComments());
 
                if(stmt.executeUpdate() == 1){
 
@@ -203,6 +210,7 @@ public class TransactionDAO implements GenericDAO<Transaction, Integer> {
                 }
             }
         } catch (SQLException ex) {
+            System.out.println(ex.getSQLState());
             throw new SubsystemException(SubsystemException.Type.DATABASE_FAILURE, ex.getCause());
         }
     }

@@ -22,18 +22,21 @@
 
 package com.kapti.transactionmanager.orderverifiers;
 
-import com.kapti.client.XmlRpcClientFactory;
+import com.kapti.client.SPClientFactory;
 import com.kapti.client.finance.FinanceFactory;
 import com.kapti.client.finance.Quote;
 import com.kapti.client.finance.Security;
 import com.kapti.client.user.Order;
 import com.kapti.client.user.OrderFactory;
+import com.kapti.client.user.UserFactory;
+import com.kapti.exceptions.NotLoggedInException;
 import com.kapti.exceptions.StockPlayException;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.ResourceBundle;
 import org.apache.log4j.Logger;
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
@@ -51,6 +54,8 @@ public class Data {
     private HashMap<Security, Quote> currentQuotes;
     private static Logger logger = Logger.getLogger(Data.class);
     private static FinanceFactory financeFactory = FinanceFactory.getInstance();
+    private XmlRpcClient client;
+    private static final ResourceBundle settings = ResourceBundle.getBundle("com/kapti/transactionmanager/settings");
 
     public static Data getReference() {
         if (ref == null)
@@ -60,13 +65,30 @@ public class Data {
 
     private Data() {
 
-        // Clear cache
-        XmlRpcClient client = XmlRpcClientFactory.getXmlRpcClient();
+        // Client
         try {
-            logger.info("Clearing cache");
-            client.execute("System.Backend.ClearCache", (Object[]) null);
-        } catch (XmlRpcException ex) {
-            logger.error("Failed to clear cache..");
+            UserFactory.getInstance().verifyLogin(settings.getString("username"), settings.getString("password"));
+        } catch (StockPlayException ex) {
+            logger.error("Failed to log in the transaction manager");
+        }
+
+        try {
+            client = SPClientFactory.getPrivateClient();
+        } catch (NotLoggedInException ex) {
+            logger.error("Failed to retrieve the private client: not logged in");
+        }
+
+        // Clear cache
+
+        if (settings.getString("debug").equals("1")) {
+            // Transaction manager heeft hier geen rechten meer toe..
+            //logger.info("Entering debug mode");
+            //try {
+            //    logger.info("Clearing cache");
+            //    client.execute("System.Backend.ClearCache", (Object[]) null);
+            //} catch (XmlRpcException ex) {
+            //    logger.error("Failed to clear cache..");
+            //}
         }
 
         // We halen alle pending orders op
@@ -104,8 +126,6 @@ public class Data {
     }
 
     public double getHighest(Date from, Date to, String isin) {
-            XmlRpcClient client = XmlRpcClientFactory.getXmlRpcClient();
-
             GregorianCalendar startTijd = new GregorianCalendar();
             startTijd.setTime(new Date());
             SimpleDateFormat formaat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'");
@@ -120,8 +140,6 @@ public class Data {
     }
 
     public double getLowest(Date from, Date to, String isin) {
-            XmlRpcClient client = XmlRpcClientFactory.getXmlRpcClient();
-
             GregorianCalendar startTijd = new GregorianCalendar();
             startTijd.setTime(new Date());
             SimpleDateFormat formaat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'");
