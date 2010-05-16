@@ -21,6 +21,18 @@ XML-RPC is a Remote Procedure Calling protocol that works over the Internet.
 An XML-RPC message is an HTTP-POST request. The body of the request is in XML. A procedure executes on the server and the value it returns is also formatted in XML.
 Procedure parameters can be scalars, numbers, strings, dates, etc.; and can also be complex record and list structures.
 
+% Configureren van codefragmenten
+\lstset{
+  breaklines=true,
+  language=XML,
+  basicstyle=\normalsize,
+  keywordstyle=\ttfamily\color{OliveGreen},
+  identifierstyle=\ttfamily\color{CadetBlue}\bfseries,
+  commentstyle=\color{Brown},
+  stringstyle=\ttfamily,
+  showstringspaces=true
+}
+
 
 %
 % Specification
@@ -37,7 +49,9 @@ User-Agent: Frontier/5.1.2 (WinNT)
 Host: betty.userland.com
 Content-Type: text/xml
 Content-length: 181
+\end{verbatim}
 
+\begin{lstlisting}
 <?xml version="1.0"?>
 <methodCall>
   <methodName>examples.getStateName</methodName>
@@ -47,7 +61,7 @@ Content-length: 181
     </param>
   </params>
 </methodCall>
-\end{verbatim}
+\end{lstlisting}
 \caption{Sample RML-RPC request}
 \label{code:xmlrpc:request}
 \end{code}
@@ -102,7 +116,7 @@ A value can also be of type $<$struct$>$. A $<$struct$>$ contains $<$member$>$s 
 An example of a two-element $<$struct$>$ is shown in code fragment \ref{code:xmlrpc:struct}.
 
 \begin{code}
-\begin{verbatim}
+\begin{lstlisting}
 <struct>
   <member>
     <name>lowerBound</name>
@@ -113,7 +127,7 @@ An example of a two-element $<$struct$>$ is shown in code fragment \ref{code:xml
     <value><i4>139</i4></value>
   </member>
 </struct>
-\end{verbatim}
+\end{lstlisting}
 \caption{Example of a two-element $<$struct$>$}
 \label{code:xmlrpc:struct}
 \end{code}
@@ -126,7 +140,7 @@ An $<$array$>$ contains a single $<$data$>$ element, which can contain any numbe
 An example of a four-element array is shown in code fragment \ref{chap:xml-rpc}.
 
 \begin{code}
-\begin{verbatim}
+\begin{lstlisting}
 <array>
   <data>
     <value><i4>12</i4></value>
@@ -135,7 +149,7 @@ An example of a four-element array is shown in code fragment \ref{chap:xml-rpc}.
     <value><i4>-31</i4></value>
   </data>
 </array>
-\end{verbatim}
+\end{lstlisting}
 \caption{Example of a four-element array.}
 \label{code:xmlrpc:array}
 \end{code}
@@ -155,7 +169,9 @@ Content-Length: 158
 Content-Type: text/xml
 Date: Fri, 17 Jul 1998 19:55:08 GMT
 Server: UserLand Frontier/5.1.2-WinNT
+\end{verbatim}
 
+\begin{lstlisting}
 <?xml version="1.0"?>
 <methodResponse>
   <params>
@@ -164,7 +180,7 @@ Server: UserLand Frontier/5.1.2-WinNT
     </param>
   </params>
 </methodResponse>
-\end{verbatim}
+\end{lstlisting}
 \caption{Example of a XML-RPC response.}
 \label{code:xmlrpc:response}
 \end{code}
@@ -188,7 +204,9 @@ Content-Length: 426
 Content-Type: text/xml
 Date: Fri, 17 Jul 1998 19:55:02 GMT
 Server: UserLand Frontier/5.1.2-WinNT
+\end{verbatim}
 
+\begin{lstlisting}
 <?xml version="1.0"?>
 <methodResponse>
   <fault>
@@ -206,7 +224,7 @@ Server: UserLand Frontier/5.1.2-WinNT
     </value>
   </fault>
 </methodResponse>
-\end{verbatim}
+\end{lstlisting}
 \caption{Example of a XML-RPC fault message.}
 \label{code:xmlrpc:fault}
 \end{code}
