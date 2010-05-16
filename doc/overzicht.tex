@@ -84,69 +84,87 @@ De grote omvang van het project zorgde ervoor dat al snel iedereen zich begon to
 
 Door de strikte timing van het project met zijn verschillende iteraties kon er niet gewacht worden op een volledig functionele backend om vanaf te starten.. De ontwikkeling verliep vooral rond de verschillende iteraties.
 
-\paragraph{Alfa-iteratie}
+\subsection{Alfa-iteratie}
 Voor elk groot onderdeel moest er iets gedemonstreerd worden. Voor elk onderdeel werd de basis gelegd, en 1 stuk rudimentair uitgewerkt.
 
-\subparagraph{Backend}
+\subsubsection{Backend}
 Er werd gezocht naar een propere manier om de backend op te bouwen: hoe wordt de database best benaderd? Wat is een goeie structuur voor de backend zelf? Hoe bouwen we de XML-RPC-berichten op?
 Uiteindelijk werd het deel van de backend dat zich bezig houdt met het opvragen, aanmaken en wijzigen van effecten gekozen als pilootproject.
-\subsubparagraph{Filtering}
+\paragraph{Filtering}
 Om clients de mogelijkheid te bieden om op een eenvoudige manier objecten te selecteren werd een eigen filter geschreven.
-\subparagraph{Website}
+
+\subsubsection{Website}
 Ontwikkeling van een ADO.NET-interface met de backend. Eerste rudimentaire functionaliteit inbouwen voor het ophalen en weergeven van effecten. Ook werd er gezocht naar manieren om de gegenereerde HTML-code vanuit ASP.NET wat op te schonen zodat er vlotter gebruik kon worden gemaakt van CSS-stylesheets.
-\subsubparagraph{Grafieken}
+\paragraph{Grafieken}
 Er werd gezocht naar een goeie manier om de historische koersinformatie grafisch weer te geven. Daarom werden verschillende javascript grafieklibraries met elkaar vergeleken en uitgetest.
-\section{Administratie desktopclient}
+
+\subsubsection{Administratie desktopclient}
 Voor de Java Swing-applicatie werd er gezocht naar een manier om een mooi en functioneel programma te maken. Er werd eerst voor geopteerd om zelf een verticale menubalk te maken vergelijkbaar met de menubalk uit MS Office Outlook 2003, maar we liepen al snel tegen beperkingen van Java in verband met precieze timing. Uiteindelijk werd er geopteerd om de SwingX-library te gebruiken.
 Bij deze iteratie was de basisfunctionaliteit om de effecten op te halen aanwezig. Hiervoor werd ook het XML-RPC-client-gedeelte geschreven die zich met het beheer van effecten bezig houdt.
-\section{Beurskoersen-scraper}
+
+\subsubsection{Beurskoersen-scraper}
 Verschillende bronnen van koersinformatie werden gezocht, en er gebeurde een eerste implementatie om de AJAX-feed van Tijd.be te verwerken.
-\subparagraph{Mobiele spelclient}
+
+\subsubsection{Mobiele spelclient}
 Er werd uitgezocht of er goeie XML-RPC-clients beschikbaar waren. Ook werd de functionaliteit van het Java ME-platform onderzocht, en de mogelijkheden van Rapid Application Development-tools onderzocht (in casu: de Netbeans IDE hiervoor)
 
-\paragraph{Beta-iteratie}
+
+\subsection{Beta-iteratie}
 Bij deze iteratie werd er vooral gefocust om zoveel mogelijk functionaliteiten in te bouwen. De bedoeling was om tegen de beta-iteratie een spel te kunnen aanbieden waarbij de speler beschikte over alle basisfunctionaliteiten: beheer van zijn portfolio, aanmaken van orders, bekijken van aandelen, etc.
 Om tegemoet te komen aan de vraag om een algoritmisch aspect in te bouwen, werd er ook voor geopteerd om een AI-speler te ontwikkelen.
 
-\section{Backend}
+\subsubsection{Backend}
 Het volledige protocol werd geimplementeerd in de backend. Ook gebeurden er aanpassingen aan het protocol om het aantal requests van de clientmodules te beperken, en zo een vlottere gebruikerservaring te kunnen aanbieden.
-\section{Website}
-De website werd verder uitgewerkt: gebruikersregistratie, beheer van portfolio, aanmaken van orders.
-\subsection{Dynamische grafieken}
 
-\section{Administratie desktopclient}
+\subsubsection{Website}
+De website werd verder uitgewerkt: gebruikersregistratie, beheer van portfolio, aanmaken van orders.
+\paragraph{Dynamische grafieken}
+
+\subsubsection{Administratie desktopclient}
 De clientlibrary werd volledig afgewerkt, zodat ze bijna alle functionaliteiten uit de backend bevatte.
 Vervolgens werd er gewerkt aan het bewerken van de opgehaalde effecten, alsook werd er begonnen aan het gebruikersbeheer. Omdat de benodigde functionaliteit tussen het effectenbeheer en het gebruikersbeheer danig verschilde, werd er voor geopteerd om geen generiek CRUD-design te gebruiken, maar aparte implementaties te voorzien.
-\section{Beurskoersen-scraper}
+
+\subsubsection{Beurskoersen-scraper}
 De scraper werd verder afgewerkt, en kan nu ook zelfstandig de nodige effecten en beurzen aanmaken.
-\subsection{Historische beurskoersen-scraper}
+\paragraph{Historische beurskoersen-scraper}
 Er werd ook een historische beurskoersen-scraper gemaakt die alle historische koersen vanaf Euronext ophaalt (1 koers per dag)
-\section{AI-speler}
+
+\subsubsection{AI-speler}
 Vooreerst werd er gezocht naar wat de beste manier is om generische algoritmen toe te passen op beurskoersen. Daarvoor werd er beroep gedaan op vakliteratuur die daarover beschikbaar was. Vervolgens werd er ge\"experimenteerd met verschillende programmeertalen om uit te zoeken wat het snelst resultaat zou opleveren. Uiteindelijk werd er gekozen voor Perl omdat deze programmeertaal op eenvoudige wijze complexe structuren toelaat.
-\section{Mobiele spelclient}
+
+\subsubsection{Mobiele spelclient}
 Omdat er op andere gebieden te veel werk was, werd er besloten om de mobiele client niet op te nemen in de beta-iteratie
-\section{Transactiemanager}
+
+\subsubsection{Transactiemanager}
 De transactiemanager was lange tijd uit het oog verloren. Omdat het echter toch een essentieel element is om het volledige spel te simuleren, werd uiteindelijk last-minute een prototype gemaakt. Op een uur of drie kon een volledig functionele transactiemanager worden gemaakt voor de eenvoudige types orders (immediate order, en orders met een enkelvoudige limiet)
 
-\paragraph{Release}
 
-\section{Backend}
+\subsection{Release}
+
+\subsubsection{Backend}
 De backend reageerde vaak niet snel genoeg op aanvragen, bij nader onderzoek bleek er een serieuze bottle-neck aanwezig te zijn bij de connectie tussen de database en de backend. Oracle stuurde vaak aan zijn bovenlimiet qua snelheid informatie door, waardoor kostbare seconden verloren gingen. Er werd daarom voor gekozen om een cachingmechanisme in te bouwen. Dit werd echter niet van de grond af gedaan, maar er werd gebruik gemaakt van een reeds publiek beschikbare library 'cache4j'.
-\section{Website}
-De nog ontbrekende stukken werden toegevoegd: de ranking, [VUL AAN]. Ook werd er functionaliteit toegevoegd om complexe orders in te voeren.
 
-\subsection{Dynamische grafieken}
+\subsubsection{Website}
+De nog ontbrekende stukken werden toegevoegd: de ranking, [VUL AAN]. Ook werd er functionaliteit toegevoegd om complexe orders in te voeren.
+\paragraph{Dynamische grafieken}
 Er werd de mogelijkheid toegevoegd om een tweede effect op de grafiek toe te voegen, zodat effecten gemakkelijker met elkaar kunnen worden vergeleken. 
-\section{Administratie desktopclient}
+
+\subsubsection{Administratie desktopclient}
 De mogelijkheid om met een elektronische identiteitskaart in te loggen werd toegevoegd. Omdat er te weinig tijd restte om uit te zoeken hoe vervolgens op een met certificaten beveiligde manier een beveiligde sessie op de backend kon worden aangevraagd, is het nodig dat lokaal de logingegevens van een administrator-account worden opgeslagen om een nieuw sessie-id te kunnen aanmaken.
-\section{Beurskoersen-scraper}
-\subsection{Historische beurskoersen-scraper}
-\section{AI-speler}
-\section{Mobiele spelclient}
+
+\subsubsection{Beurskoersen-scraper}
+\paragraph{Historische beurskoersen-scraper}
+
+\subsubsection{AI-speler}
+
+\subsubsection{Mobiele spelclient}
 De mobiele spelclient werd weer terug opgenomen. De client-library die beschikbaar was in Java werd geport naar Java ME. Aanvankelijk ging dat gepaard met de ene teleurstelling na de andere door het gebrek aan functionaliteit (geen enums, geen generics, etc), maar daar werd al snel een mouw aan gepast.. Om tijd  te sparen werd er wel besloten om wat extra functionaliteit uit de mobiele client te schrappen. Het is immers een nogal log systeem om te debuggen, en deze module is eerder bedoeld als een proof-of-concept dan als een essentieel onderdeel uit ons project.
-\section{Transactiemanager}
+
+\subsubsection{Transactiemanager}
 De transactiemanager werd uitgebreid met geavanceerde orders.
-\section{Puntenmanager}
+
+\subsubsection{Puntenmanager}
 De puntenmanager was het laatste grote ontbrekende deel aan het project. Deze werd dan ook snel in deze iteratie onder handen genomen.
+
 
 \section{Projectevaluatie}
