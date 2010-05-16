@@ -27,9 +27,6 @@ namespace StockPlay.implXMLRPC.handlers
 	
 	    [XmlRpcMethod("Finance.Security.QuoteRange")]
 	    System.DateTime[] getRange(string isin);
-	    
-	    [XmlRpcMethod("Finance.Security.Details")]
-	    XmlRpcStruct[] Details(string iFilter);
 	
 	    [XmlRpcMethod("Finance.Security.Quotes")]
 	    XmlRpcStruct[] Quotes(string iFilter);
