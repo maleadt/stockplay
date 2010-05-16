@@ -2,9 +2,9 @@
 % Functioneel
 %
 
-\chapter{Functioneel ontwerp}
+\section{Functioneel ontwerp}
 
-\section{Actoren}
+\subsection{Actoren}
 
 \paragraph{Gebruikers}Een gebruiker wordt ge\"identificeerd door een gebruikersnaam en wachtwoord, en wordt intern gelinkt aan een set van rechten, die bepalen wat de gebruiker allemaal kan doen. Zo kennen we de volgende types gebruikers, die elk een verschillende set rechten toegekend worden:
 \begin{itemize}
@@ -41,9 +41,9 @@ De opgehaalde informatie wordt vervolgens doorgestuurd naar de backend dewelke d
 Dit zijn computergestuurde spelers, die via het backend-protocol rechtstreeks communiceren met de backend om zo een competitieve medespeler te vormen.
 
 
-\section{Uitwerking User interfaces}
+\subsection{Uitwerking User interfaces}
 
-\subsection{Webapplicatie}
+\subsubsection{Webapplicatie}
 
 \begin{figure}[h!]
 	\centering
@@ -127,7 +127,7 @@ Er is ook een pagina die een zicht biedt op alle effecten aanwezig in het spel.
 \end{itemize_compact}
 Tijdens de aankoop krijgt de gebruiker een overzicht van de totale kostprijs en de verschillende taksen die erop staan.
 
-\subsection{Desktopapplicatie}
+\subsubsection{Desktopapplicatie}
 Deze applicatie voorziet in het beheer van het hele systeem. De beheerder logt daarvoor in met behulp van zijn eID.
 De desktopapplicatie is opgesplitst in drie grote componenten.
 
@@ -183,11 +183,11 @@ De desktopapplicatie is opgesplitst in drie grote componenten.
 % Technisch
 %
 
-\chapter{Technisch ontwerp}
+\section{Technisch ontwerp}
 
-\section{Hergebruik}
+\subsection{Hergebruik}
 
-\subsection{Backend protocol}
+\subsubsection{Backend protocol}
 
 Om toegang te krijgen tot de backend vanuit de verschillende andere delen van het project (zoals de scraper, AI, of interfaces) moesten we op zoek gaan naar een goed communicatieprotocol dat aan verschillende vereisten moet voldoen:
 \begin{itemize}
@@ -221,13 +221,13 @@ Deze keuzes zijn eveneens voorzichtig gemaakt. Zo kent Perl nog verschillende an
 Om XML-RPC te gebruiken in Java zijn er ook alternatieven, zoals de \makeurl{Redstone XML-RPC bibliotheek}{http://xmlrpc.sourceforge.net/} die afviel door zijn beperkte featureset, en door het feit dat het al enige tijd niet meer onderhouden was (dit in tegenstelling tot de Apache libraries, die ook een heel actieve community kent).
 Voor C\# en Java.ME hebben we geen alternatieve bibliotheken gevonden.
 
-\section{Dynamische grafieken}
+\subsection{Dynamische grafieken}
 
 Op de internetwebsite zullen we een extra module ontwikkelen waarin grafieken dynamisch gemanipuleerd kunnen worden. De gebruikers zullen met eenvoudige muishandelingen andere grafische weergaven van de grafieken kunnen opvragen, zonder de pagina te herladen. Hiervoor zal gebruik gemaakt worden van de interpreter taal Javascript en de javascript bibliotheken \makeurl{JQuery}{http://jquery.com/} en \makeurl{Flot}{http://code.google.com/p/flot/}. JQuery is benodigd om de Flot bibliotheek werkend te krijgen en kunnen we ook op andere plaatsen op de website gebruiken. Deze bibliotheek gaat wat extra functies aan de HTML-elementen hangen en geeft ons eenvoudige middelen om met AJAX extra informatie op te halen.
 
 We gebruiken Flot omdat aan deze bibliotheek nog acief ontwikkeld wordt. Alsook is ze heel eenvoudig gehouden en kan je er makkelijk op voortbouwen. Je kan er op voortbouwen door de ingebouwde events op te vangen en door gebruik te maken van de ingebouwde plugin functionaliteit. Er is ook ondersteuning voor datumweergave en er zijn plugins waarmee je een selectievenster op de grafiek kan activeren (om in te zoomen) en om de grafiek te kunnen verslepen.
 De grafieken worden getekend met een combinatie van HTML elementen en het CANVAS element. De HTML elementen kunnen we gemakkelijk vormgeven met CSS. Canvas wordt ge\"emuleerd in Internet Explorer. Alsook kunnen we de grafieken van deze bibliotheek op een eenvoudige manier vullen met JSON.
 
-\section{Hardware}
+\subsection{Hardware}
 
 \todo{Een vermelding van de mobiele interface}

@@ -1,13 +1,59 @@
-\section{Administratie desktopclient}
+%
+% Installatiehandleiding
+%
+
+\section{Installatiehandleiding}
+
+\subsection{Initialisatie van de database}
+
+\begin{enumerate}
+\item{Installeer de Oracle Database 10g Express Edition}
+\item{Cre\"er de tablespace 'StockPlay': 
+\begin{verbatim}
+CREATE TABLESPACE STOCKPLAY 
+DATAFILE 'stockplay.dat' 
+SIZE 50M autoextend on
+\end{verbatim}
+}
+\item{Maak een gebruiker 'stockplay' aan met paswoord 'chocolademousse' en default tablespace 'stockplay'}
+\item{Log in met de zonet aangemaakte gebruiker, en voer het SQL-script 'installatiescript.sql' uit}
+\end{enumerate}
+
+
+\subsection{Backend}
+
+\subsection{Webserver}
+
+\subsection{Administratie desktopclient}
+\begin{enumerate}
+\item Installeer de \makeurl{e-ID middleware}{http://eid.belgium.be/nl/Hoe\_installeer\_je\_de\_eID/Quick\_Install/} (minimum versie 3.5)
+\item{Voer het installatiebestand AdministrationSetup.exe uit}
+\end{enumerate}
+
+\subsection{Scraper}
+
+\subsection{Transactiemanager}
+
+\subsection{Puntenmanager}
+
+
+
+%
+% Gebruikershandleiding
+%
+
+\section{Gebruikershandleiding}
+
+\subsection{Administratie desktopclient}
 
 De desktopapplicatie bevindt zich op de computer ``Nernst''.
 Op deze machine kan je inloggen met de gebruikersnaam ``Administrator'' en het bekende wachtwoord ``e=mc**2''.
 De desktopapplicatie bevindt zich in de map ''VOP Groep 7'' op het bureaublad en kan je opstarten door middel van de snelkoppeling ''StockPlay administratie''.
 
-\subsection{Algemene zaken}
+\subsubsection{Algemene zaken}
 \label{sec:handl:admin:algemeen}
 
-\subsubsection{Verifi\"eren connectiviteit}
+\paragraph{Verifi\"eren connectiviteit}
 
 Indien bij het opstarten van de applicatie de StockPlay servers niet toegankelijk blijken te zijn, wordt de gebruiker hiervan ge\"informeerd zoals te zien is in figuur \ref{fig:handl:admin:verbindingsfout}. Controleer of de PC waarop de applicatie gedraait wordt, wel internetconnectiviteit heeft. Indien dit het geval is, moeten er contact opgenomen worden met de ondersteunende dienst om de backend en client-configuratie te controleren.
 
@@ -18,7 +64,7 @@ Indien bij het opstarten van de applicatie de StockPlay servers niet toegankelij
 	\label{fig:handl:admin:verbindingsfout}
 \end{figure}
 
-\subsubsection{Inloggen}
+\paragraph{Inloggen}
 
 De inloggegevens voor deze demo zijn ``Administrator'' en ``chocolademousse''. Vul die gegevens in en druk op ``Login'', zoals te zien is in figuur \ref{fig:handl:admin:login}. Indien verkeerde credentials ingevoerd worden, krijgt de gebruiker hier melding van zoals te zien is in figuur \ref{fig:handl:admin:login-failure}.
 Je kan ook zelf een account aanmaken, zie daarvoor \ref{sec:handl:admin:gebruikers}. Als deze de rechten ``Administrator'' bezit, dan kan je hiermee ook inloggen.
@@ -53,7 +99,7 @@ Op het moment van schrijven is de logica in de 'backend' die achter de Start/Sto
 		\label{fig:handl:admin:status-overzicht}
 \end{figure}
 
-\subsection{Beheer van effecten}
+\subsubsection{Beheer van effecten}
 \label{sec:handl:admin:effecten}
 
 Als je op ``Effectenbeheer'' in de linkerkolom klikt verschijnt een overzicht van alle effecten, zoals te zien in figuur \ref{sec:handl:admin:effecten} (het inladen van de effecten duurt een kan even duren).
@@ -77,7 +123,7 @@ Op elk effect kan je de volgende acties uitvoeren:
 
 Om de wijzigingen permanent te maken klik je vervolgens op de knop ``Opslaan''.
 
-\subsection{Beheer van gebruikers}
+\subsubsection{Beheer van gebruikers}
 \label{sec:handl:admin:gebruikers}
 
 Als je ``Gebruikersbeheer'' in het navigatiemenu aanklikt, verschijnt het gebruikersbeheer zoals in figuur \ref{fig:handl:admin:gebruikers-overzicht}.
@@ -98,7 +144,7 @@ De mogelijk acties zijn:
 \item{Bewerken van een bestaande gebruiker met ``Bewerk gebruiker''.}
 \end{itemize_compact}
 
-\subsubsection{Gebruiker toevoegen}
+\paragraph{Gebruiker toevoegen}
 
 Na het klikken op de knop ``Registreer gebruiker'' verschijnt een scherm zoals in figuur \ref{fig:handl:admin:gebruikers-nieuw}. Hierin moet je de velden ''nickname'', ``wachtwoord'', ''achternaam'', ''voornaam'' en ''e-mailadres'' invullen. 
 De velden startbedrag, cash en punten worden bij het registeren van de gebruiker in de backend automatisch voor je ingevuld.
@@ -110,7 +156,7 @@ De velden startbedrag, cash en punten worden bij het registeren van de gebruiker
 		\label{fig:handl:admin:gebruikers-nieuw}
 \end{figure}
 
-\subsubsection{Gebruiker bewerken}
+\paragraph{Gebruiker bewerken}
 
 Bij het bewerken van een gebruiker verschijnt een gelijkaardig venster als dat van ``Registreer gebruiker'' (figuur \ref{fig:handl:admin:gebruikers-edit})
 Dit venster verschilt hierin in de volgende punten:
@@ -136,7 +182,7 @@ Het wijzigen van de cashpositie wordt gedaan in een apart venster, waarin extra 
 			\label{fig:handl:admin:gebruikers-edit-cash}
 \end{figure}
 
-\section{Handleiding webapplicatie}
+\subsection{Handleiding webapplicatie}
 
 De website is te bereiken op het interne schoolnetwerk op het internetadres ``http://nernst/''.
 Buiten het schoolnetwerk kan men een versie van de site bekijken op ``http://www.kapti.com''.
@@ -153,7 +199,7 @@ Om te kunnen aanmelden dien je eerst over een lidmaatschap te beschikken. Een li
 Na het doorlopen van deze procedure zal je ook een email ontvangen hebben. Die kan je bewaren ter geheugensteuntje voor je gebruikersnaam.
 Nu heb je een persoonlijk lidmaatschap. Om het te activeren kan je inloggen met de gekozen gebruikersnaam en bijhorende wachtwoord.
 
-\subsection{Overzicht van effecten - opvragen van details}
+\subsubsection{Overzicht van effecten - opvragen van details}
 
 Onder ``Securities Overview'' krijg je een overzicht te zien van de effecten die op dit moment in het StockPlay systeem aanwezig zijn. Je kan in het navigatiemenu ook rechtstreeks een beurs aanklikken. Zo krijg je al direct een eerste filtering op de lijst.
 Op dit moment gebeurd het ophalen nog wat traag. Dit komt omdat door de abstractielagen nogal wat verbindingen tussen verschillende lagen en servers opgezet moeten worden.
@@ -185,17 +231,17 @@ Alle datapunten in de grafiek worden dynamisch opgehaald via AJAX technologie na
 
 'Portfolio', 'Orders' en 'Transaction History' bieden overzichten voor de huidige ingelogde gebruiker.
 
-\subsection{Aankopen van effecten}
+\subsubsection{Aankopen van effecten}
 
 Klik links op ``Securities Overview'' of een van de beurzen die aanwezig is in het spel om een lijst te krijgen van effecten. Klik op de ``Buy'' knop van het gewenste aandeel. Deze knop is ook te vinden op een detailpagina van een effect.
 
 Je kan een prijs een een aantal aandelen opgeven die je wenst te kopen. Als aan de voorwaarden vervolgens voldaan wordt, dan zal de transactionmanager deze op bepaalde tijdstippen omzetten naar een geldige transactie. Hierbij zal het order dan uitgevoerd worden en worden de effecten aan het portfolio toegevoegd.
 
-\section{Mobiele client}
+\subsection{Mobiele client}
 
 \b{Opmerking: } Omdat het onmogelijk is om bij de vastgestelde testopstelling van dit project een URL bereikbaar te maken vanaf het internet, is het niet mogelijk om de Java ME-client uit te testen op een echte GSM. Er is immers geen haalbare oplossing om een verbinding op te zetten tussen de server waar de backend van dit project op draait, en de GSM zelf. Daarom kan de applicatie enkel worden opgeleverd in een emulator.
 
-\subsection{Algemeen}
+\subsubsection{Algemeen}
 Bij het opstarten van de applicatie verschijnt er eerst een spashscreen, dat na enkele seconden wordt vervolgd door het loginscherm. Gebruik om in te loggen een gebruikersaccount dat werd aangemaakt via de website of de administratieclient.
 \begin{figure}[h!]
 	\centering
@@ -225,7 +271,7 @@ Nadat er succesvol kon worden ingelogd, verschijnt een menu met de volgende moge
 	\label{fig:handl:mobile:menu}
 \end{figure}
 
-\subsection{View Portfolio}
+\subsubsection{View Portfolio}
 \begin{figure}[h!]
 	\centering
 		\includegraphics[scale=0.75]{images/handleiding/mobile/Portfolio}
@@ -234,7 +280,7 @@ Nadat er succesvol kon worden ingelogd, verschijnt een menu met de volgende moge
 \end{figure}
 In dit scherm wordt een eenvoudig overzicht getoond met alle aandelen die zich in het portefolio van de gebruiker bevinden. Van elk effect die de speler in bezit heeft wordt de naam, de huidige waarde, en de relatieve  koersverandering van die dag.
 
-\subsection{View Orders}
+\subsubsection{View Orders}
 \begin{figure}[h!]
 	\centering
 		\includegraphics[scale=0.75]{images/handleiding/mobile/Orders}
@@ -244,7 +290,7 @@ In dit scherm wordt een eenvoudig overzicht getoond met alle aandelen die zich i
 Bij 'View orders' krijg je een overzicht van alle orders die momenteel hangende zijn, alsook van de meest recente afgewerkte orders. Van elk order is het effect, de prijs, de hoeveelheid en de status vermeld.
 Onderaan dit venster verschijnt er bij 'Cancel an order' een overzicht van lopende orders, door op een item uit deze lijst te klikken wordt het geannuleerd.
 
-\subsection{Create order}
+\subsubsection{Create order}
 \begin{figure}[h!]
 	\centering
 		\includegraphics[scale=0.75]{images/handleiding/mobile/CreateOrder}
