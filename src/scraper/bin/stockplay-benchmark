@@ -23,7 +23,7 @@ use strict;
 # Setup
 #
 
-my $stockplay = new StockPlay(app => "benchmark");
+my $stockplay = StockPlay->new(app => "benchmark");
 my $factory = $stockplay->getFactory();
 my $logger = $stockplay->getLogger();
 
@@ -88,6 +88,8 @@ sub test {
 		$t->stop($name);
 	}
 	print $t->result($name)*1000, " ms per request\n";
+	
+	return;
 }
 
 __END__

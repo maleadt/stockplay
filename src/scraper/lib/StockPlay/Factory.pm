@@ -285,8 +285,7 @@ sub getIndexes {
 =head2 C<$factory->getSecurities($exchange)>
 
 This method fetches a list of securities on a given exchange, and converts it to
-StockPlay::Exchange objects. It does however not fetches the quotes linked
-with the securities (although that is a field of the Security object).
+StockPlay::Security objects.
 
 =cut
 
@@ -312,6 +311,16 @@ sub getSecurities {
 	
 	return @securities;	
 }
+
+=pod
+
+=head2 C<$factory->getSecurities($exchange)>
+
+This method fetches a single security based on it's unique identification
+code (ISIN). The behaviour is similar to the C<getSecurities> call, but
+only returns a single value of-course.
+
+=cut
 
 sub getSecurity {
 	my ($self, $isin) = @_;
@@ -417,10 +426,11 @@ sub getLatestQuotes {
 
 =pod
 
-=head2 C<$factory->getQuotes($start, $end, $security)>
+=head2 C<$factory->getQuotes($start, $end, $security, $span)>
 
 This method fetches and returns all the quotes from a given security between
-two dates.
+two dates. An optional span parameter determines the amount of quotes
+to be returned (which obviously reduces the network traffic).
 
 =cut
 
@@ -479,6 +489,15 @@ sub getQuotes {
 	return @quotes;
 }
 
+=pod
+
+=head2 C<$factory->getQuoteRange($security)>
+
+Gets the range for which quotes are available. The returnet values are
+DateTime objects, GMT specified.
+
+=cut
+
 sub getQuoteRange {
 	my ($self, $security) = @_;
 	
@@ -491,13 +510,30 @@ sub getQuoteRange {
 	return (DateTime::Format::ISO8601->parse_datetime($s_range[0]), DateTime::Format::ISO8601->parse_datetime($s_range[1]));	
 }
 
+=pod
+
+=head2 C<$factory->getPortfolio($user)>
+
+Fetches the portfolio (securities in posession) of a given user. If the
+user parameter is absent, the portfolio of the current user is looked up.
+
+=cut
+
 sub getPortfolio {
-	my ($self) = @_;
+	my ($self, $user) = @_;
 	
 	# Request portfolio from the server
-	my @s_usersecurities = @{$self->xmlrpc->send_request(
-		'User.Portfolio.List'
-	)->value};
+	my @s_usersecurities;
+	if (defined $user) {
+		@s_usersecurities = @{$self->xmlrpc->send_request(
+			'User.Portfolio.List',
+			"id == '" . $user->id . "'i"
+		)->value};		
+	} else {
+		@s_usersecurities = @{$self->xmlrpc->send_request(
+			'User.Portfolio.List'
+		)->value};
+	}
 	
 	# Build StockPlay::Security objects
 	my @securities = ();
@@ -518,6 +554,14 @@ sub getPortfolio {
 	return @securities;
 }
 
+=pod
+
+=head2 C<$factory->getUserId($username)>
+
+Looks up a user ID by a given username.
+
+=cut
+
 sub getUserId {
 	my ($self, $nickname) = @_;
 	
@@ -525,19 +569,28 @@ sub getUserId {
 	my $s_user = $self->xmlrpc->send_request(
 		'User.List',
 		(
-			'nickname == \'' . $nickname. '\'s'
+			"nickname == '" . $nickname. "'s"
 		)
 	)->value->[0];
 	
 	return $s_user->{ID};
 }
 
+=pod
+
+=head2 C<$factory->getUser($id)>
+
+Fetches user details based on a given user ID. If the ID is absent, the details
+of the current (logged in) user are looked up.
+
+=cut
+
 sub getUser {
 	my ($self, $id) = @_;
 	
 	# Request user from the server
 	my $s_user;
-	if ($id) {
+	if (defined $id) {
 		$s_user = $self->xmlrpc->send_request(
 			'User.Details',
 			(
@@ -551,7 +604,7 @@ sub getUser {
 	}
 	
 	# Build a StockPlay::User object
-	my $user = new StockPlay::User(
+	my $user = StockPlay::User->new(
 		id		=> $s_user->{ID},
 		nickname	=> $s_user->{NICKNAME},
 		firstname	=> $s_user->{FIRSTNAME},
@@ -562,6 +615,16 @@ sub getUser {
 	
 	return $user
 }
+
+=pod
+
+=head2 C<$factory->createOrder($security, $amount, $type, $user)>
+
+Creates a new order of type $type, processing $amount securities identified
+by the $security parameter. The order is created in name of the passed $user,
+which if absent defaults to the current logged-in user.
+
+=cut
 
 sub createOrder {
 	my ($self, $security, $amount, $type, $user) = @_;
@@ -579,6 +642,8 @@ sub createOrder {
 			type	=> $type
 		}
 	);
+	
+	return;
 }
 
 

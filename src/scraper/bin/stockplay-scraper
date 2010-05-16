@@ -18,7 +18,7 @@ use strict;
 # Main
 #
 
-my $stockplay = new StockPlay(app => "scraper");
+my $stockplay = StockPlay->new(app => "scraper");
 my $factory = $stockplay->getFactory();
 my $scraper = $stockplay->getScraper();
 my $logger = $stockplay->getLogger();

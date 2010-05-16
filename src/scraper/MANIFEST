@@ -1,4 +1,5 @@
 bin/stockplay-ai
+bin/stockplay-benchmark
 bin/stockplay-chart
 bin/stockplay-historic
 bin/stockplay-random
@@ -23,12 +24,14 @@ lib/StockPlay/Logger.pm
 lib/StockPlay/Object.pm
 lib/StockPlay/Plugin.pm
 lib/StockPlay/PluginManager.pm
+lib/StockPlay/Quotable.pm
 lib/StockPlay/Quote.pm
 lib/StockPlay/Scraper.pm
 lib/StockPlay/Scraper/Source.pm
 lib/StockPlay/Scraper/Source/Website.pm
 lib/StockPlay/Scraper/Source/Website/DeTijd.pm
 lib/StockPlay/Security.pm
+lib/StockPlay/User.pm
 MANIFEST
 META.yml
 README

@@ -26,7 +26,7 @@ use strict;
 # Setup
 #
 
-my $stockplay = new StockPlay(app => "test");
+my $stockplay = StockPlay->new(app => "test");
 my $factory = $stockplay->getFactory();
 my $logger = $stockplay->getLogger();
 

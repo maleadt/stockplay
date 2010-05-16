@@ -35,7 +35,7 @@ my $PLUGIN_MAX_AGE = 3600*24*7;
 # Setup
 #
 
-my $stockplay = new StockPlay(app => "charter");
+my $stockplay = StockPlay->new(app => "charter");
 my $factory = $stockplay->getFactory();
 my $logger = $stockplay->getLogger();
 
@@ -59,7 +59,7 @@ for (my $i = 0; $i < @exchanges; $i++) {
 $choice = undef;
 while (not defined $choice or $choice < 0 or $choice > $#exchanges) {
 	print "? Exchange: ";
-	$choice = <STDIN>;
+	$choice = <>;
 	chomp $choice;
 }
 my $exchange = $exchanges[$choice];
@@ -82,7 +82,7 @@ for (my $i = 0; $i < @securities; $i++) {
 $choice = undef;
 while (not defined $choice or $choice < 0 or $choice > $#securities) {
 	print "? Security: ";
-	$choice = <STDIN>;
+	$choice = <>;
 	chomp $choice;
 }
 my $security = $securities[$choice];

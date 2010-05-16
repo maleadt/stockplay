@@ -124,7 +124,7 @@ has 'latestquote' => (
 
 =head1 METHODS
 
-=head2 C<$daemon->BUILD>
+=head2 C<$ai->BUILD>
 
 The object constructor. Builds pseudo-lazy attributes which depend on values
 passed by constructor.
@@ -142,15 +142,14 @@ sub BUILD {
 
 =pod
 
-=head2 C<$manager->run>
+=head2 C<$ai->run>
 
-Main run loop. This will continuously scan all securities on all exchanges,
+Main run loop. This will process all found securities on all the exchanges,
 attempt to accuratly predict the course for the following day (using the
 available forecasters, and pick the one with the smallest rate of error), and
 using those predicted courses collect an optimal portfolio.
 
 =cut
-
 
 sub run {
 	my ($self) = @_;
@@ -228,12 +227,24 @@ sub run {
 
 	# Buy new securities
 	foreach my $security (@portfolio_optimal) {
-		$self->logger->debug("buying " . $security->amount . " of security " . $security->name);
+		$self->logger->debug("buying " . $security->amount . " of security " . $security->name);	
 		$self->factory->createOrder($security, $security->amount, "BUY");
 	}
 	
 	return;	
 }
+
+=pod
+
+=head2 C<$ai->forecast($exchange, $index, $security, $start, $end)>
+
+This method forecasts the quotes of a given security (on a given exchange and
+reference index), by learning or analysing based on historic data between
+the given parameters $start and $end, and after that forecast a quote
+based on the today value fetched with the C<get_data_today> call. It returns
+the current input data as well as the forecasted output data.
+
+=cut
 
 sub forecast {
 	my ($self, $exchange, $index, $security, $start, $end) = @_;
@@ -265,6 +276,19 @@ sub forecast {
 	
 	return ($input_today, $output_today);
 }
+
+=pod
+
+=head2 C<$ai->get_data_historic($index, $security, $start, $end)>
+
+This method fetches the historic data for a given security and a given
+reference index between two dates. It returns two array references,
+containing respectively input and output data (converted to
+L<StockPlay::AI::Data::Input> and L<StockPlay::AI::Data::Output> objects). This
+data is to be used to train a certain network, as both the input data
+as the output data is available for each and every data point.
+
+=cut
 
 sub get_data_historic {
 	my ($self, $index, $security, $start, $end) = @_;
@@ -320,6 +344,18 @@ sub get_data_historic {
 	
 	return (\@inputs, \@outputs);
 }
+
+=pod
+
+=head2 C<$ai->get_data_today($index, $security)>
+
+This method fetches the input data for the current day. The data is returned
+as a single L<StockPlay::AI::Data::Input> point. It is to be used as input
+for a forecasting routine, as this is the datapoint for which no output
+data is known, and having that value forecasted it could be used to select an
+optimal portfolio.
+
+=cut
 
 sub get_data_today {
 	my ($self, $index, $security) = @_;

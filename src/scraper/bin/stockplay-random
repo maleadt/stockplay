@@ -24,7 +24,7 @@ use strict;
 #
 # Setup
 #
-my $stockplay = new StockPlay(app => "random");
+my $stockplay = StockPlay->new(app => "random");
 my $factory = $stockplay->getFactory();
 my $logger = $stockplay->getLogger();
 
@@ -53,7 +53,7 @@ while (1) {
 				my $price = abs($quote->price * (0.97+rand(0.06)));
 				my $min = $price<$quote->low?$price:$quote->low;
 				my $max = $price>$quote->high?$price:$quote->high;
-				my $quote_random = new StockPlay::Quote(
+				my $quote_random = StockPlay::Quote->new(
 					time		=> DateTime->now(),
 					security	=> $security->isin,
 					price		=> $price,
