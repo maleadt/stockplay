@@ -185,11 +185,52 @@ sub run {
 		});
 	}
 	
-	# Select optimal portfolio
-	my @portfolio = (
+	# Select optimal securities
+	my @securities_best = (
 		sort { $a->delta / $a->input->closing  <=>  $b->delta / $b->input->closing }
 		@forecasts
 	)[1..5];
+	my @quotes_best = $self->factory->getLatestQuotes(@securities_best);
+	
+	# Calculate current and optimal portfolio
+	my @portfolio_current = $self->factory->getPortfolio();
+	my @portfolio_optimal = ();
+	my $cash_per_security = $self->factory->user->cash / (scalar @securities_best);
+	foreach my $security (@securities_best) {
+		my $quote = (grep { $_->quotable eq $security->isin } @quotes_best)[0];
+		if (not defined $quote) {
+			die("could not find quote for selected security");
+		}
+		my $amount = int($cash_per_security / $quote->ask);
+		$security->amount($amount);
+		push(@portfolio_optimal, $security);
+	}
+
+	# Sell old securities
+	foreach my $security (@portfolio_current) {
+		my $security_new = (grep { $_->isin eq $security->isin } @portfolio_optimal)[0];
+		if (not defined $security_new) {
+			$self->logger->debug("selling all (" . $security->amount . ") of security " . $security->name);
+			$self->factory->createOrder($security, $security->amount, "SELL");
+		} else {
+			if ($security->amount > $security_new->amount) {
+				my $to_sell = $security->amount - $security_new->amount;
+				$self->logger->debug("selling limited amount (" . $to_sell . ") and reducing amount to buy to 0 of security " . $security->name);
+				$self->factory->createOrder($security, $to_sell, "SELL");
+				$security_new->amount(0);
+			} else {
+				my $to_buy = $security_new->amount - $security->amount;
+				$self->logger->debug("selling none but reducing amount to buy to " . $to_buy . " of security " . $security->name);
+				$security_new->amount($to_buy);
+			}
+		}
+	}
+
+	# Buy new securities
+	foreach my $security (@portfolio_optimal) {
+		$self->logger->debug("buying " . $security->amount . " of security " . $security->name);
+		$self->factory->createOrder($security, $security->amount, "BUY");
+	}
 	
 	return;	
 }

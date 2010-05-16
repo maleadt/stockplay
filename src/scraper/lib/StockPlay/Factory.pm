@@ -28,6 +28,7 @@ use StockPlay::Exchange;
 use StockPlay::Index;
 use StockPlay::Security;
 use StockPlay::Quote;
+use StockPlay::User;
 use DateTime::Format::ISO8601;
 use StockPlay::Configuration;
 use MIME::Base64;
@@ -90,6 +91,13 @@ sub _build_xmlrpc {
 	return $xmlrpc;
 }
 
+has 'user' => (
+	is		=> 'rw',
+	isa		=> 'StockPlay::User',
+	required	=> 0,
+	predicate	=> 'has_user'
+);
+
 
 ################################################################################
 # Methods
@@ -136,6 +144,11 @@ sub BUILD {
 			->value;
 			my $basic_auth = "Basic " . encode_base64($session . ":42");
 			$self->xmlrpc->request->header("Authorization", $basic_auth);
+					
+			$self->user( $self->getUser() );
+			$self->user->set('session', $session);
+			
+			$self->logger->info("logged in as " . $username . " (id " . $self->user->id . ")");
 			
 		};
 		if ($@) {
@@ -284,6 +297,29 @@ sub getSecurities {
 	my @s_securities = @{$self->xmlrpc->send_request(
 		'Finance.Security.List',
 		"exchange == '" . $exchange->symbol . "'"
+	)->value};
+	
+	# Build StockPlay::Security objects
+	my @securities;
+	foreach my $s_security (@s_securities) {
+		my $security = StockPlay::Security->new(
+			isin		=> $s_security->{ISIN},
+			symbol		=> $s_security->{SYMBOL}
+		);
+		$security->name($s_security->{NAME}) if (defined $s_security->{NAME});
+		push(@securities, $security);
+	}
+	
+	return @securities;	
+}
+
+sub getSecurity {
+	my ($self, $isin) = @_;
+	
+	# Request securities from the server
+	my @s_securities = @{$self->xmlrpc->send_request(
+		'Finance.Security.List',
+		"isin == '" . $isin . "'"
 	)->value};
 	
 	# Build StockPlay::Security objects
@@ -454,6 +490,99 @@ sub getQuoteRange {
 	
 	return (DateTime::Format::ISO8601->parse_datetime($s_range[0]), DateTime::Format::ISO8601->parse_datetime($s_range[1]));	
 }
+
+sub getPortfolio {
+	my ($self) = @_;
+	
+	# Request portfolio from the server
+	my @s_usersecurities = @{$self->xmlrpc->send_request(
+		'User.Portfolio.List'
+	)->value};
+	
+	# Build StockPlay::Security objects
+	my @securities = ();
+	foreach my $s_usersecurity (@s_usersecurities) {
+		# Look for the security
+		my $security_isin = $s_usersecurity->{ISIN};
+		my $security_amount = $s_usersecurity->{AMOUNT};
+		my $security = $self->getSecurity($security_isin);
+		$security->amount($security_amount);		
+		if (not defined $security) {
+			$self->logger->error("could not find security $security_isin");
+			next;
+		}
+		
+		push(@securities, $security);		
+	}
+	
+	return @securities;
+}
+
+sub getUserId {
+	my ($self, $nickname) = @_;
+	
+	# Request user from the server
+	my $s_user = $self->xmlrpc->send_request(
+		'User.List',
+		(
+			'nickname == \'' . $nickname. '\'s'
+		)
+	)->value->[0];
+	
+	return $s_user->{ID};
+}
+
+sub getUser {
+	my ($self, $id) = @_;
+	
+	# Request user from the server
+	my $s_user;
+	if ($id) {
+		$s_user = $self->xmlrpc->send_request(
+			'User.Details',
+			(
+				'id == \'' . $id . '\'s'
+			)
+		)->value->[0];
+	} else {
+		$s_user = $self->xmlrpc->send_request(
+			'User.Details'
+		)->value->[0];		
+	}
+	
+	# Build a StockPlay::User object
+	my $user = new StockPlay::User(
+		id		=> $s_user->{ID},
+		nickname	=> $s_user->{NICKNAME},
+		firstname	=> $s_user->{FIRSTNAME},
+		lastname	=> $s_user->{LASTNAME},
+		cash		=> $s_user->{CASH},
+		startamount	=> $s_user->{STARTAMOUNT}
+	);
+	
+	return $user
+}
+
+sub createOrder {
+	my ($self, $security, $amount, $type, $user) = @_;
+	if (not defined $user) {
+		die("need user data to buy securities") unless $self->has_user;
+		$user = $self->user;
+	}
+	
+	$self->xmlrpc->send_request(
+		'User.Order.Create',
+		{
+			user	=> $user->id,
+			isin	=> $security->isin,
+			amount	=> $amount,
+			type	=> $type
+		}
+	);
+}
+
+
+
 
 =pod
 

@@ -9,6 +9,8 @@ use StockPlay;
 use StockPlay::Factory;
 use Date::Manip;
 use DateTime::Format::DateManip;
+use List::Util qw/shuffle/;
+use Data::Dumper;
 
 # Write nicely
 use warnings;
@@ -34,13 +36,59 @@ my $logger = $stockplay->getLogger();
 
 $logger->debug("testing");
 
+# Fetch exchanges
 my @exchanges = $factory->getExchanges();
-print "Exchanges: ", join(", ", map{$_->name} @exchanges), "\n";
+my $exchange = (grep { $_->symbol eq "BSE" } @exchanges)[0];
 
-my $result = $factory->xmlrpc->send_request(
-	'User.Order.List',
-	''
-);
+# Fetch list of securities
+my @securities = shuffle $factory->getSecurities($exchange);
+
+# Select optimal securities
+my @securities_best = @securities[1..5];
+my @quotes_best = $factory->getLatestQuotes(@securities_best);
+
+# Calculate current and optimal portfolio
+my @portfolio_current = $factory->getPortfolio();
+my @portfolio_optimal = ();
+my $cash_per_security = $factory->user->cash / (scalar @securities_best);
+foreach my $security (@securities_best) {
+	my $quote = (grep { $_->quotable eq $security->isin } @quotes_best)[0];
+	if (not defined $quote) {
+		die("could not find quote for selected security");
+	}
+	my $amount = int($cash_per_security / $quote->ask);
+	$security->amount($amount);
+	push(@portfolio_optimal, $security);
+}
+print "* Current portfolio\n", Dumper(\@portfolio_current), "\n";
+print "* Optimal portfolio\n", Dumper(\@portfolio_optimal), "\n";
+
+# Sell old securities
+foreach my $security (@portfolio_current) {
+	my $security_new = (grep { $_->isin eq $security->isin } @portfolio_optimal)[0];
+	if (not defined $security_new) {
+		print "- Selling all (", $security->amount, ") of security ", $security->name, "\n";
+		$factory->createOrder($security, $security->amount, "SELL");
+	} else {
+		if ($security->amount > $security_new->amount) {
+			my $to_sell = $security->amount - $security_new->amount;
+			print "- Selling limited amount (", $to_sell, ") and reducing amount to buy to 0 of security ", $security->name, "\n";
+			$factory->createOrder($security, $to_sell, "SELL");
+			$security_new->amount(0);
+		} else {
+			my $to_buy = $security_new->amount - $security->amount;
+			print "- Selling none but reducing amount to buy to ", $to_buy, " of security ", $security->name, "\n";
+			$security_new->amount($to_buy);
+		}
+	}
+}
+
+# Buy new securities
+foreach my $security (@portfolio_optimal) {
+	print "- Buying ", $security->amount, " of security ", $security->name, "\n";
+	$factory->createOrder($security, $security->amount, "BUY");
+}
+
 
 exit(0);
 

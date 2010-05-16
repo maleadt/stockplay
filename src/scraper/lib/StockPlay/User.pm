@@ -3,17 +3,17 @@
 #
 
 # Package definition
-package StockPlay::Security;
+package StockPlay::User;
 
 =pod
 
 =head1 NAME
 
-StockPlay::Security - StockPlay security data object
+StockPlay::User - StockPlay user data object
 
 =head1 DESCRIPTION
 
-The C<StockPlay::Security> package contains a container for all security-related
+The C<StockPlay::User> package contains a container for all user-related
 data.
 
 =head1 SYNPOSIS
@@ -26,7 +26,6 @@ use DateTime;
 
 # Consume roles
 with 'StockPlay::Object';
-with 'StockPlay::Quotable';
 
 # Write nicely
 use strict;
@@ -43,28 +42,22 @@ use warnings;
 
 =cut
 
-has 'isin' => (
+has 'id' => (
 	is		=> 'ro',
-	isa		=> 'Str',
-	required	=> 1
-);
-
-has 'symbol' => (
-	is		=> 'ro',
-	isa		=> 'Str',
-	required	=> 1
-);
-
-has 'name' => (
-	is		=> 'rw',
-	isa		=> 'Str',
-	predicate	=> 'has_name'
-);
-
-has 'amount' => (
-	is		=> 'rw',
 	isa		=> 'Int',
-	default		=> -1
+	required	=> 1
+);
+
+has [qw/nickname firstname lastname/] => (
+	is		=> 'ro',
+	isa		=> 'Str',
+	required	=> 1
+);
+
+has [qw/cash startamount/] => (
+	is		=> 'ro',
+	isa		=> 'Num',
+	required	=> 1
 );
 
 ################################################################################
