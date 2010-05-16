@@ -35,9 +35,9 @@ Door het gebruik van een aparte backend, wordt rechtstreekse toegang tot de effe
   showstringspaces=true
 }
 
-In de tabel ``users'' bevinden zich twee kolommen met redundante informatie: cash en points. De tabel ``user\_securities'' is zelfs in zijn geheel redundant. Om te voorkomen dat er inconsistentie zou optreden binnen de database, werd daarom besloten van triggers gebruik te maken.
+In de tabel ``users'' bevinden zich twee kolommen met redundante informatie: cash en points. De tabel ``user\_securities'' is zelfs in zijn geheel redundant. Om te voorkomen dat er inconsistentie zou optreden binnen de database, werd besloten van triggers gebruik te maken.
 
-De cashpositie van een speler verandert wanneer er een transactie op zijn account wordt geregistreerd. Dit gebeurd wanneer er een rij wordt toegevoegd aan de ``transactions''-tabel. Dan wordt door middel van een trigger de cashpositie van de gebruiker gewijzigd, alsook de wijziging in de hoeveelheid effecten die hij bezit geregistreerd met de trigger te zien in codefragment \ref{code:data:trig_cash}.
+De cashpositie van een speler verandert wanneer er een transactie op zijn account wordt geregistreerd. Dit gebeurd wanneer er een rij wordt toegevoegd aan de ``transactions''-tabel. Dan wordt door middel van een trigger de cashpositie van de gebruiker, alsook de wijziging in de hoeveelheid effecten die hij bezit geregistreerd met behulp van de trigger te zien in codefragment \ref{code:data:trig_cash}.
 
 \begin{code}
 \begin{lstlisting}
@@ -71,7 +71,7 @@ END;
 \label{code:data:trig_cash}
 \end{code}
 
-Een transactie is ook niet altijd mogelijk: als een speler te weinig cash in huis heeft om te kopen, of te weinig effecten om te kunnen verkopen, dan kan een transactie niet doorgaan, dit wordt door de trigger die staat in codefragment \ref{code:data:trig_transacties}.
+Een transactie is ook niet altijd mogelijk: als een speler te weinig cash in huis heeft om te kopen, of te weinig effecten om te kunnen verkopen, dan kan een transactie niet doorgaan. Dit wordt gecontroleerd door de trigger die te zien is in codefragment \ref{code:data:trig_transacties}.
 
 \begin{code}
 \begin{lstlisting}
@@ -114,7 +114,7 @@ END;
 \end{code}
 
 
-De verandering in punten bij een speler wordt geregistreerd in de tabel ``pointtransactions'', dat laat toe om een meer verfijnde klassementen op te stellen (dagklassement, weekklassement, maandklassement, ...). Het totale aantal punten wordt met behulp een in de ``users''-tabel, zoals die te zien is in codefragment \ref{code:data:trig_punten}.
+De verandering in punten bij een speler wordt geregistreerd in de tabel ``pointtransactions'', dat laat toe om een meer verfijnde klassementen op te stellen (dagklassement, weekklassement, maandklassement, ...). Het totale aantal punten wordt berekend met behulp van een trigger in de ``users''-tabel, wiens code vermeld staat in codefragment \ref{code:data:trig_punten}.
 
 \begin{code}
 \begin{lstlisting}
