@@ -21,7 +21,7 @@ Het is evident dat een beursspel zonder live beurskoersen niet veel voorstelt.. 
 Er was ook nood aan meer extensieve informatie voor elk effect. Bijvoorbeeld om onze AI-speler goeie inschattingen te kunnen laten maken, alsook om voldoende informatie te kunnen tonen aan onze spelers in de grafieken, was er nood aan historische beurskoersen. Daarom werd ook een scraper gemaakt die op de website van Euronext de historische data ophaalde.
 
 \section{AI-speler}
-Om ook in de beginfase de eerste spelers van genoeg concurrentie te voorzien, werd er ook een AI-speler ontwikkeld. Deze AI-speler gebruikt een genetisch algoritme om zijn orders te bepalen. Door te variëren in de aangeboden parameters aan elke AI-instantie kunnen gemakkelijk verschillende AI-spelers worden aangemaakt. Dit laat toe om op een eenvoudige wijze het spel te voorzien van genoeg spelers om het ook voor de eerste menselijke spelers direct interessant te maken, en te houden natuurlijk!
+Om ook in de beginfase de eerste spelers van genoeg concurrentie te voorzien, werd er ook een AI-speler ontwikkeld. Deze AI-speler gebruikt een genetisch algoritme om zijn orders te bepalen. Door te variren in de aangeboden parameters aan elke AI-instantie kunnen gemakkelijk verschillende AI-spelers worden aangemaakt. Dit laat toe om op een eenvoudige wijze het spel te voorzien van genoeg spelers om het ook voor de eerste menselijke spelers direct interessant te maken, en te houden natuurlijk!
 
 \section{Mobiele spelclient}
 Om aan te tonen dat onze keuze voor het XML-RPC protocol ons veel mogelijkheden bood, werd er ook een client ontwikkeld in de vorm van een Java ME-applet. Java ME bevat slechts zeer rudimentaire functionaliteit, maar toch was ook daarvoor een XML-RPC-client beschikbaar.
@@ -40,10 +40,10 @@ Deze applicatie zal op gezette tijden (dit door middel van een cronjob) alle spe
 
 
 \section{Taakverdeling}
-De grote omvang van het project zorgde ervoor dat al snel iedereen zich begon toe te leggen op bepaalde domeinen van het project, en dit met uitzondering van één onderdeel: de grote gemene deler van het project, de backend.
+De grote omvang van het project zorgde ervoor dat al snel iedereen zich begon toe te leggen op bepaalde domeinen van het project, en dit met uitzondering van n onderdeel: de grote gemene deler van het project, de backend.
 
 \begin{itemize}
-	\item \b{Tim Besard: }
+	\item \textbf{Tim Besard: }
 	\begin{itemize}
 		\item Implementatie van XML-RPC-backend
 		\item Live beurskoersen-scraper
@@ -51,7 +51,7 @@ De grote omvang van het project zorgde ervoor dat al snel iedereen zich begon to
 		\item AI-spelers
 	\end{itemize}
 	
-	\item \b{Dieter Deforce: } 
+	\item \textbf{Dieter Deforce: } 
 		\begin{itemize}
 			\item Toevoegen functionaliteit in de backend
 			\item ADO.NET-interface met de backend\footnote{Het gebruik van ADO.NET was een vereiste van het project, en moest worden gedemonstreerd. De ADO.NET-interface werd na de demo uit het project gehaald}
@@ -60,7 +60,7 @@ De grote omvang van het project zorgde ervoor dat al snel iedereen zich begon to
 			\item De puntenmanager, die spelers op gezette tijden evalueert en punten toekent
 		\end {itemize}
 		
-	\item \b{Laurens Van Acker: }
+	\item \textbf{Laurens Van Acker: }
 	 \begin{itemize}
 	 	\item Toevoegen functionaliteit in de backend
 	  \item Javascript-library ontwikkelen om dynamische grafieken weer te geven
@@ -69,7 +69,7 @@ De grote omvang van het project zorgde ervoor dat al snel iedereen zich begon to
 	 	\item Filtering: toevoegen van extra functionaliteit
 	 \end{itemize}
 	 
-	 \item \b{Thijs Walcarius: }
+	 \item \textbf{Thijs Walcarius: }
 	 \begin{itemize}
 	 	\item Ontwerp Data Access Objects voor communicatie tussen backend en database
 	 	\item Instellen van Oracle-database, ontwerp triggers

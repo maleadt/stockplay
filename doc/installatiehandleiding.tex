@@ -1,34 +1,33 @@
-\section{Installatiehandleiding}
-
-\subsection{Initialisatie van de database}
+\section{Initialisatie van de database}
 
 \begin{enumerate}
 \item{Installeer de Oracle Database 10g Express Edition}
 \item{Cre\"er de tablespace 'StockPlay': 
-\begin{lstlisting}
+\begin{verbatim}
 CREATE TABLESPACE STOCKPLAY 
 DATAFILE 'stockplay.dat' 
 SIZE 50M autoextend on
-\end{lstlisting}}
+\end{verbatim}
+}
 \item{Maak een gebruiker 'stockplay' aan met paswoord 'chocolademousse' en default tablespace 'stockplay'}
 \item{Log in met de zonet aangemaakte gebruiker, en voer het SQL-script 'installatiescript.sql' uit}
 \end{enumerate}
 
 
-\subsection{Backend}
+\section{Backend}
 
-\subsection{Webserver}
+\section{Webserver}
 
-\subsection{Administratie desktopclient}
+\section{Administratie desktopclient}
 \begin{enumerate}
-\item{Installeer de \url{http://eid.belgium.be/nl/Hoe_installeer_je_de_eID/Quick_Install/}{eID-middleware} (minimum versie 3.5)}
+\item Installeer de \makeurl{e-ID middleware}{http://eid.belgium.be/nl/Hoe\_installeer\_je\_de\_eID/Quick\_Install/} (minimum versie 3.5)
 \item{Voer het installatiebestand AdministrationSetup.exe uit}
 \end{enumerate}
 
-\subsection{Scraper}
+\section{Scraper}
 
-\subsection{Transactiemanager}
+\section{Transactiemanager}
 
-\subsection{Puntenmanager}
+\section{Puntenmanager}
 
 
