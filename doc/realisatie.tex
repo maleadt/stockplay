@@ -581,17 +581,24 @@ Hier vindt men de nodige methodes terug om gebruikers te beheren. Dit is echter 
 
 \function{Points.Ranking}
 	{ ranking ophalen van een bepaalde groep gebruikers }
-	{ een filter die een groep gebruikers selecteer (zie Users.List) }
+	{ een filter die een groep gebruikers selecteert (zie Users.List) }
 	{ een array van structs, die Rank objecten voorstellen:
 		\begin{itemize_compact}
 		\item{id: gebruikers-id}
 		\item{total: het aantal punten dat de gebruiker heeft}
 		\item{rank: de rank van de gebruiker}
 		\end{itemize_compact} }
-
-\huge DIETER VUL DIT AAN, WAT DOET Points.EventRanking? EN CONTROLEER Points.Ranking OOK!
-\normalsize
 		
+\function{Points.EventRanking}
+	{ recente puntenranking ophalen voor een bepaald puntentype }
+	{ een filter die het type punten selecteert }
+	{ een array van structs, die PointsTransaction objecten voorstellen:
+		\begin{itemize_compact}
+		\item{user: gebruikers-id}
+		\item{delta: verandering van het puntenaantal door deze transactie}
+		\item{comments: commentaar bij de verhandeling}
+		\item{timestamp: de tijd van verhandeling}
+		\end{itemize_compact} }		
 
 \subsection{Finance klasse}
 
