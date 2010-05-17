@@ -168,7 +168,8 @@ Ook werd er een beveiligingsmechanisme ingebouwd, zodat afhankelijk van de aange
 Finaal werd nog een "native target" voorzien die een filter terug kan compileren naar zijn oorspronkelijke vorm, opgesteld door de programmeur. Dit om het debuggen te vereenvoudigen, alsook een betere weergave te voorzien in de cache-overzichtpagina's.
 
 \subsubsection{Website}
-De nog ontbrekende stukken werden toegevoegd: de ranking, [VUL AAN]. Ook werd er functionaliteit toegevoegd om complexe orders in te voeren.
+Enkele stukken die nog ontbraken uit de website werden toegevoegd. Ondermeer de globalisatie van de website en de mogelijkheid om de verschillende rankings te bekijken en doorzoeken. Ook werd de orderpagina ge\"updatet zodat er complexe koop- en verkooporders kunnen worden geplaatst. De vormgeving werd herzien zodat de pagina's een consistente layout hebben.
+Tenslotte werd ook de website omgevormd zodat deze zou werken met de nieuwe beveiliging en correct zou omgaan met de sessieID's.
 
 \paragraph{Dynamische grafieken}
 Er werd de mogelijkheid toegevoegd om extra effecten en indexes op de grafiek toe te voegen als referentie, zodat effecten gemakkelijker met elkaar kunnen worden vergeleken. 
@@ -188,16 +189,14 @@ Na afweging van verschillende algoritmen voor de kunstmatige intelligentie, hadd
 Om modulariteit te verhogen werd de core-code die een neuraal netwerk gebruikte om koersen te voorspellen, in een plugin gegoten om zo eventueel alternatieve algoritmes parallel te kunnen gebruiken. Ook werd een eenvoudig portfolio-selectiealgoritme toegevoegd, zodat de module nu volledig autonoom de geselecteerde (en hopelijk optimale) portfolio kan verwezenlijken door de correcte orders naar de backend te sturen.
 
 \subsubsection{Mobiele spelclient}
-De mobiele spelclient werd weer terug opgenomen. De client-library die beschikbaar was in Java werd geport naar Java ME. Aanvankelijk ging dat gepaard met de ene teleurstelling na de andere door het gebrek aan functionaliteit (geen enums, geen generics, etc), maar die problemen zijn overwonnen.. Wel werd er besloten om wat extra functionaliteit uit de mobiele client te schrappen. Het is immers een nogal log systeem om te debuggen en deze module is eerder bedoeld als een proof-of-concept en vormt geen essentieel onderdeel in het project.
+De mobiele spelclient werd terug opgenomen. De client-library die beschikbaar was in Java werd geport naar Java ME. Aanvankelijk ging dat gepaard met de ene teleurstelling na de andere door het gebrek aan functionaliteit (geen enums, geen generics, etc), maar die problemen zijn overwonnen.. Wel werd er besloten om wat extra functionaliteit uit de mobiele client te schrappen. Het is immers een nogal log systeem om te debuggen en deze module is eerder bedoeld als een proof-of-concept en vormt geen essentieel onderdeel in het project.
 
 \subsubsection{Transactiemanager}
 De transactiemanager werd herschreven zodat alle data via een class opgevraagd kon worden. Alsook werd deze uitgebreid met allerhande geavanceerde orders.
 Zodoende wordt de benodigde data slechts eenmalig per iteratie opgevraagd en niet voor elk order dat gecontroleerd moet worden. Deze werd ook herschreven om te voldoen aan de aangepaste beveiligde backend en er werden controles ingebouwd om te kijken of de speler wel over een voldoende cashpositie bezit om een transactie uit te voeren.
 
 \subsubsection{Puntenmanager}
-De puntenmanager was het laatste grote ontbrekende deel aan het project. Deze werd dan ook snel in deze iteratie onder handen genomen.
-\todo DIETER
-
+De puntenmanager was het laatste grote ontbrekende deel aan het project. Deze werd dan ook snel in deze iteratie onder handen genomen. Omdat de functies omtrent de puntentransacties nog niet getest waren, kwamen hier nog enkele bugs naar boven. Ook werden er nog enkele functies toegevoegd aan de backend omtrent punten en werd de puntentabel in de databank licht gewijzigd. Er werd voor gekozen om de puntenmanager zo modulair mogelijk op te bouwen zodat we eventueel later nog nieuwe soorten rankings konden bij verzinnen zonder de code drastisch te moeten wijzigen.
 
 \chapter{Projectevaluatie}
 Er is voor gekozen om de evaluatie van ons project te doen aan de hand van een SWOT-analyse. Hiermee worden alle vlakken van ons project aangeraakt.
