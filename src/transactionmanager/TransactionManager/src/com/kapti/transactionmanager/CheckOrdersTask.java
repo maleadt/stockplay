@@ -59,6 +59,8 @@ public class CheckOrdersTask implements Runnable {
         Collection<Order> currentOrders = data.getCurrentOrders();
         HashMap<Security, Quote> currentQuotes = data.getCurrentQuotes();
 
+        data.getData();
+
         // We testen nu een voor een elk order of het voldoet, en voeren het uit indien dat het geval is
         for (Order order : currentOrders) {
             logger.info("Verifying order " + order.getId());

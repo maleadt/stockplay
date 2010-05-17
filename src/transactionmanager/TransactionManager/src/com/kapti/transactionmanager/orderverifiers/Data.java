@@ -91,6 +91,11 @@ public class Data {
             //}
         }
 
+        getData();
+
+    }
+
+    public void getData() {
         // We halen alle pending orders op
         try {
             currentOrders = orderFactory.getAllPendingOrders();
@@ -108,7 +113,6 @@ public class Data {
         } catch (StockPlayException ex) {
             logger.error("Failed to fetch the latest quotes", ex);
         }
-
     }
 
     /**
