@@ -172,9 +172,9 @@ public class FinanceFactory {
 
             try {
                 HashMap sec = security.toStruct();
-                sec.remove(Security.Fields.EXCHANGE);
-                sec.remove(Security.Fields.ISIN);
-                sec.remove(Security.Fields.SYMBOL);
+                sec.remove(Security.Fields.EXCHANGE.name());
+                sec.remove(Security.Fields.ISIN.name());
+                sec.remove(Security.Fields.SYMBOL.name());
 
                 Integer result = (Integer) client.execute("Finance.Security.Modify", new Object[]{"isin EQUALS '" + security.getISIN() + "'",sec});
                 if (result == 1) {
