@@ -56,6 +56,9 @@ namespace web.User
             else
                 NewPoints.Visible = false;
 
+            if (pointsTable.Rows.Count == 0)
+                EmptyNotification.Visible = true;
+
             PointsGridView.DataSource = pointsTable;
             PointsGridView.DataBind();
 

@@ -30,14 +30,14 @@ namespace StockPlay.Web
 	                SellMessage.Visible = true;
 	
 	                SecurityName.InnerText = security[0].Name;
-	                Price.InnerText = Convert.ToString(security[0].GetLatestQuote().Price);
+	                Price.InnerText = security[0].GetLatestQuote().Price.ToString("#0.00€");
 	
 	                int maxAmount = 0;
 	                for (int i = 0; i < portfolio.Count; i++)
 	                    if (security[0].Isin.Equals(portfolio[i].Isin))
 	                        maxAmount = portfolio[i].Amount;
 	
-	                txtTotalAmount.Text = Convert.ToString(maxAmount);
+	                txtTotalAmount.Text = maxAmount.ToString("#0.00€");
 	                txtAmountValidator.MaximumValue = Convert.ToString(maxAmount);
 	            }
 	            else
@@ -58,8 +58,13 @@ namespace StockPlay.Web
 	            List<ISecurity> securities = null;
 	            if (isins.Length > 0)
 	                securities = data.GetSecurityByIsin(isins);
-	
-	            PortfolioGridview.DataSource = GenerateDataTable(portfolio, securities);
+
+                DataTable table = GenerateDataTable(portfolio, securities);
+
+                if (table.Rows.Count == 0)
+                    EmptyNotification.Visible = true;
+
+                PortfolioGridview.DataSource = table;
 	            PortfolioGridview.DataBind();
             }
             else
@@ -155,7 +160,7 @@ namespace StockPlay.Web
 	                if (securities[i].Isin.Equals(security.Isin))
 	                {
 	                    row[1] = securities[i].Name;
-	                    row[2] = securities[i].GetLatestQuote().Price;
+                        row[2] = securities[i].GetLatestQuote().Price;
 	                }
 	            }
 	            row[3] = security.Amount;

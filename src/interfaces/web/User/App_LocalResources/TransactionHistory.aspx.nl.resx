@@ -120,11 +120,20 @@
   <data name="Amount.HeaderText" xml:space="preserve">
     <value>Hoeveelheid</value>
   </data>
+  <data name="EmptyNotification.InnerText" xml:space="preserve">
+    <value>Momenteel heb je nog geen enkele voltooide transactie.</value>
+  </data>
   <data name="ID.HeaderText" xml:space="preserve">
     <value>TransactieID</value>
   </data>
   <data name="Page.Title" xml:space="preserve">
     <value>Transactiegeschiedenis</value>
+  </data>
+  <data name="Para1.InnerText" xml:space="preserve">
+    <value>Hier kan je al je voltooide transacties bekijken.</value>
+  </data>
+  <data name="Price.HeaderText" xml:space="preserve">
+    <value>Prijs</value>
   </data>
   <data name="Security.HeaderText" xml:space="preserve">
     <value>Effect</value>

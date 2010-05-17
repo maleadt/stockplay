@@ -121,7 +121,7 @@
     <value>Amount</value>
   </data>
   <data name="AmountError.ErrorMessage" xml:space="preserve">
-    <value>Please enter an amount smaller than or equal your total amount of stocks for this security.</value>
+    <value>Please enter a valid amount.</value>
   </data>
   <data name="bracket.Text" xml:space="preserve">
     <value>Bracket Limit Order</value>
@@ -191,5 +191,23 @@
   </data>
   <data name="Para8" xml:space="preserve">
     <value>Points:</value>
+  </data>
+  <data name="AmountMaxError.ErrorMessage" xml:space="preserve">
+    <value>Enter an amount which is smaller than the amount you have in your portfolio.</value>
+  </data>
+  <data name="BovenLimiet.ErrorMessage" xml:space="preserve">
+    <value>Enter a valid number as upper limit which is greater than 0.</value>
+  </data>
+  <data name="OnderBovenLimiet.ErrorMessage" xml:space="preserve">
+    <value>The upper limit must be higher than the lower limit.</value>
+  </data>
+  <data name="OnderLimiet.ErrorMessage" xml:space="preserve">
+    <value>Enter a valid number as lower limit which is greater than 0.</value>
+  </data>
+  <data name="BonusPunten.ErrorMessage" xml:space="preserve">
+    <value>Enter a valid amount of points which is greater than 0.</value>
+  </data>
+  <data name="EmptyNotification.InnerText" xml:space="preserve">
+    <value>Your portfolio is currently empty, you can go to the Securities Overview page to buy securities.</value>
   </data>
 </root>

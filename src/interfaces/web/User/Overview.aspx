@@ -26,11 +26,17 @@
             <td><p id="Email" runat="server"></p></td>
         </tr>
     </table>
+
+    <br />
     
     <table class="table" id="status">
         <tr>
             <td class="col" runat="server" meta:resourcekey="Balance"></td>
-            <td><p ID="Balance" runat="server"></p></td>
+            <b><td><p ID="Balance" runat="server"></p></td></b>
+        </tr>
+        <tr>
+            <td class="col" runat="server" meta:resourcekey="Points"></td>
+            <b><td><p ID="Points" runat="server"></p></td></b>
         </tr>
         <tr>
             <td class="col" runat="server" meta:resourcekey="Orders"></td>

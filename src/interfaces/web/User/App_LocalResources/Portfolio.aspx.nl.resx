@@ -121,7 +121,7 @@
     <value>Hoeveelheid</value>
   </data>
   <data name="AmountError.ErrorMessage" xml:space="preserve">
-    <value>Vul een hoeveelheid in die kleiner dan of gelijk is aan de totale hoeveelheid aandelen die zich in uw portfolio bevinden.</value>
+    <value>Vul een geldige hoeveelheid in.</value>
   </data>
   <data name="bracket.Text" xml:space="preserve">
     <value>Bracket Sell</value>
@@ -163,7 +163,7 @@
     <value>Soort order:</value>
   </data>
   <data name="PriceError.ErrorMessage" xml:space="preserve">
-    <value>Vul een positief getal in.</value>
+    <value>Vul een positief getal in als prijs.</value>
   </data>
   <data name="Quote.HeaderText" xml:space="preserve">
     <value>Laatste Koers</value>
@@ -191,5 +191,23 @@
   </data>
   <data name="Para8" xml:space="preserve">
     <value>Punten:</value>
+  </data>
+  <data name="AmountMaxError.ErrorMessage" xml:space="preserve">
+    <value>De ingevulde hoeveelheid moet kleiner zijn dan de hoeveelheid die zich in uw portfolio bevindt.</value>
+  </data>
+  <data name="BovenLimiet.ErrorMessage" xml:space="preserve">
+    <value>Vul een geldig getal in als bovenlimiet dat groter is dan 0.</value>
+  </data>
+  <data name="OnderBovenLimiet.ErrorMessage" xml:space="preserve">
+    <value>Zorg dat de bovenlimiet groter is dan de onderlimiet.</value>
+  </data>
+  <data name="OnderLimiet.ErrorMessage" xml:space="preserve">
+    <value>Vul een geldig getal in als onderlimiet dat groter is dan 0.</value>
+  </data>
+  <data name="BonusPunten.ErrorMessage" xml:space="preserve">
+    <value>Vul een geldig aantal punten in groter dan 0</value>
+  </data>
+  <data name="EmptyNotification.InnerText" xml:space="preserve">
+    <value>Je portfolio is momenteel leeg, je kan effecten kopen op de Effectenoverzicht pagina.</value>
   </data>
 </root>

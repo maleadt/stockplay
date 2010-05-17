@@ -117,52 +117,37 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Amount.HeaderText" xml:space="preserve">
-    <value>Amount</value>
+  <data name="Comment.HeaderText" xml:space="preserve">
+    <value>Comments</value>
   </data>
-  <data name="Cancel.Text" xml:space="preserve">
-    <value>Cancel</value>
+  <data name="Date.HeaderText" xml:space="preserve">
+    <value>Date</value>
   </data>
-  <data name="CancelOrder.Text" xml:space="preserve">
-    <value>Cancel order</value>
+  <data name="EmptyNotification.InnerText" xml:space="preserve">
+    <value>You haven't scored a single point! Take a look at the rankings to see how far away you are from a podium position.</value>
   </data>
-  <data name="Confirm.Text" xml:space="preserve">
-    <value>Confirm</value>
+  <data name="NewPoints.InnerText" xml:space="preserve">
+    <value>Yesterday you have earned these points:</value>
   </data>
-  <data name="Name.HeaderText" xml:space="preserve">
-    <value>Name</value>
-  </data>
-  <data name="OrderID.HeaderText" xml:space="preserve">
-    <value>OrderID</value>
+  <data name="OldPoints.InnerText" xml:space="preserve">
+    <value>In the past you have collected the following points:</value>
   </data>
   <data name="Page.Title" xml:space="preserve">
-    <value>Orders overview</value>
+    <value>Points history</value>
   </data>
-  <data name="Para1.InnerText" xml:space="preserve">
-    <value>Here you can review your outstanding orders. Active orders can still be cancelled. Press the Cancel Order link next to an order to cancel it.</value>
+  <data name="Para1.Text" xml:space="preserve">
+    <value>On this page you can see an overview of the points you have earned in the game. Currently you have a total of </value>
   </data>
-  <data name="Para21" xml:space="preserve">
-    <value>Are you sure you want to remove ordernr.</value>
+  <data name="Para2.Text" xml:space="preserve">
+    <value>points.</value>
   </data>
-  <data name="Para22" xml:space="preserve">
-    <value>for security</value>
-  </data>
-  <data name="Price.HeaderText" xml:space="preserve">
-    <value>Price</value>
-  </data>
-  <data name="secondairyLimit.HeaderText" xml:space="preserve">
-    <value>Secondairy Limit</value>
-  </data>
-  <data name="Status.HeaderText" xml:space="preserve">
-    <value>Status</value>
+  <data name="Points.HeaderText" xml:space="preserve">
+    <value>Points</value>
   </data>
   <data name="Title.InnerText" xml:space="preserve">
-    <value>Orders Overview</value>
+    <value>Points history</value>
   </data>
   <data name="Type.HeaderText" xml:space="preserve">
     <value>Type</value>
-  </data>
-  <data name="EmptyNotification.InnerText" xml:space="preserve">
-    <value>There are currently no outstanding orders, cancelled and completed orders are only visible for 7 days. If you want to place an order, you can visit the Securities Overview.</value>
   </data>
 </root>

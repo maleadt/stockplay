@@ -26,7 +26,8 @@ namespace StockPlay.Web
 	            Firstname.InnerText = user.Firstname;
 	            Email.InnerText = user.Email;
 
-                Balance.InnerText = user.Cash.ToString("#0.00");
+                Balance.InnerText = user.Cash.ToString("#0.00€");
+                Points.InnerText = Convert.ToString(user.Points);
 	
 	            txtLastname.Text = user.Lastname;
 	            txtFirstname.Text = user.Firstname;

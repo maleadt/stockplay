@@ -22,6 +22,9 @@
     </asp:GridView>
 
     <p runat="server" class="para" meta:resourcekey="OldPoints"></p>
+    
+    <p runat="server" class="paraNotification" id="EmptyNotification" meta:resourcekey="EmptyNotification" visible="false"></p>
+
     <asp:GridView ID="PointsGridView" runat="server" AutoGenerateColumns="False" GridLines="None" CellSpacing="-1">
         <Columns>
             <asp:BoundField DataField="Type" meta:resourcekey="Type" />

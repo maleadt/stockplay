@@ -177,6 +177,9 @@
   <data name="Para2.InnerText" xml:space="preserve">
     <value>Fill out the following form if you want to update your account information:</value>
   </data>
+  <data name="Points.InnerText" xml:space="preserve">
+    <value>Points</value>
+  </data>
   <data name="Portfolio.InnerText" xml:space="preserve">
     <value>Portfolio</value>
   </data>

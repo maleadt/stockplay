@@ -120,11 +120,20 @@
   <data name="Amount.HeaderText" xml:space="preserve">
     <value>Amount</value>
   </data>
+  <data name="EmptyNotification.InnerText" xml:space="preserve">
+    <value>Currently there have not been any completed transactions.</value>
+  </data>
   <data name="ID.HeaderText" xml:space="preserve">
     <value>TransactionID</value>
   </data>
   <data name="Page.Title" xml:space="preserve">
     <value>Transaction History</value>
+  </data>
+  <data name="Para1.InnerText" xml:space="preserve">
+    <value>Here you can see your past transactions.</value>
+  </data>
+  <data name="Price.HeaderText" xml:space="preserve">
+    <value>Price</value>
   </data>
   <data name="Security.HeaderText" xml:space="preserve">
     <value>Security</value>

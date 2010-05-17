@@ -21,8 +21,13 @@ namespace StockPlay.Web
 	        if (!IsPostBack)
 	        {
 	            IDataAccess data = DataAccessFactory.GetDataAccess();
-	            TransactionsGridview.DataSource =
-                    GenerateDataTable(data.GetUserTransactions((int)Session["userID"], (string)Session["sessionID"], (ISession)this.Master));
+
+                DataTable table = GenerateDataTable(data.GetUserTransactions((int)Session["userID"], (string)Session["sessionID"], (ISession)this.Master));
+
+                if (table.Rows.Count == 0)
+                    EmptyNotification.Visible = true;
+
+                TransactionsGridview.DataSource = table;                    
                 TransactionsGridview.DataBind();
 	        }
 	    }
@@ -58,6 +63,8 @@ namespace StockPlay.Web
 	        transactionsTable.Columns["Type"].DataType = typeof(string);
 	        transactionsTable.Columns.Add("Amount");
 	        transactionsTable.Columns["Amount"].DataType = typeof(double);
+            transactionsTable.Columns.Add("Price");
+            transactionsTable.Columns["Price"].DataType = typeof(double);
 	
 	        foreach (ITransaction transaction in transactions)
 	        {
@@ -68,6 +75,7 @@ namespace StockPlay.Web
 	            row[3] = transaction.Timestamp;
 	            row[4] = transaction.Type;
 	            row[5] = transaction.Amount;
+                row[6] = transaction.Price;
 	
 	            transactionsTable.Rows.Add(row);
 	        }

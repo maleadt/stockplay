@@ -32,8 +32,13 @@ namespace StockPlay.Web
 	            List<ISecurity> securities = null;
 	            if (isins.Length > 0)
 	                securities = data.GetSecurityByIsin(isins);
-	
-	            OrdersGridview.DataSource = GenerateDataTable(orders, securities);
+
+                DataTable table = GenerateDataTable(orders, securities);
+
+                if (table.Rows.Count == 0)
+                    EmptyNotification.Visible = true;
+
+                OrdersGridview.DataSource = table;
 	            OrdersGridview.DataBind();
 	
 	
@@ -85,13 +90,12 @@ namespace StockPlay.Web
 	            DataRow row = ordersTable.NewRow();
 	            row[0] = orders[i].Isin;
 	            row[1] = orders[i].ID;
-	            // TODO proper maken...
 	            for(int j=0 ; j<securities.Count ; j++)
 	                if(securities[j].Isin.Equals(orders[i].Isin))
 	                    row[2] = securities[j].Name;
 	            row[3] = orders[i].Amount;
-	            row[4] = orders[i].Price;
-                row[5] = orders[i].SecondairyLimit;
+                row[4] = orders[i].Price.ToString("#0.00");
+                row[5] = orders[i].SecondairyLimit.ToString("#0.00");
                 row[6] = orders[i].Type;
 	            row[7] = orders[i].Status;
 	
