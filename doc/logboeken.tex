@@ -223,6 +223,51 @@
 \lbentry{vrijdag 30 april 2010}{13:30}{17:45}{04:15}{Begin van het puntenbeheer. Aanmaken van de pointmanager en bekijken van de SPClient die toegang geeft tot de backend. Uitproberen van enkele aanvragen via SPClient en bugs oplossen die hierbij naar boven komen.}
 \lbentry{zondag 2 mei 2010}{16:00}{19:00}{03:00}{Verder uitwerken van de pointsmanager. Proberen de winst van spelers terug te rekenen aan de hand van de transacties en hun portfolio. Na een tijdje blijkt dat dit toch niet zo eenvoudig is en bespreek ik met de anderen ofdat we beter niet een extra tabel maken in de databank met de cashposities van de spelers. Uiteindelijk lukt het toch nog om betrouwbaar de winst van de voorbije dag te berekenen (alhoewel het weinig performant is).}
 \lbentry{dinsdag 4 mei 2010}{13:30}{17:45}{04:15}{Controleren ofdat de winstberekening nog altijd correct is ook als er complexe koop/verkooporders op dezelfde dag plaatsvinden. Structuur van pointsmanager verbeteren en enkele fouten oplossen in berekeningen. Enkele bugs oplossen in backend, website en SPClient}
+\lbentry{woensdag 5 mei 2010}{20:00}{21:00}{01:00}{Generieker maken van de puntenberekeningen}
+\lbentry{donderdag 6 mei 2010}{10:00}{11:30}{01:30}{Berekening van punten uitbreiden. We kijken nu niet enkel naar totale winst, maar ook naar winstpercentage.
+Extra puntencategorie maken voor diegene die beter scoren dan de BEL-20.
+Bekijken van de mogelijkheden van de Java Reflection API}
+\lbentry{donderdag 6 mei 2010}{19:00}{21:30}{02:30}{Experimenteren met de Java Reflection API. Proberen een klasse met default constructor te laden aan de hand van zijn naam. Vervolgens proberen hetzelfde te doen met een constructor die argumenten krijgt.
+Dit toepassen om de individuele punten en rankings te berekenen.
+Configbestand aanmaken die ingelezen wordt. Nu is het mogelijk om de verschillende puntencategorieen op te roepen door ze te vermelden in het config bestand, aan de hand van hun naam worden ze dan dynamisch geladen en uitgevoerd (aangezien ze voldoen aan een interface). Zo kunnen nieuwe events bijgemaakt worden voor speciale gelegenheden.}
+\lbentry{vrijdag 8 mei 2010}{14:00}{18:30}{04:30}{Oplossen van bug bij het laden van config-bestand bij puntenbeheer.
+Doorvoeren van wijzigingen in het beveiligingsmodel naar de website. Er zijn verscheidene problemen met de sessies die niet onmiddellijk opgelost raken.}
+\lbentry{maandag 9 mei 2010}{14:00}{15:00}{01:00}{Enkele bugs in de website ten gevolgen van de nieuwe beveiliging oplossen.}
+\lbentry{dinsdag 11 mei 2010}{13:30}{17:45}{04:15}{Laatste wijzigingen aan de PointsManager doen.
+Enkele bugs aan de website fixen.
+Problemen met de sessies in de website bespreken. Verschillende mogelijkheden uitproberen, maar er blijven toch regelmatig fouten komen!
+Vertaling voorzien van Emails die de applicatie verstuurd.}
+\lbentry{donderdag 13 mei 2010}{15:00}{19:00}{04:00}{Website is kapot door commits van andere groepsleden. Kleine wijzigingen in de back-end breken functionaliteit in de webpagina's. Enkele uren nodig gehad om die problemen op te sporen en op te lossen.
+Verderzoeken naar oplossingen voor de sessies. Na nog wat vruchteloze pogingen kwam Tim met een goed idee. De Masterpage wordt nu ingeschakeld om sessie timeouts af te handelen en gebruikers uit te loggen. Nu zijn er geen problemen meer.}
+\lbentry{donderdag 13 mei 2010}{19:30}{22:30}{03:00}{Opmaak van website verbeteren: css wat opfrissen en verscheidene pagina's van layout voorzien.}
+\lbentry{vrijdag 14 mei 2010}{10:30}{13:30}{02:30}{Website is OPNIEUW kapot door andermans commits! Bepaald bestanden zijn bovendien niet meegecommit en geven overal errors in de code!!
+Ook wat vreemde bugs omdat er een oude configuratiefile werd meegecommit... weeral enkele uren verspild met zoeken naar domme bugs.
+ForgotPassword functionaliteit doen functioneren met nieuwe beveiliging.}
+\lbentry{vrijdag 14 mei 2010}{13:45}{18:00}{04:15}{Nog wat wijzigingen doen aan de CSS.
+Zoeken waarom transactiepagina leeg blijft, blijkbaar vondt iemand het nodig om de helft van de kolommen te hernoemen zonder reden...
+Proberen een DropDownBox te voorzien met een taalkeuze. Op het eerste zicht lijkt dit niet moeilijk... Jammergenoeg blijken er wat bugs in Visual Studio te zitten waardoor de vertaling maar half gebeurd...
+Nog een nullpointer oplossen bij een corrupte sessie.
+Nog enkele foute tekststrings verbeterd.}
+\lbentry{vrijdag 14 mei 2010}{21:00}{22:30}{01:30}{Een poging ondernemen om de vertaling volledig te doen werken. Blijkbaar was mijn eerste poging al goed, maar zat er gewoon een bug in .NET.
+Enkele bestanden terug invoegen nadat ze verloren zijn gegaan in recente commits.
+Site uploaden naar kapti.com en daar nog enkele problemen oplossen.}
+\lbentry{zaterdag 15 mei 2010}{12:00}{13:00}{01:00}{Bekijken welke functies nog nodig zijn in de backend om de punten op te halen.
+Enkele functies toevoegen hiervoor}
+\lbentry{zaterdag 15 mei 2010}{13:30}{16:20}{02:50}{Rankingpagina maken op de website. Het is mogelijk om zowel de globale ranking als de vershillende deelrankings te bekijken.}
+\lbentry{zaterdag 15 mei 2010}{18:45}{19:30}{00:45}{Bugs in rankingfuncties van de backend oplossen.
+Extra kolom in de PointsTransaction tabel steken}
+\lbentry{zaterdag 15 mei 2010}{20:15}{23:00}{02:45}{Wijzigingen in backend doorvoeren om nieuwe kolom te herkennen.
+Uitvoer van PointsManager verbeteren.
+Queries van rankingfuncties herschrijven om betere resultaten te halen.
+Rankingpagina website ook updaten.}
+\lbentry{zondag 16 mei 2010}{12:30}{13:00}{00:30}{Uitzoeken waarom inloggen op de website niet meer lukt.}
+\lbentry{zondag 16 mei 2010}{14:00}{16:20}{02:20}{Pagina met de puntengeschiedenis toevoegen aan de website. Enkele bugs omtrent de DataAccess laag oplossen.
+Fouten in orderpagina oplossen en validatie toevoegen.
+Nieuwste website publishen naar kapti.com}
+\lbentry{zondag 16 mei 2010}{18:00}{19:30}{01:30}{Beginnen aan de documentatie van de ASP.NET website en de puntenmanager}
+\lbentry{zondag 16 mei 2010}{20:00}{21:15}{01:15}{Verderschrijven documentatie}
+\lbentry{maandag 17 mei 2010}{17:00}{20:30}{03:30}{TODO lijst website afwerken (tekst voorzien op sommige pagina's, validatie controleren, rankingpagina uitbreiden, bugs oplossen)}
+\lbentry{maandag 17 mei 2010}{21:00}{22:00}{01:00}{Enkele ontbrekende delen in de documentatie afwerken.}
 \lbstop{0}
 \end{compact}
 
