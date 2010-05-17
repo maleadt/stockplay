@@ -1027,13 +1027,13 @@ Voor de vormgeving van de website hebben we gekozen om deze volledig in CSS vorm
 
 Het is alom bekend dat Microsoft en ook ASP.NET het niet erg nauw nemen met het volgen van webstandaarden. Een goed voorbeeld daarvan is Internet Explorer met zijn gebrekkige ondersteuning van CSS en ook ASP.NET heeft heel gebrekkige HTML- en CSS-output.
 
-Het grote probleem met ASP.NET is dat het volledig gemaakt is om samen te werken met Visual Studio en dat alle opmaak ook via de ingebouwde wizards moet gebeuren. Zo kan je wel de CSS van al je controls aanpassen, maar dit gebeurd op een ondoorzichtige manier via allerlei GUI's, zonder dat je ziet welke code er in de uiteindelijke CSS terecht komt. Een bijkomend probleem is de HTML die ASP.NET produceert, deze bevat allerlei tags die ook vormgeving defini‘ren, maar waar de ontwikkelaar geen controle over heeft. Ook wordt het gebruik van HTML-tags om de website vorm te geven afgeraden door het W3C en levert dit bijgevolg geen valide HTML code op. Dit maakt het moeilijk om de website correct te laten weergeven in de grote verscheidenheid van browsers die vandaag de dag op het internet gebruikt wordt.
+Het grote probleem met ASP.NET is dat het volledig gemaakt is om samen te werken met Visual Studio en dat alle opmaak ook via de ingebouwde wizards moet gebeuren. Zo kan je wel de CSS van al je controls aanpassen, maar dit gebeurd op een ondoorzichtige manier via allerlei GUI's, zonder dat je ziet welke code er in de uiteindelijke CSS terecht komt. Een bijkomend probleem is de HTML die ASP.NET produceert, deze bevat allerlei tags die ook vormgeving defini\"eren, maar waar de ontwikkelaar geen controle over heeft. Ook wordt het gebruik van HTML-tags om de website vorm te geven afgeraden door het W3C en levert dit bijgevolg geen valide HTML code op. Dit maakt het moeilijk om de website correct te laten weergeven in de grote verscheidenheid van browsers die vandaag de dag op het internet gebruikt wordt.
 
 Oorspronkelijk werd het ontwerp van de website gemaakt voor een statische HTML-pagina. Vervolgens probeerden we deze structuur om te zetten naar een pagina in ASP.NET, maar dit was allesbehalve eenvoudig. Zo is het gebruik van de ID- en CLASS-tags in de servercomponenten heel moeilijk omdat ASP.NET deze namen veranderd in de uiteindelijke output. Indien daarentegen van eenvoudige HTML-componenten gebruik wordt gemaakt zonder een \emph{runat=server''} attribuut, dan worden deze namen wel behouden! Het gebruik maken van zelfgemaakte CSS wordt de ontwikkelaar dus zeker niet gemakkelijk gemaakt.
 
 Een groter probleem echter is de manier waarop sommige controls van ASP.NET gerendered worden in de uiteindelijke pagina. Zo wordt een TreeView omgezet naar een table, waarin ieder subelement nogmaals een table is! Niet alleen wordt het gebruik van tabellen voor andere doeleinden ten stelligste afgeraden door het W3C, het maakt het ook heel moeilijk om deze component vorm te geven.
 
-Om de gebrekkige HTML van deze componenten te verbeteren is het mogelijk om een Control Adapter te defini‘ren in het Web.config bestand die je toelaat om zelf de HTML-output van de servercomponent te bepalen. Om dit te doen maak je een klasse die overerft van de klasse WebControlAdapter. In deze klasse kun je dan verschillende methoden overschrijven zoals RenderBeginTag(), RenderEndTag() en RenderContents() waardoor de output van de control volledig naar wens kan worden omgezet. Via het HtmlTextWriter object die de functies als parameter meekrijgen kan dan rechtstreeks naar het HTML-document geschreven worden.
+Om de gebrekkige HTML van deze componenten te verbeteren is het mogelijk om een Control Adapter te defini\"eren in het Web.config bestand die je toelaat om zelf de HTML-output van de servercomponent te bepalen. Om dit te doen maak je een klasse die overerft van de klasse WebControlAdapter. In deze klasse kun je dan verschillende methoden overschrijven zoals RenderBeginTag(), RenderEndTag() en RenderContents() waardoor de output van de control volledig naar wens kan worden omgezet. Via het HtmlTextWriter object die de functies als parameter meekrijgen kan dan rechtstreeks naar het HTML-document geschreven worden.
 
 Bij het implementeren van ons design bleken de grootste problemen te liggen bij de TreeView en de SiteMapPath. Voor deze controls hebben we dergelijke adapters gedefinieerd zodat de TreeView eruitziet zoals een 'unordered list' en de SiteMapPath een paragraaf wordt.
 
@@ -1041,7 +1041,7 @@ Ook Microsoft heeft beseft dat het ondoenbaar is voor webontwikkelaars om hun CS
 
 \section{Internationalisatie}
 
-Een andere vereiste voor de website was dat deze genternationaliseerd moet zijn. Via het gebruik van resource files is dit gemakkelijk door te voeren in ASP.NET. Voor onze website hebben we gekozen om de default taal als engels te kiezen, dit kan je doen door de resource files als extensie .resx te geven, zonder een taal te vermelden. De website is verder in het Nederlands beschikbaar en deze files hebben dan als extensie .nl.resx.
+Een andere vereiste voor de website was dat deze ge•nternationaliseerd moet zijn. Via het gebruik van resource files is dit gemakkelijk door te voeren in ASP.NET. Voor onze website hebben we gekozen om de default taal als engels te kiezen, dit kan je doen door de resource files als extensie .resx te geven, zonder een taal te vermelden. De website is verder in het Nederlands beschikbaar en deze files hebben dan als extensie .nl.resx.
 
 Gebruikers die de website bezoeken krijgen deze voorgeschoteld in de voorkeurstaal die ze gedefinieerd hebben in hun browser. Om dit mogelijk te maken moet in de page directive van iedere ASP.NET pagina de attributen Culture en UICulture op 'auto' staan.
 
@@ -1574,4 +1574,10 @@ Relaties dienen om verschillende condities aan elkaar te schakelen, en het resul
 
 Momenteel zijn er nog geen functies gedefini\"eerd in de parser, maar de infrastructuur is er op voorzien. Mits een eenvoudige uitbreiding van de tokenizer kan er zelf gebruik gemaakt worden van functies met een variabel aantal argumenten.
 
+%
+% Logging
+%
 
+\chapter{Logging}
+
+Om de logbestanden op een gemeenschappelijke plaats te bewaren, hebben we ervoor gekozen om een logserver op te zetten. Alle interfaces sturen hun foutmeldingen en infoberichten door naar de logserver. Dit was vooral handig tijdens de ontwikkelingsfase waar de backend op een andere machine draaide dan onze eigen machine. Ook was er een interface op de logserver ge•nstalleerd zodat we de belangrijkste lijnen er konden uitfilteren.
