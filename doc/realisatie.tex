@@ -33,30 +33,59 @@ De cashpositie van een speler verandert wanneer er een transactie op zijn accoun
 \begin{code}
 \lstset{language=SQL,style=SQL}
 \begin{lstlisting}
-create or replace
+CREATE OR REPLACE
 TRIGGER UPDATECASH
-AFTER INSERT OR UPDATE ON TRANSACTIONS 
-REFERENCING OLD AS old NEW as new
+AFTER INSERT OR UPDATE
+ON transactions 
+REFERENCING OLD AS old NEW AS new
 FOR EACH ROW 
 DECLARE
-  us_exists number;
+  us_exists NUMBER;
 BEGIN
-  SELECT count(1) INTO us_exists FROM user_securities us WHERE us.userid = coalesce(:new.userid, :old.userid) AND us.isin = coalesce(:new.isin,:old.isin);
-  IF coalesce(:new.type, :old.type) = 'SELL' THEN
-      UPDATE users u SET u.cash=u.cash+coalesce(:new.price*:new.amount,0)-coalesce(:old.price*:old.amount,0) WHERE u.id=coalesce(:new.userid,:old.userid);
-      IF us_exists > 0 THEN
-            UPDATE user_securities us SET us.amount=us.amount-coalesce(:new.amount,0)+coalesce(:old.amount,0) WHERE us.userid = coalesce(:new.userid, :old.userid) AND us.isin = coalesce(:new.isin,:old.isin);
-      ELSE
-            INSERT INTO user_securities (userid, isin, amount) VALUES( coalesce(:new.userid, :old.userid), coalesce(:new.isin,:old.isin), -coalesce(:new.amount, :old.amount));
-      end IF;
+  SELECT count(1) INTO us_exists
+  FROM user_securities us
+  WHERE us.userid = COALESCE(:new.userid, :old.userid)
+        AND us.isin = COALESCE(:new.isin,:old.isin);
+  
+  IF COALESCE(:new.type, :old.type) = 'SELL'
+  THEN
+    UPDATE users u
+    SET u.cash = u.cash+COALESCE(:new.price*:new.amount,0)
+                 - COALESCE(:old.price*:old.amount,0)
+    WHERE u.id = COALESCEesce(:new.userid,:old.userid);
+    IF us_exists > 0
+    THEN
+      UPDATE user_securities us
+      SET us.amount = us.amount-COALESCE(:new.amount,0)
+                      + COALESCE(:old.amount,0)
+      WHERE us.userid = COALESCE(:new.userid, :old.userid)
+            AND us.isin = COALESCE(:new.isin,:old.isin);
+    ELSE
+      INSERT INTO user_securities (userid, isin, amount)
+      VALUES ( COALESCE(:new.userid, :old.userid),
+               COALESCE(:new.isin,:old.isin),
+               -COALESCE(:new.amount, :old.amount) );
+    END IF;
   ELSE
-      UPDATE users u SET u.cash=u.cash-coalesce(:new.price*:new.amount,0)+coalesce(:old.price*:old.amount,0) WHERE u.id=coalesce(:new.userid,:old.userid);
-             if us_exists > 0 THEN
-            UPDATE user_securities us SET us.amount=us.amount+coalesce(:new.amount,0)-coalesce(:old.amount,0) WHERE us.userid = coalesce(:new.userid, :old.userid) AND us.isin = coalesce(:new.isin,:old.isin);
-      ELSE
-            INSERT INTO user_securities (userid, isin, amount) VALUES( coalesce(:new.userid, :old.userid), coalesce(:new.isin,:old.isin), coalesce(:new.amount, :old.amount));
-      end IF;
-  end IF;
+    UPDATE users u
+    SET u.cash = u.cash-COALESCE(:new.price*:new.amount,0)
+                 + COALESCE(:old.price*:old.amount,0)
+    WHERE u.id = COALESCE(:new.userid,:old.userid);
+    IF us_exists > 0
+    THEN
+      UPDATE user_securities us
+      SET us.amount = us.amount
+                      + COALESCE(:new.amount,0)
+                      - COALESCE(:old.amount,0)
+      WHERE us.userid = COALESCE(:new.userid, :old.userid) 
+            AND us.isin = COALESCE(:new.isin,:old.isin);
+    ELSE
+      INSERT INTO user_securities (userid, isin, amount)
+      VALUES ( COALESCE(:new.userid, :old.userid),
+               COALESCE(:new.isin,:old.isin),
+               COALESCE(:new.amount, :old.amount) );
+    END IF;
+  END IF;
 END;
 \end{lstlisting}
 \caption{Trigger verantwoordelijk voor het updaten van de cashpositie van gebruikers.}
@@ -68,38 +97,61 @@ Een transactie is ook niet altijd mogelijk: als een speler een te lage cashposit
 \begin{code}
 \lstset{language=SQL,style=SQL}
 \begin{lstlisting}
-create or replace
+CREATE OR REPLACE
 TRIGGER CHECKTRANSACTION
-BEFORE INSERT OR UPDATE ON TRANSACTIONS 
+BEFORE INSERT OR UPDATE
+ON transactions 
 FOR EACH ROW 
 DECLARE
-  money_user number;
-  has_sec number;
-  amount_owned number;
+  money_user NUMBER;
+  has_sec NUMBER;
+  amount_owned NUMBER;
 BEGIN
-  if :new.price < 0 or :new.amount < 0 then
-    raise_application_error(-20000, 'Price and amount should ALWAYS be positive!');
-  end if;
+  IF :new.price < 0 or :new.amount < 0
+  THEN
+    RAISE_APPLICATION_ERROR(-20000,
+          'Price and amount should ALWAYS be positive!');
+  END IF;
     
-  if (:new.type = 'BUY') then
-      select cash into money_user from users u WHERE u.id = :new.userid;
-    if ((money_user - (:new.price*:new.amount)) < 0) then
-      raise_application_error(-20001, 'User doesnt have enough cash!');
-    end if;
+  IF (:new.type = 'BUY')
+  THEN
+    SELET cash
+    INTO money_user
+    FROM users u
+    WHERE u.id = :new.userid;
+    
+    IF ((money_user - (:new.price*:new.amount)) < 0)
+    THEN
+      RAISE_APPLICATION_ERROR(-20001,
+            'User doesnt have enough cash!');
+    ENDd IF;
 
-  elsif (:new.type = 'SELL') then
-    select count(1) into has_sec from user_securities us where us.userid = :new.userid and us.isin = :new.isin;
+  ELSIF (:new.type = 'SELL')
+  THEN
+    SELECT COUNT(1)
+    INTO has_sec
+    FROM user_securities us
+    WHERE us.userid = :new.userid
+          AND us.isin = :new.isin;
     
-    if(has_sec > 0) then 
-    
-      select amount into amount_owned from user_securities us where us.userid = :new.userid and us.isin = :new.isin;
-      if (:new.amount > amount_owned) then
-        raise_application_error(-20001, 'User doesnt have enough securities of that ISIN!');
-      end if;
-    else
-        raise_application_error(-20001, 'User doesnt have securities of that ISIN!');
-    end if;
-  end if;
+    IF (has_sec > 0)
+    THEN
+      SELECT amount
+      INTO amount_owned
+      FROM user_securities us
+      WHERE us.userid = :new.userid
+            AND us.isin = :new.isin;
+            
+      IF (:new.amount > amount_owned)
+      THEN
+        RAISE_APPLICATION_ERROR(-20001,
+              'User doesnt have enough securities of that ISIN!');
+      END IF;
+    ELSE
+      RAISE_APPLICATION_ERROR(-20001,
+            'User doesnt have securities of that ISIN!');
+    END IF;
+  END IF;
 END;
 \end{lstlisting}
 \caption{Trigger verantwoordelijk voor het controlern van transacties.}
@@ -112,13 +164,18 @@ Wijzingen in punten bij een speler wordt geregistreerd in de tabel ``pointtransa
 \begin{code}
 \lstset{language=SQL,style=SQL}
 \begin{lstlisting}
-create or replace
+CREATE OR REPLACE
 TRIGGER UPDATEPOINTS
-AFTER INSERT OR UPDATE OR DELETE ON POINTSTRANSACTIONS 
+AFTER INSERT OR UPDATE OR DELETE
+ON pointstransactions 
 REFERENCING OLD AS old NEW as new
 FOR EACH ROW 
 BEGIN
-  UPDATE users u SET u.points=coalesce(u.points,0)+coalesce(:new.delta,0)-coalesce(:old.delta,0) WHERE u.id=coalesce(:new.userid,:old.userid);
+  UPDATE users u
+  SET u.points = COALESCE(u.points,0)
+                 + COALESCE(:new.delta,0)
+                 - COALESCE(:old.delta,0)
+  WHERE u.id = COALESCE(:new.userid,:old.userid);
 END;
 \end{lstlisting}
 \caption{Trigger verantwoordelijk voor het berekenen van het puntentotaal.}
