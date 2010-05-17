@@ -2,7 +2,7 @@
 Het project kan worden opgedeeld in 2 grote delen: een backend die instaat voor het beheer van alle data in het spel, en een heleboel modules die zich op deze backend enten en de data manipuleren.
 
 \section{Backend}
-De backend is het enige deel van dit project dat in rechtstreeks contact staat met de database. Hij bepaalt wie welke informatie kan opvragen aan de hand van een uitgebreid authorisatiemechanisme en laat toe om op een gebruiksvriendelijke manier informatie op te vragen en te manipuleren.
+De backend is het enige deel van dit project dat in rechtstreeks contact staat met de database. Hij bepaalt wie welke informatie kan opvragen aan de hand van een uitgebreid autorisatiemechanisme en laat toe om op een gebruiksvriendelijk manier informatie op te vragen en te manipuleren.
 Om de overhead door deze backend zo licht mogelijk te houden, werd er gekozen voor een zo licht mogelijk protocol: XML-RPC. Dit laat toe om een grote verscheidenheid aan modules te laten communiceren met de backend: van een volwaardige ASP.NET-website, over een scrapermodule in Perl, tot een eenvoudige applet in Java ME: het protocol is in staat om aan de behoeften van elke module te voldoen.
 \subsection{Filtering}
 Om elke client toe te laten om gerichte aanvragen te maken, was er nood aan een manier waarop specifieke objecten opgevraagd konden worden. Daarom werd ervoor gekozen om een eigen filtermechanisme te ontwikkelen.
@@ -11,7 +11,7 @@ Om elke client toe te laten om gerichte aanvragen te maken, was er nood aan een 
 Op het website-gedeelte van dit project kunnen spelers deelnemen aan het StockPlay-spel. Hier kunnen ze de effecten die in dit spel zitten bekijken, orders aanmaken en hun portefolio beheren.
 
 \subsection{Dynamische grafieken}
-Uit de beurskoersen van het verleden kan veel informatie gepuurd worden, daarom is een goeie tool om de historische beurskoersen te kunnen analyseren geen overbodige luxe. Er werd voor gekozen om zelf een Javascript-library te ontwikkelen om de grafieken weer te geven. Deze javascript-library communiceert via JSON met de publieke ASP.NET webservice om de nodige data op te halen.
+Uit de beurskoersen van het verleden kan veel informatie gepuurd worden, daarom is een goeie tool om de historische beurskoersen te kunnen analyseren geen overbodige luxe. Er werd voor gekozen om zelf een Javascript-library te ontwikkelen om de grafieken weer te geven. Deze Javascript-library communiceert via JSON met de publieke ASP.NET webservice om de nodige data op te halen.
 
 \section{Administratie desktopclient}
 Er werd bij dit project voor gekozen om de component met Java Swing in te vullen als administratieclient voor het project. Bij dit administratieprogramma krijgt een beheerder een overzicht over de status van de verschillende componenten. De beheerder kan ook de aanwezige effecten en gebruikers opvragen, en deze desgewenst aanmaken, wijzigen of verwijderen.
@@ -29,7 +29,7 @@ Om aan te tonen dat onze keuze voor het XML-RPC protocol ons veel mogelijkheden 
 Met deze client kan een speler zijn portfolio en zijn huidige orders opvragen. De client staat ook enkele rudimentaire bewerkingen toe zoals het annuleren van een nog niet uitgevoerd order, alsook het aanmaken van een nieuw order.
 
 \section{Transactiemanager}
-Spelers kunnen op de website orders aanmaken om een effect te kopen of te verkopen, en kunnen aangeven dat deze pas uitgevoerd mogen worden als aan bepaalde voorwaarden voldaan wordt (zie hoofdstuk \ref{chap:geavanceerde_orders}). De uitvoering van een order is echter een aparte taak: in de re‘le beurswereld wordt een order doorgestuurd naar de beurs als alle voorwaarden voor het order voldaan zijn. Dit betekent dus dat aan alle technische voorwaarden is voldaan en dat er een tegenpartij is die het effect wil kopen of verkopen tegen de aangegeven prijs.
+Spelers kunnen op de website orders aanmaken om een effect te kopen of te verkopen, en kunnen aangeven dat deze pas uitgevoerd mogen worden als aan bepaalde voorwaarden voldaan wordt (zie hoofdstuk \ref{chap:geavanceerde_orders}). De uitvoering van een order is echter een aparte taak: in de re\ële beurswereld wordt een order doorgestuurd naar de beurs als alle voorwaarden voor het order voldaan zijn. Dit betekent dus dat aan alle technische voorwaarden is voldaan en dat er een tegenpartij is die het effect wil kopen of verkopen tegen de aangegeven prijs.
 
 In onze applicatie gebeurt het verwerken van de orders en het omzetten naar transacties door een extra module die deze taak van de beurs simuleert: de transactiemanager. Deze module zal periodiek alle actieve orders overlopen en degene waar alle voorwaarden van voldaan zijn omzetten in transacties.
 
@@ -48,10 +48,13 @@ De grote omvang van het project zorgde ervoor dat al snel iedereen zich begon to
 	\begin{itemize}
 	\item Implementatie van XML-RPC-backend
 	\item Toevoegen functionaliteit in de backend
+	\item Ontwerp van een filter-syntax en bijhorende parser
+	\item Implementatie caching om netwerk-bottleneck te minimaliseren
+	\item Perl framework (datalaag voor communicatie over XMl-RPC, en modulair plugin systeem)
 	\item Live beurskoersen-scraper
 	\item Historische beurskoersenscraper
-	\item Artifici‘le intelligentie spelers
-	\item Linux Serverbeheer
+	\item Artifici\"e intelligentie spelers
+	\item Linux serverbeheer
 	\end{itemize}
 	
 	\item \textbf{Dieter Deforce: } 
@@ -99,17 +102,17 @@ Er werd gezocht naar een nette en abstracte methode om de backend op te bouwen: 
 Uiteindelijk werd het deel van de backend dat zich bezig houdt met het opvragen, aanmaken en wijzigen van effecten gekozen als pilootproject.
 
 \paragraph{Filtering}
-Om clients de mogelijkheid te bieden om op een eenvoudige manier objecten te selecteren werd een eigen filter ontwikkeld. Hiervoor hebben we verschillende modellen en syntaxen afgewogen, om uiteindelijk te kiezen voor een SQL-achtige opmaak. Om deze te kunnen verwerken werd een compacte parser ontworpen, die de filter uiteidelijk converteert naar een geschikt formaat om door de database verwerkt te kunnen worden.
+Om clients de mogelijkheid te bieden om op een eenvoudige manier objecten te selecteren werd een eigen filter ontwikkeld. Hiervoor hebben we verschillende modellen en syntaxen afgewogen, om uiteindelijk te kiezen voor een SQL-achtige opmaak. Om deze te kunnen verwerken werd een compacte parser ontworpen, die de filter uiteindelijk converteert naar een geschikt formaat om door de database verwerkt te kunnen worden.
 Ook werd, door gebruik te maken van de GraphViz bibliotheek, een eenvoudige manier voorzien om filter de kunnen debuggen.
 
 \paragraph{Data Access Objects}
-Omdat de voorstelling van data in de backend nogal verschilt van de voorstelling in de database, werd er gezocht naar een systeem dat de omzetting zo transparant mogelijk maakte.. Omdat dit een probleem is waarmee bijna elk softwarepakket dat gebruik maakt van een database wordt geconfronteerd, bestaan hier ook design patterns voor: er werd gekozen om het 'Data Access Object'-pattern te implementeren.
+Omdat de voorstelling van data in de backend nogal verschilt van de voorstelling in de database, werd er gezocht naar een systeem dat de omzetting zo transparant mogelijk maakte.. Omdat dit een probleem is waarmee bijna elk softwarepakket dat gebruik maakt van een database wordt geconfronteerd, bestaan hier ook design patterns voor: er werd gekozen om het ``Data Access Object''-pattern te implementeren.
 
 \subsubsection{Website}
 Ontwikkeling van een ADO.NET-interface met de backend. Eerste rudimentaire functionaliteit inbouwen voor het ophalen en weergeven van effecten. Ook werd er gezocht naar manieren om de gegenereerde HTML-code vanuit ASP.NET wat op te schonen zodat er voor de vormgeving gemakkelijker gebruik kon worden gemaakt van CSS-stylesheets.
 
 \paragraph{Dynamische grafieken}
-Er werd gezocht naar een goeie manier om de historische koersinformatie grafisch weer te geven. Daarom werden verschillende javascript grafieklibraries met elkaar vergeleken en uitgetest.
+Er werd gezocht naar een goeie manier om de historische koersinformatie grafisch weer te geven. Daarom werden verschillende Javascript grafieklibraries met elkaar vergeleken en uitgetest.
 
 \subsubsection{Administratie desktopclient}
 Voor de Java Swing-applicatie werd er gezocht naar een manier om een mooi en functioneel programma te maken. Er werd eerst voor geopteerd om zelf een verticale menubalk te maken vergelijkbaar met de menubalk uit MS Office Outlook 2003, maar we liepen al snel tegen beperkingen van Java in verband met precieze timing. Uiteindelijk werd er geopteerd om de SwingX-library te gebruiken.
@@ -127,7 +130,7 @@ Bij deze iteratie werd er vooral gefocust om zoveel mogelijk functionaliteiten i
 Om tegemoet te komen aan de vraag om een algoritmisch aspect in te bouwen, werd er ook voor geopteerd om een kunstmatige intelligentie speler te ontwikkelen.
 
 \subsubsection{Backend}
-Het volledige protocol werd geimplementeerd in de backend. Ook gebeurden er aanpassingen aan het protocol om het aantal requests van de clientmodules te beperken, en zo een vlottere gebruikerservaring te kunnen aanbieden.
+Het volledige protocol werd ge\"implementeerd in de backend. Ook gebeurden er aanpassingen aan het protocol om het aantal requests van de clientmodules te beperken, en zo een vlottere gebruikerservaring te kunnen aanbieden.
 
 \paragraph{Filtering}
 De filter werd uitgebreid met complexere datastructuren (zoals reguliere expressies), alsook werd de parser verfijnd zodat complexere syntactische constructies mogelijk werden. Zo werd de filter eenvoudig in gebruik voor de programmeur.
@@ -158,7 +161,7 @@ De transactiemanager was lange tijd uit het oog verloren. Omdat het echter toch 
 \subsection{Release}
 
 \subsubsection{Backend}
-De backend reageerde vaak niet snel genoeg op aanvragen, bij nader onderzoek bleek er een serieuze bottle-neck aanwezig te zijn bij de connectie tussen de database en de backend. Oracle stuurde vaak aan zijn bovenlimiet qua snelheid informatie door, waardoor kostbare seconden verloren gingen. Er werd daarom voor gekozen om een cachingmechanisme in te bouwen. Dit werd echter niet van de grond af gedaan, maar er werd gebruik gemaakt van een reeds publiek beschikbare library 'cache4j'.
+De backend reageerde vaak niet snel genoeg op aanvragen, bij nader onderzoek bleek er een serieuze bottle-neck aanwezig te zijn bij de connectie tussen de database en de backend. Oracle stuurde vaak aan zijn bovenlimiet qua snelheid informatie door, waardoor kostbare seconden verloren gingen. Er werd daarom voor gekozen om een cachingmechanisme in te bouwen. Dit werd echter niet van de grond af gedaan, maar er werd gebruik gemaakt van een reeds publiek beschikbare library ``cache4j''.
 Ook werd er een beveiligingsmechanisme ingebouwd, zodat afhankelijk van de aangemelde gebruiker maar een beperkte subset van de backend-API aanspreekbaar werd.
 
 \paragraph{Filtering}
@@ -207,11 +210,11 @@ Zo is de datalaag van onze backend erop voorzien dat er gemakkelijk van onderlig
 
 \subsection{Weaknesses}
 
-\paragraph{Backend} Het beveiligingsmodel werkt goed, maar de categorieÃ«n in dewelke de functies zijn ondergebracht zouden best herbekeken worden, zodat ze beter aansluiten bij wat de verschillende modules van het project effectief nodig hebben. Dit zou dan toelaten om een meer nauwkeurige afsluiting van de API naar de modules toe te doen, zodat de beveiligingsrisico's worden verminderd.. Ook is er nog ruimte voor verbetering op het gebied van controles in functies zelf. Er gebeuren al heel wat controles, maar het kan nog beter. (heeft gebruiker X wel het recht om bepaalde informatie van gebruiker Y op te vragen?)
+\paragraph{Backend} Het beveiligingsmodel werkt goed, maar de categorie\"n in dewelke de functies zijn ondergebracht zouden best herbekeken worden, zodat ze beter aansluiten bij wat de verschillende modules van het project effectief nodig hebben. Dit zou dan toelaten om een meer nauwkeurige afsluiting van de API naar de modules toe te doen, zodat de beveiligingsrisico's worden verminderd.. Ook is er nog ruimte voor verbetering op het gebied van controles in functies zelf. Er gebeuren al heel wat controles, maar het kan nog beter. (heeft gebruiker X wel het recht om bepaalde informatie van gebruiker Y op te vragen?)
 
 Onze ervaring leert dat wanneer de backend enkele uren heeft gedraaid zonder dat er veel activiteit op was, dat de verbindingen met de Oracle-database komen te vervallen zonder dat de Apache Database Connection Pool dit merkt.. Dit zorgde ervoor dat requests naar onze backend vaak na 20 minuten (!) een timeout gaven met een Oracle-exceptie. Ondertussen is de Apache Database Connection Pool al zodanig geconfigureerd dat de verbindingen worden getest voordat ze worden teruggegeven, waardoor een request na 20 minuten toch een geldig antwoord krijgt.. Dat is al beter, maar er zou best nog verder worden gezocht achter een manier om de timeout in te korten. Dit is tijdens de laatste dagen van het ontwikkelingsproces ook gebeurd, maar omdat deze fout maar erg sporadisch optreedt kan er niet met zekerheid gezegd worden dat ze is opgelost..
 
-Het cachingmodel dat werd ingebouwd in de backend kan nog verder worden verfijnd. Momenteel wordt er nog te weinig rekening gehouden met mogelijke veranderingen van de achterliggende data. Er wordt best gezocht naar een meer geavanceerd model, of een eigen cachingmechanisme. Het filtersysteem dat werd ingebouwd in de backend is flexibel gemaakt, en er dus ook op voorzien om ook opzoekingen in andere gegevensstructeren mogelijk te maken, wat natuurlijk goede perspectieven biedt..
+Het cachingmodel dat werd ingebouwd in de backend kan nog verder worden verfijnd. Momenteel wordt er nog te weinig rekening gehouden met mogelijke veranderingen van de achterliggende data. Er wordt best gezocht naar een meer geavanceerd model, of een eigen cachingmechanisme. Het filtersysteem dat werd ingebouwd in de backend is flexibel gemaakt, en er dus ook op voorzien om ook opzoekingen in andere gegevensstructeren mogelijk te maken, wat natuurlijk goede perspectieven biedt. Een filter-backend die zorgt voor introspectie van de ingegeven filter zou immers selectieve invalidatie van cache-entries mogelijk maken.
 
 \paragraph{Administratie desktopclient} De implementatie van de eID-loginprocedure moet nog verder worden verbeterd.  Door gebrek aan tijd was het niet mogelijk om te zoeken naar een manier om aan de hand van de certificaten bij de elektronische identiteitskaart een sessie aan te maken op de backend.. Daarom is het nu vereist om de logingegevens van een administratoraccount permanent op te slaan, om met deze gegevens een geldige sessie te kunnen opvragen voor de gebruiker die inlogde met de eID.
 
