@@ -1060,31 +1060,31 @@ De beste oplossing echter, is om een klasse te maken die afleidt van het Page ob
 
 \section{Vormgeving}
 
-De grafiekenmodule heeft een schaduw gekregen omdat deze een belangrijk onderdeel op de website en op de pagina vormt. Ook het menu dat verschijnt als met een referentie wil toevoegen heeft een extra schaduw effect meegekregen. De module bestaat uit twee helften. De onderste helft toont de datavolumes van het gekozen effect. De bovenste helft toont het koersverloop van het effect en van zijn al dan niet geactiveerde referenties. Alsook kan op deze bovenste helft het menu geactiveerd worden of kunnen de interactieve acties toegevoegd worden. De grafieken hebben ook twee weergave modulo. Als de muisaanwijzer niet op de grafieken staat worden geen menu items getoond en wordt zo veel mogelijk van tekengedeelte getoond. Ook worden de sluitingskruisjes in de legende op de referenties enkel zichtbaar als de muisaanwijzer zich in het grafiekengedeelte bevindt.
+De grafiekenmodule heeft een schaduw gekregen zodat deze een beetje uit de pagina springt. Dit omdat de grafiek steeds een belangrijk onderdeel op de pagina is. Ook het menu dat verschijnt als met een referentie wil toevoegen heeft een extra schaduw effect meegekregen. De module bestaat uit twee helften. De onderste helft toont de datavolumes van het gekozen effect. De bovenste helft toont het koersverloop van het effect en van zijn al dan niet geactiveerde referenties. Alsook kan op deze bovenste helft het menu geactiveerd worden of kunnen de interactieve acties toegevoegd worden. De grafieken hebben ook twee weergave module. Als de muisaanwijzer niet op de grafieken staat worden geen menu items getoond en wordt zo veel mogelijk van tekengedeelte getoond. Ook worden de sluitingskruisjes in de legende op de referenties enkel zichtbaar als de muisaanwijzer zich in het grafiekengedeelte bevindt.
 
 \section{Zoomen en panning}
 
-Zoomen in een grafiek is de belangrijkste functionaliteit. Daarom is daar dan ook veel aandacht aan besteed. Vooreerst is het mogelijk in te zoomen op een bepaalde locatie door dubbel te klikken op een punt waar je op wil inzoomen. Ook kan je op een punt gaan staan met de aanwijzer en naar boven of beneden scrollen om respectievelijk in of uit te zoomen. Omdat deze snelwegen misschien niet direct duidelijk zijn voor nieuwe gebruikers is er ook een zoom in en zoomuit functionaliteit in het menu gestoken. Zodat iedereen intiutief de grafiek kan bedienen.
+Zoomen in een grafiek is de belangrijkste functionaliteit. Daarom is daar dan ook veel aandacht aan besteed. Vooreerst is het mogelijk in te zoomen op een bepaalde locatie door dubbel te klikken op een punt waar je op wil inzoomen. Ook kan je op een punt gaan staan met de aanwijzer en naar boven of beneden scrollen om respectievelijk in of uit te zoomen. Omdat deze bedieningsmogelijkheden misschien niet direct duidelijk zijn voor nieuwe gebruikers is er ook een inzoom en uitzoom functionaliteit in het menu gestoken. Zodat iedereen intu\"itief de grafiek kan bedienen.
 
-Soms wil een gebruiker gewoon even een bepaalde range van dichterbij bekijken. Als deze dan via panning en zooming deze range moet gaan opvragen zou dat te lang duren. Daarom zijn er twee modulo aangemaakt. De geactiveerde modus bepaald welke events na een mouse click opgeroepen worden.
+Soms wil een gebruiker gewoon even een bepaalde range van dichterbij bekijken. Als deze dan via panning en zooming deze range moet gaan opvragen zou dat te lang duren. Daarom zijn er twee modules aangemaakt. De geactiveerde modus bepaald welke events na een muisklik opgeroepen worden.
 
-Is de "verplaats-modus" geactiveerd (standaard), dan kan men zoomen met het scrolwiel, dubbelklikken om in te zoomen en de grafieken slepen om het bereik meer naar links of naar rechts te verplaatsen (panning). Is echte de "selectie-modus" geactiveerd, dan kan je door te klikken en te slepen een horizontaal kader trekken waarmee je een range kan aftekenen. De geselecteerde range wordt dan automatisch opgehaald en weergegeven.
+Is de "verplaats-modus" geactiveerd (standaard), dan kan men zoomen met het scrolwiel, dubbelklikken om in te zoomen en de grafieken slepen om het bereik meer naar links of naar rechts te verplaatsen (panning). Is echter de "selectie-modus" geactiveerd, dan kan je door te klikken en te slepen een horizontaal kader trekken waarmee je een bereik kan aftekenen. De geselecteerde range wordt dan automatisch opgehaald en weergegeven.
 
 \section{Snelheid en scheiding van code en design}
 
 De grafieken zijn steeds opgebouwd met de snelheid om het op te bouwen in het achterhoofd. Aangezien de rendering lokaal gebeurd kan dit potentieel ook op een oudere machine zijn of in een internetbrowser die Javascript slechts zeer traag uitvoert (type Internet Explorer).
 
-Omdat een HTML DOM opbouwen of CSS properties toepassen via JavaScript een vertraging te weeg kan brengen is reeds zo veel mogelijk informatie vooraf in de HTML en de CSS geplaatst. Dit is sowieso al het snelste. De JQuery bestanden die gebruikt worden worden gecomprimeerd meegestuurd en ook de webserver staat ingesteld om zo veel mogelijk zijn statische bestanden via Gzip te comprimeren voor deze over de lijn gestuurd worden.
+Omdat een HTML DOM opbouwen of CSS properties toepassen via JavaScript een vertraging te weeg kan brengen is reeds zo veel mogelijk informatie vooraf in de HTML en de CSS geplaatst. Dit is sowieso al het snelste. De JQuery bestanden die gebruikt worden worden gecomprimeerd meegestuurd en ook de webserver werd geconfigureerd zodat statische bestanden indien mogelijk met behulp van gzip gecomprimeerd worden verstuurd.
 
 De Jquery, CSS en Javascript bestanden krijgen ook lange expire headers mee, zodat deze client side gecached kunnen worden.
 Alsook worden de Javascript bestanden zo laat mogelijk in de HTML bestanden vermeld zodat het ophalen ervan pas begint als de overige delen van de pagina  geladen zijn.
 
 \section{Herbruikbaarheid}
 
-Er is getracht een grote mate van herbuikbaarheid in te bouwen. Javascript ondersteund standaard geen klassen. Prototype heeft daar wel een ondersteuning voor ingebouwd, maar aangezien we reeds Jquery nodig hadden voor het tekenen van de grafieken vonden we het nogal zonde om nog een extra Javascript bibliotheek toe te voegen en te mengen. Daarom hebben we een bepaalde functionaliteit in Javascript misbruikt. We maken een lege functie aan en gaan daar dan een soort object van maken.
-Afleiden was ook niet direct mogelijk, maar dat hebben we ook kunnen oplossen door twee delen in een leeg object samen te voegen. Zodoende hebben we twee types grafieken gelanceerd en een gemeenschappelijk deel. Er is een primairy plot (het bovenste deel) en een secondairy plot (het volume deel onderaan). Het gemeenschappelijke deel roept de respectievelijke kunstmatige constructors op van de afgeleide objecten. Er wordt dus eerst een gemeenschappelijke constructor uitgevoerd en dan pas een implementatiespecifieke. Deze manier van werken is nogal speciaal en was zeker even zoeken. Maar het resultaat is er.
+Er is getracht een grote mate van herbuikbaarheid in te bouwen. Javascript ondersteund standaard geen klassen. Javascript-bibliotheek \makeurl{Prototype}{http://www.prototypejs.org/} heeft daar wel een ondersteuning voor ingebouwd, maar aangezien we reeds \makeurl{jQuery}{http://jquery.com/} nodig hadden voor het tekenen van de grafieken werd er voor geopteerd om geen extra Javascript-bibliotheek toe te voegen en te mengen. Daarom hebben we een bepaalde functionaliteit in Javascript ``misbruikt''. We maken een lege functie aan en gaan daar dan een soort object van maken.
+Afleiden wordt in Javascript ook niet ondersteund, maar dat werd ge\"emuleerd door een basisobject en een meer specifiek object in een leeg object samen te voegen. Zo konden uiteindelijk twee verschillende types grafieken op hetzelfde basisobject gemaakt worden. Er is een primairy plot (het bovenste deel) en een secondairy plot (het volume deel onderaan). Het gemeenschappelijke deel roept de respectievelijke kunstmatige constructors op van de afgeleide objecten. Er wordt dus eerst een gemeenschappelijke constructor uitgevoerd en dan daarna worden de implementatiespecifieke constructors opgeroepen. 
 
-Nu kunnen op een pagina meerdere grafieken voorkomen en kunnen deze zeer gemakkelijk ingevuld worden met het juiste effect:
+Op deze manier kunnen er op een pagina meerdere grafieken voorkomen en kunnen deze zeer gemakkelijk ingevuld worden met het juiste effect:
 
 \begin{verbatim}
      var prim = new PrimaryPlot('plotTest', 'FR0000021842');
@@ -1093,7 +1093,7 @@ Nu kunnen op een pagina meerdere grafieken voorkomen en kunnen deze zeer gemakke
 
 De constructor accepteert als argumenten de div container waar de grafieken in moeten verschijnen en de ISIN waarde die getoond moet worden.
 
-Als de bovenste grafiek van beeld wijzigt, dan moet ook de onderste volume grafiek zijn view wijzigen en zijn nieuwe data ophalen. Om meerdere grafieken te kunnen koppelen is het observer pattern ingebouwd zodat grafieken naar andere grafieken kunnen luisteren voor het wijzigen van hun view. Dit kan nu heel gemakkelijk en object geori‘nteerd:
+Als de bovenste grafiek van beeld wijzigt, dan moet ook de onderste volume grafiek zijn view wijzigen en zijn nieuwe data ophalen. Om meerdere grafieken te kunnen koppelen is het observer pattern ingebouwd zodat grafieken naar andere grafieken kunnen luisteren voor het wijzigen van hun view. Dit kan nu heel gemakkelijk en object georinteerd:
 
 \begin{verbatim}
      var prim = new PrimaryPlot('plotTest', 2, 11, 'FR0000021842');
@@ -1101,7 +1101,7 @@ Als de bovenste grafiek van beeld wijzigt, dan moet ook de onderste volume grafi
      prim.addPlotListener(sec);
 \end{verbatim}
 
-Ook de opties zijn modulair samengesteld en bevatten ingebouwde functies om gemakkelijk bepaalde opties te kunnen wijzigen. Zo kan bijvoorbeeld met een regeltje code de range aangepast worden of panning ingeschakeld worden.
+Ook de opties zijn modulair samengesteld en bevatten ingebouwde functies om gemakkelijk bepaalde opties te kunnen wijzigen. Zo kan bijvoorbeeld met een enkel regeltje code de range aangepast worden of panning ingeschakeld worden.
 
 \section{Geschiedenis}
 
@@ -1122,13 +1122,9 @@ Elke keer het beeld wijzigt bereken een aantal functies het minimum en het maxim
 Bij elke beeldwijzing word een nieuwe selectie datapunten opgehaald via AJAX technieken. De data wordt in JSON formaat door de ASP.NET webservice teruggestuurd.
 Er wordt een request gezet voor de volume data en voor elke grafiek zijn punten. De teruggestuurde punten zijn beperkt in aantal en zijn dus in sterk uitgezoomde views een gemiddelde van een bepaalde periode. Er wordt ook telkens een deel links en rechts buiten het zichtbare beeld opgehaald zodat deze reeds klaar zouden staan bij het verschuiven van het beeld.
 
-\section{Testen}
-
-De module is getest en werkend bevonden in alle recente versies van de meest gangbare internetbrowsers.
-
 \section{Canvas}
 
-De grafieken zelf worden getekend met de Canvas technologie. Voor Internet Explorer is hiervoor een alternatieve manier toegevoegd aangezien die standaard geen Canvas ondersteund. De grafieken worden met de Flot bibliotheek getekend. Deze bibliotheek is gekozen omdat deze het meest flexibel en aanpasbaar bevonden werd na een uitgebreid onderzoek naar andere bibliotheken die ongeveer hetzelfde doel tot ogen hebben. Er kon gemakkelijk op deze grafiek ingebouwd worden doordat events afgevangen kunnen worden.
+De grafieken zelf worden getekend met de Canvas technologie. Voor Internet Explorer is hiervoor een alternatieve manier toegevoegd aangezien deze browser standaard geen Canvas ondersteund. De grafieken worden met de \makeurl{flot}{http://code.google.com/p/flot/}-bibliotheek getekend. Deze bibliotheek is gekozen omdat deze het meest flexibel en aanpasbaar bevonden werd na een uitgebreid onderzoek naar andere bibliotheken die ongeveer hetzelfde doel tot ogen hebben. Er kon gemakkelijk op deze grafiek ingebouwd worden doordat events afgevangen kunnen worden.
 
 \section{Internationalisatie}
 

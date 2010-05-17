@@ -70,33 +70,26 @@ De desktopapplicatie bevindt zich in de map ''VOP Groep 7'' op het bureaublad en
 \label{sec:handl:admin:algemeen}
 
 \paragraph{Verifi\"eren connectiviteit}
+\begin{wrapfigure}{r}{0.5\textwidth}
+	\centering
+		\includegraphics[width=0.48\textwidth]{images/handleiding/administratie/verbindingsfout}
+	\caption{Een verbindingsfout}
+	\label{fig:handl:admin:verbindingsfout}
+\end{wrapfigure}
 
 Indien bij het opstarten van de applicatie de StockPlay servers niet toegankelijk blijken te zijn, wordt de gebruiker hiervan ge\"informeerd zoals te zien is in figuur \ref{fig:handl:admin:verbindingsfout}. Controleer of de PC waarop de applicatie gedraaid wordt, wel internetconnectiviteit heeft. Indien dit het geval is, moeten er contact opgenomen worden met de ondersteunende dienst om de backend en client-configuratie te controleren.
-
-\begin{figure}[h!]
-	\centering
-		\includegraphics[scale=0.75]{images/handleiding/administratie/verbindingsfout}
-	\caption{Een verbindingsfout.}
-	\label{fig:handl:admin:verbindingsfout}
-\end{figure}
 
 \paragraph{Inloggen}
 
 Mogelijke inloggegevens zijn "Administrator'' als gebruikersnaam en "chocolademousse" als wachtwoord. Vul die gegevens in en druk op ``Login'', zoals te zien is in figuur \ref{fig:handl:admin:login}. Indien verkeerde credentials ingevoerd worden, krijgt de gebruiker hier melding van zoals te zien is in figuur \ref{fig:handl:admin:login-failure}.
 Je kan ook zelf een account aanmaken, zie daarvoor \ref{sec:handl:admin:gebruikers}. Als deze de ``Administrator'' rechten bezit, dan kan je hiermee ook inloggen.
 
-\begin{figure}[h!]
+\begin{figure}
 	\centering
-		\includegraphics[scale=0.75]{images/handleiding/administratie/login}
-	\caption{Het aanmeldformulier.}
-	\label{fig:handl:admin:login}
-\end{figure}
-
-\begin{figure}[h!]
-	\centering
-		\includegraphics[scale=0.75]{images/handleiding/administratie/login-failure}
-	\caption{Een login probleem.}
-	\label{fig:handl:admin:login-failure}
+	\subfloat[Het aanmeldformulier]{		\includegraphics[width=0.5\textwidth]{images/handleiding/administratie/login}
+	\label{fig:handl:admin:login}}
+	\subfloat[Een login probleem]{		\includegraphics[width=0.45\textwidth]{images/handleiding/administratie/login-failure}
+	\label{fig:handl:admin:login-failure}}
 \end{figure}
 
 Het standaard openingsscherm bevat een overzicht van de status van de verschillende componenten, zoals te zien is in figuur \ref{fig:handl:admin:status-overzicht}.
@@ -262,7 +255,7 @@ Bij het opstarten van de applicatie verschijnt er eerst een spashscreen, dat na 
 	\centering
 		\includegraphics[scale=0.75]{images/handleiding/mobile/Login}
 	\caption{Het aanmeld-venster.}
-	\label{fig:handl:admin:login}
+	\label{fig:handl:mobile:login}
 \end{figure}
 
 Tijdens de werking van het programma, wordt er voor elke request die naar de backend wordt gestuurd een waarschuwingsvenster getoond. Dit is eigen aan de emulator, en op een echte telefoon wordt na een aantal keren de mogelijkheid automatisch de mogelijkheid getoond om altijd een connectie toe te laten.

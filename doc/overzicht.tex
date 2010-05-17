@@ -200,15 +200,16 @@ De puntenmanager was het laatste grote ontbrekende deel aan het project. Deze we
 
 
 \chapter{Projectevaluatie}
+Er is voor gekozen om de evaluatie van ons project te doen aan de hand van een SWOT-analyse. Hiermee worden alle vlakken van ons project aangeraakt.
 
-\section{SWOT-analyse}
-
-\subsection{Strenghts}
+\section{Strenghts}
 
 De grootste troef van dit project is onze backend. In dit deel van het project werd het meeste tijd gestopt, en het resultaat is een elegant, flexibel en coherent geheel. 
 Zo is de datalaag van onze backend erop voorzien dat er gemakkelijk van onderliggende database kan worden gewisseld. Ook zijn er faciliteiten ingebouwd om een vlotte conversie van de interne objecten naar de gebruikte gegevensstructuren in het XML-RPC-protocol te voorzien.
 
-\subsection{Weaknesses}
+Ook op andere gebieden is er voor geopteerd om de code erg flexibel te houden: zo zijn uitbreidingsmogelijkheden voorzien bij de scraper, de kunstmatige intelligentie-speler, de puntenmanager en de transactiemanager. Hiervoor werd er voor de in Perl geschreven onderdelen geopteerd voor een plugin-structuur en wordt er in Java gebruik gemaakt van de Reflection-API. Dit alles laat toe om te voorzien in uitbreidingen zonder ook maar aan de basiscode te moeten komen..
+
+\section{Weaknesses}
 
 \paragraph{Backend} Het beveiligingsmodel werkt goed, maar de categorie\"n in dewelke de functies zijn ondergebracht zouden best herbekeken worden, zodat ze beter aansluiten bij wat de verschillende modules van het project effectief nodig hebben. Dit zou dan toelaten om een meer nauwkeurige afsluiting van de API naar de modules toe te doen, zodat de beveiligingsrisico's worden verminderd.. Ook is er nog ruimte voor verbetering op het gebied van controles in functies zelf. Er gebeuren al heel wat controles, maar het kan nog beter. (heeft gebruiker X wel het recht om bepaalde informatie van gebruiker Y op te vragen?)
 
@@ -225,9 +226,8 @@ Het cachingmodel dat werd ingebouwd in de backend kan nog verder worden verfijnd
 De volumes die getoond worden zijn nog absolute volumes, daar zouden nog relatieve volumes van gemaakt kunnen worden. En er zouden nog een aantal snelheidsoptimalisaties doorgevoerd kunnen worden. Zo kan een request geannuleerd worden (of vertraagd worden) als deze nog aan het binnenkomen is en er is al een nieuwe aanvraag gebeurd (vormt een probleem bij het veel en snel scrollen van de muis). De eerste data zou via de HTML pagina reeds meegestuurd kunnen worden, wat een HTTP request zou besparen. De data en alle request zouden ook nog via een HTTP pagina kunnen binnenkomen, nu gebeurd dit nog via verschillende requests.
 Er zou client side ook nog veel meer caching ingebouwd kunnen worden.
 
-\todo Known issues / bugs
 
-\subsection{Opportunities}
+\section{Opportunities}
 
 \paragraph{Algemeen} Het doel van het spel is om zoveel mogelijk de beurs in het echte leven de simuleren. Dit is echter zo'n danig complex gegeven dat we nog lang niet een levensecht spel hebben gecre\"erd. Elementen die nog in het spel ontbreken zijn bijvoorbeeld het aanrekenen van transactiekosten en bewaargelden. 
 Momenteel is er ook maar een beperkt aantal beurzen aanwezig in het spel. We werden hiertoe gedwongen omdat de gescrapete data van andere beurzen vaak niet granulair genoeg was. Zou er echter beschikking zijn over betere datafeeds, dan kan het spel op dit vlak snel uitbreiden. Indien er ook beurzen zouden bijkomen die met andere munteenheden werken, zou ook dit een extra dimensie aan het spel kunnen toevoegen, het werken met vreemde munten kan gelukkig snel worden ingebouwd in de bestaande voorzieningen.
@@ -236,14 +236,11 @@ Momenteel is er ook maar een beperkt aantal beurzen aanwezig in het spel. We wer
 
 \paragraph{Transactionmanager} De transactionmanager zou een aantal optimalisaties kunnen ondergaan. Er zouden orders gegroepeerd kunnen worden die dan in een keer gecontroleerd kunnen worden. Of een soort afhankelijke orders met triggers zouden aangemaakt kunnen worden. Zodoende moeten dan niet alle lopende orders continue bij elke iteratie gecontroleerd worden.
 
-\todo Uitbreidingsmogelijkheden
 
-\subsection{Threats}
+\section{Threats}
 
-\todo zwakheden in ons model (probeer hier creatief te zijn en zwakheden te zetten die eigenlijk positief zijn (vb. als je later op een sollicitatiegesprek zo'n analyse van jezelf moet maken is een goeie ``door mijn oog voor detail durf ik wel eens te lang doorgaan op een deelprobleem'')
 
 \paragraph{Algemeen} Het door ons gekozen onderwerp was zodanig breed en complex, dat er al snel de verleiding kwam om teveel elementen vanuit de echte wereld van de financi\"ele markten in ons spel te verwerken. Dit heeft ertoe geleid dat we ons project soms iets te breed hebben gezien, waardoor de workload onaangenaam hoog is komen te liggen.. Het was misschien beter geweest om een iets nauwere scope te nemen, zodat we ons ook wat meer op de afwerking van onze code konden richten.
 \emph{Ter illustratie: }ons project bevat volgens \emph{StatSVN} 54652 lijnen code, waarbij gepoogd werd enkel de zelfgemaakte bestanden in rekening te nemen (geen gecompileerde klassen, geen externe libraries, word documenten, presentaties, afbeeldingen, enzovoort). 
 
-\paragraph{Backend}
-Het cachingmodel dat werd ingebouwd in de backend kan nog verder worden verfijnd. Momenteel wordt er nog te weinig rekening gehouden met mogelijke veranderingen van de achterliggende data. Er zou best worden gezocht naar een meer geavanceerd model, of een eigen cachingmechanisme. Het filtersysteem dat werd ingebouwd in de backend is flexibel gemaakt en er dus ook op voorzien om ook opzoekingen in andere gegevensstructeren (andere databases of bijvoorbeeld een eigen opslagsysteem) mogelijk te maken, wat natuurlijk goede perspectieven biedt..
+
