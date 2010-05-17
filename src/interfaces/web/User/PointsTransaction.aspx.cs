@@ -18,6 +18,9 @@ namespace web.User
                 IDataAccess data = DataAccessFactory.GetDataAccess();
 
                 FillPointsTables(data.GetPointTransactions((int)Session["userID"], (string)Session["sessionID"], (ISession)this.Master));
+
+                List<IUser> user = data.GetUserListById((int) Session["userID"]);
+                TotalPoints.Text = Convert.ToString(user[0].Points);
             }
         }
 
@@ -47,6 +50,11 @@ namespace web.User
                 else
                     pointsTable.Rows.Add(row);
             }
+
+            if (newPointsTable.Rows.Count > 0)
+                NewPoints.Visible = true;
+            else
+                NewPoints.Visible = false;
 
             PointsGridView.DataSource = pointsTable;
             PointsGridView.DataBind();

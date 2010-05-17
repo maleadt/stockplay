@@ -77,7 +77,7 @@
             if (Session["userID"] == null || Session["sessionID"] == null )
             {
                 FormsAuthentication.SignOut();
-                Response.Redirect("~/Login.aspx");
+                Response.Redirect(Request.Url.ToString());
             }
         } 
     }

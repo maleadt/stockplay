@@ -123,6 +123,9 @@
   <data name="Cashrank.InnerText" xml:space="preserve">
     <value>Cashranking</value>
   </data>
+  <data name="Comments.HeaderText" xml:space="preserve">
+    <value>Commentaar</value>
+  </data>
   <data name="Global.InnerText" xml:space="preserve">
     <value>Globale rangschikking</value>
   </data>

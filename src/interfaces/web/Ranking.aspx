@@ -6,9 +6,11 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder" Runat="Server">
     <h1 runat="server" meta:resourcekey="Title"></h1>
 
-    <a href="~/Ranking.aspx" meta:resourcekey="Global" runat="server"></a> |
-    <a href="~/Ranking.aspx?event=PROFIT" meta:resourcekey="Profitrank" runat="server"></a> |
-    <a href="~/Ranking.aspx?event=CASH" meta:resourcekey="Cashrank" runat="server"></a>
+    <p class="RankingMenu">
+        <a href="~/Ranking.aspx" meta:resourcekey="Global" runat="server"></a> |
+        <a href="~/Ranking.aspx?event=PROFIT" meta:resourcekey="Profitrank" runat="server"></a> |
+        <a href="~/Ranking.aspx?event=CASH" meta:resourcekey="Cashrank" runat="server"></a>
+    </p>
 
     <asp:GridView ID="RankingGridView" runat="server" AutoGenerateColumns="False" GridLines="None" CellSpacing="-1" Visible="false">
         <Columns>

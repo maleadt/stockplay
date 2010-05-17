@@ -348,6 +348,12 @@
   <ItemGroup>
     <Folder Include="Properties\" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="User\App_LocalResources\PointsTransaction.aspx.nl.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="User\App_LocalResources\PointsTransaction.aspx.resx" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
   <ProjectExtensions>

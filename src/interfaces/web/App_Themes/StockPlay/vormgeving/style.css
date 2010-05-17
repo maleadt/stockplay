@@ -346,3 +346,9 @@ a:hover {
     border: 2px solid #fc746e;
     background-color: #f8f8f8;
 }
+
+/* RANKING */
+.RankingMenu 
+{
+    text-align: center;
+}
