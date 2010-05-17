@@ -32,6 +32,7 @@ namespace StockPlay
 	    bool RemoveUser(string nickname, string sessionID, ISession sessionHandler);
 	    bool UpdateUser(IUser user, string sessionID, ISession sessionHandler);
         List<IUser> GetUserListById(params int[] id); //Beperkte gebruikersinformatie ophalen van de gevraagde id
+        IUser GetUserByNickname(string nickname); //Beperkte gebruikersinformatie opvragen
 	    IUser GetUserDetailsByNickname(string nickname, string sessionID, ISession sessionHandler); //Alle gegevens van een gebruiker opvragen
 	    string ValidateUser(string nickname, string password); //Geeft de sessionID terug, deze is de lege string als validatie is mislukt
         void ResetPassword(string nickname, string newPassword);
@@ -44,6 +45,7 @@ namespace StockPlay
 
         //Points
         List<IRank> GetRanking(int start, int stop); //Geeft alle spelers die tussen start en stop geranschikt staan
+        IRank GetRanking(int userID); //Haalt de ranking op van een specifieke gebruiker
         List<IPointsTransaction> GetRankingEvent(string name); //Haalt de laatste punten op van een bepaalde rankingevent
         List<IPointsTransaction> GetPointTransactions(int userID, string sessionId, ISession sessionHandler); //Zoekt naar alle puntentransacties van de gebruiker
 	

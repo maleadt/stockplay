@@ -276,7 +276,6 @@ namespace StockPlay
         public void handleSessionTimeout()
         {
             FormsAuthentication.SignOut();
-            // TODO Van hieruit naar de login pagina omleiden?
         }
     }
 }

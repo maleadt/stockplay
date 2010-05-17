@@ -117,6 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="btnSearchRanking.Text" xml:space="preserve">
+    <value>Zoeken</value>
+  </data>
+  <data name="btnSearchUser.Text" xml:space="preserve">
+    <value>Zoeken</value>
+  </data>
   <data name="Cash.HeaderText" xml:space="preserve">
     <value>Cash</value>
   </data>
@@ -141,6 +147,12 @@
   <data name="Rank.HeaderText" xml:space="preserve">
     <value>Rang</value>
   </data>
+  <data name="SearchRanking.Text" xml:space="preserve">
+    <value>Zoek naar nabijgelegen rangplaatsen:</value>
+  </data>
+  <data name="SearchUser.Text" xml:space="preserve">
+    <value>Doorzoek de rangschikking naar een gebruikersnaam:</value>
+  </data>
   <data name="Title.InnerText" xml:space="preserve">
     <value>Ranking</value>
   </data>
@@ -149,5 +161,14 @@
   </data>
   <data name="Username.HeaderText" xml:space="preserve">
     <value>Gebruiker</value>
+  </data>
+  <data name="txtSearchUserRequired.ErrorMessage" xml:space="preserve">
+    <value>Gelieve een gebruikersnaam in te vullen</value>
+  </data>
+  <data name="txtSearchRankingRequired.ErrorMessage" xml:space="preserve">
+    <value>Vul een geldig nummer in</value>
+  </data>
+  <data name="EmptyNotification.InnerText" xml:space="preserve">
+    <value>Uw zoekopdracht heeft geen resultaten opgeleverd</value>
   </data>
 </root>

@@ -52,7 +52,7 @@ namespace StockPlay.Web
 	
 	        if (latestQuote != null)
 	        {
-	            Value.InnerText = String.Format("{0:0.00}", latestQuote.Price);
+	            Value.InnerText = String.Format("{0:0.00€}", latestQuote.Price);
 	            quoteChange = security.GetLatestQuote().Change;
 	        }
 	
@@ -71,9 +71,9 @@ namespace StockPlay.Web
 	        //Data
 	        if (latestQuote != null)
 	        {
-	            Open.InnerText = Convert.ToString(latestQuote.Open);
-	            High.InnerText = Convert.ToString(latestQuote.High);
-	            Low.InnerText = Convert.ToString(latestQuote.Low);
+                Open.InnerText = String.Format("{0:0.00€}", latestQuote.Open);
+                High.InnerText = String.Format("{0:0.00€}", latestQuote.High);
+                Low.InnerText = String.Format("{0:0.00€}", latestQuote.Low);
 	        }
 	
 	        //History

@@ -21,7 +21,7 @@
                 <ItemStyle CssClass="action" />
             </asp:BoundField>
             <asp:BoundField DataField="Change" SortExpression="Change" HtmlEncode="false" DataFormatString="{0:0.00}" meta:resourcekey="Change" />
-            <asp:BoundField DataField="Quote" SortExpression="Quote" HtmlEncode="false" DataFormatString="{0:0.00}" meta:resourcekey="Quote" />
+            <asp:BoundField DataField="Quote" SortExpression="Quote" HtmlEncode="false" DataFormatString="{0:0.00€}" meta:resourcekey="Quote" />
             <asp:BoundField DataField="Date" SortExpression="Date" HtmlEncode="false" DataFormatString="{0:dd/MM, HH:MM:ss}" meta:resourcekey="Date" />
             <asp:HyperLinkField DataNavigateUrlFields="Isin" DataNavigateUrlFormatString="~/User/CreateOrder.aspx?isin={0}" meta:resourcekey="Buy"
             Text="<img src='App_Themes/StockPlay/afbeeldingen/money_add.png' alt='Buy' border='0' />" />

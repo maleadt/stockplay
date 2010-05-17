@@ -20,9 +20,18 @@ namespace StockPlay.Web
 	    {
             if (!IsPostBack)
             {
+                txtSearchUser.Attributes.Add("onKeyPress", "javascript:if (event.keyCode == 13) __doPostBack('" + btnSearchUser.UniqueID + "','')");
+                txtSearchRanking.Attributes.Add("onKeyPress", "javascript:if (event.keyCode == 13) __doPostBack('" + btnSearchRanking.UniqueID + "','')");
+
                 IDataAccess data = DataAccessFactory.GetDataAccess();
                 if (Request.Params["event"] == null)
                 {
+                    Global.Disabled = true;
+
+                    SearchUserP.Visible = true;
+                    SearchRankingP.Visible = true;
+                    EmptyNotification.Visible = false;
+
                     RankingGridView.Visible = true;
                     PointsTransactionGridView.Visible = false;
 
@@ -31,6 +40,15 @@ namespace StockPlay.Web
                 }
                 else
                 {
+                    if (Request.Params["event"].Equals("CASH"))
+                        Cashrank.Disabled = true;
+                    else if (Request.Params["event"].Equals("PROFIT"))
+                        Profitrank.Disabled = true;
+
+                    SearchUserP.Visible = false;
+                    SearchRankingP.Visible = false;
+                    EmptyNotification.Visible = false;
+
                     RankingGridView.Visible = false;
                     PointsTransactionGridView.Visible = true;
 
@@ -120,6 +138,73 @@ namespace StockPlay.Web
             }
 
             return rankingTable;
+        }
+
+        protected void SearchUser(object sender, EventArgs e)
+        {
+            IDataAccess data = DataAccessFactory.GetDataAccess();
+
+            IUser user = data.GetUserByNickname(txtSearchUser.Text);
+
+            if (user != null)
+            {
+                List<IRank> ranking = new List<IRank>();
+
+                ranking.Add(data.GetRanking(user.ID));
+
+                DataTable table = GenerateRankingTable(ranking);
+
+                SearchUserP.Visible = true;
+                SearchRankingP.Visible = true;
+                EmptyNotification.Visible = false;
+
+                RankingGridView.Visible = true;
+                PointsTransactionGridView.Visible = false;
+
+                RankingGridView.DataSource = table;
+                RankingGridView.DataBind();
+            }
+            else
+            {
+                EmptyNotification.Visible = true;
+                RankingGridView.Visible = false;
+            }
+        }
+
+        protected void SearchRanking(object sender, EventArgs e)
+        {
+            IDataAccess data = DataAccessFactory.GetDataAccess();
+
+            try
+            {
+                int rank = Convert.ToInt32(txtSearchRanking.Text);
+
+                List<IRank> ranking = data.GetRanking(rank - 10, rank + 10);
+
+                if (ranking.Count != 0)
+                {
+                    DataTable table = GenerateRankingTable(ranking);
+
+                    SearchUserP.Visible = true;
+                    SearchRankingP.Visible = true;
+                    EmptyNotification.Visible = false;
+
+                    RankingGridView.Visible = true;
+                    PointsTransactionGridView.Visible = false;
+
+                    RankingGridView.DataSource = table;
+                    RankingGridView.DataBind();
+                }
+                else
+                {
+                    EmptyNotification.Visible = true;
+                    RankingGridView.Visible = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Response.Redirect("~/Ranking.aspx");
+            }
         }
 	}
 }

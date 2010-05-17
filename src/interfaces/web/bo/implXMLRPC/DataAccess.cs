@@ -259,7 +259,6 @@ namespace StockPlay.implXMLRPC
                 foreach (ISecurity security in securities)
                     isins.Add("ISIN == '" + security.Isin + "'");
 
-                // TODO - deze info wordt niet doorgestuurd, wss te groot
                 sysLog.Info("Request: 'GetLatestQuotesFromSecurities' - Requested Securities: '" + string.Join(" ", isins.ToArray()) + "'");
 
                 XmlRpcStruct[] queries = publicSecurityHandler.LatestQuotes(string.Join(" || ", isins.ToArray()));
@@ -278,7 +277,7 @@ namespace StockPlay.implXMLRPC
             }
         }
 
-        //TODO - Deze methode schrijven (of eventueel weglaten?) -- Dient om tabel van laatste quotes weer te geven op SecurityDetail pagina
+        //Deze methode schrijven (of eventueel weglaten?) -- Dient om tabel van laatste quotes weer te geven op SecurityDetail pagina
         public List<IQuote> GetDailyQuotesFromSecurity(string isin, DateTime minDate, DateTime maxDate)
         {
             return new List<IQuote>();
@@ -488,6 +487,27 @@ namespace StockPlay.implXMLRPC
             }
         }
 
+        public IUser GetUserByNickname(string nickname)
+        {
+            try
+            {
+                sysLog.Info("Request: UserListById - Requested user: '" + nickname + "'");
+
+                XmlRpcStruct[] userStruct = publicUserHandler.List("NICKNAME == '" + nickname + "'");
+
+                if (userStruct.Length > 0)
+                    return new User(userStruct[0]);
+                else
+                    return null;
+            }
+            catch (Exception e)
+            {
+                sysLog.Error("Error when requesting userList", e);
+
+                return null;
+            }
+        }
+
         public IUser GetUserDetailsByNickname(string nickname, string sessionID, ISession sessionHandler)
         {
             try
@@ -625,6 +645,29 @@ namespace StockPlay.implXMLRPC
                 sysLog.Error("Error when getting rankings", e);
 
                 return new List<IRank>();
+            }
+        }
+
+        public IRank GetRanking(int userID)
+        {
+            try
+            {
+                sysLog.Info("Request: GetRanking - Requested user: '" + userID + "'");
+
+                List<IRank> rankings = new List<IRank>();
+
+                XmlRpcStruct[] rankingStruct = publicPointsTransactionHandler.Ranking("USERID == " + userID);
+
+                if (rankingStruct.Length > 0)
+                    return new Rank(rankingStruct[0]);
+                else
+                    return null;
+            }
+            catch (Exception e)
+            {
+                sysLog.Error("Error when getting rankings", e);
+
+                return null;
             }
         }
 

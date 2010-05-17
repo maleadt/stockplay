@@ -21,7 +21,14 @@ hr
 }
 
 p.para {
-	margin: 0.5em 2em 0.5em 2em;
+	margin: 1em 2em 1em 2em;
+}
+
+p.paraNotification
+{
+    margin: 0.5em 4em 0.5em 4em;
+    font-style: italic;
+    text-align: center;
 }
 
 a:hover {
@@ -338,8 +345,8 @@ a:hover {
     border: 2px solid #fff17d;
 }
 
-/* ORDERSOVERVIEW DELETEBERICHT */
-#ctl00_ContentPlaceHolder_DeleteMessage 
+/* ORDERSOVERVIEW DELETEBERICHT en PORTFOLIO SELLBERICHT*/
+#ctl00_ContentPlaceHolder_DeleteMessage, #ctl00_ContentPlaceHolder_SellMessage
 {
     margin-left: 4em;
     margin-right: 4em;
