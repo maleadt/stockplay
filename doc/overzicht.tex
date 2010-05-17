@@ -21,10 +21,10 @@ Het is evident dat een beursspel zonder live beurskoersen niet veel voorstelt.. 
 Er was ook nood aan meer extensieve informatie voor elk effect. Bijvoorbeeld om onze AI-speler goeie inschattingen te kunnen laten maken, alsook om voldoende informatie te kunnen tonen aan onze spelers in de grafieken, was er nood aan historische beurskoersen. Daarom werd ook een scraper gemaakt die op de website van Euronext de historische data ophaalde.
 
 \section{AI-speler}
-Om ook in de beginfase de eerste spelers van genoeg concurrentie te voorzien, werd er ook een AI-speler ontwikkeld. Deze AI-speler gebruikt een genetisch algoritme om zijn orders te bepalen. Door te variren in de aangeboden parameters aan elke AI-instantie kunnen gemakkelijk verschillende AI-spelers worden aangemaakt. Dit laat toe om op een eenvoudige wijze het spel te voorzien van genoeg spelers om het ook voor de eerste menselijke spelers direct interessant te maken, en te houden natuurlijk!
+Om ook in de beginfase de eerste spelers van genoeg concurrentie te voorzien, werd er ook een AI-speler ontwikkeld. Deze AI-speler gebruikt een genetisch algoritme om zijn orders te bepalen. Door te vari\"eren in de aangeboden parameters aan elke AI-instantie kunnen gemakkelijk verschillende AI-spelers worden aangemaakt. Dit laat toe om op een eenvoudige wijze het spel te voorzien van genoeg spelers om het ook voor de eerste menselijke spelers direct interessant te maken, en te houden natuurlijk!
 
 \section{Mobiele spelclient}
-Om aan te tonen dat onze keuze voor het XML-RPC protocol ons veel mogelijkheden bood, werd er ook een client ontwikkeld in de vorm van een Java ME-applet. Java ME bevat slechts zeer rudimentaire functionaliteit, maar toch was ook daarvoor een XML-RPC-client beschikbaar.
+Om aan te tonen dat onze keuze voor het XML-RPC protocol ons veel mogelijkheden bood, werd er ook een client ontwikkeld in de vorm van een Java ME-applicatie. Java ME bevat slechts zeer rudimentaire functionaliteit, maar toch was ook daarvoor een XML-RPC-client beschikbaar.
 Met deze client kan een speler zijn portfolio en zijn huidige orders opvragen. De client staat ook enkele rudimentaire bewerkingen toe zoals het cancellen van een nog niet uitgevoerd order, alsook het aanmaken van een nieuw order.
 
 \section{Transactiemanager}
@@ -85,17 +85,19 @@ De grote omvang van het project zorgde ervoor dat al snel iedereen zich begon to
 Door de strikte timing van het project met zijn verschillende iteraties kon er niet gewacht worden op een volledig functionele backend om vanaf te starten.. De ontwikkeling verliep vooral rond de verschillende iteraties.
 
 \subsection{Alfa-iteratie}
-Voor elk groot onderdeel moest er iets gedemonstreerd worden. Voor elk onderdeel werd de basis gelegd, en 1 stuk rudimentair uitgewerkt.
+Voor elk groot onderdeel van het project moest er iets gedemonstreerd kunnen worden. We waren dus verplicht om zeer snel te bepalen op welke fundatielaag we gingen werken, om zo voor elk onderdeel één stuk rudimentair te kunnen uitwerken.
 
 \subsubsection{Backend}
 Er werd gezocht naar een propere manier om de backend op te bouwen: hoe wordt de database best benaderd? Wat is een goeie structuur voor de backend zelf? Hoe bouwen we de XML-RPC-berichten op?
 Uiteindelijk werd het deel van de backend dat zich bezig houdt met het opvragen, aanmaken en wijzigen van effecten gekozen als pilootproject.
 \paragraph{Filtering}
 Om clients de mogelijkheid te bieden om op een eenvoudige manier objecten te selecteren werd een eigen filter geschreven.
+\paragraph{Data Access Objects}
+Omdat de voorstelling van data in de backend nogal verschilt van de voorstelling in de database, werd er gezocht naar een systeem dat de omzetting zo pijnloos mogelijk maakte.. Omdat dit een probleem is waarmee bijna elk softwarepakket dat gebruik maakt van een database wordt geconfronteerd, bestaan hier ook design patterns voor: er werd gekozen om het 'Data Access Object'-pattern te implementeren.
 
 \subsubsection{Website}
 Ontwikkeling van een ADO.NET-interface met de backend. Eerste rudimentaire functionaliteit inbouwen voor het ophalen en weergeven van effecten. Ook werd er gezocht naar manieren om de gegenereerde HTML-code vanuit ASP.NET wat op te schonen zodat er vlotter gebruik kon worden gemaakt van CSS-stylesheets.
-\paragraph{Grafieken}
+\paragraph{Dynamische grafieken}
 Er werd gezocht naar een goeie manier om de historische koersinformatie grafisch weer te geven. Daarom werden verschillende javascript grafieklibraries met elkaar vergeleken en uitgetest.
 
 \subsubsection{Administratie desktopclient}
@@ -130,7 +132,7 @@ De scraper werd verder afgewerkt, en kan nu ook zelfstandig de nodige effecten e
 Er werd ook een historische beurskoersen-scraper gemaakt die alle historische koersen vanaf Euronext ophaalt (1 koers per dag)
 
 \subsubsection{AI-speler}
-Vooreerst werd er gezocht naar wat de beste manier is om generische algoritmen toe te passen op beurskoersen. Daarvoor werd er beroep gedaan op vakliteratuur die daarover beschikbaar was. Vervolgens werd er ge\"experimenteerd met verschillende programmeertalen om uit te zoeken wat het snelst resultaat zou opleveren. Uiteindelijk werd er gekozen voor Perl omdat deze programmeertaal op eenvoudige wijze complexe structuren toelaat.
+Vooreerst werd er gezocht naar wat de beste manier is om generische algoritmen toe te passen op beurskoersen. Daarvoor werd er beroep gedaan op vakliteratuur die daarover beschikbaar was. Vervolgens werd er ge\"experimenteerd met verschillende programmeertalen om uit te zoeken wat het snelst resultaat zou opleveren. Uiteindelijk werd er gekozen voor Perl omdat deze programmeertaal op eenvoudige wijze toelaat om complexe gegevensstructuren te verwerken met een goede performantie.
 
 \subsubsection{Mobiele spelclient}
 Omdat er op andere gebieden te veel werk was, werd er besloten om de mobiele client niet op te nemen in de beta-iteratie
@@ -143,6 +145,7 @@ De transactiemanager was lange tijd uit het oog verloren. Omdat het echter toch 
 
 \subsubsection{Backend}
 De backend reageerde vaak niet snel genoeg op aanvragen, bij nader onderzoek bleek er een serieuze bottle-neck aanwezig te zijn bij de connectie tussen de database en de backend. Oracle stuurde vaak aan zijn bovenlimiet qua snelheid informatie door, waardoor kostbare seconden verloren gingen. Er werd daarom voor gekozen om een cachingmechanisme in te bouwen. Dit werd echter niet van de grond af gedaan, maar er werd gebruik gemaakt van een reeds publiek beschikbare library 'cache4j'.
+Ook werd er een beveiligingsmechanisme ingebouwd, zodat afhankelijk van de aangemelde gebruiker maar een beperkte subset van de backend-API aanspreekbaar werd.
 
 \subsubsection{Website}
 De nog ontbrekende stukken werden toegevoegd: de ranking, [VUL AAN]. Ook werd er functionaliteit toegevoegd om complexe orders in te voeren.
@@ -154,17 +157,53 @@ De mogelijkheid om met een elektronische identiteitskaart in te loggen werd toeg
 
 \subsubsection{Beurskoersen-scraper}
 \paragraph{Historische beurskoersen-scraper}
-
+\todo TIM
 \subsubsection{AI-speler}
+\todo TIM
 
 \subsubsection{Mobiele spelclient}
 De mobiele spelclient werd weer terug opgenomen. De client-library die beschikbaar was in Java werd geport naar Java ME. Aanvankelijk ging dat gepaard met de ene teleurstelling na de andere door het gebrek aan functionaliteit (geen enums, geen generics, etc), maar daar werd al snel een mouw aan gepast.. Om tijd  te sparen werd er wel besloten om wat extra functionaliteit uit de mobiele client te schrappen. Het is immers een nogal log systeem om te debuggen, en deze module is eerder bedoeld als een proof-of-concept dan als een essentieel onderdeel uit ons project.
 
 \subsubsection{Transactiemanager}
 De transactiemanager werd uitgebreid met geavanceerde orders.
+\todo LAURENS
 
 \subsubsection{Puntenmanager}
 De puntenmanager was het laatste grote ontbrekende deel aan het project. Deze werd dan ook snel in deze iteratie onder handen genomen.
+\todo DIETER
+
+\chapter{Projectevaluatie}
 
 
-\section{Projectevaluatie}
+\section{SWOT-analyse}
+
+\subsection{Strenghts}
+
+De grootste sterkte van dit project is onze backend. In dit deel van het project werd het meeste tijd gestopt, en het resultaat is een elegant, flexibel en coherent geheel. 
+Zo is de datalaag van onze backend erop voorzien dat er gemakkelijk van onderliggende database kan worden gewisseld, en zijn er ook faciliteiten ingebouwd om een vlotte conversie van de interne objecten naar de gebruikte gegevensstructuren in het XML-RPC-protocol.
+
+
+\subsection{Weaknesses}
+
+\paragraph{Mobiele client} De mobiele client werd niet opgebouwd op een erg robuuste manier. Zou deze verder ontwikkeld worden, dan zou er al snel nood zijn aan een grote herorganisatie van de code om ze flexibeler te maken.
+
+\todo Known issues / bugs
+
+\subsection{Opportunities}
+
+\paragraph{Algemeen} Het doel van het spel is om zoveel mogelijk de beurs in het echte leven de simuleren. Dit is echter zo'n danig complex gegeven dat we nog lang niet een levensecht spel hebben gecre\"erd. Elementen die nog in het spel ontbreken zijn bijvoorbeeld het aanrekenen van transactiekosten en bewaargelden. 
+Momenteel is er ook maar een beperkt aantal beurzen aanwezig in het spel. We werden hiertoe gedwongen omdat de gescrapete data van andere beurzen vaak niet granulair genoeg was. Zou er echter beschikking zijn over betere datafeeds, dan kan het spel op dit vlak snel uitbreiden. Indien er ook beurzen zouden bijkomen die met andere munteenheden werken, zou ook dit een extra dimensie aan het spel kunnen toevoegen, het werken met vreemde munten kan gelukkig snel worden ingebouwd in de bestaande voorzieningen.
+
+\paragraph{Puntenmanager} De puntenmanager voorziet in alle faciliteiten om gebruikers op verschillende vlakken te quoteren. Om het spel intersanter en aantrekkelijker te maken is het een goed idee om nog verder te zoeken naar domeinen waar een speler op kan worden gequoteerd. Het is misschien ook een goed idee om aparte klassementen te voorzien voor bepaalde criteria (bijvoorbeeld: met zo weinig mogelijk transacties toch zo goed mogelijk scoren)
+
+\todo Uitbreidingsmogelijkheden
+
+\subsection{Threats}
+
+\todo zwakheden in ons model (probeer hier creatief te zijn en zwakheden te zetten die eigenlijk positief zijn (vb. als je later op een sollicitatiegesprek zo'n analyse van jezelf moet maken is een goeie ``door mijn oog voor detail durf ik wel eens te lang doorgaan op een deelprobleem'')
+
+\paragraph{Algemeen} Het door ons gekozen onderwerp was zodanig breed en complex, dat er al snel de verleiding kwam om teveel elementen vanuit de echte wereld van de financi\"ele markten in ons spel te verwerken. Dit heeft ertoe geleid dat we ons project soms iets te breed hebben gezien, waardoor de workload onaangenaam hoog is komen te liggen.. Het was misschien beter geweest om een iets nauwere scope te nemen, zodat we ons ook wat meer op de afwerking van onze code konden richten.
+
+\paragraph{Backend}
+Het cachingmodel dat werd ingebouwd in de backend kan nog verder worden verfijnd. Momenteel wordt er nog te weinig rekening gehouden met mogelijke veranderingen van de achterliggende data. Er wordt best gezocht naar een meer geavanceerd model, of een eigen cachingmechanisme. Het filtersysteem dat werd ingebouwd in de backend is flexibel gemaakt, en er dus ook op voorzien om ook opzoekingen in andere gegevensstructeren mogelijk te maken, wat natuurlijk goede perspectieven biedt..
+
