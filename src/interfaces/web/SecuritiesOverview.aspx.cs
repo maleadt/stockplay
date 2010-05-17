@@ -131,7 +131,15 @@ namespace StockPlay.Web
 	
 	    protected void SecuritiesGridview_PageIndexChanging(object sender, GridViewPageEventArgs e)
 	    {
+            SortDirection sortDirection = (SortDirection) ViewState["sortDirection"];
+            string sortExpression = (string)ViewState["sortExpression"];
+
+            DataView dataView = (DataView)Session["securitiesView"];
+            dataView.Sort = sortExpression + " " + ConvertSortDirectionToSql(sortDirection);
+
 	        SecuritiesGridview.PageIndex = e.NewPageIndex;
+
+            SecuritiesGridview.DataSource = dataView;
 	        SecuritiesGridview.DataBind();
 	    }
 	
@@ -140,15 +148,16 @@ namespace StockPlay.Web
 	        DataView dataView = (DataView) Session["securitiesView"];
 	
 	        SortDirection sortDirection;
-	        if (Session["sortDirection"] != null)
-	            sortDirection = InvertSort((SortDirection)Session["sortDirection"]);
+            if (ViewState["sortDirection"] != null)
+                sortDirection = InvertSort((SortDirection)ViewState["sortDirection"]);
 	        else
 	            sortDirection = e.SortDirection;
 	
 	        if (dataView != null)
 	        {
 	            dataView.Sort = e.SortExpression + " " + ConvertSortDirectionToSql(sortDirection);
-	            Session["sortDirection"] = sortDirection;
+                ViewState["sortDirection"] = sortDirection;
+                ViewState["sortExpression"] = e.SortExpression;
 	
 	            SecuritiesGridview.DataSource = dataView;
 	            SecuritiesGridview.DataBind();
