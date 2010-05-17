@@ -91,4 +91,31 @@
 % Compacte environment voor use-cases
 \newenvironment{compact}{\setlength{\parskip}{0pt}}{}
 
+%stijlen voor listings
+%
+\lstdefinestyle{SQL}{
+  breaklines=true,
+  language=SQL,
+  basicstyle=\normalsize,
+  keywordstyle=\ttfamily\color{OliveGreen},
+  identifierstyle=\ttfamily\color{CadetBlue}\bfseries,
+  commentstyle=\color{Brown},
+  stringstyle=\ttfamily,
+  showstringspaces=true
+}
 
+
+\definecolor{myid}{rgb}{0.1,0.1,0.1}
+\lstdefinestyle{Java}{language=java,
+basicstyle=\ttfamily\normalsize,
+numbers=left,stepnumber=1,numberstyle=\small\ttfamily,
+numbersep=5pt,frame=tlbr,extendedchars=true,
+commentstyle=\color{OliveGreen}\ttfamily,
+%% stringstyle=\color{red}\ttfamily,
+stringstyle=\ttfamily\color{Magenta},
+keywordstyle=\ttfamily\color{Violet}\bfseries,
+ndkeywordstyle=\ttfamily\color{Yellow}\bfseries,
+identifierstyle=\ttfamily\color{myid},
+% sensitive=false,
+basicstyle=\scriptsize,
+}
