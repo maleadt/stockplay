@@ -89,7 +89,7 @@ De grote omvang van het project zorgde ervoor dat al snel iedereen zich begon to
 
 \section{Planning}
 
-Door de strikte timing van het project met zijn verschillende iteraties kon er niet gewacht worden op een volledig functionele backend om vanaf te starten.. De ontwikkeling verliep vooral rond de verschillende iteraties.
+Door de strikte timing van het project met zijn verschillende iteraties kon er niet gewacht worden op een volledig functionele backend om vanaf te starten. De ontwikkeling verliep vooral rond de verschillende iteraties.
 
 \subsection{Alfa-iteratie}
 Voor elk groot onderdeel van het project moest er iets gedemonstreerd kunnen worden. We waren dus verplicht om zeer snel te bepalen op welke fundatielaag we gingen werken, om zo voor elk onderdeel een stuk rudimentair te kunnen uitwerken.
@@ -99,7 +99,8 @@ Er werd gezocht naar een nette en abstracte methode om de backend op te bouwen: 
 Uiteindelijk werd het deel van de backend dat zich bezig houdt met het opvragen, aanmaken en wijzigen van effecten gekozen als pilootproject.
 
 \paragraph{Filtering}
-Om clients de mogelijkheid te bieden om op een eenvoudige manier objecten te selecteren werd een eigen filter ontwikkeld.
+Om clients de mogelijkheid te bieden om op een eenvoudige manier objecten te selecteren werd een eigen filter ontwikkeld. Hiervoor hebben we verschillende modellen en syntaxen afgewogen, om uiteindelijk te kiezen voor een SQL-achtige opmaak. Om deze te kunnen verwerken werd een compacte parser ontworpen, die de filter uiteidelijk converteert naar een geschikt formaat om door de database verwerkt te kunnen worden.
+Ook werd, door gebruik te maken van de GraphViz bibliotheek, een eenvoudige manier voorzien om filter de kunnen debuggen.
 
 \paragraph{Data Access Objects}
 Omdat de voorstelling van data in de backend nogal verschilt van de voorstelling in de database, werd er gezocht naar een systeem dat de omzetting zo transparant mogelijk maakte.. Omdat dit een probleem is waarmee bijna elk softwarepakket dat gebruik maakt van een database wordt geconfronteerd, bestaan hier ook design patterns voor: er werd gekozen om het 'Data Access Object'-pattern te implementeren.
@@ -123,16 +124,19 @@ Er werd uitgezocht of er goeie XML-RPC-clients beschikbaar waren. Ook werd de fu
 
 \subsection{Beta-iteratie}
 Bij deze iteratie werd er vooral gefocust om zoveel mogelijk functionaliteiten in te bouwen. De bedoeling was om tegen de beta-iteratie een spel te kunnen aanbieden waarbij de speler beschikte over alle basisfunctionaliteiten: beheer van zijn portfolio, aanmaken van orders, bekijken van aandelen, etc.
-Om tegemoet te komen aan de vraag om een algoritmisch aspect in te bouwen, werd er ook voor geopteerd om een kunstmatige artifici‘le intelligentie speler te ontwikkelen.
+Om tegemoet te komen aan de vraag om een algoritmisch aspect in te bouwen, werd er ook voor geopteerd om een kunstmatige intelligentie speler te ontwikkelen.
 
 \subsubsection{Backend}
 Het volledige protocol werd geimplementeerd in de backend. Ook gebeurden er aanpassingen aan het protocol om het aantal requests van de clientmodules te beperken, en zo een vlottere gebruikerservaring te kunnen aanbieden.
+
+\paragraph{Filtering}
+De filter werd uitgebreid met complexere datastructuren (zoals reguliere expressies), alsook werd de parser verfijnd zodat complexere syntactische constructies mogelijk werden. Zo werd de filter eenvoudig in gebruik voor de programmeur.
 
 \subsubsection{Website}
 De website werd verder uitgewerkt: gebruikersregistratie, beheer van portfolio, aanmaken van orders.
 
 \paragraph{Dynamische grafieken}
-De dynamische grafieken module werd verder uitgewerkt in object geori‘nteerde javascript. Er werd een menu toegevoegd en de functionaliteit achter de knoppen werd ontwikkeld. Het is mogelijk om referenties toe te voegen, in te zoomen via knoppen of muisbewegingen een bereik te selecteren.
+De dynamische grafieken module werd verder uitgewerkt in object geori\"enteerde javascript. Er werd een menu toegevoegd en de functionaliteit achter de knoppen werd ontwikkeld. Het is mogelijk om referenties toe te voegen, in te zoomen via knoppen of muisbewegingen een bereik te selecteren.
 Ook werd een weergave historiek ingebouwd zodat weergavewijzingen ongedaan kunnen gemaakt worden. De ASP.NET Webservice werd ontwikkeld om de data via AJAX en JSON te kunnen leveren. En een tweede gekoppelde grafiek werd toegevoegd met volume data.
 
 \subsubsection{Administratie desktopclient}
@@ -140,13 +144,10 @@ De clientlibrary werd volledig afgewerkt, zodat ze bijna alle functionaliteiten 
 Vervolgens werd er gewerkt aan het bewerken van de opgehaalde effecten, alsook werd er begonnen aan het gebruikersbeheer. Omdat de benodigde functionaliteit tussen het effectenbeheer en het gebruikersbeheer danig verschilde, werd er voor geopteerd om geen generiek CRUD-design te gebruiken, maar aparte implementaties te voorzien.
 
 \subsubsection{Beurskoersen-scraper}
-De scraper werd verder afgewerkt en kan nu ook zelfstandig de nodige effecten en beurzen aanmaken.
+De scraper werd verder afgewerkt en kan nu ook zelfstandig de nodige effecten en beurzen aanmaken. Ook werd de bestaande code modulair en robuuster gemaakt door alles te abstraheren in een datalaag, waarbij data-objecten ge\"instantieerd en opgevuld worden door een aparte factory (naar model van de DAO laag in de backend).
 
-\paragraph{Historische beurskoersen-scraper}
-Er werd ook een historische beurskoersen-scraper gemaakt die alle historische koersen vanaf Euronext ophaalt (een koers per dag)
-
-\subsubsection{Kunstmatige artifici‘le intelligentie speler}
-Vooreerst werd er gezocht naar wat de beste manier is om generische algoritmen toe te passen op beurskoersen. Daarvoor werd er beroep gedaan op vakliteratuur die daarover beschikbaar was. Vervolgens werd er ge\"experimenteerd met verschillende programmeertalen om uit te zoeken wat het snelst resultaat zou opleveren. Uiteindelijk werd er gekozen voor Perl omdat deze programmeertaal op eenvoudige wijze toelaat om complexe gegevensstructuren te verwerken met een goede performantie.
+\subsubsection{Kunstmatige intelligentie speler}
+Vooreerst werd er gezocht naar wat de beste manier is om generische algoritmen toe te passen op beurskoersen. Daarvoor werd er beroep gedaan op vakliteratuur die daarover beschikbaar was. Vervolgens werd er ge\"experimenteerd met verschillende programmeertalen om uit te zoeken wat het snelst resultaat zou opleveren. Uiteindelijk werd er gekozen voor Perl omdat we zo konden gebruik maken van de bestaande datalaag voor de verwerking van complexe datastructuren, en toch eenvoudig konden interfacen met een library geschreven in een performantere taal om het echte werk uit te voeren.
 
 \subsubsection{Mobiele spelclient}
 Er werd besloten om de mobiele client niet op te nemen in de beta-iteratie omdat andere onderdelen een hogere prioriteit hadden.
@@ -159,6 +160,9 @@ De transactiemanager was lange tijd uit het oog verloren. Omdat het echter toch 
 \subsubsection{Backend}
 De backend reageerde vaak niet snel genoeg op aanvragen, bij nader onderzoek bleek er een serieuze bottle-neck aanwezig te zijn bij de connectie tussen de database en de backend. Oracle stuurde vaak aan zijn bovenlimiet qua snelheid informatie door, waardoor kostbare seconden verloren gingen. Er werd daarom voor gekozen om een cachingmechanisme in te bouwen. Dit werd echter niet van de grond af gedaan, maar er werd gebruik gemaakt van een reeds publiek beschikbare library 'cache4j'.
 Ook werd er een beveiligingsmechanisme ingebouwd, zodat afhankelijk van de aangemelde gebruiker maar een beperkte subset van de backend-API aanspreekbaar werd.
+
+\paragraph{Filtering}
+Finaal werd nog een "native target" voorzien die een filter terug kan compileren naar zijn oorspronkelijke vorm, opgesteld door de programmeur. Dit om het debuggen te vereenvoudigen, alsook een betere weergave te voorzien in de cache-overzichtpagina's.
 
 \subsubsection{Website}
 De nog ontbrekende stukken werden toegevoegd: de ranking, [VUL AAN]. Ook werd er functionaliteit toegevoegd om complexe orders in te voeren.
@@ -173,13 +177,12 @@ Er werden ook aanpassingen gedaan zodat nu slechts maximum 100 punten teruggegev
 De mogelijkheid om met een elektronische identiteitskaart in te loggen werd toegevoegd. Omdat er te weinig tijd restte om uit te zoeken hoe vervolgens op een met certificaten beveiligde manier een beveiligde sessie op de backend kon worden aangevraagd, is het nodig dat lokaal de logingegevens van een administrator-account worden opgeslagen om een nieuw sessie-id te kunnen aanmaken.
 
 \subsubsection{Beurskoersen-scraper}
+
 \paragraph{Historische beurskoersen-scraper}
+Na afweging van verschillende algoritmen voor de kunstmatige intelligentie, hadden we uiteindelijk gekozen voor een massief-lerend algoritme. Hiervoor was echter een ruime hoeveelheid data benodigd, en daar kon de huidige scraper, vooral gericht op realtime data aan een hoge resolutie, niet aan voldoen. Daarom hebben we een alternatieve scraper gemaakt, die zich door gebruik te maken van alternatieve databronnen, richtte op een veel groter bereik aan data. Deze haalde zijn data van de Euronext site, beperkt in resolutie maar met een bereik tot 2 jaar in het verleden.
 
-\todo TIM
-
-\subsubsection{Kunstmatige artifici‘le intelligentie speler}
-
-\todo TIM
+\subsubsection{Kunstmatige intelligentie speler}
+Om modulariteit te verhogen werd de core-code die een neuraal netwerk gebruikte om koersen te voorspellen, in een plugin gegoten om zo eventueel alternatieve algoritmes parallel te kunnen gebruiken. Ook werd een eenvoudig portfolio-selectiealgoritme toegevoegd, zodat de module nu volledig autonoom de geselecteerde (en hopelijk optimale) portfolio kan verwezenlijken door de correcte orders naar de backend te sturen.
 
 \subsubsection{Mobiele spelclient}
 De mobiele spelclient werd weer terug opgenomen. De client-library die beschikbaar was in Java werd geport naar Java ME. Aanvankelijk ging dat gepaard met de ene teleurstelling na de andere door het gebrek aan functionaliteit (geen enums, geen generics, etc), maar die problemen zijn overwonnen.. Wel werd er besloten om wat extra functionaliteit uit de mobiele client te schrappen. Het is immers een nogal log systeem om te debuggen en deze module is eerder bedoeld als een proof-of-concept en vormt geen essentieel onderdeel in het project.
@@ -192,8 +195,8 @@ Zodoende wordt de benodigde data slechts eenmalig per iteratie opgevraagd en nie
 De puntenmanager was het laatste grote ontbrekende deel aan het project. Deze werd dan ook snel in deze iteratie onder handen genomen.
 \todo DIETER
 
-\chapter{Projectevaluatie}
 
+\chapter{Projectevaluatie}
 
 \section{SWOT-analyse}
 
@@ -240,4 +243,4 @@ Momenteel is er ook maar een beperkt aantal beurzen aanwezig in het spel. We wer
 \emph{Ter illustratie: }ons project bevat volgens \emph{StatSVN} 54652 lijnen code, waarbij gepoogd werd enkel de zelfgemaakte bestanden in rekening te nemen (geen gecompileerde klassen, geen externe libraries, word documenten, presentaties, afbeeldingen, enzovoort). 
 
 \paragraph{Backend}
-Het cachingmodel dat werd ingebouwd in de backend kan nog verder worden verfijnd. Momenteel wordt er nog te weinig rekening gehouden met mogelijke veranderingen van de achterliggende data. Er zou best worden gezocht naar een meer geavanceerd model, of een eigen cachingmechanisme. Het filtersysteem dat werd ingebouwd in de backend is flexibel gemaakt en er dus ook op voorzien om ook opzoekingen in andere gegevensstructeren (andere databases of bijvoorbeeld een eigen opslagsysteem) mogelijk te maken, wat natuurlijk goede perspectieven biedt..>>>>>>> .r653
+Het cachingmodel dat werd ingebouwd in de backend kan nog verder worden verfijnd. Momenteel wordt er nog te weinig rekening gehouden met mogelijke veranderingen van de achterliggende data. Er zou best worden gezocht naar een meer geavanceerd model, of een eigen cachingmechanisme. Het filtersysteem dat werd ingebouwd in de backend is flexibel gemaakt en er dus ook op voorzien om ook opzoekingen in andere gegevensstructeren (andere databases of bijvoorbeeld een eigen opslagsysteem) mogelijk te maken, wat natuurlijk goede perspectieven biedt.
