@@ -1,9 +1,7 @@
 package com.kapti.data.persistence;
 
-import com.kapti.data.Exchange;
 import com.kapti.data.Security;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.HashMap;
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;

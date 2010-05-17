@@ -32,6 +32,7 @@ import java.util.Vector;
 import com.kapti.data.Quote;
 import com.kapti.data.Security;
 import com.kapti.exceptions.FilterException;
+import com.kapti.filter.relation.RelationAnd;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -52,31 +53,27 @@ public class SecurityHandler extends MethodClass {
     //
 
     public List<Map<String, Object>> List() throws StockPlayException {
-        // Get DAO reference
-        GenericDAO<com.kapti.data.Security, String> tSecurityDAO = getDAO().getSecurityDAO();
-
-        // Fetch and convert all Indexs
-        Collection<com.kapti.data.Security> tIndexs = tSecurityDAO.findAll();
-        Vector<Map<String, Object>> oVector = new Vector<Map<String, Object>>();
-        for (com.kapti.data.Security tIndex : tIndexs) {
-            oVector.add(tIndex.toStruct(
-                    com.kapti.data.Security.Fields.ISIN,
-                    com.kapti.data.Security.Fields.SYMBOL,
-                    com.kapti.data.Security.Fields.NAME,
-                    com.kapti.data.Security.Fields.EXCHANGE,
-                    com.kapti.data.Security.Fields.VISIBLE,
-                    com.kapti.data.Security.Fields.SUSPENDED));
-        }
-
-        return oVector;
+        return List("");
     }
 
     public List<Map<String, Object>> List(String iFilter) throws StockPlayException {
         // Get DAO reference
         GenericDAO<com.kapti.data.Security, String> tSecurityDAO = getDAO().getSecurityDAO();
 
+                // Create a filter
         Parser parser = Parser.getInstance();
-        Filter filter = parser.parse(iFilter);
+        Filter filter = null;
+        Filter base = parser.parse(iFilter);
+        if (getRole() != null && getRole().isBackendAdmin()) {
+            filter = base;
+        } else {
+            Filter visible = parser.parse("visible == 1");
+            if (!base.empty()) {
+                filter = Filter.merge(RelationAnd.class, base, visible);
+            } else {
+                filter = visible;
+            }
+        }
 
         // Fetch and convert all Indexs
         Collection<com.kapti.data.Security> tSecurities = tSecurityDAO.findByFilter(filter);
