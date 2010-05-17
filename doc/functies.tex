@@ -58,14 +58,13 @@
 			\end{tabular}
 		}
 		\subsection{#1}
-		\begin{tabular}{|r r r p{8cm}|}
+		\begin{tabular}{|r r r p{10cm}|}
 		\hline
 		\textsc{Begin} & \textsc{Einde} & \textsc{Duur} & \textsc{Beschrijving} \\
 		\hline
 	}
 	\lbsetdate{#1}
 	#2 & #3 & #4 & #5 \\
-	%DATA & DATA2 & DATA3 & DATA4 \\
 }
 \newcommand{\lbstop}[1] {
 	& & & \\ \hline % TODO: consistentie fix, zie hierboven
