@@ -1303,6 +1303,13 @@ Analoog aan hoe we de scraper plugin-infrastructuur gerealiseerd hebben, zal elk
 Wanneer er tenslotte slotkoersen voor de volgende dag voorspeld zijn, moet er nog een optimale portfolio samengesteld worden. Dit aspect mag misschien klein lijken, het is helemaal niet evident om dit intelligent te realiseren! Een goed algoritme zou hierbij kijken naar de nauwkeurigheid van elke voorspelling, zich baseren op het uiteindelijke resultaat van vorige voorspellingen, en gebruik maken van vastgelegde parameters die bepalen hoe ``conservatief'' of net ``risicovol'' het zich moet gedragen. Maar dit valt opnieuw ruim buiten de scope van dit project, niet alleen is het geen exacte wetenschap, ook is het een relatief ongedocumenteerd onderwerp en zou er veel tijd kruipen in het ontwikkelen en benchmarken van een dergelijk algoritme. Daarom hebben we geopteerd om een eenvoudig algoritme te gebruiken, waarbij een evenredige selectie genomen wordt van de meest performante aandelen gebaseerd op een enkele voorspelling. Dit opnieuw omdat de artifici\"ele intelligentie vooral ontworpen is om de modulariteit en eenvoudige uitbreidbaarheid van de backend te demonstreren, het ontwikkelen van een complex portfolio-selectiealgoritme is hierbij irrelevant.
 
 
+\section{Computationeel intensief}
+
+Het trainen van een neuraal netwerk tot een niveau waarop de foutenmarges binnen aanvaardbare proporties vallen, vereist veel rekentijd. Aangezien de AI voor het selecteren van een optimale portfolio deze berekening moet herhalen voor alle beschikbare aandelen, heeft de module veel tijd nodig om een cyclus af te ronden. Praktisch komt dit op een recente computer en een relatief nauwkeurige netwerkeis (maximaal 0.1 eurocent afwijking ten opzichte van de ingegeven waarden) neer op een minuut per aandeel, wat in geval van een relatief grote beurs neerkomt op verschillende uren per cyclus. Daarom hebben we de AI module ingericht zodat ze best eenmaal per dag uitgevoerd wordt, waarna huidige portfolio vergeleken wordt met de op dat moment optimale selectie, om vervolgens de benodigde aandelen te kopen of verkopen.
+
+De hoeveelheid rekentijd benodigd voor een cyclus zou echter wel verminderd kunnen worden, bijvoorbeeld door caching-mogelijkheden aan te bieden aan alle plugins. Zo kan bijvoorbeeld een neuraal netwerk zijn optimale netwerkparameters zou kunnen neerschrijven, zodat opeenvolgende leercycli sneller afgerond worden.
+
+
 %
 % Netwerkoptimalisaties
 %

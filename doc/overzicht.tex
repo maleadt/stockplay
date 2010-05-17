@@ -217,6 +217,10 @@ Onze ervaring leert dat wanneer de backend enkele uren heeft gedraaid zonder dat
 
 Het cachingmodel dat werd ingebouwd in de backend kan nog verder worden verfijnd. Momenteel wordt er nog te weinig rekening gehouden met mogelijke veranderingen van de achterliggende data. Er wordt best gezocht naar een meer geavanceerd model, of een eigen cachingmechanisme. Het filtersysteem dat werd ingebouwd in de backend is flexibel gemaakt, en er dus ook op voorzien om ook opzoekingen in andere gegevensstructeren mogelijk te maken, wat natuurlijk goede perspectieven biedt. Een filter-backend die zorgt voor introspectie van de ingegeven filter zou immers selectieve invalidatie van cache-entries mogelijk maken.
 
+\paragraph{Artifici\"ele intelligentie}
+
+Berekeningen die door de artifici\"ele intelligentie uitgevoerd worden, zijn vaak computationeel vrij intensief. Het aanbieden van een caching-interface aan de plugins zou de cycli potentieel sterk inkorten, waardoor de intelligentie met een verhoogde frequentie zou kunnen ingezet worden, waardoor het spelverloop realistischer zou worden.
+
 \paragraph{Administratie desktopclient} De implementatie van de eID-loginprocedure moet nog verder worden verbeterd.  Door gebrek aan tijd was het niet mogelijk om te zoeken naar een manier om aan de hand van de certificaten bij de elektronische identiteitskaart een sessie aan te maken op de backend.. Daarom is het nu vereist om de logingegevens van een administratoraccount permanent op te slaan, om met deze gegevens een geldige sessie te kunnen opvragen voor de gebruiker die inlogde met de eID.
 
 \paragraph{Mobiele client} De mobiele client werd niet opgebouwd op een erg robuuste manier. Zou deze verder ontwikkeld worden, dan zou er al snel nood zijn aan een grote herorganisatie van de code om ze flexibeler te maken.
