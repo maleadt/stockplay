@@ -21,6 +21,7 @@
  */
 package com.kapti.client;
 
+import com.kapti.client.user.User;
 import com.kapti.exceptions.NotLoggedInException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -67,8 +68,6 @@ public class SPClientFactory {
         }
 
         try {
-
-
             XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
             config.setServerURL(new URL(serverURL));
             config.setGzipCompressing(settings.getString("gzip").equals("1"));
