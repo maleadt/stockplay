@@ -7,7 +7,7 @@
 \subsection{Initialisatie van de database}
 
 \begin{enumerate}
-\item{Installeer de Oracle Database 10g Express Edition}
+\item{Installeer Oracle Database 10g Express Edition}
 \item{Cre\"er de tablespace 'StockPlay': 
 \begin{verbatim}
 CREATE TABLESPACE STOCKPLAY 
@@ -15,16 +15,27 @@ DATAFILE 'stockplay.dat'
 SIZE 50M autoextend on
 \end{verbatim}
 }
-\item{Maak een gebruiker 'stockplay' aan met paswoord 'chocolademousse' en default tablespace 'stockplay'}
+\item{Maak een gebruiker 'stockplay' aan met paswoord 'chocolademousse' en stel de default tablespace in op 'stockplay'}
 \item{Log in met de zonet aangemaakte gebruiker, en voer het SQL-script 'installatiescript.sql' uit}
 \end{enumerate}
 
 
 \subsection{Backend}
 
+\begin{enumerate}
+\item{Gebruik het installatieprogramma}
+\end{enumerate}
+
 \subsection{Webserver}
 
+\begin{enumerate}
+\item{Installeer de IIS role met ASP.NET 3.5 op een Windows Server besturingsysteem}
+\item{Maak een nieuwe site aan en plaats er de bestanden in}
+\item{Eventueel dienen de DNS records van de domeinnaam nog aangepast te worden om naar de nieuwe installatie te verwijzen}
+\end{enumerate}
+
 \subsection{Administratie desktopclient}
+
 \begin{enumerate}
 \item Installeer de \makeurl{e-ID middleware}{http://eid.belgium.be/nl/Hoe\_installeer\_je\_de\_eID/Quick\_Install/} (minimum versie 3.5)
 \item{Voer het installatiebestand AdministrationSetup.exe uit}
@@ -33,6 +44,11 @@ SIZE 50M autoextend on
 \subsection{Scraper}
 
 \subsection{Transactiemanager}
+
+\begin{enumerate}
+\item{Installeer het script zodat de .jar automatisch opgeroepen wordt na een serverboot}
+\item{De transactiemanager blijft draaien en zal periodiek zijn order controleren en eventueel uitvoeren}
+\end{enumerate}
 
 \subsection{Puntenmanager}
 
@@ -55,7 +71,7 @@ De desktopapplicatie bevindt zich in de map ''VOP Groep 7'' op het bureaublad en
 
 \paragraph{Verifi\"eren connectiviteit}
 
-Indien bij het opstarten van de applicatie de StockPlay servers niet toegankelijk blijken te zijn, wordt de gebruiker hiervan ge\"informeerd zoals te zien is in figuur \ref{fig:handl:admin:verbindingsfout}. Controleer of de PC waarop de applicatie gedraait wordt, wel internetconnectiviteit heeft. Indien dit het geval is, moeten er contact opgenomen worden met de ondersteunende dienst om de backend en client-configuratie te controleren.
+Indien bij het opstarten van de applicatie de StockPlay servers niet toegankelijk blijken te zijn, wordt de gebruiker hiervan ge\"informeerd zoals te zien is in figuur \ref{fig:handl:admin:verbindingsfout}. Controleer of de PC waarop de applicatie gedraaid wordt, wel internetconnectiviteit heeft. Indien dit het geval is, moeten er contact opgenomen worden met de ondersteunende dienst om de backend en client-configuratie te controleren.
 
 \begin{figure}[h!]
 	\centering
@@ -66,8 +82,8 @@ Indien bij het opstarten van de applicatie de StockPlay servers niet toegankelij
 
 \paragraph{Inloggen}
 
-De inloggegevens voor deze demo zijn ``Administrator'' en ``chocolademousse''. Vul die gegevens in en druk op ``Login'', zoals te zien is in figuur \ref{fig:handl:admin:login}. Indien verkeerde credentials ingevoerd worden, krijgt de gebruiker hier melding van zoals te zien is in figuur \ref{fig:handl:admin:login-failure}.
-Je kan ook zelf een account aanmaken, zie daarvoor \ref{sec:handl:admin:gebruikers}. Als deze de rechten ``Administrator'' bezit, dan kan je hiermee ook inloggen.
+Mogelijke inloggegevens zijn "Administrator'' als gebruikersnaam en "chocolademousse" als wachtwoord. Vul die gegevens in en druk op ``Login'', zoals te zien is in figuur \ref{fig:handl:admin:login}. Indien verkeerde credentials ingevoerd worden, krijgt de gebruiker hier melding van zoals te zien is in figuur \ref{fig:handl:admin:login-failure}.
+Je kan ook zelf een account aanmaken, zie daarvoor \ref{sec:handl:admin:gebruikers}. Als deze de ``Administrator'' rechten bezit, dan kan je hiermee ook inloggen.
 
 \begin{figure}[h!]
 	\centering
@@ -90,7 +106,6 @@ Alsook bevat deze enkele belangrijke statistieken over de backend:
 \item Hoe lang de backend reeds draait
 \item Hoeveel requests de backend reeds verwerkt heeft
 \end{enumerate_compact}
-Op het moment van schrijven is de logica in de 'backend' die achter de Start/Stop/Restart-knoppen zit nog niet uitgewerkt.
 
 \begin{figure}[h!]
 	\centering
