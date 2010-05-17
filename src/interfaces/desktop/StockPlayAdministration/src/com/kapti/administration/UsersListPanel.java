@@ -314,30 +314,27 @@ public class UsersListPanel extends JPanel implements TableModelListener, ListSe
 
 
             editDialog.setVisible(true);
-            editDialog.addWindowListener(new WindowAdapter() {
+            editDialog.addActionListener(new ActionListener() {
 
-                @Override
-                public void windowClosed(WindowEvent e) {
+                public void actionPerformed(ActionEvent e) {
+
                     EditUserDialog editDialog = (EditUserDialog) e.getSource();
-                    System.out.println(editDialog.isSuccess() + " --> " + editDialog.getUser().getNickname());
-                    if (e.getNewState() == WindowEvent.WINDOW_CLOSED) {
-                        //TODO dit werkt niet
-                        if (editDialog.isSuccess()) {
-                            usersTableModel.addUser(editDialog.getUser());
-                        }
+                    if (editDialog.isSuccess()) {
+                        usersTableModel.addUser(editDialog.getUser());
                     }
                 }
             });
 
 
-
         } else if (e.getActionCommand().equals(EDIT_USER_ACTION)) {
+
             for (int rownr : usersTable.getSelectedRows()) {
 
-                EditUserDialog editFrame = new EditUserDialog((JFrame) this.getTopLevelAncestor(), usersTableModel.getUserAt(rownr), String.format(translations.getString("EDIT_USER_TITLE"), usersTableModel.getUserAt(rownr).getId()));
-                editFrame.setVisible(true);
+                int realrownr = usersTable.convertRowIndexToModel(rownr);
 
-                usersTableModel.setUserAt(rownr, editFrame.getUser());
+                EditUserDialog editFrame = new EditUserDialog((JFrame) this.getTopLevelAncestor(), usersTableModel.getUserAt(realrownr), String.format(translations.getString("EDIT_USER_TITLE"), usersTableModel.getUserAt(realrownr).getId()));
+                editFrame.setVisible(true);
+                editFrame.addActionListener(new EditUserFinishedActionListener(realrownr, editFrame));
 
             }
         } else if (e.getActionCommand().equals(DELETE_USER_ACTION)) {
@@ -349,7 +346,9 @@ public class UsersListPanel extends JPanel implements TableModelListener, ListSe
 
                 String selectedUsers = "";
                 for (int rownr : usersTable.getSelectedRows()) {
-                    User user = usersTableModel.getUserAt(rownr);
+
+                    int realrownr = usersTable.convertRowIndexToModel(rownr);
+                    User user = usersTableModel.getUserAt(realrownr);
 
                     selectedUsers += user.getNickname() + " (ID: " + user.getId() + "), ";
 
@@ -359,7 +358,7 @@ public class UsersListPanel extends JPanel implements TableModelListener, ListSe
                 question = String.format(translations.getString("CONFIRM_USERS_DELETION"), selectedUsers);
             } else {
 
-                User user = usersTableModel.getUserAt(usersTable.getSelectedRow());
+                User user = usersTableModel.getUserAt(usersTable.convertRowIndexToModel(usersTable.getSelectedRow()));
                 question = String.format(translations.getString("CONFIRM_USER_DELETION"), user.getNickname() + " (ID: " + user.getId() + ")");
 
             }
@@ -376,6 +375,24 @@ public class UsersListPanel extends JPanel implements TableModelListener, ListSe
                 }
             }
         }
+    }
+
+    private class EditUserFinishedActionListener implements ActionListener{
+
+        int rownr;
+        EditUserDialog dialog;
+
+        public EditUserFinishedActionListener(int rownr, EditUserDialog dialog) {
+            this.rownr = rownr;
+            this.dialog = dialog;
+        }
+
+
+
+        public void actionPerformed(ActionEvent e) {
+                usersTableModel.setUserAt(rownr, dialog.getUser());
+        }
+
     }
 
     public void tableChanged(TableModelEvent e) {

@@ -172,8 +172,7 @@ public class SecuritiesListPanel extends JPanel implements TableModelListener, L
 
     public void tableChanged(TableModelEvent e) {
         checkButtons();
-        saveButton.setText(translations.getString("SAVE") + " (" + securitiesTableModel.getChangedRowsCount() +  ")");
-        saveButton.setEnabled(securitiesTableModel.getChangedRowsCount() > 0);
+
     }
 
     public void valueChanged(ListSelectionEvent e) {
@@ -204,6 +203,9 @@ public class SecuritiesListPanel extends JPanel implements TableModelListener, L
         hideSecurity.setEnabled(hide);
         resumeSecurity.setEnabled(resume);
         suspendSecurity.setEnabled(suspend);
+
+        saveButton.setText(translations.getString("SAVE") + " (" + securitiesTableModel.getChangedRowsCount() + ")");
+        saveButton.setEnabled(securitiesTableModel.getChangedRowsCount() > 0);
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -243,6 +245,9 @@ public class SecuritiesListPanel extends JPanel implements TableModelListener, L
                     JXErrorPane.showDialog(null, new ErrorInfo(translations.getString("ERROR"), translations.getString("ERROR_SAVING_SECURITIES"), "", "", null, null, null));
                 }
             }
+            securitiesTableModel.setChangesSaved();
+
+
         }
 
     }

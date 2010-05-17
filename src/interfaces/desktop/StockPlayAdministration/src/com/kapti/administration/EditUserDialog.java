@@ -23,7 +23,9 @@ import java.awt.event.ActionListener;
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.regex.Pattern;
 import javax.swing.BorderFactory;
@@ -309,6 +311,7 @@ public class EditUserDialog extends JDialog implements ActionListener {
 
                 if (dialog.isSuccess()) {
                     cashChange = dialog.getValueChange();
+                    cashField.setValue(user.getCash() + cashChange.getDelta());
                 }
 
             }
@@ -349,8 +352,12 @@ public class EditUserDialog extends JDialog implements ActionListener {
 
                 dialog.setVisible(true);
 
+
+
+
                 if (dialog.isSuccess()) {
                     pointsChange = dialog.getValueChange();
+                    pointsField.setValue(user.getPoints() + pointsChange.getDelta());
                 }
 
             }
@@ -382,6 +389,7 @@ public class EditUserDialog extends JDialog implements ActionListener {
 
 
     }
+
 
     public User getUser() {
         return user;
@@ -458,10 +466,30 @@ public class EditUserDialog extends JDialog implements ActionListener {
             } 
         }
 
+        fireActionEvent(new ActionEvent(this,0 ,""));
+
         this.setVisible(false);
     }
 
     public boolean isSuccess() {
         return success;
     }
+
+        private List<ActionListener> listeners = new ArrayList<ActionListener>();
+
+    public void addActionListener(ActionListener listener) {
+        listeners.add(listener);
+    }
+
+    public void removeActionListener(ActionListener listener) {
+        listeners.remove(listener);
+    }
+
+
+    private void fireActionEvent(ActionEvent e) {
+        for (ActionListener listener : listeners) {
+            listener.actionPerformed(e);
+        }
+    }
+
 }

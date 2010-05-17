@@ -170,10 +170,9 @@ public class MenuBar extends JMenuBar {
                             }
                         }
                     });
-
-
-
-
+                }
+                else{
+                    prefs.setLoginWithEid(false);
                 }
 
             }

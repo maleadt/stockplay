@@ -1,13 +1,14 @@
 package com.kapti.administration;
 
 import java.awt.Font;
-import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.Format;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -22,8 +23,8 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 public class ValueChangeWithReasonDialog<T extends Number> extends JDialog implements ActionListener, ChangeListener {
-    private static final ResourceBundle translations = ResourceBundle.getBundle("com/kapti/administration/translations");
 
+    private static final ResourceBundle translations = ResourceBundle.getBundle("com/kapti/administration/translations");
     private ComputeChange changeComputer;
     private SpinnerModel valueSpinnerModel;
     private Format valueFormatter;
@@ -36,14 +37,27 @@ public class ValueChangeWithReasonDialog<T extends Number> extends JDialog imple
     private JSpinner changeSpinner;
     private JTextField reasonField;
     private JButton saveButton;
+    private List<ActionListener> listeners = new ArrayList<ActionListener>();
+
+    public void addActionListener(ActionListener listener) {
+        listeners.add(listener);
+    }
+
+    public void removeActionListener(ActionListener listener) {
+        listeners.remove(listener);
+    }
+
+    private void fireActionEvent(ActionEvent e) {
+        for (ActionListener listener : listeners) {
+            listener.actionPerformed(e);
+        }
+    }
 
     public boolean isSuccess() {
         return success;
     }
 
-
-
-    public ValueChangeWithReasonDialog( String valueName, T initialValue, Format valueFormatter, SpinnerModel valueSpinnerModel, ComputeChange changeComputer, ValueChange<T> valueChange) {
+    public ValueChangeWithReasonDialog(String valueName, T initialValue, Format valueFormatter, SpinnerModel valueSpinnerModel, ComputeChange changeComputer, ValueChange<T> valueChange) {
         this.valueName = valueName;
         this.initialValue = initialValue;
         this.valueFormatter = valueFormatter;
@@ -60,7 +74,7 @@ public class ValueChangeWithReasonDialog<T extends Number> extends JDialog imple
         cTitel.anchor = GridBagConstraints.CENTER;
         cTitel.fill = GridBagConstraints.HORIZONTAL;
         cTitel.gridwidth = GridBagConstraints.REMAINDER;
-        cTitel.insets = new Insets(10,10,10,10);
+        cTitel.insets = new Insets(10, 10, 10, 10);
         cTitel.gridx = 0;
         cTitel.gridy = 0;
 
@@ -153,13 +167,13 @@ public class ValueChangeWithReasonDialog<T extends Number> extends JDialog imple
             JOptionPane.showMessageDialog(reasonField, translations.getString("ERROR_REASON_TO_SHORT"), translations.getString("ERROR_REASON_TO_SHORT_TITLE"), JOptionPane.WARNING_MESSAGE);
             reasonField.requestFocus();
 
-        }
-        else {
+        } else {
             valueChange.setDelta((T) changeSpinner.getValue());
             valueChange.setReason(reasonField.getText());
 
             success = true;
             setVisible(false);
+            fireActionEvent(new ActionEvent(this, 0, ""));
         }
     }
 

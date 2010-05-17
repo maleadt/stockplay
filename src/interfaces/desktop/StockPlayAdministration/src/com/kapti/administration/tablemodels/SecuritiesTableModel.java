@@ -80,6 +80,8 @@ public class SecuritiesTableModel extends AbstractTableModel {
     public void setChangesSaved(){
         for(int i = 0; i < changed.length; i++)
             changed[i] = false;
+
+       fireTableRowsUpdated(0, securities.length-1);
     }
 
     public int getChangedRowsCount(){
@@ -89,7 +91,6 @@ public class SecuritiesTableModel extends AbstractTableModel {
                 result++;
 
         return result;
-
     }
 
     public int getRowCount() {
