@@ -62,7 +62,7 @@ END;
 \label{code:data:trig_cash}
 \end{code}
 
-Een transactie is ook niet altijd mogelijk: als een speler te weinig cash in huis heeft om te kopen, of te weinig effecten om te kunnen verkopen, dan kan een transactie niet doorgaan. Dit wordt gecontroleerd door de trigger die te zien is in codefragment \ref{code:data:trig_transacties}.
+Een transactie is ook niet altijd mogelijk: als een speler een te lage cashpositie bezit, of te weinig effecten om te kunnen verkopen, dan kan een transactie niet doorgaan. Dit wordt gecontroleerd door de trigger die te zien is in codefragment \ref{code:data:trig_transacties}.
 
 \begin{code}
 \begin{lstlisting}
@@ -105,7 +105,7 @@ END;
 \end{code}
 
 
-De verandering in punten bij een speler wordt geregistreerd in de tabel ``pointtransactions'', dat laat toe om een meer verfijnde klassementen op te stellen (dagklassement, weekklassement, maandklassement, ...). Het totale aantal punten wordt berekend met behulp van een trigger in de ``users''-tabel, wiens code vermeld staat in codefragment \ref{code:data:trig_punten}.
+Wijzingen in punten bij een speler wordt geregistreerd in de tabel ``pointtransactions'', dat laat toe om een meer verfijnde klassementen op te stellen (dagklassement, weekklassement, maandklassement, ...). Het totale aantal punten wordt berekend met behulp van een trigger in de ``users''-tabel, wiens code vermeld staat in codefragment \ref{code:data:trig_punten}.
 
 \begin{code}
 \begin{lstlisting}
@@ -130,7 +130,7 @@ END;
 
 \section{Data Access Objects}
 
-Een veel voorkomend probleem bij de huidige stand van de techniek is de relatief grote ``afstand'' tussen de platte voorstelling van data in een database en de rijkere voorstelling van data in objecten. Dit omdat er andere manieren worden gebruikt om overerving, relaties tussen data, enzovoort, voor te stellen. Dit probleem is in de literatuur beter bekend als de ``object-relational impedance mismatch''. Een veelgebruikte oplossing is die van de Object-Relational Mapping-tools, waarvan het gebruik voor deze bachelorproef uitgesloten werd.. Daarom werd er op zoek gegaan naar andere conceptuele ide\"en die gebruikt konden worden, en uiteindelijk werd er gekozen voor het gebruik van het ``Data Access Object''-pattern.
+Een probleem bij de huidige implementatie is de relatief grote ``afstand'' tussen de lineaire voorstelling van data in een database en de rijkere voorstelling van data in objecten. Dit omdat er andere manieren worden gebruikt om overerving, relaties tussen data, enzovoort, voor te stellen. Dit probleem is in de literatuur beter bekend als de ``object-relational impedance mismatch''. Een veelgebruikte oplossing is die van de Object-Relational Mapping-tools, waarvan het gebruik voor deze bachelorproef uitgesloten werd.. Daarom werd er op zoek gegaan naar andere conceptuele ide\"en die gebruikt konden worden, en uiteindelijk werd er gekozen voor het gebruik van het ``Data Access Object''-pattern.
 
 Het DAO-pattern koppelt op een eenvoudige manier de businesslogica los van het mechanisme dat de data permanent opslaat. Dit zorgt ervoor dat de businesslogica meer robuust en flexibeler is wanneer er wijzigingen zouden optreden in de manier waarop de data wordt opgeslagen.
 
@@ -150,11 +150,11 @@ public interface GenericDAO<T, ID> {
 }
 \end{lstlisting}
 
-De objecten die de eigenlijke data bevatten worden de ``Data Transfer Objects'' (DTO's) genoemd. De businesslogica kan de data in deze objecten naar believen aanpassen zonder dat dit repercuties heeft op de persistente data. Pas als het DTO weer wordt doorgegeven aan het DAO, wordt de persistente data gewijzigd. Dit maakt het gebruik van dit pattern erg geschikt voor onze backend, waar de eigenlijke wijzigingen van de data niet op niveau van de backend gebeuren, maar wel door de modules die op de backend inhaken. Deze DTO's zijn namelijk erg ``licht'' omdat ze enkel gebruikt worden om data voor te stellen, en kunnen dus gemakkelijk via het XML-RPC-protocol verstuurd worden.
+De objecten die de eigenlijke data bevatten worden de ``Data Transfer Objects'' (DTO's) genoemd. De businesslogica kan de data in deze objecten aanpassen zonder dat dit gevolgen heeft op de persistente data. Pas als het DTO weer wordt doorgegeven aan het DAO, wordt de persistente data gewijzigd. Dit maakt het gebruik van dit pattern erg geschikt voor onze backend, waar de eigenlijke wijzigingen van de data niet op niveau van de backend gebeuren, maar wel door de modules die op de backend inhaken. Deze DTO's zijn namelijk erg ``licht'' omdat ze enkel gebruikt worden om data voor te stellen, en kunnen dus gemakkelijk via het XML-RPC-protocol verstuurd worden.
 
 \section{XML-RPC interface}
 
-Zoals vermeld bij het technisch ontwerp, gebruiken we het XML-RPC protocol als communicatiemiddel tussen de backend en zijn interfaces. Hiertoe moeten we de set aan functies vastleggen die een client kan uitvoeren, en de bijhorende signatuur documenteren.
+Zoals vermeld bij het technisch ontwerp, gebruiken we het XML-RPC protocol als communicatiemiddel tussen de backend en zijn interfaces. Hiertoe moesten we de set aan functies vastleggen die een client kan uitvoeren, en de bijhorende signatuur documenteren.
 
 Aangezien XML-RPC geen ondersteuning biedt voor namespaces of andere vormen van functieorganisatie, hanteren we zelf een mechanisme om dit te bekomen: een methode-naam bestaat altijd uit meerdere delen, gescheiden door een punt. De delen voor het scheidingsteken duiden de ``klasse'', het deel erna de methode die we willen oproepen.
 Zo delen we de backend op in de volgende drie primaire klassen:
@@ -168,7 +168,7 @@ Zo delen we de backend op in de volgende drie primaire klassen:
 
 De XML-RPC specificatie biedt ook ondersteuning voor foutberichten, in de form van een bericht met een $<$fault$>$ tag. Die tag moet steeds twee $<$member$>$ tags bevatten, namelijk een foutcode $<$faultCode$>$ van het integer type, en een foutbericht $<$faultString$>$ van het string type.
 
-De mogelijke foutberichten die de backend kan opwerpen, zijn ondergedeeld in verschillende klassen. Bij elke klasse valt de foutcode dan in een specifiek vooraf-gedefini\"eerd bereik, zodat client-software eenvoudig kan detecteren om welk soort fout het gaat. De exacte foutcode, eveneens op voorhand vastgelegd, bepaald vervolgens exacat welke fout er opgeworpen is. Zie tabel \ref{tbl:real:xmlrpc:fouten} voor de mogelijke fouten.
+De mogelijke foutberichten die de backend kan opwerpen, zijn onderverdeeld in verschillende klassen. Bij elke klasse valt de foutcode dan in een specifiek vooraf gedefini\"eerd bereik, zodat client-software eenvoudig kan detecteren om welk soort fout het gaat. De exacte foutcode, eveneens op voorhand vastgelegd, bepaald vervolgens welke fout er opgeworpen is. Zie tabel \ref{tbl:real:xmlrpc:fouten} voor de mogelijke fouten.
 Bij elk type fout gaat zo een standaard foutbericht gepaard, maar de backend-ontwikkelaar kan die eventueel vervangen door een meer specifieke foutmelding.
 
 Om meer informatie over een specifieke fout te bekomen, moet naar de log van de backend gekeken worden. Daar wordt telkens de exacte ``stacktrace'' vermeld, zodat de fout eenvoudig te verhelpen wordt. Een speciaal type fout tenslotte, is de ``internal exception''. Deze treedt op wanneer een exceptie onverwacht optrad, en dus niet in een correcte try-catch blok opgevangen werd.
@@ -189,16 +189,16 @@ Om meer informatie over een specifieke fout te bekomen, moet naar de log van de 
 	
 	$[10-20[$ & \emph{Service exceptions.} & \\
 	10 & Service Unavailable & De backend kan tijdelijk niet gebruikt worden (werkzaamheden, overloaded, ...). \\
-	11 & Unauthorized & De huidige gebruiker is niet geautoriseerd om de functie in kwestie uit t voeren. \\
-	12 & Invalid Credentials & De poging om aan te melden is mislukt, wegens een verkeerde username-password combinatie. \\
+	11 & Unauthorized & De huidige gebruiker is niet geautoriseerd om de functie in kwestie uit te voeren. \\
+	12 & Invalid Credentials & De poging om aan te melden is mislukt, wegens een foutieve gebruikersnaam en wachtwoord combinatie. \\
 	13 & Session Corrupt & De meegeleverde sessie is niet geregistreerd in de backend (verlopen of corrupt). \\
 	14 & Not Enough Information & Er is niet genoeg informatie om het object aan te maken (meestal betekent dit dat er een veld in de meegeleverde struct ontbreekt). \\
 	\hline
 	
 	$[20-30[$ & \emph{Invocation issues.} & \\
-	20 & Version Not Supported & De client gebruikt een verkeerd communicatieprotocol. \\
-	21 & Not Found & Methode niet gevonden, verifieer de schrijfwijze en de klasse. \\
-	22 & Bad Request & Probleem met de parameters, controleer het gebruik van de methode. \\
+	20 & Version Not Supported & De client gebruikt een foutief communicatieprotocol. \\
+	21 & Not Found & Er is geen methode gevonden met die naam, verifieer de schrijfwijze en de klasse. \\
+	22 & Bad Request & Probleem met de parameters, controleer de documentatie van de methode. \\
 	23 & Non Existing Entity & Het item dat je opvroeg bestaat niet \\
 	24 & Pre Existing Entity & Er bestaat reeds zo'n item \\
 	25 & Read Only Key & Er is een aanvraag gedaan om een key aan te passen die niet aangepast mag worden \\
@@ -208,7 +208,7 @@ Om meer informatie over een specifieke fout te bekomen, moet naar de log van de 
 	$[30-40[$ & \emph{Filter issues.} & \\
 	31 & Filter Failure & Er is een probleem met de doorgegeven filter, controleer deze. \\
 	32 & Debug Failure & De backend is er niet in geslaagd een debug-AST te genereren van de filter, is de benodigde software ge\"installeerd? \\
-	33 & Filter Failure & De backend slaagde er niet in twee filters samen te smelten om een resultaatset-reductie te bekomen. \\
+	33 & Filter Failure & De backend slaagde er niet in twee filters samen te voegen om een resultaatset-reductie te bekomen. \\
 	
 	\hline
 \end{tabular}
@@ -218,13 +218,13 @@ Om meer informatie over een specifieke fout te bekomen, moet naar de log van de 
 
 \subsection{Authenticatie en autorisatie}
 
-Aangezien het XML-RPC protocol gebruik maakt van het HTTP-protocol, kunnen we diens functionaliteit gebruiken om authenticatie te bekomen. Daartoe zullen we gebruik maken van \emph{basic authentication}, waarbij de client indien gevraagd een gebruikersnaam en wachtwoord naar de server doorstuurd. Normaal zou dit geen extra code teweegbrengen, en zouden we volledig op de authenticatiemogelijkheden van het HTTP protocol kunnen berusten.
+Aangezien het XML-RPC protocol gebruik maakt van het HTTP-protocol, waren we van plan om diens functionaliteit gebruiken om authenticatie te bekomen. Daartoe zouden we gebruik maken van \emph{basic authentication}, waarbij de client indien gevraagd een gebruikersnaam en wachtwoord naar de server doorstuurd. Normaal zou dit geen extra code te weeg gebracht hebben en zouden we volledig op de authenticatiemogelijkheden van het HTTP protocol kunnen berusten.
 
-Deze denkpiste gaf echter enkele problemen. Vooreerst is het sterk onveilig aangezien het wachtwoord continu in (quasi) plaintext doorgestuurd wordt. Het maakt echter verfijnde autorisatie moeilijk, tenzij we voor elk authenticatie-niveau een aparte URL zouden voorzien. Daarom hebben we gekozen om gebruik te maken van een eigen authenticatie-laag, waarbij een XML-RPC functie gebruikt wordt om de gebruiker aan te melden (dit in tegenstelling tot het gebruik maken van de HTTP laag). Na aanmelding geeft de functie in kwestie een sessie-ID terug, die een sessie serverside linkt aan een specifieke gebruiker. Zo kunnen we, opnieuw binnenin de XML-RPC laag, controleren of een gebruiker wel correct aangemeld is, en heel dynamisch requests toelaten of weigeren. Dit is gebaseerd op een flexibel rechten-systeem, waarbij elke gebruiker in de database gelinkt wordt aan een rol die bepaalde rechten toekent.
+Deze denkpiste gaf echter enkele problemen. Vooreerst is het sterk onveilig aangezien het wachtwoord continu in (quasi) plaintext doorgestuurd wordt. Het maakt echter verfijnde autorisatie moeilijk, tenzij we voor elk authenticatie-niveau een aparte URL zouden voorzien. Daarom hebben we gekozen om gebruik te maken van een eigen authenticatie-laag, waarbij een XML-RPC functie gebruikt wordt om de gebruiker aan te melden (dit in tegenstelling tot het gebruik maken van de HTTP laag). Na aanmelding geeft de functie in kwestie een sessie-ID terug, die een sessie serverside linkt aan een specifieke gebruiker. Zo kunnen we, opnieuw binnenin de XML-RPC laag, controleren of een gebruiker wel correct aangemeld is en heel dynamisch requests toelaten of weigeren. Dit is gebaseerd op een flexibel rechten-systeem, waarbij elke gebruiker in de database gelinkt wordt aan een rol die bepaalde rechten toekent.
 
-Om de veiligheid te verhogen gebruiken we verschillende technieken. Eerst en vooral is de sessie tijdelijk, en worden ongebruikte sessie-keys regelmatig geinvalideerd. Ook hebben we het moeilijk gemaakt om sessie-keys te genereren, door ze op een unieke manier te linken aan data die enkel de gebruiker zelf kent (zijn wachtwoord). Om het tenslotten ook moeilijk te maken om een sessie-key te linken aan een gebruiker, implementeren we in onze sessie-hash een variabele seed.
+Om de veiligheid te verhogen gebruiken we verschillende technieken. Eerst en vooral is de sessie tijdelijk, en worden ongebruikte sessie-keys regelmatig ge•nvalideerd. Ook hebben we het moeilijk gemaakt om sessie-keys te genereren, door ze op een unieke manier te linken aan data die enkel de gebruiker zelf kent (zijn wachtwoord). Om het tenslotte ook moeilijk te maken om een sessie-key te linken aan een gebruiker, implementeren we in onze sessie-hash een variabele seed.
 
-Authenticatie en autorisatie gaat ook gepaard met een specifieke set aan mogelijke errormessages. Allemaal geklasseerd binnen de Service Exceptions, zijn de volgende subtypes mogelijk: ``Invalid Credentials'' wanneer het authenticeren mislukt is, ``Unauthorized'' wanneer een gebruiker niet geautoriseerd is tot het gebruik van een bepaalde functie, en tenslotte ``Session Corrupt'' wanneer een gespecificeerde sessie ongeldig blijkt te zijn (zie tabel \ref{tbl:real:xmlrpc:fouten}).
+Authenticatie en autorisatie gaat ook gepaard met een specifieke set aan mogelijke foutboodschappen. Allemaal geklasseerd binnen de Service Bezwaren zijn de volgende subtypes mogelijk: ``Invalid Credentials'' wanneer het authenticeren mislukt is, ``Unauthorized'' wanneer een gebruiker niet geautoriseerd is tot het gebruik van een bepaalde functie en tenslotte ``Session Corrupt'' wanneer een gespecificeerde sessie ongeldig blijkt te zijn (zie tabel \ref{tbl:real:xmlrpc:fouten}).
 
 De mogelijke autorisatieniveau's zijn beschreven in tabel \ref{tbl:real:xmlrpc:autorisatie}. Hoewel een administrator deze bij gebruikers manueel kan aanpassen, onderscheiden we toch volgende categorie\"en:
 \begin{itemize_compact}
@@ -305,7 +305,7 @@ Deze klasse biedt de client mogelijkheden om het systeem te beheren. Zoals het o
 	{ BACKEND\_ADMIN }
 
 \function{Backend.ClearCache}
-	{ de backend cache legen }
+	{ de backend cache legen, zodat die opnieuw alle data uit zijn datalagen dient op te halen}
 	{ geen }
 	{ bool die indiceert of de actie succesvol was }
 	{ BACKEND\_ADMIN }
@@ -375,7 +375,6 @@ Deze klasse biedt de client mogelijkheden om het systeem te beheren. Zoals het o
 	{ geen }
 	{ bool die indiceert of de actie succesvol was }
 	{ SCRAPER\_ADMIN }
-
 
 \subsection{User klasse}
 
@@ -988,21 +987,21 @@ Deze klasse biedt, zoals de User.Portfolio klasse doet met Users, een link tusse
 
 \chapter{ASP.NET website}
 
-Een belangrijk onderdeel van ons eindproject bestaat natuurlijk uit de website. Omdat dit het enige deel is dat zichtbaar is voor de eindgebruiker werd hier dan ook veel tijd in genvesteerd.
+Een belangrijk onderdeel van ons eindproject bestaat natuurlijk uit de website. Omdat dit het enige deel is dat zichtbaar is voor de eindgebruiker werd hier dan ook veel tijd in ge•nvesteerd.
 
 \section{Datalaag}
 
-Gedurende de beginfase van het project werd de website nog ontwikkeld met behulp van ADO.NET. Enerzijds omdat dit een vereiste was voor het eindproject, maar ook omdat de ontwikkeling van de backend nog verre van compleet was. Om dus toch al te kunnen werken aan de website werd een generieke datalaag ontwikkeld die oorspronkelijk werkte met ADO.NET, maar die later makkelijk kon omgevormd worden om te werken met het XML-RPC protocol.
+Gedurende de beginfase van het project werd de website nog ontwikkeld met behulp van ADO.NET. Enerzijds omdat dit een vereiste was voor het eindproject, maar ook omdat de ontwikkeling van de backend nog verre van compleet was. Om dus toch al te kunnen werken aan de website werd een generieke datalaag ontwikkeld die oorspronkelijk werkte met ADO.NET, maar die later makkelijk kon omgevormd worden om te werken met het XML-RPC protocol. Er werd gebruik gemaakt van een interface, dus eventueel kunnen met minimale aanpassingen ook andere databronnen ingesteld worden.
 
 Om dit te bewerkstelligen maakt de datalaag gebruik van het Factory design pattern in combinatie met het Singleton design pattern. De webpagina's krijgen toegang tot de datalaag via de DataAccessFactory klasse. Via de methode getInstance() kan een instantie van een klasse opgevraagd worden die voldoet aan de IDataAccess interface. Afhankelijk van een instelling in het Web.config bestand wordt dan een object teruggeven die intern met ADO.NET werkt of met XML-RPC. Aangezien de website door meerdere gebruikers tegelijkertijd wordt gebruikt is het nodig dat de objecten die de factory teruggeeft voorzien worden van dubbele locking. Hierdoor wordt voorkomen dat meerdere DataAccess objecten worden aangemaakt indien er gelijktijdige vragen optreden.
 
-In de uiteindelijke versie is deze functionaliteit verwijderd uit de website. Dit voornamelijk door de gebrekkige data provider van Oracle. Deze is namelijk niet compatibel met 64-bit systemen en op een compatibele cli\"ent is het nog enkele maanden wachten. Ook werd de website deels ontwikkeld onder Linux in combinatie met het open-source Mono framework. Alhoewel deze compatibel is met het .NET framework van Microsoft is het niet mogelijk om de data providers te installeren op een Linux besturingssysteem.
+In de uiteindelijke versie is deze ADO.NET functionaliteit verwijderd uit de website. Dit voornamelijk door de gebrekkige data provider van Oracle. Deze is namelijk niet compatibel met 64-bit systemen en op een compatibele cli\"ent is het nog enkele maanden wachten. Ook werd de website deels ontwikkeld onder Linux in combinatie met het open-source Mono framework. Alhoewel deze compatibel is met het .NET framework van Microsoft is het niet mogelijk om de data providers te installeren op een Linux besturingssysteem.
 
 \section{XML-RPC.NET}
 
-Om te communiceren vanuit een .NET applicatie met de backend over XML-RPC werd gebruik gemaakt van de XML-RPC.NET bibliotheek van Cook Computing.
+Om te communiceren vanuit een .NET applicatie met de backend over XML-RPC werd gebruik gemaakt van de XML-RPC.NET bibliotheek van Cook Computing \makeurl{Website::CookComp}{http://www.xml-rpc.net}.
 
-Methodes op een remote computer kunnen met deze bibliotheek eenvoudig worden gemapt op equivalente .NET methoden. Het is voldoende om een interface te voorzien die de IXmlRpcProxy interface overneemt en hierin de gewenste methodes op te sommen. De methode moet enkel voorafgegaan worden door een header met daarin de naam van de methode op de remote computer. Bijvoorbeeld voor de methode User.Hello die gedefinieerd staat in de backend wordt dit:
+Methodes op een remote computer kunnen met deze bibliotheek eenvoudig worden gemapt op equivalente .NET methoden. Het is voldoende om een interface te voorzien die de IXmlRpcProxy interface overneemt en hierin de gewenste methodes op te sommen. De methode moet enkel voorafgegaan worden door een header met daarin de naam van de methode op de remote computer. Bijvoorbeeld voor de methode "User.Hello" die gedefinieerd staat in de backend wordt dit:
 
 \begin{verbatim}
 public interface UserHandler : IXmlRpcProxy
@@ -1012,7 +1011,7 @@ public interface UserHandler : IXmlRpcProxy
 	    ...
 \end{verbatim}
 
-Om een instantie te maken van deze interface kan je de statische methode Create() oproepen van XmlRpcProxyGen:
+Om een instantie te maken van deze interface kan je de statische methode "Create()" oproepen van "XmlRpcProxyGen":
 
 \begin{verbatim}
 UserHandler handler = XmlRpcProxyGen.Create<UserHandler>();
@@ -1020,7 +1019,7 @@ UserHandler handler = XmlRpcProxyGen.Create<UserHandler>();
 
 Om het mogelijk te maken om ook objecten over het protocol te sturen worden de dataleden van een object door de backend verpakt in een HashMap. XML-RPC.NET schotelt deze voor onder de vorm van een XmlRpcStruct of een XmlRpcStruct[] indien het om een tabel gaat, deze gedragen zich analoog als een HashMap. Aangezien het veel voorkomt dat de verschillende sleutels in een XmlRpcStruct rechtstreeks gemapt worden op een object aan de clintzijde biedt XML-RPC.NET de mogelijkheid om dit automatisch te doen. Enige beperking hierbij is dat een XmlRpcStruct enkel kan afgebeeld worden op een struct en niet op een class. Een bijkomend probleem bij het XML-RPC protocol is dat null niet kan voorgesteld worden. Sommige bibliotheken bieden wel ondersteuning voor allerlei extensies, waaronder de mogelijkheid tot het voorstellen van een variabele die null is. Omdat niet al onze gebruikte bibliotheken deze vendor-specifieke extensies begrijpen kunnen wij dit echter niet gebruiken.
 
-Om deze speciale gevallen op te vangen en aangezien alles toch werd omgezet naar objecten hebben we besloten om de XmlRpcStructs rechtstreeks om te zetten naar een object. De omzetting naar een struct is toch maar een nutteloze tussenstap.
+Om deze speciale gevallen op te vangen en aangezien alles toch werd omgezet naar objecten hebben we besloten om de XmlRpcStructs rechtstreeks om te zetten naar een object. De omzetting naar een struct is toch maar een zinloze tussenstap.
 
 \section{Vormgeving}
 
@@ -1028,13 +1027,13 @@ Voor de vormgeving van de website hebben we gekozen om deze volledig in CSS vorm
 
 Het is alom bekend dat Microsoft en ook ASP.NET het niet erg nauw nemen met het volgen van webstandaarden. Een goed voorbeeld daarvan is Internet Explorer met zijn gebrekkige ondersteuning van CSS en ook ASP.NET heeft heel gebrekkige HTML- en CSS-output.
 
-Het grote probleem met ASP.NET is dat het volledig gemaakt is om samen te werken met Visual Studio en dat alle opmaak ook via de ingebouwde wizards moet gebeuren. Zo kan je wel de CSS van al je controls aanpassen, maar dit gebeurd op een ondoorzichtige manier via allerlei GUI's, zonder dat je ziet welke code er in de uiteindelijke CSS terecht komt. Een bijkomend probleem is de HTML die ASP.NET produceert, deze bevat allerlei tags die ook vormgeving definiren, maar waar de ontwikkelaar geen controle over heeft. Ook wordt het gebruik van HTML-tags om de website vorm te geven afgeraden door het W3C en levert dit bijgevolg geen valide HTML code op. Dit maakt het moeilijk om de website correct te laten weergeven in de grote verscheidenheid van browsers die vandaag de dag op het internet gebruikt wordt.
+Het grote probleem met ASP.NET is dat het volledig gemaakt is om samen te werken met Visual Studio en dat alle opmaak ook via de ingebouwde wizards moet gebeuren. Zo kan je wel de CSS van al je controls aanpassen, maar dit gebeurd op een ondoorzichtige manier via allerlei GUI's, zonder dat je ziet welke code er in de uiteindelijke CSS terecht komt. Een bijkomend probleem is de HTML die ASP.NET produceert, deze bevat allerlei tags die ook vormgeving defini‘ren, maar waar de ontwikkelaar geen controle over heeft. Ook wordt het gebruik van HTML-tags om de website vorm te geven afgeraden door het W3C en levert dit bijgevolg geen valide HTML code op. Dit maakt het moeilijk om de website correct te laten weergeven in de grote verscheidenheid van browsers die vandaag de dag op het internet gebruikt wordt.
 
 Oorspronkelijk werd het ontwerp van de website gemaakt voor een statische HTML-pagina. Vervolgens probeerden we deze structuur om te zetten naar een pagina in ASP.NET, maar dit was allesbehalve eenvoudig. Zo is het gebruik van de ID- en CLASS-tags in de servercomponenten heel moeilijk omdat ASP.NET deze namen veranderd in de uiteindelijke output. Indien daarentegen van eenvoudige HTML-componenten gebruik wordt gemaakt zonder een \emph{runat=server''} attribuut, dan worden deze namen wel behouden! Het gebruik maken van zelfgemaakte CSS wordt de ontwikkelaar dus zeker niet gemakkelijk gemaakt.
 
 Een groter probleem echter is de manier waarop sommige controls van ASP.NET gerendered worden in de uiteindelijke pagina. Zo wordt een TreeView omgezet naar een table, waarin ieder subelement nogmaals een table is! Niet alleen wordt het gebruik van tabellen voor andere doeleinden ten stelligste afgeraden door het W3C, het maakt het ook heel moeilijk om deze component vorm te geven.
 
-Om de gebrekkige HTML van deze componenten te verbeteren is het mogelijk om een Control Adapter te definiren in het Web.config bestand die je toelaat om zelf de HTML-output van de servercomponent te bepalen. Om dit te doen maak je een klasse die overerft van de klasse WebControlAdapter. In deze klasse kun je dan verschillende methoden overschrijven zoals RenderBeginTag(), RenderEndTag() en RenderContents() waardoor de output van de control volledig naar wens kan worden omgezet. Via het HtmlTextWriter object die de functies als parameter meekrijgen kan dan rechtstreeks naar het HTML-document geschreven worden.
+Om de gebrekkige HTML van deze componenten te verbeteren is het mogelijk om een Control Adapter te defini‘ren in het Web.config bestand die je toelaat om zelf de HTML-output van de servercomponent te bepalen. Om dit te doen maak je een klasse die overerft van de klasse WebControlAdapter. In deze klasse kun je dan verschillende methoden overschrijven zoals RenderBeginTag(), RenderEndTag() en RenderContents() waardoor de output van de control volledig naar wens kan worden omgezet. Via het HtmlTextWriter object die de functies als parameter meekrijgen kan dan rechtstreeks naar het HTML-document geschreven worden.
 
 Bij het implementeren van ons design bleken de grootste problemen te liggen bij de TreeView en de SiteMapPath. Voor deze controls hebben we dergelijke adapters gedefinieerd zodat de TreeView eruitziet zoals een 'unordered list' en de SiteMapPath een paragraaf wordt.
 
