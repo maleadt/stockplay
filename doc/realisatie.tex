@@ -965,6 +965,74 @@ Deze klasse biedt, zoals de User.Portfolio klasse doet met Users, een link tusse
 
 
 %
+% ASP.NET website
+%
+
+\chapter{ASP.NET website}
+
+Een belangrijk onderdeel van ons eindproject bestaat natuurlijk uit de website. Omdat dit het enige deel is dat zichtbaar is voor de eindgebruiker werd hier dan ook veel tijd in geïnvesteerd.
+
+\section{Datalaag}
+
+Gedurende de beginfase van het project werd de website nog ontwikkeld met behulp van ADO.NET. Enerzijds omdat dit een vereiste was voor het eindproject, maar ook omdat de ontwikkeling van de backend nog verre van compleet was. Om dus toch al te kunnen werken aan de website werd een generieke datalaag ontwikkeld die oorspronkelijk werkte met ADO.NET, maar die later makkelijk kon omgevormd worden om te werken met het XML-RPC protocol.
+
+Om dit te bewerkstelligen maakt de datalaag gebruik van het Factory design pattern in combinatie met het Singleton design pattern. De webpagina's krijgen toegang tot de datalaag via de DataAccessFactory klasse. Via de methode getInstance() kan een instantie van een klasse opgevraagd worden die voldoet aan de IDataAccess interface. Afhankelijk van een instelling in het Web.config bestand wordt dan een object teruggeven die intern met ADO.NET werkt of met XML-RPC. Aangezien de website door meerdere gebruikers tegelijkertijd wordt gebruikt is het nodig dat de objecten die de factory teruggeeft voorzien worden van dubbele locking. Hierdoor wordt voorkomen dat meerdere DataAccess objecten worden aangemaakt indien er gelijktijdige vragen optreden.
+
+In de uiteindelijke versie is deze functionaliteit verwijderd uit de website. Dit voornamelijk door de gebrekkige data provider van Oracle. Deze is namelijk niet compatibel met 64-bit systemen en op een compatibele cli\"ent is het nog enkele maanden wachten. Ook werd de website deels ontwikkeld onder Linux in combinatie met het open-source Mono framework. Alhoewel deze compatibel is met het .NET framework van Microsoft is het niet mogelijk om de data providers te installeren op een Linux besturingssysteem.
+
+\section{XML-RPC.NET}
+
+Om te communiceren vanuit een .NET applicatie met de backend over XML-RPC werd gebruik gemaakt van de XML-RPC.NET bibliotheek van Cook Computing.
+
+Methodes op een remote computer kunnen met deze bibliotheek eenvoudig worden gemapt op equivalente .NET methoden. Het is voldoende om een interface te voorzien die de IXmlRpcProxy interface overneemt en hierin de gewenste methodes op te sommen. De methode moet enkel voorafgegaan worden door een header met daarin de naam van de methode op de remote computer. Bijvoorbeeld voor de methode User.Hello die gedefinieerd staat in de backend wordt dit:
+
+\begin{verbatim}
+public interface UserHandler : IXmlRpcProxy
+	{
+	    [XmlRpcMethod("User.Hello")]
+	    int Hello(string client, int protocol);
+	    ...
+\end{verbatim}
+
+Om een instantie te maken van deze interface kan je de statische methode Create() oproepen van XmlRpcProxyGen:
+
+\begin{verbatim}
+UserHandler handler = XmlRpcProxyGen.Create<UserHandler>();
+\end{verbatim}
+
+Om het mogelijk te maken om ook objecten over het protocol te sturen worden de dataleden van een object door de backend verpakt in een HashMap. XML-RPC.NET schotelt deze voor onder de vorm van een XmlRpcStruct of een XmlRpcStruct[] indien het om een tabel gaat, deze gedragen zich analoog als een HashMap. Aangezien het veel voorkomt dat de verschillende sleutels in een XmlRpcStruct rechtstreeks gemapt worden op een object aan de cliëntzijde biedt XML-RPC.NET de mogelijkheid om dit automatisch te doen. Enige beperking hierbij is dat een XmlRpcStruct enkel kan afgebeeld worden op een struct en niet op een class. Een bijkomend probleem bij het XML-RPC protocol is dat null niet kan voorgesteld worden. Sommige bibliotheken bieden wel ondersteuning voor allerlei extensies, waaronder de mogelijkheid tot het voorstellen van een variabele die null is. Omdat niet al onze gebruikte bibliotheken deze vendor-specifieke extensies begrijpen kunnen wij dit echter niet gebruiken.
+
+Om deze speciale gevallen op te vangen en aangezien alles toch werd omgezet naar objecten hebben we besloten om de XmlRpcStructs rechtstreeks om te zetten naar een object. De omzetting naar een struct is toch maar een nutteloze tussenstap.
+
+\section{Vormgeving}
+
+Voor de vormgeving van de website hebben we gekozen om deze volledig in CSS vorm te geven. ASP.NET biedt op een andere manier ondersteuning voor het vormgeven van websites (met behulpvan themes en skins), maar we wilden onze website conform met de webstandaarden vormgeven.
+
+Het is alom bekend dat Microsoft en ook ASP.NET het niet erg nauw nemen met het volgen van webstandaarden. Een goed voorbeeld daarvan is Internet Explorer met zijn gebrekkige ondersteuning van CSS en ook ASP.NET heeft heel gebrekkige HTML- en CSS-output.
+
+Het grote probleem met ASP.NET is dat het volledig gemaakt is om samen te werken met Visual Studio en dat alle opmaak ook via de ingebouwde wizards moet gebeuren. Zo kan je wel de CSS van al je controls aanpassen, maar dit gebeurd op een ondoorzichtige manier via allerlei GUI's, zonder dat je ziet welke code er in de uiteindelijke CSS terecht komt. Een bijkomend probleem is de HTML die ASP.NET produceert, deze bevat allerlei tags die ook vormgeving definiëren, maar waar de ontwikkelaar geen controle over heeft. Ook wordt het gebruik van HTML-tags om de website vorm te geven afgeraden door het W3C en levert dit bijgevolg geen valide HTML code op. Dit maakt het moeilijk om de website correct te laten weergeven in de grote verscheidenheid van browsers die vandaag de dag op het internet gebruikt wordt.
+
+Oorspronkelijk werd het ontwerp van de website gemaakt voor een statische HTML-pagina. Vervolgens probeerden we deze structuur om te zetten naar een pagina in ASP.NET, maar dit was allesbehalve eenvoudig. Zo is het gebruik van de ID- en CLASS-tags in de servercomponenten heel moeilijk omdat ASP.NET deze namen veranderd in de uiteindelijke output. Indien daarentegen van eenvoudige HTML-componenten gebruik wordt gemaakt zonder een \emph{runat=´´server''} attribuut, dan worden deze namen wel behouden! Het gebruik maken van zelfgemaakte CSS wordt de ontwikkelaar dus zeker niet gemakkelijk gemaakt.
+
+Een groter probleem echter is de manier waarop sommige controls van ASP.NET gerendered worden in de uiteindelijke pagina. Zo wordt een TreeView omgezet naar een table, waarin ieder subelement nogmaals een table is! Niet alleen wordt het gebruik van tabellen voor andere doeleinden ten stelligste afgeraden door het W3C, het maakt het ook heel moeilijk om deze component vorm te geven.
+
+Om de gebrekkige HTML van deze componenten te verbeteren is het mogelijk om een “Control Adapter” te definiëren in het Web.config bestand die je toelaat om zelf de HTML-output van de servercomponent te bepalen. Om dit te doen maak je een klasse die overerft van de klasse WebControlAdapter. In deze klasse kun je dan verschillende methoden overschrijven zoals RenderBeginTag(), RenderEndTag() en RenderContents() waardoor de output van de control volledig naar wens kan worden omgezet. Via het HtmlTextWriter object die de functies als parameter meekrijgen kan dan rechtstreeks naar het HTML-document geschreven worden.
+
+Bij het implementeren van ons design bleken de grootste problemen te liggen bij de TreeView en de SiteMapPath. Voor deze controls hebben we dergelijke adapters gedefinieerd zodat de TreeView eruitziet zoals een 'unordered list' en de SiteMapPath een paragraaf wordt.
+
+Ook Microsoft heeft beseft dat het ondoenbaar is voor webontwikkelaars om hun CSS op deze manier te schrijven, daarom hebben ze zelf CSS-vriendelijke control adapters vrijgegeven samen met hun broncode. Deze adapters dateren wel nog van .NET 2.0 en zijn sindsdien niet meer geüpdatet voor de nieuwere .NET platformen, waardoor het niet meer te compileren valt onder .NET 3.5. Omdat het ons didactisch interessant leek, hebben we dan maar zelf enkele eenvoudige adapters geschreven. Verder heeft Microsoft beloofd werk te maken van betere CSS ondersteuning in het nieuwe .NET 4.0, maar aangezien dit nog maar net is uitgekomen hebben we dit niet kunnen gebruiken.
+
+\section{Internationalisatie}
+
+Een andere vereiste voor de website was dat deze geïnternationaliseerd moet zijn. Via het gebruik van resource files is dit gemakkelijk door te voeren in ASP.NET. Voor onze website hebben we gekozen om de default taal als engels te kiezen, dit kan je doen door de resource files als extensie .resx te geven, zonder een taal te vermelden. De website is verder in het Nederlands beschikbaar en deze files hebben dan als extensie .nl.resx.
+
+Gebruikers die de website bezoeken krijgen deze voorgeschoteld in de voorkeurstaal die ze gedefinieerd hebben in hun browser. Om dit mogelijk te maken moet in de page directive van iedere ASP.NET pagina de attributen Culture en UICulture op 'auto' staan.
+
+Het is ook mogelijk dat de gebruiker zelf zijn taal kiest. De taal instellen in ASP.NET is op zich eenvoudig, maar er zijn vaak discussies over de plaats waar dit moet gebeuren. Normaal gebeurt dit in de InitializeCulture()-methode die vroeg in de levensloop van een ASP.NET pagina opgeroepen wordt. Dit betekent weliswaar dat dit in iedere pagina zou moeten worden doorgevoerd! Daarom wordt vaak voorgesteld om de taal in te stellen bij de BeginRequest()-event in Global.asax die uitgevoerd wordt bij iedere aanvraag van een pagina.
+
+De beste oplossing echter, is om een klasse te maken die afleidt van het Page object en de InitializeCulture()-methode overschrijft. Vervolgens laten we alle pagina's van de website afleiden van deze nieuwe klasse, zodat deze allemaal automatisch hun taal kunnen instellen. De voorkeur van de gebruiker kan dan bijvoorbeeld uit het Session-object worden gehaald.
+
+%
 % Grafieken
 %
 
@@ -1170,7 +1238,50 @@ Als de koers buiten een van de twee limietwaarden valt dan geeft de module een p
 \section{Stop loss}
 De module vraagt bij een aankooporder aan de backend wat de laagste prijs was tussen het plaatsen van het order en het huidige tijdstip. Is dit minimum lager dan de eerste parameter, dan geeft de module een positief antwoord terug. Bij een verkooporder gebeurt het omgekeerde.
 
+%
+% Puntenmanager
+%
 
+\chapter{Puntenmanager}
+
+Om de competitie in het beursspel aan te wakkeren worden de beursprestaties van de spelers beoordeeld. Dit gebeurt in de vorm van punten die toegekend worden afhankelijk van de prestaties van hun portfolio. De punten kunnen zowel op individueel vlak toegekend worden of de speler kan punten krijgen omdat hij goed scoorde in een klassement.
+
+\section{Puntenevenementen}
+
+Momenteel zijn er drie verschillende soorten evenementen waarvoor punten kunnen worden toegekend:
+
+\begin{enumerate}
+\item Beter presteren dan de Bel-20: Indien de speler erin geslaagd is zijn portfolio positief te laten renderen en hierbij ook nog beter doet dan de Bel-20 dan krijgt hij hiervoor punten. Voor iedere procent boven de Bel-20 krijgt hij 10 punten.
+\item Klassement van de cashpositie: De 25 spelers die op het einde van de dag het grootste kapitaal hebben krijgen hiervoor punten. De eerste in het klassement krijgt 25 punten en voor iedere volgende plaats vermindert dit met 1. Hierdoor worden spelers die in crisistijd hun geld niet beleggen beloond, maar zonder te beleggen kun je natuurlijk niet de eerste blijven!
+\item Winstklassement: In dit klassement staan de spelers die over de afgelopen dag de grootste winst hebben gemaakt op hun portfolio. Opnieuw krijgt de eerste speler 25 punten en voor iedere volgende plaats vermindert dit iedere keer met 1 punt.
+\end{enumerate}
+
+De puntenmanager wordt periodiek opgeroepen door de Cron van een Linux besturingssysteem en wordt dagelijks om middernacht opgeroepen.
+
+\section{Modulariteit}
+
+Momenteel is het aantal puntenevenementen nog beperkt. Het is de bedoeling dat dit makkelijk uitbreidbaar is, daarom is de puntenmanager modulair opgebouwd. Zo is het mogelijk om voor een eenmalig evenement punten te laten berekenen, maar men kan ook evenementen toevoegen of verwijderen zonder dat hiervoor de code van de puntenmanager moet aangepast worden.
+
+Om deze modulariteit mogelijk te maken wordt gebruik gemaakt van de Reflection API van Java. Deze API maakt het mogelijk om zonder voorkennis klassen dynamisch te laden ´at runtime' en deze vervolgens uit te voeren. Voor het maken van nieuwe puntenevenementen zijn volgende klassen gedeclareerd:
+
+\begin{enumerate}
+\item Een interface IIndividualEvent die een evenement definieert dat berekend wordt voor iedere individuele gebruiker.
+\item Een abstracte klasse ARankingEvent die eerst een ranking berekent over de volledige groep gebruikers en waarna dan de punten van de winnende gebruikers kunnen opgevraagd worden.
+\end{enumerate}
+
+Indien men een nieuw evenement wil maken, dan dient men een implementatie te voorzien van een van deze klassen.
+
+De puntenmanager krijgt bij het uitvoeren een parameter mee op de command-line, dit is het pad naar een configuratiebestand waarin de te berekenen evenementen staan. De  puntenevenementen wordt voorafgegaan door een tag die het soort evenement voorstelt. Voor de dagelijkse puntenberekening ziet deze er als volgt uit:
+
+\begin{verbatim}
+[IndividualEvents]
+ProfitEvent
+[RankingEvents]
+CashRanking
+ProfitRanking
+\end{verbatim}
+
+Afhankelijk van de ingelezen tag weet de puntenmanager hoe hij de klasse in kwestie instantieert. Voor een IIndividualEvent laadt hij een nieuwe instantie van een object aan de hand van zijn default constructor en cast dit object vervolgens naar een IIndividualEvent. Daarna zal hij voor iedere gebruiker in de databank de puntenberekening uitvoeren. Dankzij de mogelijkheid tot reflectie in Java is het dus voldoende om de naam op te geven van een klasse om deze te kunnen instanti\"eren. Omdat deze klasse voldoet aan een interface kunnen we ons programma hierop afstemmen, zonder dat we het meer specifieke type van deze klasse moeten weten. Voor een ARankingEvent gebeurt de constructie op een analoge manier, hier is echter een constructor voorzien met een parameter. Hier is wat extra code voor nodig, maar ook dit wordt volledig geconstrueerd met behulp van reflectie.
 
 %
 % Filters
