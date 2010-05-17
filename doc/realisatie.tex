@@ -1036,6 +1036,12 @@ Bij het implementeren van ons design bleken de grootste problemen te liggen bij 
 
 Ook Microsoft heeft beseft dat het ondoenbaar is voor webontwikkelaars om hun CSS op deze manier te schrijven, daarom hebben ze zelf CSS-vriendelijke control adapters vrijgegeven samen met hun broncode. Deze adapters dateren wel nog van .NET 2.0 en zijn sindsdien niet meer gepdatet voor de nieuwere .NET platformen, waardoor het niet meer te compileren valt onder .NET 3.5. Omdat het ons didactisch interessant leek, hebben we dan maar zelf enkele eenvoudige adapters geschreven. Verder heeft Microsoft beloofd werk te maken van betere CSS ondersteuning in het nieuwe .NET 4.0, maar aangezien dit nog maar net is uitgekomen hebben we dit niet kunnen gebruiken.
 
+\section{Vormgeving}
+
+Voor de vormgeving is gekozen voor een minimalistisch design. De kleurenzettingen zijn gebaseerd op deze van de Dropbox website \makeurl{Website::Website}{http://www.dropbox.com}. De breedte van de website is bewust beperkt gehouden zodat deze ook op kleine nettops of geavanceerde mobiele toestellen goed zichtbaar zou zijn.
+Het logo hebben we een Web 2.0 look willen meegeven door de transparante schaduw in de tekst en het label met het versienummer van de website.
+Om snel naar een effectenoverzichtpagina te kunnen navigeren is de zoekbox op een prominente plaats geplaatst. Je kan er direct een deel van een naam van een effect in ingeven en vervolgens de enter toets op je toetsenbord gebruiken om de zoekaanvraag te lanceren. De website is getest en werkend bevonden in de meest actuele versies van de meest gangbare internetbrowsers.
+
 \section{Internationalisatie}
 
 Een andere vereiste voor de website was dat deze ge\"internationaliseerd moet zijn. Via het gebruik van resource files is dit gemakkelijk door te voeren in ASP.NET. Voor onze website hebben we gekozen om de default taal als engels te kiezen, dit kan je doen door de resource files als extensie .resx te geven, zonder een taal te vermelden. De website is verder in het Nederlands beschikbaar en deze files hebben dan als extensie .nl.resx.
@@ -1050,23 +1056,83 @@ De beste oplossing echter, is om een klasse te maken die afleidt van het Page ob
 % Grafieken
 %
 
-\todo{details over de implementatie van Laurens zijn grafieken. Misschien ook alles van styling (template/masterpage) hier?}
-
 \chapter{Dynamische grafieken}
 
-Zoals reeds vermeld maken we gebruik van de JQuery en FLOT bibliotheken om interactieve grafieken te maken. Die zullen volgende functionaliteit bevatten:
-\begin{itemize_compact}
-\item{zoomen in de grafiek doormiddel van het scrolwiel}
-\item{zoomen in de grafiek doormiddel van een dubbelklik op een locatie}
-\item{uitzoomen met een knop}
-\item{de grafiek zal je kunnen vastnemen en over de x-as verslepen}
-\item{je zal kunnen wisselen tussen een sleepmodus en een modus waarin je een kader kan selecteren waarin je wil inzoomen (enkel over de x-as)}
-\item{er zal onderaan een tweede, gekoppelde grafiek te zien zijn waarin een bargrafiek te zien is waar de volumes van de effecten in te zien zijn}
-\item{eventueel: je zal extra referentie lijnen kunnen toevoegen}
-\item{je zal een beperkt aantal maal op je laatste handelingen kunnen terugkeren}
-\item{de opgehaalde punten zullen gecached worden en enkel indien vereist zal via AJAX nieuwe punten opgehaald worden}
-\end{itemize_compact}
+\section{Vormgeving}
 
+De grafiekenmodule heeft een schaduw gekregen omdat deze een belangrijk onderdeel op de website en op de pagina vormt. Ook het menu dat verschijnt als met een referentie wil toevoegen heeft een extra schaduw effect meegekregen. De module bestaat uit twee helften. De onderste helft toont de datavolumes van het gekozen effect. De bovenste helft toont het koersverloop van het effect en van zijn al dan niet geactiveerde referenties. Alsook kan op deze bovenste helft het menu geactiveerd worden of kunnen de interactieve acties toegevoegd worden. De grafieken hebben ook twee weergave modulo. Als de muisaanwijzer niet op de grafieken staat worden geen menu items getoond en wordt zo veel mogelijk van tekengedeelte getoond. Ook worden de sluitingskruisjes in de legende op de referenties enkel zichtbaar als de muisaanwijzer zich in het grafiekengedeelte bevindt.
+
+\section{Zoomen en panning}
+
+Zoomen in een grafiek is de belangrijkste functionaliteit. Daarom is daar dan ook veel aandacht aan besteed. Vooreerst is het mogelijk in te zoomen op een bepaalde locatie door dubbel te klikken op een punt waar je op wil inzoomen. Ook kan je op een punt gaan staan met de aanwijzer en naar boven of beneden scrollen om respectievelijk in of uit te zoomen. Omdat deze snelwegen misschien niet direct duidelijk zijn voor nieuwe gebruikers is er ook een zoom in en zoomuit functionaliteit in het menu gestoken. Zodat iedereen intiutief de grafiek kan bedienen.
+
+Soms wil een gebruiker gewoon even een bepaalde range van dichterbij bekijken. Als deze dan via panning en zooming deze range moet gaan opvragen zou dat te lang duren. Daarom zijn er twee modulo aangemaakt. De geactiveerde modus bepaald welke events na een mouse click opgeroepen worden.
+
+Is de "verplaats-modus" geactiveerd (standaard), dan kan men zoomen met het scrolwiel, dubbelklikken om in te zoomen en de grafieken slepen om het bereik meer naar links of naar rechts te verplaatsen (panning). Is echte de "selectie-modus" geactiveerd, dan kan je door te klikken en te slepen een horizontaal kader trekken waarmee je een range kan aftekenen. De geselecteerde range wordt dan automatisch opgehaald en weergegeven.
+
+\section{Snelheid en scheiding van code en design}
+
+De grafieken zijn steeds opgebouwd met de snelheid om het op te bouwen in het achterhoofd. Aangezien de rendering lokaal gebeurd kan dit potentieel ook op een oudere machine zijn of in een internetbrowser die Javascript slechts zeer traag uitvoert (type Internet Explorer).
+
+Omdat een HTML DOM opbouwen of CSS properties toepassen via JavaScript een vertraging te weeg kan brengen is reeds zo veel mogelijk informatie vooraf in de HTML en de CSS geplaatst. Dit is sowieso al het snelste. De JQuery bestanden die gebruikt worden worden gecomprimeerd meegestuurd en ook de webserver staat ingesteld om zo veel mogelijk zijn statische bestanden via Gzip te comprimeren voor deze over de lijn gestuurd worden.
+
+De Jquery, CSS en Javascript bestanden krijgen ook lange expire headers mee, zodat deze client side gecached kunnen worden.
+Alsook worden de Javascript bestanden zo laat mogelijk in de HTML bestanden vermeld zodat het ophalen ervan pas begint als de overige delen van de pagina  geladen zijn.
+
+\section{Herbruikbaarheid}
+
+Er is getracht een grote mate van herbuikbaarheid in te bouwen. Javascript ondersteund standaard geen klassen. Prototype heeft daar wel een ondersteuning voor ingebouwd, maar aangezien we reeds Jquery nodig hadden voor het tekenen van de grafieken vonden we het nogal zonde om nog een extra Javascript bibliotheek toe te voegen en te mengen. Daarom hebben we een bepaalde functionaliteit in Javascript misbruikt. We maken een lege functie aan en gaan daar dan een soort object van maken.
+Afleiden was ook niet direct mogelijk, maar dat hebben we ook kunnen oplossen door twee delen in een leeg object samen te voegen. Zodoende hebben we twee types grafieken gelanceerd en een gemeenschappelijk deel. Er is een primairy plot (het bovenste deel) en een secondairy plot (het volume deel onderaan). Het gemeenschappelijke deel roept de respectievelijke kunstmatige constructors op van de afgeleide objecten. Er wordt dus eerst een gemeenschappelijke constructor uitgevoerd en dan pas een implementatiespecifieke. Deze manier van werken is nogal speciaal en was zeker even zoeken. Maar het resultaat is er.
+
+Nu kunnen op een pagina meerdere grafieken voorkomen en kunnen deze zeer gemakkelijk ingevuld worden met het juiste effect:
+
+\begin{verbatim}
+     var prim = new PrimaryPlot('plotTest', 'FR0000021842');
+     var sec = new SubPlot('volumes', 'FR0000021842');
+\end{verbatim}
+
+De constructor accepteert als argumenten de div container waar de grafieken in moeten verschijnen en de ISIN waarde die getoond moet worden.
+
+Als de bovenste grafiek van beeld wijzigt, dan moet ook de onderste volume grafiek zijn view wijzigen en zijn nieuwe data ophalen. Om meerdere grafieken te kunnen koppelen is het observer pattern ingebouwd zodat grafieken naar andere grafieken kunnen luisteren voor het wijzigen van hun view. Dit kan nu heel gemakkelijk en object geori‘nteerd:
+
+\begin{verbatim}
+     var prim = new PrimaryPlot('plotTest', 2, 11, 'FR0000021842');
+     var sec = new SubPlot('volumes', 2, 11, 'FR0000021842');
+     prim.addPlotListener(sec);
+\end{verbatim}
+
+Ook de opties zijn modulair samengesteld en bevatten ingebouwde functies om gemakkelijk bepaalde opties te kunnen wijzigen. Zo kan bijvoorbeeld met een regeltje code de range aangepast worden of panning ingeschakeld worden.
+
+\section{Geschiedenis}
+
+Elke wijziging die gedaan wordt in de weergave (zooming, panning, het instellen van een range, etc..) wordt opgeslaan. Zodoende is het mogelijk met de "vorige" toets in het menu onbeperkt terug te keren in de tijd. Door de reset knop te gebruiken kan deze geschiedenis terug gewist worden.
+
+\section{Referenties}
+
+Het is mogelijk gemaakt om referentielijnen toe te voegen aan het beeld. Deze kunnen zowel ISIN codes van een effect zijn of van een index. De webservice maakt vervolgens automatisch het onderscheid. De webservice geeft van elke referentie de naam, data en absolute begin en eindwaarden terug. Van alle weer te geven lijnen wordt telkens het absolute minimum en maximum berekent. Zo wordt er voor gezorgd dat er nooit een range getoond wordt waar een bepaalde referentie geef data voor heeft.
+
+Referenties kunnen verwijderd worden door op het kruisje te duwen in de legende of door de reset knop te gebruiken. Om de snelheid optimaal te houden is er voor gekozen een maximum in te stellen van twee referenties. Samen met de aanwezige lijn worden dan gelijktijdig drie grafieken getoond over elkaar.
+
+\section{Automatische herschaling}
+
+Elke keer het beeld wijzigt bereken een aantal functies het minimum en het maximum van alle zichtbare lijnen. Zo wordt telkenmale het beeld herschaalt om zo veel mogelijk informatie zichtbaar te maken. Zo kan dus ook enkel de X waarde gemanipuleerd worden, de Y waarden worden automatisch ingevuld.
+
+\section{JSON}
+
+Bij elke beeldwijzing word een nieuwe selectie datapunten opgehaald via AJAX technieken. De data wordt in JSON formaat door de ASP.NET webservice teruggestuurd.
+Er wordt een request gezet voor de volume data en voor elke grafiek zijn punten. De teruggestuurde punten zijn beperkt in aantal en zijn dus in sterk uitgezoomde views een gemiddelde van een bepaalde periode. Er wordt ook telkens een deel links en rechts buiten het zichtbare beeld opgehaald zodat deze reeds klaar zouden staan bij het verschuiven van het beeld.
+
+\section{Testen}
+
+De module is getest en werkend bevonden in alle recente versies van de meest gangbare internetbrowsers.
+
+\section{Canvas}
+
+De grafieken zelf worden getekend met de Canvas technologie. Voor Internet Explorer is hiervoor een alternatieve manier toegevoegd aangezien die standaard geen Canvas ondersteund. De grafieken worden met de Flot bibliotheek getekend. Deze bibliotheek is gekozen omdat deze het meest flexibel en aanpasbaar bevonden werd na een uitgebreid onderzoek naar andere bibliotheken die ongeveer hetzelfde doel tot ogen hebben. Er kon gemakkelijk op deze grafiek ingebouwd worden doordat events afgevangen kunnen worden.
+
+\section{Internationalisatie}
+
+Javascript biedt standaard geen ondersteuning voor internationalisatie. Daarom is er voor gekozen om de teksten die in de module gebruikt worden onder te brengen in een losstaand bestand. Hierdoor staan alle taalbestanden samen op een locatie (flexibel). De website kan dan volgens de taalkeuze die gemaakt is het juiste taalbestand includen. De module gaat er van uit dat dit taalbestand reeds geladen is door de internetbrowser en kan dan variabelen gebruiken op de plaatsen waar taalstrings dienen te staan.
 
 %
 % Scraper
