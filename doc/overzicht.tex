@@ -185,6 +185,12 @@ Zo is de datalaag van onze backend erop voorzien dat er gemakkelijk van onderlig
 
 \subsection{Weaknesses}
 
+\paragraph{Backend} Het beveiligingsmodel werkt goed, maar de categorieën in dewelke de functies zijn ondergebracht zouden best herbekeken worden, zodat ze beter aansluiten bij wat de verschillende modules van het project effectief nodig hebben. Dit zou dan toelaten om een meer nauwkeurige afsluiting van de API naar de modules toe te doen, zodat de beveiligingsrisico's worden verminderd..
+
+Onze ervaring leert dat wanneer de backend enkele uren heeft gedraaid zonder dat er veel activiteit op was, dat de verbindingen met de Oracle-database komen te vervallen zonder dat de Apache Database Connection Pool dit merkt.. Dit zorgde ervoor dat requests naar onze backend vaak na 20 minuten (!) een timeout gaven met een Oracle-exceptie. Ondertussen is de Apache Database Connection Pool al zodanig geconfigureerd dat de verbindingen worden getest voordat ze worden teruggegeven, waardoor een request na 20 minuten toch een geldig antwoord krijgt.. Dat is al beter, maar er zou best nog verder worden gezocht achter een manier om de timeout in te korten. Dit is tijdens de laatste dagen van het ontwikkelingsproces ook gebeurd, maar omdat deze fout maar erg sporadisch optreedt kan er niet met zekerheid gezegd worden dat ze is opgelost..
+
+\paragraph{Administratie desktopclient} De implementatie van de eID-loginprocedure moet nog verder worden verbeterd.  Door gebrek aan tijd was het niet mogelijk om te zoeken naar een manier om aan de hand van de certificaten bij de elektronische identiteitskaart een sessie aan te maken op de backend.. Daarom is het nu vereist om de logingegevens van een administratoraccount permanent op te slaan, om met deze gegevens een geldige sessie te kunnen opvragen voor de gebruiker die inlogde met de eID.
+
 \paragraph{Mobiele client} De mobiele client werd niet opgebouwd op een erg robuuste manier. Zou deze verder ontwikkeld worden, dan zou er al snel nood zijn aan een grote herorganisatie van de code om ze flexibeler te maken.
 
 \todo Known issues / bugs
