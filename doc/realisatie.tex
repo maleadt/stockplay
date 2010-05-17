@@ -150,7 +150,7 @@ public interface GenericDAO<T, ID> {
 }
 \end{lstlisting}
 
-De objecten die de eigenlijke data bevatten worden de ``Data Transfer Objects'' (DTO's) genoemd. De businesslogica kan de data in deze objecten aanpassen zonder dat dit gevolgen heeft op de persistente data. Pas als het DTO weer wordt doorgegeven aan het DAO, wordt de persistente data gewijzigd. Dit maakt het gebruik van dit pattern erg geschikt voor onze backend, waar de eigenlijke wijzigingen van de data niet op niveau van de backend gebeuren, maar wel door de modules die op de backend inhaken. Deze DTO's zijn namelijk erg ``licht'' omdat ze enkel gebruikt worden om data voor te stellen, en kunnen dus gemakkelijk via het XML-RPC-protocol verstuurd worden.
+De objecten die de eigenlijke data bevatten worden de ``Data Transfer Objects'' (DTO's) genoemd. De businesslogica kan de data in deze objecten aanpassen zonder dat dit gevolgen heeft op de persistente data. Pas als het DTO weer wordt doorgegeven aan het DAO, wordt de persistente data gewijzigd. Dit maakt het gebruik van dit pattern erg geschikt voor onze backend, waar de eigenlijke wijzigingen van de data niet op niveau van de backend gebeuren, maar wel door de modules die op de backend inhaken. Deze DTO's zijn namelijk erg ``licht'' omdat ze enkel gebruikt worden om data voor te stellen, en kunnen dus gemakkelijk via het XML-RPC-protocol verstuurd worden. Er konden daardoor functies werden gemaakt die zorgen voor een 1-op-1 omzetting tussen een DTO en een XML-RPC-struct.
 
 \section{XML-RPC interface}
 
@@ -220,9 +220,7 @@ Om meer informatie over een specifieke fout te bekomen, moet naar de log van de 
 
 Aangezien het XML-RPC protocol gebruik maakt van het HTTP-protocol, waren we van plan om diens functionaliteit gebruiken om authenticatie te bekomen. Daartoe zouden we gebruik maken van \emph{basic authentication}, waarbij de client indien gevraagd een gebruikersnaam en wachtwoord naar de server doorstuurd. Normaal zou dit geen extra code te weeg gebracht hebben en zouden we volledig op de authenticatiemogelijkheden van het HTTP protocol kunnen berusten.
 
-Deze denkpiste gaf echter enkele problemen. Vooreerst is het sterk onveilig aangezien het wachtwoord continu in (quasi) plaintext doorgestuurd wordt. Het maakt echter verfijnde autorisatie moeilijk, tenzij we voor elk authenticatie-niveau een aparte URL zouden voorzien. Daarom hebben we gekozen om gebruik te maken van een eigen authenticatie-laag, waarbij een XML-RPC functie gebruikt wordt om de gebruiker aan te melden (dit in tegenstelling tot het gebruik maken van de HTTP laag). Na aanmelding geeft de functie in kwestie een sessie-ID terug, die een sessie serverside linkt aan een specifieke gebruiker. Zo kunnen we, opnieuw binnenin de XML-RPC laag, controleren of een gebruiker wel correct aangemeld is en heel dynamisch requests toelaten of weigeren. Dit is gebaseerd op een flexibel rechten-systeem, waarbij elke gebruiker in de database gelinkt wordt aan een rol die bepaalde rechten toekent.
-
-Om de veiligheid te verhogen gebruiken we verschillende technieken. Eerst en vooral is de sessie tijdelijk, en worden ongebruikte sessie-keys regelmatig ge\"invalideerd. Ook hebben we het moeilijk gemaakt om sessie-keys te genereren, door ze op een unieke manier te linken aan data die enkel de gebruiker zelf kent (zijn wachtwoord). Om het tenslotte ook moeilijk te maken om een sessie-key te linken aan een gebruiker, implementeren we in onze sessie-hash een variabele seed.
+Deze denkpiste gaf echter enkele problemen. Vooreerst is het sterk onveilig aangezien het wachtwoord continu in (quasi) plaintext doorgestuurd wordt. Het maakt echter verfijnde autorisatie moeilijk, tenzij we voor elk authenticatie-niveau een aparte URL zouden voorzien. Daarom hebben we gekozen om gebruik te maken van een eigen authenticatie-laag, waarbij een XML-RPC functie gebruikt wordt om de gebruiker aan te melden (dit in tegenstelling tot het gebruik maken van de HTTP laag). Na aanmelding geeft de functie in kwestie een sessie-ID terug, die een sessie serverside linkt aan een specifieke gebruiker. Er wordt vervolgens van de client verwacht dat hij bij elke request de sessie-ID mee stuurt. Zo kunnen we, opnieuw binnenin de XML-RPC laag, controleren of een gebruiker wel correct aangemeld is en heel dynamisch requests toelaten of weigeren. Dit is gebaseerd op een flexibel rechten-systeem, waarbij elke gebruiker in de database gelinkt wordt aan een rol die bepaalde rechten toekent.
 
 Authenticatie en autorisatie gaat ook gepaard met een specifieke set aan mogelijke foutboodschappen. Allemaal geklasseerd binnen de Service Bezwaren zijn de volgende subtypes mogelijk: ``Invalid Credentials'' wanneer het authenticeren mislukt is, ``Unauthorized'' wanneer een gebruiker niet geautoriseerd is tot het gebruik van een bepaalde functie en tenslotte ``Session Corrupt'' wanneer een gespecificeerde sessie ongeldig blijkt te zijn (zie tabel \ref{tbl:real:xmlrpc:fouten}).
 
@@ -234,7 +232,7 @@ De mogelijke autorisatieniveau's zijn beschreven in tabel \ref{tbl:real:xmlrpc:a
 \item{Scraper}
 \item{Puntenmanager}
 \item{Transactiemanager}
-\item{AI}
+\item{AI-speler}
 \end{itemize_compact}
 
 \begin{table}
@@ -526,9 +524,8 @@ Hier vindt men de nodige methodes terug om gebruikers te beheren. Dit is echter 
 
 \subsubsection{Order subklasse}
 
-\todo{behoudt Orders.List ook uitgevoerde orders van een bepaald timeframe? - we hadden normaal gezegd dat we hier alle order tonen, ook de uitgevoerde. Het timeframe/resente orders zetten is dan kwestie van het zetten van de juiste filter en kan de client dan zelf bepalen. Kan je je hier in vinden? - Laur}
 \function{Order.List}
-	{ wachtende orders bekijken }
+	{ Wachtende en recentelijke verwerkte orders bekijken }
 	{ een filter, met de volgende mogelijke sleutels:
 		\begin{itemize_compact}
 		\item{id: id van het order}
@@ -1199,8 +1196,10 @@ Hoewel de bovenstaande netwerkoptimalisatie een grote impact heeft (grote datatr
 Daarom hebben we besloten om de datalaag in de backend uit te breiden met een flexibel caching systeem. Dit resulteerde echter in een aantal interessante problemen: wat moet er juist in de cache, wanneer worden entries geinvalideerd, en hoe bepalen we wat relevant is en wat te vluchtig is om in een cache op te slaan? Veel van deze problemen zijn niet eigen aan ons project, maar vallen binnen het domein van caches. Daarom hebben we besloten om een deel van deze problematiek te elimineren door gebruik te maken van een bestaande caching bibliotheek. De keuze is daarbij gevallen op \makeurl{cache4j}{http://cache4j.sourceforge.net/}: een compacte doch performante caching bibliotheek die net voldoende features biedt om aan onze eisen te voldoen.
 
 De standaard opzet bij caches is om de data die de gebruiker terugkrijgt op te slaan, en wanneer de gebruiker iets opvraagt eerst de cache te controleren. Zo zouden we een cache moeten opzetten met beurzen, aandelen, koersen, etc. Wanneer de gebruiker dan een lijst van de beurzen opvraagt, kunnen we eenvoudigweg de inhoud van de cache teruggeven in plaats van de database te moeten contacteren.
+
 De opzet van ons project bemoeilijkt dit concept echter. Aangezien we gebruik maken van een filter die nooit ge\"interpreteerd wordt door de backend, maar louter gecompileerd wordt tot een string die de database dan kan verwerken, heeft de backend nooit weet van wat de effectieve selectiecriteria van de dataset waren. Daarom kunnen we het resultaat van de bevraging niet eenvoudig opslaan, laat staan in een later stadium de cache raadplegen om de juiste entries op te halen.
 Om toch een cache te kunnen gebruiken, slaan we geen hi\"erarchie van datasets op, maar louter het letterlijke antwoord dat een gebruiker zou moeten krijgen bij een specifieke aanvraag. De sleutel die web gebruiken om de resultaatset op te slaan in de cache, is een gemodificeerde content-aware representatie van de aa,vraag, samengesteld uit de methodenaam en de argumentenlijst (meestal een filter). Zo zal een aanvraag bij de backend, gericht op eenzelfde functie (vb ``Finance.Exchange.List''), waarbij de argumenten inhoudelijk identiek zijn aan de argumenten van een vorige aanroep, niet resulteren in een bevraging bij de database maar louter in het teruggeven van een waarde uit de cache.
+
 Hoewel dit complex mag lijken, valt dit in Java relatief eenvoudig te implementeren. Eerst hebben we voorzien in een Proxy klasse, die elke aanvraag op object kan herleiden via een InvocationHandler (indien caching gewenst is natuurlijk). Die InvocationHandler zal in actie treden wanneer een willekeurige functie aangeroepen wordt op een object dat geregistreerd is bij de Proxy. In die methode kunnen we vervolgens de content-aware hashcode genereren, de cache controleren, eventueel een opgeslagen waarde teruggeven, of indien die ontbrak een aanroep naar het effectieve object uitvoeren om daarna het resultaat in de cache op te slaan.
 Om dit proces vervolgens flexibel te maken, hebben we gebruikt van Java annotaties (\emph{@Cachable} en \emph{@Invalidates}), die de programmeur van de Data Access Objecten eenvoudig kan toevoegen aan een functiedeclaratie, om zo de interpretatie binnen een eventuele InvocationHandler te manipuleren.
 
@@ -1241,16 +1240,16 @@ Waarde een en twee zijn waardes die de gebruiker ingesteld heeft en hebben afhan
 Hierna volgt een overzicht van de modules die we zullen implementeren.
 
 \section{Onmiddellijk uitvoeren}
-Deze module gebruikt de gegeven parameters niet en evalueert de voorwaarde steeds als waar. Het order wordt onmiddellijk uitgevoerd.
+Deze module gebruikt de gegeven parameters niet en evalueert de voorwaarde steeds als waar. Het order wordt onmiddellijk uitgevoerd, ongeacht wat de prijs van het effect op dat moment is.
 
 \section{Koerslimiet}
 Deze module gebruikt de eerste parameter als limietwaarde. Bij een aankooporder gaat hij een positief antwoord geven als de koers lager is dan de limietwaarde. Deze koersinformatie komt hij via de backend te weten. Bij een verkooporder gebeurt het omgekeerde. 
 
 \section{Trailing-stop}
-Bij een verkoop order wordt de trigger waarde ingesteld op een vast aantal beurspunten onder de hoogste koers. Als de hoogste koers dus verhoogd in waarde, dan verhoogd ook de trigger waarde evenveel punten. Hetzelfde kan ook ingesteld worden bij een aankooporder. Deze trigger waarde krijgt de module via de parameters mee en het maximum sinds de periode van het plaatsen van de order en het huidige tijdstip vraagt deze aan de backend.
+Bij een verkoop order wordt de trigger waarde ingesteld op een vast aantal beurspunten onder de hoogste koers. Als de hoogste koers dus verhoogt in waarde, dan verhoogd ook de trigger waarde evenveel punten. Hetzelfde kan ook ingesteld worden bij een aankooporder. Deze trigger waarde krijgt de module via de parameters mee en het maximum sinds de periode van het plaatsen van de order en het huidige tijdstip vraagt deze aan de backend.
 
 \section{Bracket-limiet}
-Als de koers buiten een van de twee limietwaarden valt dan geeft de module een positief antwoord terug.
+Dit type order laat een speler toe om de maximale fluctuatie van een aandeel te beperken. Hiervoor geeft de speler zowel een boven- als een ondergrens in, valt de prijs van het aandeel buiten de opgegeven band, dan zal de module een positief antwoord geven. Zo legt een speler zowel zijn maximale verlies als zijn maximale winst vast.
 
 \section{Stop loss}
 De module vraagt bij een aankooporder aan de backend wat de laagste prijs was tussen het plaatsen van het order en het huidige tijdstip. Is dit minimum lager dan de eerste parameter, dan geeft de module een positief antwoord terug. Bij een verkooporder gebeurt het omgekeerde.

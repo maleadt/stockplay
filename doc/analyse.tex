@@ -81,31 +81,6 @@ Alternatief voor \ref{def:lidmaatschap:bevestiging}:
 \end{enumerate_compact}
 \end{compact}
 
-\todo{De beschrijving van deze use case is gewoon een kopie van de vorige?? -Dieter}
-\paragraph{Inloggen}
-\begin{compact}
-\subparagraph{Beschrijving} De website zal uit drie delen bestaan. Een deel bestaat uit een of meerdere pagina's. Een deel zal enkel zichtbaar zijn voor niet geauthenticeerde gebruikers of bezoekers zonder lidmaatschap. Een ander deel zal zichtbaar zijn voor zowel niet geauthenticeerde bezoekers als geauthenticeerde bezoekers. Geauthenticeerde bezoekers hebben dan ook nog toegang tot een enkel voor hen zichtbare derde deel. Het is in dat deel dat de interactieve site zich bevindt. Dat deel is enkel toegankelijk voor geauthenticeerde bezoekers.
-\subparagraph{Actoren} Bezoekers met lidmaatschap die toegang willen tot het interactieve deel van de website.
-\subparagraph{Doel} Een bezoeker koppelen aan zijn lidmaatschap en dus onrechtstreeks aan zijn portfolio, puntentotaal en instellingen.
-\subparagraph{Precondities} De bezoeker bezit reeds een lidmaatschap en beschikt over voldoende informatie en hulpmiddelen om aan te kunnen tonen dat dit lidmaatschap van hem of haar is.
-\subparagraph{Postcondities} De gebruiker is geauthenticeerd.
-\subparagraph{Triggers} De gebruiker vult zijn gebruikersnaam en wachtwoord in of verbind zijn eID met de applicatie. Dit gebeurt vanaf de gastpagina.
-\subparagraph{Notities} Het kan zijn dat de gebruiker niet moet inloggen omdat dit reeds voorheen gebeurd is en een bepaald mechanisme met een cookie de authenticatie reeds verzocht heeft. Dit laatste gebeurt dan onzichtbaar voor de gebruiker.
-\subparagraph{Prioriteit}Hoog
-\subparagraph{Complexiteit}Hoog
-\subparagraph{Successcenario}
-\begin{enumerate_compact}
- \item Speler bezoekt de website
- \item Speler geeft voldoende gegevens waarmee hij zich kan authenticeren
- \item \label{def:inloggen:bevestiging} Speler krijgt een bevestiging en wordt doorgestuurd naar het interactieve deel van de website
-\end{enumerate_compact}
-\subparagraph{Alternatieve scenario's}
-Alternatief voor \ref{def:inloggen:bevestiging}:
-\begin{enumerate_compact}
- \item Speler heeft een ongeschikte of foutieve invoer gedaan voor een veld en krijgt de mogelijkheid om dit aan te passen
-\end{enumerate_compact}
-\end{compact}
-
 \paragraph{De gebruiker bekijkt zijn eigen Portfolio}
 \begin{compact}
 \subparagraph{Beschrijving} De gebruiker ziet een webpagina met daarop de effecten die deze momenteel in bezit heeft, de historische aankoopprijs per stuk, de historische aankoopprijs in totaal, de huidige koers, het rendement en het verschil op de waarde sinds de aankoop van het effect.
