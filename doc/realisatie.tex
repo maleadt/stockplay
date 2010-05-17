@@ -31,6 +31,7 @@ In de tabel ``users'' bevinden zich twee kolommen met redundante informatie: cas
 De cashpositie van een speler verandert wanneer er een transactie op zijn account wordt geregistreerd. Dit gebeurd wanneer er een rij wordt toegevoegd aan de ``transactions''-tabel. Dan wordt door middel van een trigger de cashpositie van de gebruiker, alsook de wijziging in de hoeveelheid effecten die hij bezit geregistreerd met behulp van de trigger te zien in codefragment \ref{code:data:trig_cash}.
 
 \begin{code}
+\lstset{language=SQL,style=SQL}
 \begin{lstlisting}
 create or replace
 TRIGGER UPDATECASH
@@ -65,6 +66,7 @@ END;
 Een transactie is ook niet altijd mogelijk: als een speler een te lage cashpositie bezit, of te weinig effecten om te kunnen verkopen, dan kan een transactie niet doorgaan. Dit wordt gecontroleerd door de trigger die te zien is in codefragment \ref{code:data:trig_transacties}.
 
 \begin{code}
+\lstset{language=SQL,style=SQL}
 \begin{lstlisting}
 create or replace
 TRIGGER CHECKTRANSACTION
@@ -108,6 +110,7 @@ END;
 Wijzingen in punten bij een speler wordt geregistreerd in de tabel ``pointtransactions'', dat laat toe om een meer verfijnde klassementen op te stellen (dagklassement, weekklassement, maandklassement, ...). Het totale aantal punten wordt berekend met behulp van een trigger in de ``users''-tabel, wiens code vermeld staat in codefragment \ref{code:data:trig_punten}.
 
 \begin{code}
+\lstset{language=SQL,style=SQL}
 \begin{lstlisting}
 create or replace
 TRIGGER UPDATEPOINTS
@@ -134,12 +137,12 @@ Een probleem bij de huidige implementatie is de relatief grote ``afstand'' tusse
 
 Het DAO-pattern koppelt op een eenvoudige manier de businesslogica los van het mechanisme dat de data permanent opslaat. Dit zorgt ervoor dat de businesslogica meer robuust en flexibeler is wanneer er wijzigingen zouden optreden in de manier waarop de data wordt opgeslagen.
 
-Een data access object voorziet in zijn meest eenvoudige vorm 4 operaties: het ophalen, aanmaken, wijzigen en verwijderen van een object. Dit wordt grotendeels weerspiegeld in de gebruikte interface bij dit project:
+Een data access object voorziet in zijn meest eenvoudige vorm 4 operaties: het ophalen, aanmaken, wijzigen en verwijderen van een object. Dit wordt grotendeels weerspiegeld in de gebruikte interface bij dit project, zoals te zien in codefragment \ref{code:real:dao}.
 
+\begin{code}
 \lstset{language=Java,style=Java}
 \begin{lstlisting}
 public interface GenericDAO<T, ID> {
-
     public T findById(ID id);
     public Collection<T> findByFilter(Filter iFilter);
     public Collection<T> findAll();
@@ -149,6 +152,9 @@ public interface GenericDAO<T, ID> {
     public boolean delete(T entity);
 }
 \end{lstlisting}
+\caption{Interface van een Data Access Object.}
+\label{code:real:dao}
+\end{code}
 
 De objecten die de eigenlijke data bevatten worden de ``Data Transfer Objects'' (DTO's) genoemd. De businesslogica kan de data in deze objecten aanpassen zonder dat dit gevolgen heeft op de persistente data. Pas als het DTO weer wordt doorgegeven aan het DAO, wordt de persistente data gewijzigd. Dit maakt het gebruik van dit pattern erg geschikt voor onze backend, waar de eigenlijke wijzigingen van de data niet op niveau van de backend gebeuren, maar wel door de modules die op de backend inhaken. Deze DTO's zijn namelijk erg ``licht'' omdat ze enkel gebruikt worden om data voor te stellen, en kunnen dus gemakkelijk via het XML-RPC-protocol verstuurd worden. Er konden daardoor functies werden gemaakt die zorgen voor een 1-op-1 omzetting tussen een DTO en een XML-RPC-struct.
 
@@ -554,7 +560,6 @@ Hier vindt men de nodige methodes terug om gebruikers te beheren. Dit is echter 
 		\end{itemize_compact} }
 	{ BACKEND\_ADMIN (moet ooit ORDER\_ADMIN worden), of LOGGEDIN (maar dan wordt de resultaatset gereduceerd tot orders van de ingelogde gebruiker) }
 
-\todo{specifieke foutmelding als order aanmaken faalde}
 \function{Order.Create}
 	{ een nieuw order aanmaken }
 	{ struct met orderdetails
