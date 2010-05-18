@@ -21,6 +21,16 @@ SIZE 50M autoextend on
 
 Om vervolgens de database op te vullen met een set aan historische data (wat niet verplicht is, maar bijvoorbeeld de performantie van de kunstmatige intelligentie verhoogt, alsook het uitzicht van de grafieken verbeterd), kan de historische scraper gebriukt worden. Hiervoer moet echter eerst eenmaal de reguliere scraper uitgevoerd worden, zodat de benodigde informatie duidende op aandelen, indexen en beurzen zich in de database bevindt. Vervolgens kan men het script ``stockplay-historic'' gebruiken om de database aan de hand van de ingevulde informatie wat betreft aandelen etc, koersen van de Euronext site op te halen die tot 2 jaar terug in de tijd gaan.
 
+Tenslotte moet de ``stockplay'' gebruiker een extra recht toegekend hebben, zodat deze in staat is bepaalde statistieken van de database op te halen. Aangezien dit als de ``SYS'' gebruiker moet uitgevoerd worden, kunnen we dit niet toevoegen aan het installatiscript ``installatiescript.sql''. De grant die uitgevoerd moed worden, is te vinden in codefragment \ref{code:handl:grant}.
+
+\begin{code}
+\lstset{language=SQL,style=SQL}
+\begin{lstlisting}
+GRANT SELECT ON sys.v_$instance TO stockplay
+\end{lstlisting}
+\caption{Grant die de ``stockplay'' gebruiker toelaat statistieken op te halen.}
+\label{code:handl:grant}
+\end{code}
 
 \subsection{Backend}
 

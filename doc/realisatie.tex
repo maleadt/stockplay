@@ -90,7 +90,8 @@ BEGIN
                   - COALESCE(:old.price*:old.amount,0)
       WHERE u.id = COALESCE(:new.userid,:old.userid);
   END IF;
-END;\end{lstlisting}
+END;
+\end{lstlisting}
 \caption{Trigger verantwoordelijk voor het updaten van de cashpositie van gebruikers.}
 \label{code:data:trig_cash}
 \end{code}
