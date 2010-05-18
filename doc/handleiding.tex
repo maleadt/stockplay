@@ -41,7 +41,24 @@ SIZE 50M autoextend on
 \item{Voer het installatiebestand AdministrationSetup.exe uit}
 \end{enumerate}
 
-\subsection{Scraper}
+\subsection{Perl componenten}
+
+Voor de installatie van alle in Perl geschreven componenten (de AI, de scraper, de historische scraper, en enkele andere hulpscripts) wordt er voorzien in een CPAN compatibel pakket ``StockPlay-0.01.tar.gz''. Deze kan ge\"installeerd worden met een CPAN-compatibele package manager naar keuze (zoals CPAN.pm of ActiveState's PPM), maar een manuele installatie blijft ook altijd mogelijk:
+\begin{itemize}
+\item Pak het archief ``StockPlay-0.01.tar.gz'' uit, en verander de huidige directory naar waar het archief uitgepakt is.
+\item Configureer de build-environment door ``perl Build.PL'' uit te voeren. Hiervoor is de module \emph{Module::Builder} nodig.
+\item Test of de meegeleverde code correct op het systeem werkt door ``./Build test'' uit te voeren.
+\item Installeer de modules via ``./Build install''. Hiervoor zijn administrator-rechten nodig als de doeldirectory een systeempad is. Om dit te vermijden kan gebruik gemaakt worden van een environment geconfigureerd met \emph{local::lib}.
+\end{itemize}
+
+Hierna zijn de relevante scripts (``stockplay-scraper'', ``stockplay-ai'', ``stockplay-benchmark'', etc) beschikbaar op het systeem. Om te configureren op welke server en met welke credentials het framework connecteerd, moet het bestand ``config'' die zich bevindt in de subdirectory ``.stockplay'' van de gebruiker zijn thuisfolder, correct gewijzigd worden. Zo kan men daar elke module configuratieparameters meegeven (zie daarvoor de codedocumentatie). Een voorbeeld van dergelijke directives:
+\begin{verbatim}
+[factory]
+server=http://be04.kapti.com:6800/backend/public
+username=foo
+password=bar
+\end{verbatim}
+
 
 \subsection{Transactiemanager}
 
