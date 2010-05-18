@@ -19,6 +19,8 @@ SIZE 50M autoextend on
 \item{Log in met de zonet aangemaakte gebruiker, en voer het SQL-script ``installatiescript.sql'' uit}
 \end{enumerate}
 
+Om vervolgens de database op te vullen met een set aan historische data (wat niet verplicht is, maar bijvoorbeeld de performantie van de kunstmatige intelligentie verhoogt, alsook het uitzicht van de grafieken verbeterd), kan de historische scraper gebriukt worden. Hiervoer moet echter eerst eenmaal de reguliere scraper uitgevoerd worden, zodat de benodigde informatie duidende op aandelen, indexen en beurzen zich in de database bevindt. Vervolgens kan men het script ``stockplay-historic'' gebruiken om de database aan de hand van de ingevulde informatie wat betreft aandelen etc, koersen van de Euronext site op te halen die tot 2 jaar terug in de tijd gaan.
+
 
 \subsection{Backend}
 
