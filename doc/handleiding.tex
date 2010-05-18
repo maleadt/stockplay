@@ -56,16 +56,17 @@ Deze handleiding gaat ervan uit dat de puntenmanager ge\"installeerd wordt op ee
 \item{Kopieer de map van de puntenmanager inclusief lib-map en config.txt bestand naar de gewenste directory. Als voorbeeld nemen we de home map van root.}
 \item{Maak een leeg tekstbestand aan met als naam puntenmanager.cron en plaats daarin volgende Cronjob: '0 0 * * 1-5 java -jar /home/root/PointsManager/PointManager.jar /home/Dieter/PointsManager/config.txt'. Deze cronjob zal iedere weekdag de puntenberekening uitvoeren}
 \item{Open een terminal en ga naar de directory waar dit tekstbestand is aangemaakt.  Voer dan volgend command uit: 'crontab puntenmanager.cron'}
-\item{Voer vervolgens 'crontab -l' uit om te verifi\"eren dat de cronjob correct is toegevoegd.
+\item{Voer vervolgens 'crontab -l' uit om te verifi\"eren dat de cronjob correct is toegevoegd.}
 \end{enumerate}
 
 \subsection{Mobiele client}
-\textbf{Opmerking: } Omdat het onmogelijk is om bij de vastgestelde testopstelling van dit project een URL bereikbaar te maken vanaf het internet, is het niet mogelijk om de Java ME-client uit te testen op een echte GSM. Er is immers geen haalbare oplossing om een verbinding op te zetten tussen de server waar de backend van dit project op draait, en de GSM zelf. Daarom kan de applicatie enkel worden opgeleverd in een emulator. Er is voor gekozen om gebruik te maken van de Sony Ericsson Java ME-emulator, omdat de standaard Sun Java-emulator enkel toe laat om de applicatie vanuit netbeans te starten.
+\textbf{Opmerking}: Omdat het onmogelijk is om bij de vastgestelde testopstelling van dit project een URL bereikbaar te maken vanaf het internet, is het niet mogelijk om de Java ME-client uit te testen op een echte GSM. Er is immers geen haalbare oplossing om een verbinding op te zetten tussen de server waar de backend van dit project op draait, en de GSM zelf. Daarom kan de applicatie enkel worden opgeleverd in een emulator. Er is voor gekozen om gebruik te maken van de Sony Ericsson Java ME-emulator, omdat de standaard Sun Java-emulator enkel toe laat om de applicatie vanuit netbeans te starten.
 
 \begin{enumerate}
 \item{Installeer de Sony Ericsson Java SDK (te vinden in de zipfile 99962-semc\_java\_me\_cldc\_sdk\_2\_5\_0\_6.zip)}
-\item{Open de emulator via Start \rightarrow Programs \rightarrow Sony Ericsson \rightarrow Java ME SDK for CLDC \rightarrow Run MIDP Application}
-\item{Er verschijnt nu een dialoogvenster waarin je de Java ME-jad kan selecteren. Navigeer naar de juiste map en kies
+\item{Open de emulator via Start $\Rightarrow$ Programs $\Rightarrow$ Sony Ericsson $\Rightarrow$ Java ME SDK for CLDC $\Rightarrow$ Run MIDP Application}
+\item{Er verschijnt nu een dialoogvenster waarin je de Java ME-jad kan selecteren. Navigeer naar de juiste map en kies ...}
+\todo aanvullen
 \end{enumerate}
 
 
