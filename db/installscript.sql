@@ -5,7 +5,7 @@
 
 -- Users table
 
-CREATE SEQUENCE "STOCKPLAY"."USERID_SEQ" MINVALUE 1 MAXVALUE 999999999999999999999999999 INCREMENT BY 1 START WITH 5 CACHE 20 NOORDER NOCYCLE ;
+CREATE SEQUENCE "STOCKPLAY"."USERID_SEQ" MINVALUE 1 MAXVALUE 999999999999999999999999999 INCREMENT BY 1 START WITH 10 CACHE 20 NOORDER NOCYCLE ;
 
 CREATE TABLE "STOCKPLAY"."USERS"
   (
@@ -85,7 +85,8 @@ CREATE TABLE "STOCKPLAY"."POINTSTRANSACTIONS"
     "TIMEST" TIMESTAMP (6) NOT NULL ENABLE,
     "DELTA"    NUMBER,
     "COMMENTS" VARCHAR2(200 BYTE),
-    CONSTRAINT "POINTSHISTORY_PK" PRIMARY KEY ("USERID", "TIMEST") USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645 PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT) TABLESPACE "STOCKPLAY" ENABLE,
+    "TYPE"     VARCHAR2(20 BYTE) NOT NULL ENABLE,
+    CONSTRAINT "POINTSHISTORY_PK" PRIMARY KEY ("USERID", "TYPE", "TIMEST") USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645 PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT) TABLESPACE "STOCKPLAY" ENABLE,
     CONSTRAINT "POINTSHISTORY_USERID_FK" FOREIGN KEY ("USERID") REFERENCES "STOCKPLAY"."USERS" ("ID") ON
   DELETE CASCADE ENABLE
   )
@@ -94,6 +95,7 @@ CREATE TABLE "STOCKPLAY"."POINTSTRANSACTIONS"
     INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645 PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT
   )
   TABLESPACE "STOCKPLAY" ;
+
   
 -- Trigger om insert/updates/deletes van deze tabel te weerspiegelen in de users-tabel
 
@@ -278,105 +280,85 @@ CREATE TABLE "STOCKPLAY"."TRANSACTIONS"
   
   
 -- Trigger om toevoeging van transactie te verwerken naar user-table
-CREATE OR REPLACE TRIGGER "STOCKPLAY"."UPDATECASH" AFTER
-  INSERT OR
-  UPDATE ON TRANSACTIONS REFERENCING OLD AS OLD NEW AS NEW FOR EACH ROW DECLARE us_exists NUMBER;
-  BEGIN
-    SELECT COUNT(1)
-    INTO us_exists
-    FROM user_securities us
-    WHERE us.userid                   = COALESCE(:new.userid, :old.userid)
-    AND us.isin                       = COALESCE(:new.isin,:old.isin);
-    IF COALESCE(:new.type, :old.type) = 'SELL' THEN
-      UPDATE users u
-      SET u.cash   =u.cash+COALESCE(:new.price*:new.amount,0)-COALESCE(:old.price*:old.amount,0)
-      WHERE u.id   =COALESCE(:new.userid,:old.userid);
-      IF us_exists > 0 THEN
-        UPDATE user_securities us
-        SET us.amount   =us.amount-COALESCE(:new.amount,0)+COALESCE(:old.amount,0)
-        WHERE us.userid = COALESCE(:new.userid, :old.userid)
-        AND us.isin     = COALESCE(:new.isin,:old.isin);
-      ELSE
-        INSERT
-        INTO user_securities
-          (
-            userid,
-            isin,
-            amount
-          )
-          VALUES
-          (
-            COALESCE(:new.userid, :old.userid),
-            COALESCE(:new.isin,:old.isin),
-            -COALESCE(:new.amount, :old.amount)
-          );
-      END IF;
-    ELSE
-      UPDATE users u
-      SET u.cash   =u.cash-COALESCE(:new.price*:new.amount,0)+COALESCE(:old.price*:old.amount,0)
-      WHERE u.id   =COALESCE(:new.userid,:old.userid);
-      IF us_exists > 0 THEN
-        UPDATE user_securities us
-        SET us.amount   =us.amount+COALESCE(:new.amount,0)-COALESCE(:old.amount,0)
-        WHERE us.userid = COALESCE(:new.userid, :old.userid)
-        AND us.isin     = COALESCE(:new.isin,:old.isin);
-      ELSE
-        INSERT
-        INTO user_securities
-          (
-            userid,
-            isin,
-            amount
-          )
-          VALUES
-          (
-            COALESCE(:new.userid, :old.userid),
-            COALESCE(:new.isin,:old.isin),
-            COALESCE(:new.amount, :old.amount)
-          );
-      END IF;
-    END IF;
-  END;
-  /
-  ALTER TRIGGER "STOCKPLAY"."UPDATECASH" ENABLE;
+create or replace
+TRIGGER UPDATECASH
+AFTER INSERT OR UPDATE ON TRANSACTIONS 
+REFERENCING OLD AS old NEW as new
+FOR EACH ROW 
+declare
+  us_exists number;
+begin
+
+  select count(1) into us_exists from user_securities us WHERE us.userid = coalesce(:new.userid, :old.userid) AND us.isin = coalesce(:new.isin,:old.isin);
+
+  if coalesce(:new.type, :old.type) = 'SELL' then
+      UPDATE users u SET u.cash=u.cash+coalesce(:new.price*:new.amount,0)-coalesce(:old.price*:old.amount,0) WHERE u.id=coalesce(:new.userid,:old.userid);
+      
+      if coalesce(:new.isin, :old.isin) <> null then
+      if us_exists > 0 then
+
+            UPDATE user_securities us SET us.amount=us.amount-coalesce(:new.amount,0)+coalesce(:old.amount,0) WHERE us.userid = coalesce(:new.userid, :old.userid) AND us.isin = coalesce(:new.isin,:old.isin);
+      else
+            INSERT INTO user_securities (userid, isin, amount) VALUES( coalesce(:new.userid, :old.userid), coalesce(:new.isin,:old.isin), -coalesce(:new.amount, :old.amount) );
+      end if;
+      end if;
+          
+  elsif coalesce(:new.type, :old.type) = 'BUY' then
+      UPDATE users u SET u.cash=u.cash-coalesce(:new.price*:new.amount,0)+coalesce(:old.price*:old.amount,0) WHERE u.id=coalesce(:new.userid,:old.userid);
+      
+      if coalesce(:new.isin, :old.isin) <> null then
+        if us_exists > 0 then
   
+              UPDATE user_securities us SET us.amount=us.amount+coalesce(:new.amount,0)-coalesce(:old.amount,0) WHERE us.userid = coalesce(:new.userid, :old.userid) AND us.isin = coalesce(:new.isin,:old.isin);
+        else
+              INSERT INTO user_securities (userid, isin, amount) VALUES( coalesce(:new.userid, :old.userid), coalesce(:new.isin,:old.isin), coalesce(:new.amount, :old.amount) );
+        end if;
+      end if;
+  
+  else
+  --MANUAL TYPE
+      UPDATE users u SET u.cash=u.cash+coalesce(:new.price*:new.amount,0)-coalesce(:old.price*:old.amount,0) WHERE u.id=coalesce(:new.userid,:old.userid);
+  end if;
+END;
+  
+  ALTER TRIGGER "STOCKPLAY"."UPDATECASH" ENABLE;
 -- Trigger om transactie te checken op geldigheid vooraleer hem door te voeren
   
-CREATE OR REPLACE TRIGGER "STOCKPLAY"."CHECKTRANSACTION" BEFORE
-  INSERT OR
-  UPDATE ON TRANSACTIONS FOR EACH ROW DECLARE money_user NUMBER;
-  has_sec      NUMBER;
-  amount_owned NUMBER;
-  BEGIN
-    IF :new.price < 0 OR :new.amount < 0 THEN
-      raise_application_error(-20000, 'Price and amount should ALWAYS be positive!');
-    END IF;
-    IF (:new.type = 'BUY') THEN
-      SELECT cash INTO money_user FROM users u WHERE u.id = :new.userid;
-      IF ((money_user           - (:new.price*:new.amount)) < 0) THEN
-        raise_application_error(-20001, 'User doesnt have enough cash!');
-      END IF;
-    elsif (:new.type = 'SELL') THEN
-      SELECT COUNT(1)
-      INTO has_sec
-      FROM user_securities us
-      WHERE us.userid = :new.userid
-      AND us.isin     = :new.isin;
-      IF(has_sec      > 0) THEN
-        SELECT amount
-        INTO amount_owned
-        FROM user_securities us
-        WHERE us.userid = :new.userid
-        AND us.isin     = :new.isin;
-        IF (:new.amount > amount_owned) THEN
-          raise_application_error(-20001, 'User doesnt have enough securities of that ISIN!');
-        END IF;
-      ELSE
+create or replace
+TRIGGER CHECKTRANSACTION
+BEFORE INSERT OR UPDATE ON TRANSACTIONS 
+FOR EACH ROW 
+declare
+  money_user number;
+  has_sec number;
+  amount_owned number;
+begin
+  if :new.type <>'MANUAL' and (:new.price < 0 or :new.amount < 0) then
+    raise_application_error(-20000, 'Price and amount should ALWAYS be positive!');
+  end if;
+  
+  
+  if (:new.type = 'BUY') then
+  
+    select cash into money_user from users u WHERE u.id = :new.userid;
+    if ((money_user - (:new.price*:new.amount)) < 0) then
+      raise_application_error(-20001, 'User doesnt have enough cash!');
+    end if;
+
+  elsif (:new.type = 'SELL') then
+    select count(1) into has_sec from user_securities us where us.userid = :new.userid and us.isin = :new.isin;
+    
+    if(has_sec > 0) then 
+    
+      select amount into amount_owned from user_securities us where us.userid = :new.userid and us.isin = :new.isin;
+      if (:new.amount > amount_owned) then
+        raise_application_error(-20001, 'User doesnt have enough securities of that ISIN!');
+      end if;
+    else
         raise_application_error(-20001, 'User doesnt have securities of that ISIN!');
-      END IF;
-    END IF;
-  END;
-  /
+    end if;
+  end if;
+END;
   ALTER TRIGGER "STOCKPLAY"."CHECKTRANSACTION" ENABLE;
 
   

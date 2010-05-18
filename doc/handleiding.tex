@@ -59,6 +59,14 @@ Deze handleiding gaat ervan uit dat de puntenmanager ge\"installeerd wordt op ee
 \item{Voer vervolgens 'crontab -l' uit om te verifi\"eren dat de cronjob correct is toegevoegd.
 \end{enumerate}
 
+\subsection{Mobiele client}
+\textbf{Opmerking: } Omdat het onmogelijk is om bij de vastgestelde testopstelling van dit project een URL bereikbaar te maken vanaf het internet, is het niet mogelijk om de Java ME-client uit te testen op een echte GSM. Er is immers geen haalbare oplossing om een verbinding op te zetten tussen de server waar de backend van dit project op draait, en de GSM zelf. Daarom kan de applicatie enkel worden opgeleverd in een emulator. Er is voor gekozen om gebruik te maken van de Sony Ericsson Java ME-emulator, omdat de standaard Sun Java-emulator enkel toe laat om de applicatie vanuit netbeans te starten.
+
+\begin{enumerate}
+\item{Installeer de Sony Ericsson Java SDK (te vinden in de zipfile 99962-semc\_java\_me\_cldc\_sdk\_2\_5\_0\_6.zip)}
+\item{Open de emulator via Start \rightarrow Programs \rightarrow Sony Ericsson \rightarrow Java ME SDK for CLDC \rightarrow Run MIDP Application}
+\item{Er verschijnt nu een dialoogvenster waarin je de Java ME-jad kan selecteren. Navigeer naar de juiste map en kies
+\end{enumerate}
 
 
 %
@@ -253,8 +261,6 @@ Klik links op ``Securities Overview'' of een van de beurzen die aanwezig is in h
 Je kan een prijs een een aantal aandelen opgeven die je wenst te kopen. Als aan de voorwaarden vervolgens voldaan wordt, dan zal de transactionmanager deze op bepaalde tijdstippen omzetten naar een geldige transactie. Hierbij zal het order dan uitgevoerd worden en worden de effecten aan het portfolio toegevoegd.
 
 \subsection{Mobiele client}
-
-\b{Opmerking: } Omdat het onmogelijk is om bij de vastgestelde testopstelling van dit project een URL bereikbaar te maken vanaf het internet, is het niet mogelijk om de Java ME-client uit te testen op een echte GSM. Er is immers geen haalbare oplossing om een verbinding op te zetten tussen de server waar de backend van dit project op draait, en de GSM zelf. Daarom kan de applicatie enkel worden opgeleverd in een emulator.
 
 \subsubsection{Algemeen}
 Bij het opstarten van de applicatie verschijnt er eerst een spashscreen, dat na enkele seconden wordt vervolgd door het loginscherm. Gebruik om in te loggen een gebruikersaccount dat werd aangemaakt via de website of de administratieclient.

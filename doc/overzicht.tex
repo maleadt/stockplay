@@ -99,6 +99,7 @@ Voor elk groot onderdeel van het project moest er iets gedemonstreerd kunnen wor
 
 \subsubsection{Backend}
 Er werd gezocht naar een nette en abstracte methode om de backend op te bouwen: hoe wordt de database best benaderd? Wat is een goeie structuur voor de backend zelf? Hoe bouwen we de XML-RPC-berichten op?
+Tijdens de ontwikkeling van de klassen die zich bezighouden met de persistentie van gegevens (de DAO-laag), alsook de implementatie van de eerste functies werden er JUnit-tests gemaakt om deze functies op hun functionaliteit te testen.
 Uiteindelijk werd het deel van de backend dat zich bezig houdt met het opvragen, aanmaken en wijzigen van effecten gekozen als pilootproject.
 
 \paragraph{Filtering}
@@ -131,6 +132,7 @@ Om tegemoet te komen aan de vraag om een algoritmisch aspect in te bouwen, werd 
 
 \subsubsection{Backend}
 Het volledige protocol werd ge\"implementeerd in de backend. Ook gebeurden er aanpassingen aan het protocol om het aantal requests van de clientmodules te beperken, en zo een vlottere gebruikerservaring te kunnen aanbieden.
+Voor de meeste functies werd er een JUnit-test geimplementeerd, maar dit werd naar het einde toe niet meer doorgezet.
 
 \paragraph{Filtering}
 De filter werd uitgebreid met complexere datastructuren (zoals reguliere expressies), alsook werd de parser verfijnd zodat complexere syntactische constructies mogelijk werden. Zo werd de filter eenvoudig in gebruik voor de programmeur.
