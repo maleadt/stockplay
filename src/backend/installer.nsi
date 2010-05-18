@@ -99,7 +99,7 @@ SectionEnd
 ; Tomcat webapp
 Section "Tomcat webservice" SecTomcat
 	SetOutPath "$TOMCAT\webapps"
-	File "dist\stockplay_backend.war"
+	File "dist\backend.war"
 SectionEnd
 
 ; Source
@@ -168,6 +168,6 @@ Section "Uninstall"
 	RMDir /r "$SMPROGRAMS\StockPlay\Backend"            ; remove shortcut directory
 	
 	; Webapp
-	Delete "$TOMCAT\webapps\stockplay_backend.war"
-	RMDir /r "$TOMCAT\webapps\stockplay_backend"          ; remove webapp dir IF created by Tomcat
+	Delete "$TOMCAT\webapps\backend.war"
+	RMDir /r "$TOMCAT\webapps\backend"          ; remove webapp dir IF created by Tomcat
 SectionEnd
