@@ -1,9 +1,3 @@
-%
-% Definitiestudie
-%
-
-\section{Definitiestudie}
-
 Voorafgaand aan de start van het spel is er een inschrijvingsperiode. (Uitbreiding: Spelers kunnen zich registeren met behulp van hun eID.) Spelers die zich registeren voor de start van het spel verkrijgen 100.000 euro virtuele cash.
 
 Het spel start op een vastgesteld moment: op 1 maart 2010 om 8u 's morgens, Central European Time. Gebruikers die na de start van het spel registreren krijgen een ander startbudget. Maximaal verkrijgen de spelers een startbudget van 100.000 euro. Is de re\"ele beurs sinds de start van het spel negatief ge\"evolueerd, dan wordt het startbudget ook in verhouding evenveel verlaagd.
@@ -21,7 +15,7 @@ Tijdens het verloop van het spel worden er op gezette tijden (per dag, per week 
 Het spel eindigt op 31 mei 2010, waarna een eindklassement wordt opgemaakt. De koersen op de website worden niet meer ge\"updatet, en er kunnen ook geen transacties meer gedaan worden. Gebruikers kunnen wel nog steeds authenticeren op de website om statistieken van hun spelverloop te raadplegen.
 
 
-\subsection{Website}
+\section{Website}
 
 \begin{figure}[h!]
 	\centering
@@ -29,7 +23,7 @@ Het spel eindigt op 31 mei 2010, waarna een eindklassement wordt opgemaakt. De k
 	\caption{Use-case diagram van de website.}
 \end{figure}
 
-\paragraph{Lidmaatschap aanvragen}
+\subsection{Lidmaatschap aanvragen}
 \begin{compact}
 \subparagraph{Beschrijving}Een persoon kan zich inschrijven voor een lidmaatschap. Dit lidmaatschap is een vereiste om de interactieve delen van de website te kunnen beleven. Deze procedure bestaat uit een aantal velden die naar waarheid in te vullen zijn en een aantal velden waar men een waarde voor kan kiezen.
 \subparagraph{Primaire actoren}Een persoon die de interactieve delen van de website wil gebruiken
@@ -59,7 +53,7 @@ Alternatief voor \ref{def:lidmaatschap:bevestiging}:
 \end{itemize_compact}
 \end{compact}
  
-\paragraph{Het bekijken van de gastsite}
+\subsection{Het bekijken van de gastsite}
 \begin{compact}
 \subparagraph{Beschrijving}De website zal uit drie delen bestaan. Een deel bestaat uit een of meerdere pagina's. Een deel zal enkel zichtbaar zijn voor niet geauthenticeerde gebruikers of bezoekers zonder lidmaatschap. Een ander deel zal zichtbaar zijn voor zowel niet geauthenticeerde bezoekers als geauthenticeerde bezoekers. Geauthenticeerde bezoekers hebben dan ook nog toegang tot een enkel voor hen zichtbare derde deel. Het is in dat deel dat de interactieve site zich bevindt.
 \subparagraph{Primaire actoren} Bezoekers zonder lidmaatschap die er wel een willen aanvragen, bezoekers zonder lidmaatschap die enkel op zoek zijn naar informatie over het spel en bezoekers met lidmaatschap die zich willen authenticeren voor toegang tot het voor hen zichtbare deel.
@@ -79,7 +73,7 @@ Alternatief voor \ref{def:lidmaatschap:bevestiging}:
 \end{enumerate_compact}
 \end{compact}
 
-\paragraph{De gebruiker bekijkt zijn eigen Portfolio}
+\subsection{De gebruiker bekijkt zijn eigen Portfolio}
 \begin{compact}
 \subparagraph{Beschrijving} De gebruiker ziet een webpagina met daarop de effecten die deze momenteel in bezit heeft, de historische aankoopprijs per stuk, de historische aankoopprijs in totaal, de huidige koers, het rendement en het verschil op de waarde sinds de aankoop van het effect.
 \subparagraph{Actoren} De speler bekijkt het portfolio. De huidige waarde hangt af van de re\"ele beursevolutie (de scrapers volgen deze evolutie).
@@ -96,7 +90,7 @@ Alternatief voor \ref{def:lidmaatschap:bevestiging}:
 \end{enumerate_compact}
 \end{compact}
 
-\paragraph{Effecten aankopen}
+\subsection{Effecten aankopen}
 \begin{compact}
 
 \subparagraph{Overzicht}Een gebruiker kan zijn portfolio invullen of aanvullen door effecten bij te kopen. De speler kan effecten bijkopen van een effect die hij/zei reeds bezit of een nieuwe reeks aankopen. Een effect kan nooit rechtstreeks aangekocht worden, dit gebeurt met een tussenstap. Deze tussenstap noemen we het plaatsen van een order. Een order bestaat er in twee types; een aankooporder of een verkooporder. Een order heeft een voorwaarde, type, aantal, eigenaar en effect. Orders worden periodiek (elke minuut) bekeken. Als aan de voorwaarde voldaan wordt, dan wordt het order omgezet in een effectieve aankoop of verkoop. Dan pas worden de effecten toegevoegd of verwijderd van het spelers portfolio. Het kan dus zijn dat een geplaatst order pas in de verre toekomst uitgevoerd wordt of in zijn geheel niet uitgevoerd wordt. De voorwaarden die op een order ingezet kunnen worden houden we in een eerste fase beperkt. Maar deze kunnen later aangevuld worden met geavanceerde orders, zoals ook te zien is bij de huidige gespecialiseerde brokers. We beginnen met drie typen van orders:
@@ -129,7 +123,7 @@ Alternatief voor \ref{def:aankopen:bevestiging}:
 \end{enumerate_compact}
 \end{compact}
 
-\paragraph{Effecten verkopen}
+\subsection{Effecten verkopen}
 \begin{compact}
 Een effect verkopen verloopt op dezelfde manier als een effect aankopen. Er wordt ook een order aangemaakt voor een aantal effecten. Resulteert de voorwaarde van het order positief, dan worden zoveel effecten verkocht. Als een gebruiker geen effecten meer overhoudt van een bepaald symbool, dan wordt dit uit het portfolio gehaald.
 \subparagraph{Actoren} De speler plaatst een order
@@ -153,7 +147,7 @@ Alternatief voor \ref{def:verkopen:bevestiging}:
 \end{enumerate_compact}
 \end{compact}
 
-\paragraph{Overzicht opvragen van de effecten die je in het spel actief kan verhandelen}
+\subsection{Overzicht opvragen van de effecten die je in het spel actief kan verhandelen}
 \begin{compact}
 \subparagraph{Beschrijving} Een effect op de beurs kan ofwel opgenomen worden door onze scrapers of buiten bereik liggen van onze scrapers.
 Als deze binnen het bereik van een of meerdere scrapers valt, dan worden er gegevens van bijgehouden in onze dataopslag. Een effect kan dan nog onderverdeeld worden onder effecten die onzichtbaar zijn op de site, effecten die geschorst zijn en dus niet actief verhandeld kunnen worden en actief te verhandelen effecten. Bij het overzicht worden de gescrapete actieve of geschorste effecten getoond. Hierop kunnen dan filters geplaatst worden om de lijst in te korten.
@@ -186,7 +180,7 @@ Als deze binnen het bereik van een of meerdere scrapers valt, dan worden er gege
 \end{enumerate_compact}
 \end{compact}
 
-\paragraph{Een klassement opvragen}
+\subsection{Een klassement opvragen}
 \begin{compact}
 
 \subparagraph{Beschrijving} Er bestaat een overzichtspagina waar gastgebruikers en geauthenticeerde spelers een overzicht kunnen zien van:
@@ -202,7 +196,7 @@ Het tijdsinterval kan de speler bepalen door een dubbele slider te verslepen. De
 \subparagraph{Complexiteit}Laag
 \end{compact}
 
-\paragraph{Een detail fiche bekijken}
+\subsection{Een detail fiche bekijken}
 \begin{compact}
 \subparagraph{Beschrijving} De detail fiche heeft tot doel de speler of bezoeker zoveel mogelijk informatie te verschaffen over de huidige en historische stand van een effect.
 \subparagraph{Doel} De speler of bezoeker genoeg informatie verschaffen zodat hij op basis daarvan kan bepalen of het interessant zou zijn een order te plaatsen op het aandeel. Eventueel kan de speler het effect een vlagje geven (favoriet aandeel). Zodoende vindt hij/zij het dan later vlugger terug door het zetten van de geschikte filter.
@@ -218,7 +212,7 @@ Het tijdsinterval kan de speler bepalen door een dubbele slider te verslepen. De
 \end{enumerate_compact}
 \end{compact}
 
-\paragraph{Gebruiker bekijkt zijn transactiegeschiedenis}
+\subsection{Gebruiker bekijkt zijn transactiegeschiedenis}
 \begin{compact}
 \subparagraph{Beschrijving} Een gebruiker bekijkt zijn transactiegeschiedenis op een daarvoor ingerichte pagina. De gebeurtenissen op die pagina zijn te filteren op:
 \begin{itemize_compact}
@@ -238,7 +232,7 @@ Het tijdsinterval kan de speler bepalen door een dubbele slider te verslepen. De
 \end{enumerate_compact}
 \end{compact}
 
-\paragraph{Gebruiker bekijkt zijn algemeen overzicht}
+\subsection{Gebruiker bekijkt zijn algemeen overzicht}
 \begin{compact}
 \subparagraph{Beschrijving} Een gebruiker bekijkt zijn algemeen overzichtspagina en vindt hierop zeker volgende waardes opgesomd:
 \begin{itemize_compact}
@@ -265,7 +259,7 @@ Het tijdsinterval kan de speler bepalen door een dubbele slider te verslepen. De
 \end{compact}
 
 
-\subsection{Desktopapplicatie}
+\section{Desktopapplicatie}
 
 \begin{figure}[h!]
 	\centering
@@ -273,7 +267,7 @@ Het tijdsinterval kan de speler bepalen door een dubbele slider te verslepen. De
 	\caption{Use-case diagram van de desktopapplicatie.}
 \end{figure}
 
-\paragraph{Inloggen van gebruiker}
+\subsection{Inloggen van gebruiker}
 \begin{compact}
 \subparagraph{Beschrijving} Een gebruiker logt in op de desktopapplicatie via zijn e-ID.
 \subparagraph{Doel} De administrator is ingelogd op de desktopapplicatie en kan het spel nu beheren.
@@ -301,7 +295,7 @@ Het tijdsinterval kan de speler bepalen door een dubbele slider te verslepen. De
 \end{enumerate_compact}
 \end{compact}
 
-\paragraph{Status van servers bekijken}
+\subsection{Status van servers bekijken}
 \begin{compact}
 \subparagraph{Beschrijving} De administrator kan de onlinestatus van de verschillende servers bekijken op de statuspagina. De administrator kan de servers hier ook beheren.
 \subparagraph{Doel} De applicatie toont een paneel met daarin de status van de verschillende servers.
@@ -324,7 +318,7 @@ Het tijdsinterval kan de speler bepalen door een dubbele slider te verslepen. De
 \end{enumerate_compact}
 \end{compact}
 
-\paragraph{Gebruikersgegevens wijzigen}
+\subsection{Gebruikersgegevens wijzigen}
 \begin{compact}
 \subparagraph{Beschrijving} Een administrator kan gegevens van een gebruiker wijzigen via de desktopapplicatie.
 \subparagraph{Doel} De gegevens van de gespecificeerde gebruiker aanpassen in de databank.
@@ -353,7 +347,7 @@ Het tijdsinterval kan de speler bepalen door een dubbele slider te verslepen. De
 \end{enumerate_compact}
 \end{compact}
 
-\paragraph{Effect schorsen of verbergen}
+\subsection{Effect schorsen of verbergen}
 \begin{compact}
 \subparagraph{Beschrijving} Als er problemen zijn met een bepaald effect kan een administrator deze schorsen om het verhandelen ervan onmogelijk te maken. Eventueel kan het effect ook onzichtbaar gemaakt worden.
 \subparagraph{Doel} Het effect is nu niet meer verhandelbaar in het spel, of is onzichtbaar gemaakt
@@ -377,7 +371,7 @@ Het tijdsinterval kan de speler bepalen door een dubbele slider te verslepen. De
 \end{enumerate_compact}
 \end{compact}
 
-\paragraph{Gebruiker verbannen}
+\subsection{Gebruiker verbannen}
 \begin{compact}
 \subparagraph{Beschrijving} Een administrator kan een gebruiker voor een bepaalde tijdsduur uit het spel verbannen.
 \subparagraph{Doel} De verbannen gebruiker kan niet meer inloggen gedurende de opgegeven tijdsduur.
@@ -403,7 +397,7 @@ Het tijdsinterval kan de speler bepalen door een dubbele slider te verslepen. De
 \end{enumerate_compact}
 \end{compact}
 
-\paragraph{Schorsen van een effect}
+\subsection{Schorsen van een effect}
 \begin{compact}
 \subparagraph{Beschrijving} Een effect dat geschorst is op de beurs kan niet meer verhandeld worden. Dus het kan gekocht noch verkocht worden.
 \begin{itemize_compact}
@@ -419,9 +413,9 @@ Het tijdsinterval kan de speler bepalen door een dubbele slider te verslepen. De
 \end{compact}
 
 
-\subsection{Backend}
+\section{Backend}
 
-\paragraph{Scrapen van beurskoersen}
+\subsection{Scrapen van beurskoersen}
 \begin{compact}
 \subparagraph{Beschrijving} De beurskoersen die in dit spel worden gebruikt worden constant live gescraped van enkele beurswebsites
 \begin{itemize_compact}
@@ -436,7 +430,7 @@ Het tijdsinterval kan de speler bepalen door een dubbele slider te verslepen. De
 \subparagraph{Complexiteit}Hoog
 \end{compact}
 
-\paragraph{Omzetten van orders naar transacties}
+\subsection{Omzetten van orders naar transacties}
 \begin{compact}
 \subparagraph{Beschrijving} Als een gebruiker een aandeel wil kopen of verkopen moet hij daar een order voor aanmaken. De effectieve uitvoering van een order gebeurt dan door de beurs zelf. In dit spel gebeurt dit door de backend. Deze controleert elke minuut of de condities voor het order voldaan zijn, en voert deze uit indien ze in orde zijn.
 \begin{itemize_compact}
@@ -454,11 +448,3 @@ Het tijdsinterval kan de speler bepalen door een dubbele slider te verslepen. De
 \subparagraph{Complexiteit}Matig
 \end{compact}
 
-
-%
-% Functieanalyse
-%
-
-\section{Functieanalyse}
-
-\todo{Hier komt een beschrijving van de omgeving waarin het systeem moet werken}
