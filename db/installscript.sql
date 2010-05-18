@@ -397,3 +397,5 @@ BEGIN
 END time_diff;
 /
  
+--Nodig om statistieken op te halen
+grant select on sys.v_$instance to stockplay;
