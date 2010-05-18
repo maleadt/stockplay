@@ -31,7 +31,7 @@ public class StockPlayPreferences {
 
         public String getServerURL() {
 
-        return prefs.get(SERVERURLPREF, "http://oersted.iii.hogent.be:6800/backend/public");
+        return prefs.get(SERVERURLPREF, "http://nernst.iii.hogent.be:6800/backend/public");
     }
 
     public void setServerURL(String serverurl) {
