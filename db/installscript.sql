@@ -99,18 +99,18 @@ CREATE TABLE "STOCKPLAY"."POINTSTRANSACTIONS"
   
 -- Trigger om insert/updates/deletes van deze tabel te weerspiegelen in de users-tabel
 
-CREATE OR REPLACE TRIGGER "STOCKPLAY"."UPDATEPOINTS" AFTER
-  INSERT OR
-  UPDATE OR
-  DELETE ON POINTSTRANSACTIONS REFERENCING OLD AS OLD NEW AS NEW FOR EACH ROW BEGIN
-
-  UPDATE users u
-  SET u.points=COALESCE(u.points,0)+COALESCE(:new.delta,0)-COALESCE(:old.delta,0)
-  WHERE u.id  =COALESCE(:new.userid,:old.userid);
-
+  CREATE OR REPLACE TRIGGER "STOCKPLAY"."UPDATEPOINTS" 
+AFTER INSERT OR UPDATE ON POINTSTRANSACTIONS 
+REFERENCING OLD AS old NEW as new
+FOR EACH ROW 
+BEGIN
+  --alter trigger blockcashandpointsupdate disable;
+  UPDATE users u SET u.points=coalesce(u.points,0)+coalesce(:new.delta,0)-coalesce(:old.delta,0) WHERE u.id=coalesce(:new.userid,:old.userid);
+  --alter trigger blockcashandpointsupdate enable;
 END;
 /
 ALTER TRIGGER "STOCKPLAY"."UPDATEPOINTS" ENABLE;
+ 
 
 
 -- Exchange table
@@ -280,8 +280,9 @@ CREATE TABLE "STOCKPLAY"."TRANSACTIONS"
   
   
 -- Trigger om toevoeging van transactie te verwerken naar user-table
-create or replace
-TRIGGER UPDATECASH
+
+
+  CREATE OR REPLACE TRIGGER "STOCKPLAY"."UPDATECASH" 
 AFTER INSERT OR UPDATE ON TRANSACTIONS 
 REFERENCING OLD AS old NEW as new
 FOR EACH ROW 
@@ -290,6 +291,7 @@ declare
 begin
 
   select count(1) into us_exists from user_securities us WHERE us.userid = coalesce(:new.userid, :old.userid) AND us.isin = coalesce(:new.isin,:old.isin);
+
 
   if coalesce(:new.type, :old.type) = 'SELL' then
       UPDATE users u SET u.cash=u.cash+coalesce(:new.price*:new.amount,0)-coalesce(:old.price*:old.amount,0) WHERE u.id=coalesce(:new.userid,:old.userid);
@@ -320,12 +322,15 @@ begin
       UPDATE users u SET u.cash=u.cash+coalesce(:new.price*:new.amount,0)-coalesce(:old.price*:old.amount,0) WHERE u.id=coalesce(:new.userid,:old.userid);
   end if;
 END;
-  
-  ALTER TRIGGER "STOCKPLAY"."UPDATECASH" ENABLE;
+/
+ALTER TRIGGER "STOCKPLAY"."UPDATECASH" ENABLE;
+ 
+
+
 -- Trigger om transactie te checken op geldigheid vooraleer hem door te voeren
-  
-create or replace
-TRIGGER CHECKTRANSACTION
+
+
+  CREATE OR REPLACE TRIGGER "STOCKPLAY"."CHECKTRANSACTION" 
 BEFORE INSERT OR UPDATE ON TRANSACTIONS 
 FOR EACH ROW 
 declare
@@ -359,29 +364,36 @@ begin
     end if;
   end if;
 END;
-  ALTER TRIGGER "STOCKPLAY"."CHECKTRANSACTION" ENABLE;
+/
+ALTER TRIGGER "STOCKPLAY"."CHECKTRANSACTION" ENABLE;
+ 
 
 
 -- Functie voor quotes
-CREATE OR REPLACE FUNCTION time_diff (
+
+
+  CREATE OR REPLACE FUNCTION "STOCKPLAY"."TIME_DIFF" (
 DATE_1 IN DATE, DATE_2 IN DATE) RETURN NUMBER IS
-	NDATE_1   NUMBER;
-	NDATE_2   NUMBER;
-	NSECOND_1 NUMBER(5,0);
-	NSECOND_2 NUMBER(5,0);
+ 
+NDATE_1   NUMBER;
+NDATE_2   NUMBER;
+NSECOND_1 NUMBER(5,0);
+NSECOND_2 NUMBER(5,0);
+ 
 BEGIN
   -- Get Julian date number from first date (DATE_1)
   NDATE_1 := TO_NUMBER(TO_CHAR(DATE_1, 'J'));
-
+ 
   -- Get Julian date number from second date (DATE_2)
- NDATE_2 := TO_NUMBER(TO_CHAR(DATE_2, 'J'));
-
+  NDATE_2 := TO_NUMBER(TO_CHAR(DATE_2, 'J'));
+ 
   -- Get seconds since midnight from first date (DATE_1)
   NSECOND_1 := TO_NUMBER(TO_CHAR(DATE_1, 'SSSSS'));
-
+ 
   -- Get seconds since midnight from second date (DATE_2)
   NSECOND_2 := TO_NUMBER(TO_CHAR(DATE_2, 'SSSSS'));
-
+ 
   RETURN (((NDATE_2 - NDATE_1) * 86400)+(NSECOND_2 - NSECOND_1));
 END time_diff;
-
+/
+ 
