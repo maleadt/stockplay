@@ -126,6 +126,9 @@
   <data name="Date.HeaderText" xml:space="preserve">
     <value>Date</value>
   </data>
+  <data name="EmptyNotification.InnerText" xml:space="preserve">
+    <value>Your search did not return any securities.</value>
+  </data>
   <data name="Exchange.HeaderText" xml:space="preserve">
     <value>Exchange</value>
   </data>

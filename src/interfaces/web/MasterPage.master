@@ -63,8 +63,8 @@
             </div>
             
             <!-- Javascript -->
-            <script type="text/javascript" src="App_Themes/StockPlay/dynamiek/taalbestanden/nl-be.js"></script>
-            <script type="text/javascript" src="App_Themes/StockPlay/dynamiek/algemeen.js"></script>
+            <script type="text/javascript" src="/App_Themes/StockPlay/dynamiek/taalbestanden/nl-be.js"></script>
+            <script type="text/javascript" src="/App_Themes/StockPlay/dynamiek/algemeen.js"></script>
         </div>
     
         <asp:ScriptManager id="ScriptManager" runat="server" />

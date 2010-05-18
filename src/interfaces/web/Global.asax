@@ -58,6 +58,8 @@
     { 
         // Code that runs when an unhandled error occurs
 
+        System.Threading.Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo("en-US");
+
         Exception ex = Server.GetLastError();
 
         //Niet opgevangen excepties doorspelen aan de logger
@@ -79,7 +81,10 @@
                 FormsAuthentication.SignOut();
                 Response.Redirect(Request.Url.ToString());
             }
-        } 
+        }
+
+        string sessionId = Session.SessionID; //Fix voor een exceptie die gegooid wordt
+                                              //indien excepties verlopen
     }
 
     void Session_End(object sender, EventArgs e) 

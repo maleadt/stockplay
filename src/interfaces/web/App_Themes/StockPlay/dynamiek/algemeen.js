@@ -32,8 +32,7 @@ searchBox.focus(function () {
         $(this).attr("value", messages.searchDefault);
 }).bind("keydown", function (e) {
     if (e.keyCode == 13) {
-//        location.href = "SecuritiesOverview.aspx?search=" + searchBox.val();
-        location.href = 'http://www.google.com';
+        location.href = "SecuritiesOverview.aspx?search=" + searchBox.val();
         e.preventDefault();
     }
 });

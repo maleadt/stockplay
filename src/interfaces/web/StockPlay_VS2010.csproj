@@ -294,24 +294,54 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App_GlobalResources\Sitemap.nl.resx" />
-    <None Include="App_GlobalResources\Sitemap.resx" />
+    <None Include="App_GlobalResources\Sitemap.nl.resx">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="App_GlobalResources\Sitemap.resx">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="App_LocalResources\Default.aspx.nl.resx">
       <SubType>Designer</SubType>
     </None>
-    <None Include="App_LocalResources\Default.aspx.resx" />
-    <None Include="App_LocalResources\ForgotPassword.aspx.nl.resx" />
-    <None Include="App_LocalResources\ForgotPassword.aspx.resx" />
-    <None Include="App_LocalResources\Help.aspx.nl.resx" />
-    <None Include="App_LocalResources\Help.aspx.resx" />
-    <None Include="App_LocalResources\Login.aspx.nl.resx" />
-    <None Include="App_LocalResources\Login.aspx.resx" />
-    <None Include="App_LocalResources\Masterpage.Master.resx" />
-    <None Include="App_LocalResources\MasterPage.Master.nl.resx" />
-    <None Include="App_LocalResources\Ranking.aspx.nl.resx" />
-    <None Include="App_LocalResources\Ranking.aspx.resx" />
-    <None Include="App_LocalResources\Register.aspx.nl.resx" />
-    <None Include="App_LocalResources\Register.aspx.resx" />
+    <None Include="App_LocalResources\Default.aspx.resx">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="App_LocalResources\ForgotPassword.aspx.nl.resx">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="App_LocalResources\ForgotPassword.aspx.resx">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="App_LocalResources\Help.aspx.nl.resx">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="App_LocalResources\Help.aspx.resx">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="App_LocalResources\Login.aspx.nl.resx">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="App_LocalResources\Login.aspx.resx">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="App_LocalResources\Masterpage.Master.resx">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="App_LocalResources\MasterPage.Master.nl.resx">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="App_LocalResources\Ranking.aspx.nl.resx">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="App_LocalResources\Ranking.aspx.resx">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="App_LocalResources\Register.aspx.nl.resx">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="App_LocalResources\Register.aspx.resx">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="App_LocalResources\SecuritiesOverview.aspx.nl.resx" />
     <None Include="App_LocalResources\SecuritiesOverview.aspx.resx" />
     <None Include="App_LocalResources\SecurityDetail.aspx.nl.resx" />

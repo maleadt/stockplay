@@ -126,6 +126,9 @@
   <data name="Date.HeaderText" xml:space="preserve">
     <value>Datum</value>
   </data>
+  <data name="EmptyNotification.InnerText" xml:space="preserve">
+    <value>Uw zoekopdracht heeft geen resultaten teruggegeven.</value>
+  </data>
   <data name="Exchange.HeaderText" xml:space="preserve">
     <value>Beurs</value>
   </data>

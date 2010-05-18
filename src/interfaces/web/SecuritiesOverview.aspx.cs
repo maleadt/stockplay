@@ -32,6 +32,11 @@ namespace StockPlay.Web
 	                securitiesTable = GenerateDataTable(data.GetSecuritiesList(Request.Params["search"]));
 	            else
 	                securitiesTable = GenerateDataTable(data.GetSecuritiesList());
+
+                if (securitiesTable.Rows.Count == 0)
+                {
+                    EmptyNotification.Visible = true;
+                }
 	
 	            Session["securitiesView"] = securitiesTable.DefaultView;
 	        }

@@ -4,6 +4,9 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder" Runat="Server">
 
     <h1 runat="server" meta:resourcekey="Title"></h1>
+
+    <p runat="server" class="paraNotification" id="EmptyNotification" meta:resourcekey="EmptyNotification" visible="false"></p>
+
     <!-- Gridlines op none en cellspacing op -1 zijn nodig om de html attributen uit de html tags te kunnen wegwerken! -->
     <asp:GridView ID="SecuritiesGridview" runat="server" AutoGenerateColumns="False" AllowSorting="True" AllowPaging="True"
         OnSorting="SecuritiesGridview_Sorting" OnPageIndexChanging="SecuritiesGridview_PageIndexChanging" GridLines="None" 
