@@ -92,7 +92,7 @@ public class UserFactory {
     }
 
     public User getUserById(int id) throws StockPlayException {
-        Collection<User> users = getUsersDetailsByFilter("id == " + id);
+        Collection<User> users = getUsersByFilter("id == " + id);
         Iterator<User> it = users.iterator();
 
         if (it.hasNext()) {
@@ -100,8 +100,6 @@ public class UserFactory {
         } else {
             return null;
         }
-
-
     }
 
     public boolean verifyLogin(String nickname, String password) throws StockPlayException {
