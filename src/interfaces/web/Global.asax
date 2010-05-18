@@ -72,6 +72,9 @@
     void Session_Start(object sender, EventArgs e) 
     {
         // Code that runs when a new session is started
+        string sessionId = Session.SessionID; //Fix voor een exceptie die gegooid wordt
+                                              //indien sessies verlopen
+        
         
         if (HttpContext.Current.User != null)
         {
@@ -82,9 +85,6 @@
                 Response.Redirect(Request.Url.ToString());
             }
         }
-
-        string sessionId = Session.SessionID; //Fix voor een exceptie die gegooid wordt
-                                              //indien excepties verlopen
     }
 
     void Session_End(object sender, EventArgs e) 
