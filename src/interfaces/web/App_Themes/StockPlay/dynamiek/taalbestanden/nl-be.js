@@ -27,6 +27,6 @@ var messages = {
 	referenceAdd: 'Toevoegen',
 	referenceCancel: 'Annuleren',
 	legendString: 'Beursverloop',
-	searchDefault: 'Effect zoeken..',
+	searchDefault: 'Effect zoeken...',
 	laden: 'Bezig met laden..'
 }

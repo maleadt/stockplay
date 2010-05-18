@@ -18,21 +18,22 @@
 
 // Variabelen
 
-var searchBox = $('#search');
+var searchBox = $('#ctl00_search');
 
 // Vereiste: taalbestand is geladen, alsook jQuery
 
 // Standaard tekst in de zoekbalk
 
-searchBox.focus(function(){  
-	if($(this).attr('value') == messages.searchDefault)
-		$(this).attr('value', '');
-}).blur(function(){  
-	if($(this).attr('value') == '')
-		$(this).attr("value", messages.searchDefault);  
-}).bind("keydown", function(e) {
-	if (e.keyCode == 13) {
-		location.href="SecuritiesOverview.aspx?search="+searchBox.val();
-		e.preventDefault();
-	}
+searchBox.focus(function () {
+    if ($(this).attr('value') == messages.searchDefault)
+        $(this).attr('value', '');
+}).blur(function () {
+    if ($(this).attr('value') == '')
+        $(this).attr("value", messages.searchDefault);
+}).bind("keydown", function (e) {
+    if (e.keyCode == 13) {
+//        location.href = "SecuritiesOverview.aspx?search=" + searchBox.val();
+        location.href = 'http://www.google.com';
+        e.preventDefault();
+    }
 });
