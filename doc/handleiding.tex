@@ -24,8 +24,30 @@ Om vervolgens de database op te vullen met een set aan historische data (wat nie
 
 \subsection{Backend}
 
+\paragraph{Automatisch} Gebruik het installatieprogramma.
+
+\paragraph{Manueel}
+In geval van een manuele installatie (voor wanneer de installer niet bruikbaar is, bijvoorbeeld op een Linux-based systeem), moeten de volgende stappen doorlopen worden:
 \begin{enumerate}
-\item{Gebruik het installatieprogramma}
+\item Installatie van Tomcat 6.x
+\item Toevoegen van relevante libraries aan het Tomcat classpath
+\begin{itemize_compact}
+\item log4j-1.2.16.jar
+\item xmlrpc-client-3.1.3.jar
+\item xmlrpc-common-3.1.3.jar
+\item xmlrpc-server-3.1.3.jar
+\item commons-dbcp-1.4.jar
+\item commons-logging-1.1.jar
+\item commons-pool-1.5.4.jar
+\item cache4j\_0.4.jar
+\item ojdbc14.jar
+\item ws-commons-util-1.0.2.jar
+\end{itemize_compact}
+\item Registreren van de backend als Tomcat webapplicatie
+\begin{itemize}
+\item Activeer en surf naar de Tomcat webapp manager
+\item Upload stockplay\_backend.war
+\end{itemize}
 \end{enumerate}
 
 \subsection{Webserver}
@@ -60,6 +82,8 @@ server=http://be04.kapti.com:6800/backend/public
 username=foo
 password=bar
 \end{verbatim}
+
+Hiervoor moet natuurlijk eerst een voldoende geprivilegieerd gebruiker aangemaakt worden.
 
 
 \subsection{Transactiemanager}
