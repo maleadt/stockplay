@@ -5,7 +5,7 @@
 Name "StockPlay Administration"
 
 ; The file to write
-OutFile "Installer.exe"
+OutFile "AdministrationSetup.exe"
 
 ; The default installation directory
 InstallDir "$PROGRAMFILES\StockPlay Administration"
