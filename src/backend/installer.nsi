@@ -81,6 +81,21 @@ Section "Core (required)" SecCore
 	WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\StockPlay_Backend" "DisplayName" "StockPlay Backend (remove only)"
 SectionEnd
 
+; Libraries
+Section "Libraries" SecLibs
+	SetOutPath "$TOMCAT\lib"
+	File "..\..\lib\java\log4j-1.2.16.jar"
+	File "..\..\lib\java\xmlrpc-client-3.1.3.jar"
+	File "..\..\lib\java\xmlrpc-common-3.1.3.jar"
+	File "..\..\lib\java\xmlrpc-server-3.1.3.jar"
+	File "..\..\lib\java\commons-dbcp-1.4.jar"
+	File "..\..\lib\java\commons-logging-1.1.jar"
+	File "..\..\lib\java\commons-pool-1.5.4.jar"
+	File "..\..\lib\java\cache4j_0.4.jar"
+	File "..\..\lib\java\ojdbc14.jar"
+	File "..\..\lib\java\ws-commons-util-1.0.2.jar"
+SectionEnd
+
 ; Tomcat webapp
 Section "Tomcat webservice" SecTomcat
 	SetOutPath "$TOMCAT\webapps"
@@ -112,6 +127,7 @@ SectionEnd
 !insertmacro MUI_DESCRIPTION_TEXT ${SecTomcat} $(SecTomcat_Desc)
 !insertmacro MUI_DESCRIPTION_TEXT ${SecSource} $(SecSource_Desc)
 !insertmacro MUI_DESCRIPTION_TEXT ${SecDocs} $(SecDocs_Desc)
+!insertmacro MUI_DESCRIPTION_TEXT ${SecLibs} $(SecLibs_Desc)
 !insertmacro MUI_FUNCTION_DESCRIPTION_END
 
 
@@ -133,6 +149,18 @@ Section "Uninstall"
 	
 	; Documenation
 	RMDir /r "$INSTDIR\Documentation"
+	
+	; Libraries
+	Delete "$TOMCAT\lib\log4j-1.2.16.jar"
+	Delete "$TOMCAT\lib\xmlrpc-client-3.1.3.jar"
+	Delete "$TOMCAT\lib\xmlrpc-common-3.1.3.jar"
+	Delete "$TOMCAT\lib\xmlrpc-server-3.1.3.jar"
+	Delete "$TOMCAT\lib\commons-dbcp-1.4.jar"
+	Delete "$TOMCAT\lib\commons-logging-1.1.jar"
+	Delete "$TOMCAT\lib\commons-pool-1.5.4.jar"
+	Delete "$TOMCAT\lib\cache4j_0.4.jar"
+	Delete "$TOMCAT\lib\ojdbc14.jar"
+	Delete "$TOMCAT\lib\ws-commons-util-1.0.2.jar"
 
 	; Core
 	Delete "$INSTDIR\Uninstall.exe"
