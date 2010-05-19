@@ -1,14 +1,24 @@
-Backend
--------
+KNOWN ISSUES
+------------
 
-*) Controle van keys in filter
+1) Backend
+
+- Session invalidation gebeurt los van het feit of de client inactief is
+
+
+
+TODO
+----
+
+1) Backend
+
+-> Controle van keys in filter
 
 Het zou mooi zijn om de doorgegeven filters te controleren zodat slecht een
 vaste (gedocumenteerde) selectie er kan in voorkomen. Eventueel translatielaag
 toevoegen om joins etc te ondersteunen (FIELD -> String, SQL only).
 
-
-*) Filter
+-> Filter
 
 Limit functie (orderfields, amount, selection)
 

@@ -27,6 +27,7 @@ Tenslotte moet de ``stockplay'' gebruiker een extra recht toegekend hebben, zoda
 \lstset{language=SQL,style=SQL}
 \begin{lstlisting}
 GRANT SELECT ON sys.v_$instance TO stockplay
+GRANT SELECT ON sys.v_$symmetric TO stockplay
 \end{lstlisting}
 \caption{Grant die de ``stockplay'' gebruiker toelaat statistieken op te halen.}
 \label{code:handl:grant}

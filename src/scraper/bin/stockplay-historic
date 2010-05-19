@@ -79,7 +79,7 @@ foreach my $exchange (@exchanges) {
 				$volume = 0 if ($volume eq "-");
 				
 				my $quote = StockPlay::Quote->new(
-					security	=> $isin,
+					quotable	=> $isin,
 					time		=> to_datetime($date),	# TODO: timezone (now floating) && closing hour
 					price		=> $close,
 					low		=> $low,

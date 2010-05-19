@@ -7,9 +7,6 @@
             <minimum-ant-version>1.6.5</minimum-ant-version>
             <web-module-libraries>
                 <library dirs="200">
-                    <file>${file.reference.lib-java}</file>
-                </library>
-                <library dirs="200">
                     <file>${file.reference.log4j-1.2.16.jar}</file>
                 </library>
                 <library dirs="200">
@@ -38,7 +35,6 @@
                 </library>
                 <library dirs="200">
                     <file>${file.reference.ws-commons-util-1.0.2.jar}</file>
-                    <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
             </web-module-libraries>
             <web-module-additional-libraries/>

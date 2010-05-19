@@ -11,6 +11,11 @@ meta-spec:
   version: 1.4
 name: StockPlay
 provides:
+  StockPlay:
+    file: lib/StockPlay.pm
+    version: 0.01
+  StockPlay::AI:
+    file: lib/StockPlay/AI.pm
   StockPlay::AI::Data:
     file: lib/StockPlay/AI/Data.pm
   StockPlay::AI::Data::Input:
@@ -21,8 +26,12 @@ provides:
     file: lib/StockPlay/AI/Forecaster.pm
   StockPlay::AI::Forecaster::Neural:
     file: lib/StockPlay/AI/Forecaster/Neural.pm
-  StockPlay::AI::Manager:
-    file: lib/StockPlay/AI/Manager.pm
+  StockPlay::Configurable:
+    file: lib/StockPlay/Configurable.pm
+  StockPlay::Configuration:
+    file: lib/StockPlay/Configuration.pm
+  StockPlay::Configuration::Entry:
+    file: lib/StockPlay/Configuration/Entry.pm
   StockPlay::Exchange:
     file: lib/StockPlay/Exchange.pm
   StockPlay::Factory:
@@ -37,10 +46,12 @@ provides:
     file: lib/StockPlay/Plugin.pm
   StockPlay::PluginManager:
     file: lib/StockPlay/PluginManager.pm
+  StockPlay::Quotable:
+    file: lib/StockPlay/Quotable.pm
   StockPlay::Quote:
     file: lib/StockPlay/Quote.pm
-  StockPlay::Scraper::Daemon:
-    file: lib/StockPlay/Scraper/Daemon.pm
+  StockPlay::Scraper:
+    file: lib/StockPlay/Scraper.pm
   StockPlay::Scraper::Source:
     file: lib/StockPlay/Scraper/Source.pm
   StockPlay::Scraper::Source::Website:
@@ -49,6 +60,8 @@ provides:
     file: lib/StockPlay/Scraper/Source/Website/DeTijd.pm
   StockPlay::Security:
     file: lib/StockPlay/Security.pm
+  StockPlay::User:
+    file: lib/StockPlay/User.pm
 recommends:
   AI::FANN: 0
   HTML::TreeBuilder: 0
@@ -72,4 +85,4 @@ requires:
   perl: 5
 resources:
   license: http://opensource.org/licenses/gpl-license.php
-version: 0.1
+version: 0.01

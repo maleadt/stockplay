@@ -36,6 +36,8 @@ my $logger = $stockplay->getLogger();
 
 $logger->debug("testing");
 
+exit;
+
 # Fetch exchanges
 my @exchanges = $factory->getExchanges();
 my $exchange = (grep { $_->symbol eq "BSE" } @exchanges)[0];

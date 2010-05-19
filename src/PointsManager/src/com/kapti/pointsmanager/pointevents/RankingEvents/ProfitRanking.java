@@ -63,8 +63,10 @@ public class ProfitRanking extends ARankingEvent {
         //Hashmap maken met scores voor iedere speler
         HashMap<User, Integer> winnersMap = new HashMap<User, Integer>();
 
-        for(int i=0 ; i<RANKINGPLAATSEN ; i++)
-            winnersMap.put(profitList.get(i).getUser(), RANKINGPLAATSEN-i);
+        for(int i=0 ; i<RANKINGPLAATSEN ; i++) {
+            if (i < profitList.size())
+                winnersMap.put(profitList.get(i).getUser(), RANKINGPLAATSEN-i);
+        }
 
         return winnersMap;
     }

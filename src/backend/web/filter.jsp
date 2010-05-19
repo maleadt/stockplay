@@ -68,7 +68,7 @@
     </head>
     <body>
         <h1>Filter debug page</h1>
-        <pre><%=tFilter.compile()%></pre>
+        <pre><%=tFilter.compile("sql")%></pre>
     </body>
 </html>
 <%

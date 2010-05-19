@@ -202,7 +202,7 @@ sub buildExchanges {
 	foreach my $exchange (@exchanges) {
 		my @quotes = $self->getLatestQuotes(@{$exchange->securities});
 		foreach my $quote (@quotes) {
-			my $security = (grep { $_->isin eq $quote->security } @{$exchange->securities})[0];
+			my $security = (grep { $_->isin eq $quote->quotable } @{$exchange->securities})[0];
 			if (defined $security) {
 				$security->quote($quote);
 			}

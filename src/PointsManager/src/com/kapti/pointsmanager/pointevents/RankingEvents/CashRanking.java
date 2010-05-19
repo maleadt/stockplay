@@ -42,8 +42,10 @@ public class CashRanking extends ARankingEvent {
 
         //Hoogst gerankte spelers eruithalen
         HashMap<User, Integer> winningUsers = new HashMap<User, Integer>();
-        for(int i=0 ; i<RANKINGPLAATSEN ; i++)
-            winningUsers.put(usersList.get(i), RANKINGPLAATSEN-i);
+        for(int i=0 ; i<RANKINGPLAATSEN ; i++) {
+            if (i < usersList.size())
+                winningUsers.put(usersList.get(i), RANKINGPLAATSEN-i);
+        }
 
         return winningUsers;
     }
