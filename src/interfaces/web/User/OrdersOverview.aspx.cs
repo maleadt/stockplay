@@ -124,8 +124,8 @@ namespace StockPlay.Web
 	    {
 	        if (e.Row.RowType == DataControlRowType.DataRow)
 	        {
-	            if (e.Row.Cells[6].Text.Equals("CANCELLED") || e.Row.Cells[6].Text.Equals("EXECUTED"))
-	                e.Row.Cells[7].Text = "-";
+	            if (e.Row.Cells[7].Text.Equals("CANCELLED") || e.Row.Cells[7].Text.Equals("EXECUTED"))
+	                e.Row.Cells[8].Text = "-";
 	
 	            e.Row.Cells[0].Visible = false; //Isin verbergen
 	        }

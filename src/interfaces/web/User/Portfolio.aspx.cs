@@ -30,14 +30,14 @@ namespace StockPlay.Web
 	                SellMessage.Visible = true;
 	
 	                SecurityName.InnerText = security[0].Name;
-	                Price.InnerText = security[0].GetLatestQuote().Price.ToString("#0.00€");
+	                Price.InnerText = security[0].GetLatestQuote().Price.ToString("#0.00");
 	
 	                int maxAmount = 0;
 	                for (int i = 0; i < portfolio.Count; i++)
 	                    if (security[0].Isin.Equals(portfolio[i].Isin))
 	                        maxAmount = portfolio[i].Amount;
 	
-	                txtTotalAmount.Text = maxAmount.ToString("#0.00€");
+	                txtTotalAmount.Text = maxAmount.ToString("#0.00");
 	                txtAmountValidator.MaximumValue = Convert.ToString(maxAmount);
 	            }
 	            else

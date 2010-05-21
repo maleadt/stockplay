@@ -24,17 +24,17 @@
         <asp:Literal ID="lblPara4" runat="server" Text="<%$ Resources:Para4 %>" /> 
         <asp:TextBox ID="txtAmount" runat="server" ValidationGroup="AmountValidation" meta:resourcekey="txtAmountResource1"></asp:TextBox>
         <asp:Literal ID="lblMultiply" runat="server" Text=" x " />
-        <asp:TextBox ID="txtQuote" runat="server" meta:resourcekey="txtQuoteResource1" Enabled="false"></asp:TextBox>€
+        <asp:TextBox ID="txtQuote" runat="server" meta:resourcekey="txtQuoteResource1" Enabled="false"></asp:TextBox>
         <asp:Literal ID="lblEquals" runat="server" Text=" = " />
-        <asp:Label ID="Total" runat="server" meta:resourcekey="TotalResource1"></asp:Label>€
+        <asp:Label ID="Total" runat="server" meta:resourcekey="TotalResource1"></asp:Label>
     </p>
     <p class="para">
         <asp:Literal ID="lblOnderLimiet" runat="server" Text="<%$ Resources:Para6 %>" Visible="false"/> 
-        <asp:TextBox ID="txtOnderLimiet" runat="server" Visible="false"></asp:TextBox>€
+        <asp:TextBox ID="txtOnderLimiet" runat="server" Visible="false"></asp:TextBox>
     </p>
     <p class="para">
         <asp:Literal ID="lblBovenLimiet" runat="server" Text="<%$ Resources:Para7 %>" Visible="false" /> 
-        <asp:TextBox ID="txtBovenLimiet" runat="server" Visible="false"></asp:TextBox>€
+        <asp:TextBox ID="txtBovenLimiet" runat="server" Visible="false"></asp:TextBox>
     </p>
     <p class="para">
         <asp:Literal ID="lblBonuspunten" runat="server" Visible="false" Text="<%$ Resources:Para8 %>" />

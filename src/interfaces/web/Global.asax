@@ -76,7 +76,7 @@
                                               //indien sessies verlopen
         
         
-        if (HttpContext.Current.User != null)
+        if (!HttpContext.Current.User.Identity.Name.Equals(""))
         {
             //controleren of sessie bestaat en nog niet verlopen is
             if (Session["userID"] == null || Session["sessionID"] == null )

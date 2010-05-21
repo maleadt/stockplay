@@ -33,11 +33,11 @@ namespace StockPlay.Web
 	                if (security != null && latestQuote != null && user != null)
 	                {
 	                    Security.InnerText = security.Name;
-	                    Quote.InnerText = latestQuote.Price.ToString("#0.00€");
+	                    Quote.InnerText = latestQuote.Price.ToString("#0.00");
 	
-	                    Cash.InnerText = user.Cash.ToString("#0.00€");
+	                    Cash.InnerText = user.Cash.ToString("#0.00");
 
-                        txtQuote.Text = latestQuote.Price.ToString("#0.00€");
+                        txtQuote.Text = latestQuote.Price.ToString("#0.00");
 	                    Total.Text = Convert.ToString(0);
                     }
 	                else
