@@ -153,9 +153,10 @@ namespace StockPlay.Web
                     total = (Convert.ToDouble(txtQuote.Text) + Convert.ToDouble(txtBonuspunten.Text)) * Convert.ToInt32(txtAmount.Text);
 
                 if (total > Convert.ToDouble(Cash.InnerText))
-	                ErrorLabel.Visible = true;
+	                ErrorLabel.Visible = true;                    
 	            else
 	            {
+                    ErrorLabel.Visible = false;
 	                btnConfirm.Visible = true;
 	                btnContinue.Visible = false;
 	                Notification.Visible = true;
@@ -175,6 +176,8 @@ namespace StockPlay.Web
 	                ErrorLabel.Visible = true;
 	            else
 	            {
+                    ErrorLabel.Visible = false;
+
 	                IDataAccess data = DataAccessFactory.GetDataAccess();
 	                ISecurity security = data.GetSecurityByIsin(Request.Params["ISIN"])[0];
 

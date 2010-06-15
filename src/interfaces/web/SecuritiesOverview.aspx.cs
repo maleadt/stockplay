@@ -19,6 +19,11 @@ namespace StockPlay.Web
 	    protected void Page_Load(object sender, EventArgs e)
 	    {
 	        DataView securitiesView;
+
+            if (ViewState["sortDirection"] == null)
+                ViewState["sortDirection"] = SortDirection.Descending;
+            if (ViewState["sortExpression"] == null)
+                ViewState["sortExpression"] = "Date";
 	
 	        if (!IsPostBack)
 	        {
@@ -44,6 +49,7 @@ namespace StockPlay.Web
 	        securitiesView = (DataView) Session["securitiesView"];
 
             securitiesView.Sort = "Date DESC"; //Nieuwste quotes bovenaan
+
 
             SecuritiesGridview.DataSource = securitiesView;
 	        SecuritiesGridview.DataBind();
