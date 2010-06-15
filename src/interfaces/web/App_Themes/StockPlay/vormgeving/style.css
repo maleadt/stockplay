@@ -240,6 +240,13 @@ a:hover {
 	margin: 0.5em 0 1em 0.25em;
 }
 
+/* FOUTMELDINGEN */
+#right h1.warning
+{
+    color: #fc746e;
+	margin: 0.5em 0 1em 0.25em;
+}
+
 /* OPMAAK VAN SECURITY DETAIL */
 #right h2.Value 
 {
