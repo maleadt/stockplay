@@ -192,4 +192,10 @@
   <data name="LimitError.ErrorMessage" xml:space="preserve">
     <value>The upper limit must be larger than the lower limit!</value>
   </data>
+  <data name="AmountRequired.Text" xml:space="preserve">
+    <value>You have to enter an amount</value>
+  </data>
+  <data name="RequiredLabel.Text" xml:space="preserve">
+    <value>You have to fill in all the fields</value>
+  </data>
 </root>

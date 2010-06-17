@@ -41,6 +41,7 @@
         <asp:TextBox ID="txtBonuspunten" runat="server" Visible="false"></asp:TextBox>
     </p>
     <p class="para">
+        <asp:RequiredFieldValidator ID="RequiredAmount" runat="server" ControlToValidate="txtAmount" meta:resourcekey="AmountRequired" />
         <asp:CompareValidator ID="CompareValidator1" runat="server"  ValidationGroup="AmountValidation" ControlToValidate="txtAmount"
          Operator="GreaterThan" Type="Integer" ValueToCompare="0" meta:resourcekey="AmountError" Display="Dynamic"></asp:CompareValidator>
         <asp:CompareValidator ID="CompareValidator2" runat="server"  ValidationGroup="AmountValidation" ControlToValidate="txtQuote"
@@ -54,6 +55,7 @@
 
          <asp:Label ID="ErrorLabel" meta:resourcekey="LabelError" ForeColor="Red" 
             runat="server" Visible="False" />
+         <asp:Label ID="RequiredLabel" meta:resourcekey="RequiredLabel" ForeColor="Red" runat="server" Visible="false" />
     </p>
     <p id="Notification" class="para" runat="server" visible="false">
         <asp:Literal runat="server" Text="<%$ Resources:Para51 %>" /> <b id="NewBalance" runat="server"></b>. <asp:Literal runat="server" Text="<%$ Resources:Para52 %>" />

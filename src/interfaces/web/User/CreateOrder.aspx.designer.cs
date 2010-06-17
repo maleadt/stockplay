@@ -166,6 +166,15 @@ namespace StockPlay.Web {
         protected global::System.Web.UI.WebControls.TextBox txtBonuspunten;
         
         /// <summary>
+        /// RequiredAmount control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredAmount;
+        
+        /// <summary>
         /// CompareValidator1 control.
         /// </summary>
         /// <remarks>
@@ -218,6 +227,15 @@ namespace StockPlay.Web {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label ErrorLabel;
+        
+        /// <summary>
+        /// RequiredLabel control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label RequiredLabel;
         
         /// <summary>
         /// Notification control.

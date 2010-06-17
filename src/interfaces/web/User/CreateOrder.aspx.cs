@@ -47,6 +47,10 @@ namespace StockPlay.Web
 	                Response.Redirect("~/SecuritiesOverview.aspx");
             }
             else {
+                btnConfirm.Visible = false;
+                btnContinue.Visible = true;
+                Notification.Visible = false;
+
                 if (OrderType.SelectedValue.Equals("direct")) {
                     txtQuote.Enabled = false;
                     lblPara4.Visible = true;
@@ -136,33 +140,48 @@ namespace StockPlay.Web
 	        if (Page.IsValid)
 	        {
                 double total = 0;
+                try
+                {
+                    if (OrderType.SelectedValue.Equals("direct"))
+                        total = Convert.ToDouble(txtQuote.Text) * Convert.ToInt32(txtAmount.Text);
 
-                if (OrderType.SelectedValue.Equals("direct"))
-                    total = Convert.ToDouble(txtQuote.Text) * Convert.ToInt32(txtAmount.Text);
+                    if (OrderType.SelectedValue.Equals("limit"))
+                        total = Convert.ToDouble(txtQuote.Text) * Convert.ToInt32(txtAmount.Text);
 
-                if (OrderType.SelectedValue.Equals("limit"))
-                    total = Convert.ToDouble(txtQuote.Text) * Convert.ToInt32(txtAmount.Text);
+                    if (OrderType.SelectedValue.Equals("bracket"))
+                    {
+                        if (txtBonuspunten.Text.Equals(""))
+                            throw new Exception();
+                        total = Convert.ToDouble(txtBovenLimiet.Text) * Convert.ToInt32(txtAmount.Text);
+                    }
 
-                if (OrderType.SelectedValue.Equals("bracket"))
-                    total = Convert.ToDouble(txtBovenLimiet.Text) * Convert.ToInt32(txtAmount.Text);
+                    if (OrderType.SelectedValue.Equals("stoploss"))
+                        total = Convert.ToDouble(txtQuote.Text) * Convert.ToInt32(txtAmount.Text);
 
-                if (OrderType.SelectedValue.Equals("stoploss"))
-                    total = Convert.ToDouble(txtQuote.Text) * Convert.ToInt32(txtAmount.Text);
+                    if (OrderType.SelectedValue.Equals("trailing"))
+                    {
+                        if (txtBonuspunten.Text == "")
+                            throw new Exception();
+                        total = (Convert.ToDouble(txtQuote.Text) + Convert.ToDouble(txtBonuspunten.Text)) * Convert.ToInt32(txtAmount.Text);
+                    }
 
-                if (OrderType.SelectedValue.Equals("trailing"))
-                    total = (Convert.ToDouble(txtQuote.Text) + Convert.ToDouble(txtBonuspunten.Text)) * Convert.ToInt32(txtAmount.Text);
-
-                if (total > Convert.ToDouble(Cash.InnerText))
-	                ErrorLabel.Visible = true;                    
-	            else
-	            {
-                    ErrorLabel.Visible = false;
-	                btnConfirm.Visible = true;
-	                btnContinue.Visible = false;
-	                Notification.Visible = true;
-	                Total.Text = Convert.ToString(total);
-	                NewBalance.InnerText = Convert.ToString(Convert.ToDouble(Cash.InnerText) - Convert.ToDouble(Total.Text));
-	            }
+                    if (total > Convert.ToDouble(Cash.InnerText))
+                        ErrorLabel.Visible = true;
+                    else
+                    {
+                        ErrorLabel.Visible = false;
+                        RequiredLabel.Visible = false;
+                        btnConfirm.Visible = true;
+                        btnContinue.Visible = false;
+                        Notification.Visible = true;
+                        Total.Text = Convert.ToString(total);
+                        NewBalance.InnerText = Convert.ToString(Convert.ToDouble(Cash.InnerText) - Convert.ToDouble(Total.Text));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    RequiredLabel.Visible = true; //Ontbrekende vakken
+                }
 	        }
 	    }
 	
@@ -177,6 +196,7 @@ namespace StockPlay.Web
 	            else
 	            {
                     ErrorLabel.Visible = false;
+                    RequiredLabel.Visible = false;
 
 	                IDataAccess data = DataAccessFactory.GetDataAccess();
 	                ISecurity security = data.GetSecurityByIsin(Request.Params["ISIN"])[0];

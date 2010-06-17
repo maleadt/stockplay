@@ -259,13 +259,18 @@ namespace StockPlay.implXMLRPC
                 foreach (ISecurity security in securities)
                     isins.Add("ISIN == '" + security.Isin + "'");
 
-                sysLog.Info("Request: 'GetLatestQuotesFromSecurities' - Requested Securities: '" + string.Join(" ", isins.ToArray()) + "'");
+                XmlRpcStruct[] queries = null;
 
-                XmlRpcStruct[] queries = publicSecurityHandler.LatestQuotes(string.Join(" || ", isins.ToArray()));
-                foreach (XmlRpcStruct query in queries)
+                if (securities.Count < 30) //Indien de filter té groot is, vragen we onmiddellijk de volledige lijst op
                 {
-                    quotes.Add(new Quote(query));
+                    sysLog.Info("Request: 'GetLatestQuotesFromSecurities' - Requested Securities: '" + string.Join(" ", isins.ToArray()) + "'");
+                    queries = publicSecurityHandler.LatestQuotes(string.Join(" || ", isins.ToArray()));
                 }
+                else
+                    queries = publicSecurityHandler.LatestQuotes("");
+
+                foreach (XmlRpcStruct query in queries)
+                    quotes.Add(new Quote(query));
 
                 return quotes;
             }
