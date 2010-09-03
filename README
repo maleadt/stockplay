@@ -1,24 +1,24 @@
-KNOWN ISSUES
-------------
+ABOUT
+-----
 
-1) Backend
-
-- Session invalidation gebeurt los van het feit of de client inactief is
+StockPlay is the result of a 4 month undergraduate project for our BSc in Computer Science, at University College Ghent (Belgium). The goal of the project was to create a complete stock trading game, using several of the technologies learned over the course of the previous years. Although for the sake of ease most of the application as well as the accompanying report are written in Dutch, given some effort code-base should be comprehensible for anyone.
 
 
+HET SPEL
+--------
 
-TODO
-----
+StockPlay is een spel waarmee beleggen op de beurs wordt gesimuleerd. De deelnemers kunnen aandelen, opties, trackers, fondsen, enz. verhandelen. De bedoeling van het spel is om een zo goed mogelijke prestatie neer te zetten, en dit zoals in het echte leven: op lange termijn. StockPlay is een doorlopend spel, waarbij alle spelers op gezette tijden worden geëvaluaeerd over hun prestaties. Hun prestaties worden beoordeeld op verschillende vlakken: presteren ze beter dan de BEL20, zijn ze bij de beste 25 beleggers van die dag, etc. Aan de hand daarvan wordt een klassement opgesteld waarmee de spelers zich met elkaar kunnen meten.
+Technologieën
 
-1) Backend
+StockPlay bestaat uit verschillende componenten:
+ - een backend (Java)
+ - een ranking-systeem (Java)
+ - een transactie-manager (Java)
+ - een realtime & historische scraper (Perl)
+ - een artificiële intelligentie speler (Perl) 
 
--> Controle van keys in filter
-
-Het zou mooi zijn om de doorgegeven filters te controleren zodat slecht een
-vaste (gedocumenteerde) selectie er kan in voorkomen. Eventueel translatielaag
-toevoegen om joins etc te ondersteunen (FIELD -> String, SQL only).
-
--> Filter
-
-Limit functie (orderfields, amount, selection)
+Er bestaan ook verschillende interfaces tot het spel:
+ - een webinterface (C# ASP.NET)
+ - een mobiele interface (Java ME)
+ - een administratieve desktop-client (Java) 
 
